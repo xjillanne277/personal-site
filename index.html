@@ -1,0 +1,1281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#2f5e46">
+<meta property="og:title" content="Jillanne Youssef">
+<meta property="og:description" content="3B Mechanical Engineering student at the University of Waterloo. Product design, consumer electronics and robotics.">
+<meta property="og:image" content="https://www.jillanneyoussef.com/img/led-render.webp">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%232f5e46'/%3E%3Crect x='3' y='2' width='10' height='5' fill='%232a1a14'/%3E%3Crect x='2' y='4' width='3' height='9' fill='%232a1a14'/%3E%3Crect x='11' y='4' width='3' height='9' fill='%232a1a14'/%3E%3Crect x='5' y='5' width='6' height='5' fill='%23e8bfa0'/%3E%3Crect x='6' y='7' width='1' height='1' fill='%232a1a14'/%3E%3Crect x='9' y='7' width='1' height='1' fill='%232a1a14'/%3E%3Crect x='5' y='11' width='6' height='4' fill='%231f2126'/%3E%3C/svg%3E">
+<title>Jillanne Youssef</title>
+<meta name="description" content="Jillanne Youssef, 3B Mechanical Engineering student at the University of Waterloo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Title screen: her world drifts behind a game start menu. Single deliberate look (pixel world), palette follows the visitor's time of day. */
+:root{
+  --panel:#fbf3e4; --panel-edge:#7a5232; --panel-shadow:#4a301c; --ink:#3a2617; --muted:#8a6a4c; --accent:#d9644a; --badge:#2f6f5e;
+  --f-pixel:"Pixelify Sans","Courier New",ui-monospace,monospace;
+  color-scheme:light;
+}
+html,body{height:100%;margin:0;background:#9fc8e8;overflow:hidden}
+[hidden]{display:none!important}
+body{font-family:var(--f-pixel);color:var(--ink)}
+#world{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;display:block}
+
+.screen{position:fixed;inset:0;display:grid;justify-items:center;align-content:start;padding-inline:16px;padding-top:calc(clamp(72px,13vh,150px) + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.panel{position:relative;background:var(--panel);padding:30px 40px 28px;max-width:min(560px,100%);width:100%;text-align:center;
+  box-shadow:0 0 0 4px var(--panel-edge),0 0 0 8px var(--panel-shadow),0 12px 0 8px rgba(0,0,0,.25);border-radius:2px}
+.panel::before{content:"";position:absolute;inset:6px;border:2px solid #ead8b8;pointer-events:none}
+h1{margin:0;font-weight:700;font-size:clamp(34px,7.4vw,58px);line-height:1;letter-spacing:.02em;color:var(--ink);text-wrap:balance}
+.sub{margin:14px auto 0;font-size:clamp(16px,2.6vw,19px);color:var(--muted);max-width:30ch;line-height:1.35}
+.menu{list-style:none;margin:28px 0 0;padding:0;display:grid;gap:6px;justify-items:center}
+.menu button{font:600 clamp(19px,3.4vw,24px) var(--f-pixel);color:var(--ink);background:none;border:0;padding:8px 14px 8px 34px;cursor:pointer;position:relative;display:inline-flex;align-items:baseline;gap:10px;border-radius:2px}
+.menu button::before{content:"";position:absolute;left:10px;top:50%;width:0;height:0;border-left:10px solid var(--accent);border-top:7px solid transparent;border-bottom:7px solid transparent;transform:translateY(-50%);opacity:0}
+.menu button[aria-current="true"]::before{opacity:1;animation:nudge 1s steps(2) infinite}
+.menu button[aria-current="true"]{background:#f3e3c6}
+.menu small{font:400 14px var(--f-pixel);color:var(--accent)}
+.menu button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@keyframes nudge{50%{transform:translate(3px,-50%)}}
+.hint{margin-top:18px;font-size:14px;color:var(--muted)}
+
+.badge{position:fixed;left:calc(14px + env(safe-area-inset-left,0px));top:calc(14px + env(safe-area-inset-top,0px));background:var(--badge);color:#f4fbf6;font:600 14px var(--f-pixel);padding:7px 12px 6px;box-shadow:0 0 0 3px #1d4a3e,0 4px 0 3px rgba(0,0,0,.25);display:flex;align-items:center;gap:8px}
+.badge i{width:8px;height:8px;background:#8ff0b8;display:block;animation:blink 1.6s steps(2) infinite}
+@keyframes blink{50%{opacity:.25}}
+.sound{position:fixed;z-index:11;right:calc(14px + env(safe-area-inset-right,0px));top:calc(14px + env(safe-area-inset-top,0px));width:44px;height:44px;background:var(--panel);border:0;cursor:pointer;box-shadow:0 0 0 3px var(--panel-edge),0 4px 0 3px rgba(0,0,0,.25);display:grid;place-items:center;padding:0}
+.sound svg{width:26px;height:26px;image-rendering:pixelated}
+.sound:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.sound .wave{display:none}.sound[aria-pressed="true"] .wave{display:inline}
+.sound[aria-pressed="true"] .x{display:none}
+
+.fade{position:fixed;inset:0;background:#120c08;opacity:0;pointer-events:none;transition:opacity .45s steps(6)}
+.fade.on{opacity:1}
+.next .panel h2{margin:0;font-size:clamp(26px,5vw,36px)}
+.next .panel p{margin:12px auto 0;max-width:34ch;color:var(--muted);font-size:17px;line-height:1.4}
+.back{margin-top:22px;font:600 18px var(--f-pixel);background:var(--accent);color:#fff8ef;border:0;padding:10px 18px;cursor:pointer;box-shadow:0 4px 0 #9b3f2c}
+.back:active{transform:translateY(3px);box-shadow:0 1px 0 #9b3f2c}
+
+/* ---------- world ---------- */
+#world-ui{position:fixed;inset:0;z-index:5}
+#world-cv{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;display:block;touch-action:none;outline:none}
+#world-labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.w-label{position:absolute;left:0;top:0;pointer-events:auto;font:600 14px/1.15 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:0;color:#fbf3e4;background:rgba(42,30,20,.82);border:0;padding:3px 8px 2px;border-radius:2px;cursor:pointer;white-space:nowrap}
+.w-label.w-stop{background:rgba(122,82,50,.95);box-shadow:0 0 0 2px #fbf3e4;animation:bob 1.4s steps(2) infinite}
+.w-label.w-visited{animation:none;opacity:.85}
+.w-label.w-visited::after{content:" ✓"}
+@keyframes bob{50%{margin-top:-3px}}
+@media (prefers-reduced-motion:reduce){.w-label.w-stop{animation:none}}
+.w-label:hover,.w-label:focus-visible{background:var(--accent);outline:none}
+img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;box-shadow:0 0 0 2px #fff,0 0 0 4px #3a2a20,0 3px 0 4px rgba(0,0,0,.25);image-rendering:auto}
+#world-prompt{position:absolute;left:0;top:0;font:600 14px var(--f-pixel);background:var(--panel);color:var(--ink);border:0;padding:6px 10px 5px;box-shadow:0 0 0 3px var(--panel-edge);cursor:pointer;white-space:nowrap;z-index:2}
+#world-card{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(152px + env(safe-area-inset-bottom,0px));width:min(540px,calc(100% - 32px));z-index:8}
+.w-card-in{position:relative;background:var(--panel);padding:22px 26px 20px;box-shadow:0 0 0 4px var(--panel-edge),0 0 0 8px var(--panel-shadow),0 10px 0 8px rgba(0,0,0,.25);max-height:min(58vh,520px);overflow:auto}
+.w-card-in h2{margin:0;font:700 26px var(--f-pixel);color:var(--ink);padding-right:30px}
+.w-card-in .w-meta{margin:4px 0 12px;color:var(--muted);font-size:15px}
+.w-card-in p{margin:0 0 10px;font-size:16px;line-height:1.45;color:var(--ink)}
+.w-card-in .w-note{color:var(--accent);font-size:14px;margin-top:6px}
+.w-card-in .w-tourpos{color:var(--muted);font-size:13px;margin:0 0 4px}
+.w-close{position:absolute;right:10px;top:10px;width:32px;height:32px;border:0;background:#ead8b8;color:var(--ink);font:700 16px var(--f-pixel);cursor:pointer}
+.w-close:focus-visible,.w-label:focus-visible,#world-bar button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.w-contact{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0 10px}
+.w-contact code{font:600 15px var(--f-pixel);background:#fff;padding:6px 10px;user-select:all}
+.w-copy{font:600 14px var(--f-pixel);background:var(--ink);color:var(--panel);border:0;padding:7px 12px;cursor:pointer}
+.w-links a{color:var(--ink);margin-right:14px}
+.w-img{display:block;max-width:100%;max-height:min(46vh,380px);width:auto;height:auto;margin:4px auto 10px;border:3px solid var(--panel-edge);background:#fff}
+.w-cap{margin:-4px 0 10px;font-size:14px;color:var(--muted)}
+.w-sl{display:grid;grid-template-columns:5.5em 1fr 2.6em;gap:10px;align-items:center;font:600 15px var(--f-pixel);margin:6px 0}
+.w-sl output{text-align:right;font-family:"IBM Plex Mono",monospace;font-size:14px}
+.w-sl input{accent-color:var(--accent);width:100%}
+.w-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.w-go,.w-alt{font:600 16px var(--f-pixel);border:0;padding:10px 16px 9px;cursor:pointer}
+.w-go{background:var(--accent);color:#fff8ef;box-shadow:0 4px 0 #9b3f2c}
+.w-alt{background:#ead8b8;color:var(--ink)}
+.w-go:focus-visible,.w-alt:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+#world-bar{position:fixed;left:0;right:0;bottom:0;display:flex;gap:14px;align-items:stretch;justify-content:center;flex-wrap:wrap;padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));z-index:7;pointer-events:none}
+#world-bar > *{pointer-events:auto}
+.bar-box{background:var(--panel);box-shadow:0 0 0 3px var(--panel-edge),0 4px 0 3px rgba(0,0,0,.25);padding:8px 10px}
+.mini-wrap,.tour{box-sizing:border-box;width:200px;height:116px}
+.mini-wrap{position:relative;display:flex;align-items:center;justify-content:center;padding:6px;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+.mini-wrap:hover,.mini-wrap:focus-visible{transform:translateY(-3px) scale(1.04);box-shadow:0 0 0 3px var(--accent),0 6px 0 3px rgba(0,0,0,.25);outline:none}
+.mini-wrap::after{content:"Open map";position:absolute;right:8px;bottom:8px;font:600 11px/1 "IBM Plex Mono",monospace;background:rgba(42,30,20,.85);color:#fbf3e4;padding:4px 6px 3px;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.mini-wrap:hover{transform:none}}
+#minimap{width:auto;height:auto;max-width:100%;max-height:100%;image-rendering:pixelated;cursor:pointer;display:block}
+.mini-wrap span{font-size:12px;color:var(--muted)}
+.tour{display:flex;flex-direction:column;justify-content:center;gap:6px;padding:8px 10px}
+#tour-pos{font-size:11px;line-height:1.2;color:var(--muted);text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tour div{display:flex;flex-direction:column-reverse;gap:6px}
+.tour div button{width:100%}
+#world-bar button.b{white-space:nowrap;font:600 15px var(--f-pixel);border:0;padding:7px 12px 6px;cursor:pointer;background:#ead8b8;color:var(--ink)}
+#world-bar button.b:disabled{opacity:.45;cursor:default}
+#world-bar button.b.primary{background:var(--accent);color:#fff8ef}
+#world-bar button.b.facts{background:var(--badge);color:#f4fbf6}
+#world-bar button.b.contact{background:#3f6fb0;color:#f4f8fd}
+.side{display:grid;grid-auto-rows:34px;gap:6px;align-self:center;width:170px}
+#map-toggle{display:none}
+.side button{width:100%}
+#tod{position:fixed;left:calc(12px + env(safe-area-inset-left,0px));top:calc(12px + env(safe-area-inset-top,0px));display:flex;background:var(--panel);box-shadow:0 0 0 3px var(--panel-edge),0 4px 0 3px rgba(0,0,0,.25);z-index:7}
+#tod button{font:600 13px var(--f-pixel);border:0;background:none;color:var(--ink);padding:7px 9px 6px;cursor:pointer}
+#tod button[aria-pressed="true"]{background:var(--accent);color:#fff8ef}
+#bigmap{position:fixed;inset:0;background:rgba(20,14,8,.55);display:grid;place-items:center;z-index:12;padding:16px}
+.bm-in{position:relative;background:var(--panel);padding:16px;box-shadow:0 0 0 4px var(--panel-edge),0 0 0 8px var(--panel-shadow);width:min(900px,100%)}
+.bm-title{margin:0 0 10px;font:700 22px var(--f-pixel)}
+.bm-close{position:absolute;right:10px;top:10px;width:32px;height:32px;border:0;background:#ead8b8;font:700 16px var(--f-pixel);cursor:pointer}
+.bm-frame{position:relative}
+.bm-frame canvas{width:100%;height:auto;image-rendering:pixelated;display:block}
+.bm-pins{position:absolute;inset:0}
+.bm-pin{position:absolute;transform:translate(-50%,-100%);font:600 13px/1.15 "IBM Plex Mono",ui-monospace,monospace;background:rgba(42,30,20,.85);color:#fbf3e4;border:0;padding:4px 8px 3px;cursor:pointer;white-space:nowrap}
+.bm-pin.stop{background:#7a5232;box-shadow:0 0 0 2px #fbf3e4}
+.bm-pin:hover,.bm-pin:focus-visible{background:var(--accent);outline:none}
+.bm-you{position:absolute;width:12px;height:12px;background:var(--accent);border:2px solid #fff;transform:translate(-50%,-50%);border-radius:50%}
+@media (max-width:760px){
+  .mini-wrap{display:none}
+  #tod button{padding:6px 6px 5px;font-size:12px}
+  .bm-pin{font-size:11px;padding:3px 5px 2px}
+  #world-bar{flex-direction:column;align-items:center;gap:8px}
+  .side{grid-auto-rows:auto;grid-auto-flow:column;width:auto}
+  #map-toggle{display:inline-block}
+  .tour{order:-1;width:auto;height:auto;flex-direction:row;align-items:center;padding:6px 8px}
+  .tour div{flex-direction:row-reverse}
+  #tour-pos{display:none}
+  #world-card{bottom:calc(120px + env(safe-area-inset-bottom,0px))}
+}
+@media (max-width:480px){.panel{padding:26px 18px 22px}.badge{font-size:12px}}
+@media (prefers-reduced-motion:reduce){.menu button[aria-current="true"]::before,.badge i{animation:none}}
+
+/* ---------- project notebook ---------- */
+.proj{position:fixed;inset:0;z-index:22;overflow-y:auto;background:#3a2a20;-webkit-overflow-scrolling:touch}
+.proj-bar{position:sticky;top:0;z-index:2;display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:10px 16px calc(10px);padding-top:calc(10px + env(safe-area-inset-top,0px));background:#2b1f17;color:#e9d8bd;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.proj-back{font:600 16px var(--f-pixel);background:var(--accent);color:#fff8ef;border:0;padding:8px 14px 7px;cursor:pointer;box-shadow:0 3px 0 #9b3f2c}
+.proj-back:focus-visible{outline:3px solid #fbf3e4;outline-offset:2px}
+.proj-crumb{font:500 14px/1 "IBM Plex Mono",ui-monospace,monospace;color:#cdb79a}
+.proj-sheet{max-width:920px;margin:28px auto 64px;padding:44px clamp(18px,5vw,64px) 48px;color:#2b2119;font:400 17px/1.6 "Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  background-color:#fbf6ea;background-image:linear-gradient(rgba(122,82,50,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(122,82,50,.08) 1px,transparent 1px);background-size:20px 20px;box-shadow:0 0 0 4px #7a5232,0 0 0 8px #4a301c,0 14px 0 8px rgba(0,0,0,.3)}
+@media (max-width:960px){.proj-sheet{margin:16px 12px 48px}}
+.proj-kicker{margin:0;font:500 14px/1 "IBM Plex Mono",ui-monospace,monospace;color:#9b6a43;letter-spacing:.04em}
+.proj h1{margin:6px 0 12px;font:700 clamp(34px,6vw,56px)/1.02 var(--f-pixel);color:#2b2119;text-wrap:balance}
+.proj-lede{margin:0;font-size:clamp(18px,2.2vw,21px);max-width:58ch;color:#3d2f24}
+.proj-hero{margin:24px 0 10px}
+.proj-hero img{display:block;width:100%;max-height:340px;object-fit:contain;background:#fff;border:3px solid #7a5232}
+.proj-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;margin:18px 0 0;border-top:3px solid #2b2119}
+.proj-stats div{padding:12px 12px 4px 0;min-width:0}
+.proj-stats div+div{padding-left:12px;border-left:1px solid rgba(43,33,25,.2)}
+.proj-stats dt{font:700 clamp(24px,3.4vw,34px)/1 var(--f-pixel)}
+.proj-stats dd{margin:4px 0 0;font-size:14px;color:#6b5646;line-height:1.35}
+@media (max-width:640px){.proj-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.proj-stats div:nth-child(3){border-left:0;padding-left:0}}
+.proj-ch{margin-top:48px}
+.proj h2{display:flex;gap:12px;align-items:baseline;margin:0 0 14px;font:700 clamp(22px,3vw,30px)/1.15 var(--f-pixel);color:#2b2119;text-wrap:balance}
+.proj h2 span{font:500 17px/1 "IBM Plex Mono",ui-monospace,monospace;color:#c0603f}
+.proj p{margin:0 0 12px;max-width:62ch}
+.proj-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:28px;align-items:start;margin-top:14px}
+@media (max-width:760px){.proj-grid{grid-template-columns:minmax(0,1fr)}}
+.proj-figs{display:grid;gap:14px}
+.proj figure{margin:0}
+.proj figure img{display:block;width:100%;height:auto;background:#fff;border:3px solid #7a5232;transform:rotate(-.4deg)}
+.proj figure:nth-child(2) img{transform:rotate(.5deg)}
+.proj figcaption{margin-top:6px;font:500 13px/1.1 "IBM Plex Mono",ui-monospace,monospace;color:#7a5a44}
+.proj-did,.proj-learn,.proj-res{padding-left:14px;border-left:4px solid}
+.proj-did{border-color:#7a5232}
+.proj-learn{border-color:#2f6f5e;background:rgba(47,111,94,.07);padding-top:6px;padding-bottom:6px}
+.proj-res{border-color:#d9644a}
+.proj-did b,.proj-learn b,.proj-res b{font-weight:700}
+.proj-small{font-size:14px;color:#6b5646}
+.proj-calc{margin:6px 0 14px;padding:12px 14px;background:#fffdf7;border:2px dashed #b89a7a;font:500 14px/1.35 "IBM Plex Mono",ui-monospace,monospace;color:#2b2119;max-width:62ch}
+.proj-calc b{color:#9b3f2c;font-weight:400}
+.proj-table{display:grid;margin:8px 0 6px;border-top:2px solid #2b2119}
+.proj-table>div{display:grid;grid-template-columns:9.5em minmax(0,1fr);gap:12px;padding:8px 0;border-bottom:1px solid rgba(43,33,25,.18)}
+.proj-table-3>div{grid-template-columns:8.5em minmax(0,1fr) minmax(0,1fr)}
+.proj-table .th b{font:500 13px/1 "IBM Plex Mono",ui-monospace,monospace;color:#7a5a44}
+.proj-table b{font-weight:700}
+@media (max-width:640px){.proj-table>div,.proj-table-3>div{grid-template-columns:minmax(0,1fr)}.proj-table .th{display:none}.proj-table-3 span:nth-child(2)::before{content:"Before: ";font-weight:700}.proj-table-3 span:nth-child(3)::before{content:"After: ";font-weight:700}}
+.proj-matrix{display:grid;gap:8px;max-width:380px;margin:4px 0 8px}
+.proj-matrix div{display:grid;grid-template-columns:4.5em minmax(0,1fr) 2em;gap:10px;align-items:center;font:500 14px/1 "IBM Plex Mono",ui-monospace,monospace}
+.proj-matrix i{display:block;height:12px;background:rgba(43,33,25,.12);position:relative}
+.proj-matrix i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--w);background:#9b8a7a}
+.proj-matrix .win i::after{background:#2f6f5e}
+.proj-matrix b{font-weight:400;text-align:right}
+.proj-time{list-style:none;margin:6px 0 18px;padding:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;border-top:3px solid #2b2119}
+.proj-time li{padding:8px 8px 0 0;font-size:14px;line-height:1.35;color:#3d2f24;min-width:0}
+.proj-time li+li{padding-left:8px;border-left:1px dashed rgba(43,33,25,.3)}
+.proj-time b{display:block;font:500 14px/1 "IBM Plex Mono",ui-monospace,monospace;color:#c0603f;margin-bottom:4px}
+@media (max-width:760px){.proj-time{grid-template-columns:repeat(2,minmax(0,1fr))}.proj-time li:nth-child(odd){border-left:0;padding-left:0}}
+.proj-skills{margin-top:44px;padding-top:16px;border-top:3px solid #2b2119}
+.proj-skills p{margin:0 0 10px;font:500 14px/1 "IBM Plex Mono",ui-monospace,monospace;color:#7a5a44}
+.proj-skills ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.proj-skills li{font-size:14px;background:#2f6f5e;color:#f4fbf6;padding:5px 10px 4px}
+.w-more{display:inline-block;margin-top:4px;font:600 16px var(--f-pixel);background:var(--accent);color:#fff8ef;border:0;padding:9px 14px 8px;cursor:pointer;box-shadow:0 3px 0 #9b3f2c}
+
+/* ---------- just the facts ---------- */
+#facts{position:fixed;inset:0;z-index:15;overflow-y:auto;background:#f7f2e8;color:#2b2119;font:400 17px/1.6 "Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif}
+.facts-in{max-width:980px;margin:0 auto;padding:calc(48px + env(safe-area-inset-top,0px)) clamp(16px,4vw,40px) 72px}
+.facts-head{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:28px;align-items:end;padding-bottom:26px;border-bottom:3px solid #2b2119}
+@media (max-width:760px){.facts-head{grid-template-columns:minmax(0,1fr)}}
+#facts h1{margin:0;font:700 clamp(40px,7vw,68px)/1 var(--f-pixel);color:#2b2119}
+.facts-sub{margin:12px 0 0;font-size:clamp(17px,2vw,20px);max-width:44ch;color:#4a3b2e}
+.facts-links{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:flex-start}
+.facts-links a{color:#2b2119;font-weight:700;text-decoration-color:#d9644a;text-decoration-thickness:2px;text-underline-offset:3px}
+.facts-email{display:flex;gap:6px;align-items:center;background:#fff;border:2px solid #2b2119;padding:4px 4px 4px 10px}
+.facts-email code{font:500 14px "IBM Plex Mono",ui-monospace,monospace;user-select:all}
+.facts-email button{font:700 13px var(--f-body,inherit);background:#2b2119;color:#f7f2e8;border:0;padding:6px 10px;cursor:pointer}
+.facts-world{font:600 16px var(--f-pixel);background:#d9644a;color:#fff8ef;border:0;padding:9px 14px 8px;cursor:pointer;box-shadow:0 3px 0 #9b3f2c}
+.facts-world.big{font-size:19px;padding:12px 20px 11px}
+.facts-sec{margin-top:44px}
+#facts h2{margin:0 0 16px;font:700 24px/1.1 var(--f-pixel);color:#2b2119}
+.facts-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media (max-width:900px){.facts-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.facts-cards{grid-template-columns:minmax(0,1fr)}}
+.facts-card{display:grid;gap:6px;align-content:start;text-align:left;background:#fff;border:2px solid #2b2119;padding:0 0 14px;cursor:pointer;font:inherit;color:inherit;box-shadow:0 4px 0 #2b2119;transition:transform .12s}
+.facts-card:hover{transform:translateY(-2px)}
+.facts-card:focus-visible{outline:3px solid #d9644a;outline-offset:3px}
+.facts-card img,.facts-stat{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;background:#f1ebde;border-bottom:2px solid #2b2119}
+.facts-stat{display:grid;place-items:center;font:700 40px var(--f-pixel);font-style:normal;color:#2f6f5e}
+.facts-card b,.facts-card span{padding:0 14px}
+.facts-card b{font-size:17px;line-height:1.25;margin-top:6px}
+.facts-card span{font-size:14px;line-height:1.45;color:#5a4a3d}
+.facts-exp{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.facts-exp>li{padding:18px 0;border-bottom:1px solid rgba(43,33,25,.18)}
+.fx-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;align-items:baseline}
+.fx-top b{font:700 22px var(--f-pixel)}
+.fx-top span{font:500 14px/1 "IBM Plex Mono",ui-monospace,monospace;color:#7a5a44}
+.fx-role{margin:2px 0 6px;font-weight:700;color:#4a3b2e}
+.facts-exp ul{margin:0;padding-left:20px;max-width:72ch}
+.facts-exp ul li{margin:2px 0}
+.fx-more{margin-top:6px;font:700 14px inherit;background:none;border:0;padding:0;color:#9b3f2c;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.facts-two{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:32px}
+@media (max-width:760px){.facts-two{grid-template-columns:minmax(0,1fr)}}
+.facts-skills{margin:0;display:grid;grid-template-columns:11em minmax(0,1fr);gap:8px 14px}
+@media (max-width:480px){.facts-skills{grid-template-columns:minmax(0,1fr)}.facts-skills dd{margin-bottom:6px}}
+.facts-skills dt{font-weight:700}
+.facts-skills dd{margin:0;color:#4a3b2e}
+.facts-two p{margin:0}
+.facts-foot{margin-top:56px;padding:28px;background:#2f5e46;color:#f1f7f2;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;box-shadow:0 0 0 4px #1d3b2d}
+.facts-foot p{margin:0;max-width:46ch;font-size:18px}
+
+/* project pages: technical document */
+.proj-sheet{background:#ffffff;background-image:none;box-shadow:0 0 0 1px #d8cfc3,0 12px 40px rgba(0,0,0,.35);font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16.5px;line-height:1.6;color:#1f2328}
+.proj h1{font:700 clamp(30px,5vw,46px)/1.1 "IBM Plex Sans",system-ui,sans-serif;letter-spacing:-.01em;color:#14181d}
+.proj h2{font:700 clamp(20px,2.6vw,25px)/1.2 "IBM Plex Sans",system-ui,sans-serif;color:#14181d;padding-top:14px;border-top:1px solid #d9dde2}
+.proj h2 span{font:600 15px/1 "IBM Plex Mono",ui-monospace,monospace;color:#8a5a3c}
+.proj-kicker,.proj-crumb,.proj figcaption,.proj-skills p,.proj-time b,.proj-stats dt{font-family:"IBM Plex Mono",ui-monospace,monospace!important}
+.proj-kicker{font-size:13px;letter-spacing:.06em;color:#8a5a3c}
+.proj-stats dt{font-size:clamp(20px,2.8vw,27px);font-weight:600}
+.proj-lede{color:#3a4048}
+.proj figure img{transform:none!important;border:1px solid #d9dde2;background:#fff}
+.proj figure:nth-child(2) img{transform:none}
+.proj figcaption{font-size:12.5px;color:#59626c;margin-top:6px}
+.proj-hero img{border:1px solid #d9dde2}
+.proj-wide{margin:18px 0 6px}
+.proj-wide img{width:100%;height:auto}
+.proj-calc{font:400 14px/1.6 "IBM Plex Mono",ui-monospace,monospace;background:#f6f8fa;border:1px solid #d9dde2;border-left:3px solid #8a5a3c}
+.proj-calc b{color:#14181d;font-weight:600}
+.proj-why{margin:12px 0;padding:10px 14px;border:1px solid #d9dde2;border-radius:3px;background:#fbfbfc}
+.proj-why p{margin:0;max-width:none}
+.proj-why .q{font-weight:700;color:#14181d;margin-bottom:4px}
+.proj-decisions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px;margin:10px 0}
+@media (max-width:760px){.proj-decisions{grid-template-columns:minmax(0,1fr)}}
+.proj-scroll{overflow-x:auto;margin:10px 0 6px}
+.proj-mtx{width:100%;border-collapse:collapse;font-size:14.5px;min-width:560px}
+.proj-mtx th,.proj-mtx td{text-align:left;padding:7px 10px;border-bottom:1px solid #e3e6ea;vertical-align:top}
+.proj-mtx thead th{font:600 12.5px "IBM Plex Mono",monospace;color:#59626c;border-bottom:2px solid #14181d}
+.proj-mtx tfoot td{border-top:2px solid #14181d;font-weight:700}
+.proj-mtx td:nth-child(n+4){font-variant-numeric:tabular-nums}
+.proj-table{border-top:2px solid #14181d}
+.proj-table .th b{font:600 12.5px "IBM Plex Mono",monospace;color:#59626c}
+.proj-time{border-top:2px solid #14181d}
+.proj-time b{font-size:13px;color:#8a5a3c}
+.proj-did,.proj-learn,.proj-res{border-left-width:3px}
+.proj-learn{background:#f3f8f6}
+.proj-toc{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:16px;font:500 13px "IBM Plex Mono",monospace}
+.proj-toc a{color:#8a5a3c}
+.proj-skills{border-top:2px solid #14181d}
+.proj-skills li{background:#eef1f4;color:#1f2328;border:1px solid #d9dde2}
+.proj-ch{scroll-margin-top:64px}
+#facts h1:focus{outline:none}
+.proj-revs td{font-size:14px}
+.proj-revs td:first-child{min-width:170px}
+.proj-revs td:last-child{min-width:260px}
+.proj-sub{font-size:12.5px;color:#59626c}
+
+/* ---------- skills tower ---------- */
+.tower{position:fixed;inset:0;z-index:18;overflow-y:auto;background-color:#3a3448;background-image:linear-gradient(rgba(0,0,0,.18) 2px,transparent 2px),linear-gradient(90deg,rgba(0,0,0,.18) 2px,transparent 2px);background-size:48px 24px,48px 48px;color:#f3ecdf}
+.tw-bar{position:sticky;top:0;z-index:2;display:flex;gap:14px;align-items:center;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:#231f2c;box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.tw-crumb{font:500 14px "IBM Plex Mono",monospace;color:#c9bfd9}
+.tw-in{max-width:1180px;margin:0 auto;padding:28px clamp(16px,3vw,32px) 64px}
+.tw-head h1{margin:0;font:700 clamp(30px,5vw,46px)/1 var(--f-pixel);color:#fbf3e4}
+.tw-head p{margin:10px 0 0;color:#d6cce4;font:400 16px/1.5 "IBM Plex Sans",system-ui,sans-serif}
+.tw-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:24px;margin-top:22px;align-items:start}
+@media (max-width:860px){.tw-layout{grid-template-columns:minmax(0,1fr)}}
+.tw-case{background:#5a3a24;padding:12px 14px 4px;box-shadow:0 0 0 4px #3e2716,0 0 0 8px #2a1a0e,0 14px 0 8px rgba(0,0,0,.3)}
+.tw-shelf{position:relative;padding:28px 6px 0;margin-bottom:10px;background:#2a1a10;box-shadow:inset 0 6px 10px rgba(0,0,0,.45)}
+.tw-shelf::after{content:"";display:block;height:12px;margin:0 -6px;background:#7a5232;box-shadow:inset 0 2px 0 #946540,0 3px 0 #3e2716}
+.tw-plaque{position:absolute;left:10px;top:6px;margin:0;font:600 12px/1 "IBM Plex Mono",monospace;letter-spacing:.04em;background:#c9a54a;color:#2a1a0e;padding:4px 7px 3px;box-shadow:0 0 0 2px #7a5a1e}
+.tw-books{display:flex;flex-wrap:wrap;align-items:flex-end;gap:4px;padding:0 4px;min-height:178px}
+.tw-book{--c:#8b3a3a;--h:96px;position:relative;width:38px;height:var(--h);border:0;padding:6px 0;cursor:pointer;background:var(--c);color:#fbf3e4;box-shadow:inset -4px 0 0 rgba(0,0,0,.22),inset 3px 0 0 rgba(255,255,255,.14);transition:transform .12s ease;display:flex;align-items:center;justify-content:center}
+.tw-book::before,.tw-book::after{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(255,230,160,.55)}
+.tw-book::before{top:8px}.tw-book::after{bottom:8px}
+.tw-book span{writing-mode:vertical-rl;transform:rotate(180deg);font:600 11px/1.1 "IBM Plex Mono",monospace;white-space:nowrap}
+.tw-book:hover{transform:translateY(-6px)}
+.tw-book.on{transform:translateY(-10px);box-shadow:inset -4px 0 0 rgba(0,0,0,.22),0 0 0 3px #f2c14e}
+.tw-book:focus-visible{outline:3px solid #f2c14e;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.tw-book{transition:none}}
+.tw-detail{position:sticky;top:76px;background:var(--panel);color:var(--ink);padding:18px 20px 16px;box-shadow:0 0 0 4px var(--panel-edge),0 0 0 8px var(--panel-shadow),0 10px 0 8px rgba(0,0,0,.25);font:400 15.5px/1.55 "IBM Plex Sans",system-ui,sans-serif;min-height:160px}
+@media (max-width:860px){.tw-detail{position:static}}
+.tw-hint{margin:0;color:var(--muted)}
+.tw-shelfname{margin:0;font:600 12px "IBM Plex Mono",monospace;letter-spacing:.04em}
+.tw-detail h3{margin:4px 0 8px;font:700 22px/1.15 var(--f-pixel)}
+.tw-detail p{margin:0 0 10px}
+.tw-used{font:600 12px "IBM Plex Mono",monospace;color:var(--muted);margin-top:4px!important}
+.tw-detail ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.tw-link{width:100%;text-align:left;font:600 14px "IBM Plex Sans",system-ui,sans-serif;background:#fff;border:2px solid var(--panel-edge);color:var(--ink);padding:7px 10px;cursor:pointer}
+.tw-link::after{content:" →";color:var(--accent)}
+.tw-link:hover,.tw-link:focus-visible{background:#f3e3c6;outline:none}
+.w-projlist{display:grid;gap:6px;margin:4px 0 6px}
+</style>
+<style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+
+<canvas id="world" aria-hidden="true"></canvas>
+
+<div class="badge" role="status"><i></i>Open to Summer 2027 roles</div>
+<button class="sound" id="sound" type="button" aria-pressed="false" aria-label="Music off. Turn music on.">
+  <svg viewBox="0 0 13 13" shape-rendering="crispEdges" aria-hidden="true">
+    <path fill="#3a2617" d="M1 4h3v5H1zM4 3h1v7H4zM5 2h1v9H5zM6 1h1v11H6z"/>
+    <g class="wave" fill="#d9644a"><path d="M8 5h1v3H8zM10 3h1v1h-1zM11 4h1v5h-1zM10 9h1v1h-1z"/></g>
+    <g class="x" fill="#d9644a"><path d="M8 4h1v1H8zM9 5h1v1H9zM10 6h1v1h-1zM11 7h1v1h-1zM12 8h1v1h-1zM12 4h1v1h-1zM11 5h1v1h-1zM9 7h1v1H9zM8 8h1v1H8z"/></g>
+  </svg>
+</button>
+
+<main class="screen" id="title">
+  <div class="panel">
+    <h1>Jillanne Youssef</h1>
+    <p class="sub">3B Mechanical Engineering student at the University of Waterloo.</p>
+    <ul class="menu" role="menu" aria-label="Choose a version">
+      <li role="none"><button role="menuitem" id="opt-story" aria-current="true" data-go="story">The full story <small>recommended</small></button></li>
+      <li role="none"><button role="menuitem" id="opt-facts" aria-current="false" data-go="facts">Just the facts</button></li>
+    </ul>
+    <p class="hint">Arrow keys and Enter, or click</p>
+  </div>
+</main>
+
+<main class="screen next" id="next" hidden>
+  <div class="panel">
+    <h2 id="next-title">The full story</h2>
+    <p id="next-text"></p>
+    <button class="back" type="button" id="back">Back to title</button>
+  </div>
+</main>
+
+
+
+<section id="facts" class="facts" hidden aria-label="Just the facts">
+  <div class="facts-in">
+    <header class="facts-head">
+      <div>
+        <h1>Jillanne Youssef</h1>
+        <p class="facts-sub">3B Mechanical Engineering student at the University of Waterloo. Product design for consumer electronics, robotics and test fixtures. Looking for a Summer 2027 role.</p>
+      </div>
+      <div class="facts-links">
+        <div class="facts-email"><code id="f-email">j4yousse@uwaterloo.ca</code><button type="button" id="f-copy">Copy</button></div>
+        <a href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
+        <button type="button" class="facts-world" data-go-world>Enter the world</button>
+      </div>
+    </header>
+
+    <section class="facts-sec">
+      <h2>Selected projects</h2>
+      <div class="facts-cards">
+        <button type="button" class="facts-card" data-open="led"><img src="img/led-render.webp" alt=""><b>LED controller</b><span>Standalone RGBW controller for Tesla’s lighting studio. My first PCB, 7 weeks to handoff.</span></button>
+        <button type="button" class="facts-card" data-open="level"><img src="img/mag-puck.webp" alt=""><b>Magnets instead of accelerometers</b><span>Smart lock sensing proof of concept at Level. $12/unit, $12M projected.</span></button>
+        <button type="button" class="facts-card" data-open="level"><img src="img/fx-v2.webp" alt=""><b>Climate-chamber test fixture</b><span>Automated cap-touch fixture at Level: 2M+ cycles, 14 issues fixed, 100% pass.</span></button>
+        <button type="button" class="facts-card" data-open="geotab"><i class="facts-stat">1st / 11</i><b>Computer vision in a week</b><span>Geotab intern hackathon: taught myself model training and built the only working demo.</span></button>
+      </div>
+    </section>
+
+    <section class="facts-sec">
+      <h2>Experience</h2>
+      <ol class="facts-exp">
+        <li><div class="fx-top"><b>Google</b><span>May–Aug 2026 · Mountain View, CA</span></div><p class="fx-role">Product Design Engineering Intern, Pixel Hardware</p><ul><li>Owned design and validation of the Pixel Watch screen geometry for precision-moulded glass.</li><li>Saved $15K in vendor testing and $20K+ in prototypes with new test coupons, fixtures and an installed-condition drop test.</li></ul><button type="button" class="fx-more" data-open="google">Read more</button></li>
+        <li><div class="fx-top"><b>Level Home</b><span>Jan–Apr 2026 · Redwood City, CA</span></div><p class="fx-role">Product Design Engineering Intern</p><ul><li>Cut $12/unit ($12M projected) by replacing accelerometers and FPCAs with magnetometers and insert-moulded magnets.</li><li>Built an automated solenoid test fixture and PCBA: 14 issues fixed across 2M+ cycles, 100% functional success.</li><li>Reduced actuation-force variability 25% with GD&amp;T and tolerance work; led DFM on 20+ parts, cutting tooling cost 8%.</li></ul><button type="button" class="fx-more" data-open="level">Read more</button></li>
+        <li><div class="fx-top"><b>Tesla</b><span>Sep–Dec 2025 · Fremont, CA</span></div><p class="fx-role">Mechanical Design Engineering Intern, Lighting, Switches &amp; Sensors</p><ul><li>Led Class A surface design of a new interior cabin light in CATIA V6.</li><li>Designed a 2-layer mixed-signal PCB from scratch and built an RGBW LED controller that drives 6× more LEDs per unit.</li></ul><button type="button" class="fx-more" data-open="led">Read more</button></li>
+        <li><div class="fx-top"><b>Tesla</b><span>Jan–Apr 2025 · Palo Alto, CA</span></div><p class="fx-role">Mechanical Design Engineering Intern, Cell Equipment</p><ul><li>Magnetic clamping assembly holding 0.1 mm clearance: yield +15%, setup 30 s → 5 s.</li><li>Foil-stretching machine with closed-loop tension control: wrinkling and creasing down 50%.</li></ul><button type="button" class="fx-more" data-open="teslacells">Read more</button></li>
+        <li><div class="fx-top"><b>Geotab</b><span>May–Aug 2024 · Oakville, ON</span></div><p class="fx-role">System Verification Intern</p><ul><li>Closed-loop air-cooled dashcam test rack holding 26 °C.</li><li>1st of 11 teams in the intern hackathon with a computer vision model (72% detection, 6% false positives).</li></ul><button type="button" class="fx-more" data-open="geotab">Read more</button></li>
+        <li><div class="fx-top"><b>Valbruna ASW</b><span>Sep–Dec 2023 · Welland, ON</span></div><p class="fx-role">Mechanical Engineering Co-op</p><ul><li>Found $900K CAD in potential scrap losses with ANSYS Fluent CFD of an electric arc furnace.</li><li>Redesigned a 100,000 CFM fan enclosure to code, saving $45K CAD per unit.</li></ul><button type="button" class="fx-more" data-open="valbruna">Read more</button></li>
+        <li><div class="fx-top"><b>Evercloak</b><span>Jan–Apr 2023 · Kitchener, ON</span></div><p class="fx-role">Mechanical Engineering Co-op</p><ul><li>Prototype dehumidifier enclosure designed with DFMA and GD&amp;T; +40% performance through membrane selection.</li></ul><button type="button" class="fx-more" data-open="evercloak">Read more</button></li>
+      </ol>
+    </section>
+
+    <section class="facts-sec facts-two">
+      <div>
+        <h2>Skills</h2>
+        <dl class="facts-skills">
+          <dt>Mechanical design</dt><dd>NX, CATIA V6, SolidWorks · DFMA for injection moulding, die-casting, CNC</dd>
+          <dt>Analysis</dt><dd>Tolerance analysis, FEA (Ansys Mechanical), CFD (Ansys Fluent), RCFA/FMEA, mould flow</dd>
+          <dt>Prototyping</dt><dd>Lathe and mill, SLA/SLS/FDM printing, waterjet and laser cutting</dd>
+          <dt>Electrical &amp; software</dt><dd>PCB design (KiCad, Altium), ESP32, Arduino, Raspberry Pi, C++, Python, MATLAB</dd>
+        </dl>
+      </div>
+      <div>
+        <h2>Education</h2>
+        <p><b>University of Waterloo</b><br>BASc, Mechanical Engineering<br>Expected April 2029</p>
+      </div>
+    </section>
+
+    <footer class="facts-foot">
+      <p>This page is the short version. The world has the same work told in more depth, plus a bit more of who I am.</p>
+      <button type="button" class="facts-world big" data-go-world>Enter the world</button>
+    </footer>
+  </div>
+</section>
+
+
+<section id="tower" class="tower" hidden aria-label="Skills tower">
+  <div class="tw-bar"><button type="button" class="proj-back" id="tower-close">← Back to the world</button><span class="tw-crumb">Skills tower</span></div>
+  <div class="tw-in">
+    <header class="tw-head">
+      <h1>Skills tower</h1>
+      <p>Every book is a skill, shelved by area. Pick one to see where I’ve used it.</p>
+    </header>
+    <div class="tw-layout">
+      <div class="tw-case" id="tw-case"></div>
+      <aside class="tw-detail" id="tw-detail" aria-live="polite">
+        <p class="tw-hint">Pick a book from the shelves.</p>
+      </aside>
+    </div>
+  </div>
+</section>
+<script>
+(() => {
+  const PROJ = {led: 'LED controller · Tesla, 2025', teslacells: 'Cell equipment · Tesla, 2025', level: 'Smart locks · Level Home, 2026', google: 'Pixel Watch · Google, 2026', geotab: 'Dashcams · Geotab, 2024', valbruna: 'Steel mill · Valbruna, 2023', evercloak: 'Dehumidifier · Evercloak, 2023', waterloo: 'First-year builds · Waterloo'};
+  const SHELVES = [
+    ['Mechanical design', '#8b3a3a', [
+      ['CAD: NX, CATIA V6, SolidWorks', 'Solid and surface modelling across every term.', ['led', 'valbruna', 'evercloak']],
+      ['Class A surfacing', 'Visible, injection-moulded surfaces on a new cabin light, in CATIA V6.', ['led']],
+      ['DFM / DFMA', 'Designing parts so they can actually be moulded, cast and assembled.', ['level', 'google', 'led', 'evercloak']],
+      ['GD&T and drawings', 'Datums, tolerances and production drawings.', ['level', 'valbruna', 'evercloak']],
+      ['Tolerance stack-ups', 'Finding which dimension actually causes the problem.', ['level', 'teslacells']],
+      ['Snap-fit design', 'Cantilever snap-fits checked by hand calculation.', ['led']],
+      ['Test fixture design', 'Fixtures that make testing repeatable, automated or non-destructive.', ['level', 'google', 'geotab']],
+      ['Enclosure design', 'Enclosures that seal, cool, protect and can be serviced.', ['led', 'evercloak', 'valbruna']]
+    ]],
+    ['Analysis', '#2f5e7a', [
+      ['FEA (Ansys Mechanical)', 'Structural simulation, validated against a physical drop test.', ['google']],
+      ['CFD (Ansys Fluent)', 'Modelling scrap melting in an electric arc furnace.', ['valbruna']],
+      ['Thermal modelling', 'Thermal resistance networks and closed-loop cooling.', ['led', 'geotab']],
+      ['Root cause analysis', 'RCFA and FMEA on seal failures and cycle-test failures.', ['google', 'level']],
+      ['Design of experiments', 'Planning a test that cleanly answers one question.', ['level']],
+      ['Decision matrices', 'Weighted, justified component selection.', ['led']],
+      ['Mould flow simulation', 'Listed on my résumé.', []]
+    ]],
+    ['Prototyping', '#6b5a2e', [
+      ['3D printing: SLA, SLS, FDM', 'Enclosures, mounts and fixtures.', ['led', 'geotab', 'level']],
+      ['Machining: lathe, mill', 'Listed on my résumé.', []],
+      ['Laser and waterjet cutting', 'Laser-cut enclosures and parts.', ['waterloo']],
+      ['Hand soldering and bring-up', 'Assembling and bringing up my own boards.', ['led']]
+    ]],
+    ['Electrical and software', '#3d6b4a', [
+      ['PCB design (KiCad, Altium)', 'A 2-layer mixed-signal board, schematic to assembly.', ['led']],
+      ['ESP32, Arduino, Raspberry Pi', 'Microcontrollers for tools, test rigs and control boxes.', ['led', 'teslacells']],
+      ['Embedded C++', 'Firmware with debouncing, filtering and hysteresis.', ['led']],
+      ['Level shifting and signal integrity', '3.3 V to 5 V buffering and series termination.', ['led']],
+      ['Closed-loop control', 'Load cells, signal conditioning and pneumatic rollers.', ['teslacells']],
+      ['Python', 'Training a computer vision model.', ['geotab']],
+      ['Computer vision', 'Detecting distracted driving from dashcam video.', ['geotab']],
+      ['MATLAB', 'Listed on my résumé.', []]
+    ]],
+    ['Testing and validation', '#5a4a7a', [
+      ['Reliability and cycle testing', '5M+ cycles across 12 subassemblies, with failures logged.', ['level']],
+      ['Environmental testing', 'Fixtures built to survive −22 °C to 66 °C.', ['level']],
+      ['Drop testing', 'Installed-condition drop tests that save prototypes.', ['google']],
+      ['Strain testing', 'One universal jig for four suppliers.', ['google']],
+      ['Sensor validation', 'Magnetometer signal-to-noise on a real lock.', ['level']]
+    ]],
+    ['Ways of working', '#7a4a3a', [
+      ['Learning fast', 'Computer vision from zero to a winning demo in a week.', ['geotab']],
+      ['Proposing my own projects', 'Spotting a bottleneck and pitching the fix.', ['led', 'level']],
+      ['Working with EE and firmware', 'Fixtures, PCBAs and debug tools built across teams.', ['level', 'led']],
+      ['Supplier reviews', 'Tooling and DFM reviews with suppliers.', ['level', 'google']],
+      ['Documentation and handoff', 'SOPs so a team can keep building what I made.', ['led']],
+      ['Presenting', 'Pitching results to judges and senior engineers.', ['geotab', 'led']]
+    ]]
+  ];
+  const SHORT = {"CAD: NX, CATIA V6, SolidWorks": "CAD", "Laser and waterjet cutting": "Laser / waterjet", "Hand soldering and bring-up": "Soldering, bring-up", "ESP32, Arduino, Raspberry Pi": "Microcontrollers", "Level shifting and signal integrity": "Signal integrity", "Reliability and cycle testing": "Cycle testing", "Proposing my own projects": "Proposing projects", "Working with EE and firmware": "Cross-team work", "Documentation and handoff": "Docs and handoff", "3D printing: SLA, SLS, FDM": "3D printing", "Machining: lathe, mill": "Machining", "PCB design (KiCad, Altium)": "PCB design", "FEA (Ansys Mechanical)": "FEA", "CFD (Ansys Fluent)": "CFD"};
+  const caseEl = document.getElementById('tw-case'), det = document.getElementById('tw-detail');
+  const tones = c => { const n = parseInt(c.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255; return [0, 22, -18, 36, -8].map(d => `rgb(${Math.max(0, Math.min(255, r + d))},${Math.max(0, Math.min(255, g + d))},${Math.max(0, Math.min(255, b + d))})`); };
+  const esc = s => s.replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+  let sel = null;
+  SHELVES.forEach(([name, col, books], si) => {
+    const sh = document.createElement('div'); sh.className = 'tw-shelf';
+    sh.innerHTML = `<h2 class="tw-plaque">${esc(name)}</h2><div class="tw-books" role="list"></div>`;
+    const row = sh.querySelector('.tw-books'), t = tones(col);
+    books.forEach(([title, desc, used], bi) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'tw-book'; b.setAttribute('role', 'listitem');
+      b.style.setProperty('--c', t[bi % t.length]); const sp = SHORT[title] || title; b.style.setProperty('--h', Math.round(30 + sp.length * 6.8 + ((bi * 37 + si * 11) % 14)) + 'px');
+      b.innerHTML = `<span>${esc(sp)}</span>`; b.setAttribute('aria-label', title);
+      b.addEventListener('click', () => {
+        if (sel) sel.classList.remove('on'); sel = b; b.classList.add('on');
+        det.innerHTML = `<p class="tw-shelfname" style="color:${col}">${esc(name)}</p><h3>${esc(title)}</h3><p>${esc(desc)}</p>` +
+          (used.length ? `<p class="tw-used">Where I used it</p><ul>${used.map(u => `<li><button type="button" class="tw-link" data-p="${u}">${esc(PROJ[u])}</button></li>`).join('')}</ul>` : '<p class="tw-used">Not written up on the site yet. Happy to talk about it.</p>');
+        det.querySelectorAll('.tw-link').forEach(a => a.addEventListener('click', () => window.__openProject(a.dataset.p)));
+        if (matchMedia('(max-width: 860px)').matches) det.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+      });
+      row.appendChild(b);
+    });
+    caseEl.appendChild(sh);
+  });
+  const tw = document.getElementById('tower');
+  window.__openTower = () => { tw.hidden = false; tw.scrollTop = 0; document.getElementById('tower-close').focus({preventScroll: true}); };
+  const closeT = () => { tw.hidden = true; const c = document.getElementById('world-cv'); c && c.focus({preventScroll: true}); };
+  document.getElementById('tower-close').addEventListener('click', closeT);
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !tw.hidden && document.getElementById('proj').hidden) { e.stopImmediatePropagation(); closeT(); } }, true);
+})();
+</script>
+
+<section id="proj" class="proj" hidden aria-label="Project notebook">
+  <div class="proj-bar">
+    <button type="button" class="proj-back" id="proj-close">← Back to the world</button>
+    <span class="proj-crumb" id="proj-crumb"></span>
+  </div>
+  <article class="proj-sheet" data-proj="led" data-crumb="Tesla · Lighting, Switches &amp; Sensors · Fall 2025">
+    <header class="proj-head">
+      <p class="proj-kicker">Technical write-up</p>
+      <h1>Universal RGBW LED controller</h1>
+      <p class="proj-lede">A standalone controller that lets Tesla’s interior lighting design studio set colour, brightness and presets on production LED strips without a firmware engineer. Concept to handoff in seven weeks, including my first PCB.</p>
+      <figure class="proj-hero"><img src="img/led-render.webp" alt="Render of the finished controller: enclosure with slide potentiometers, programmable buttons and a touchscreen"></figure>
+      <dl class="proj-stats">
+        <div><dt>7 weeks</dt><dd>scoping to handoff</dd></div>
+        <div><dt>6×</dt><dd>LEDs per controller vs off-the-shelf</dd></div>
+        <div><dt>2 revs</dt><dd>schematic Rev A → Rev B</dd></div>
+        <div><dt>&gt;10 h/day</dt><dd>continuous duty target</dd></div>
+      </dl>
+      <nav class="proj-toc" aria-label="Sections"><a href="#led-1">Problem</a><a href="#led-2">P0</a><a href="#led-3">P1 and MCU</a><a href="#led-4">Schematic</a><a href="#led-5">Power and fuse</a><a href="#led-6">PCB</a><a href="#led-7">Thermal</a><a href="#led-8">Enclosure</a><a href="#led-9">Firmware</a><a href="#led-10">Result</a></nav>
+    </header>
+
+    <section class="proj-ch" id="led-1">
+      <h2><span>1</span> Problem and requirements</h2>
+      <p>The interior lighting design studio in LA tests lighting presets for new vehicles. Every time a designer wanted to change a colour or animation, a firmware engineer had to reprogram the LEDs. Each supplier’s LEDs also needed its own proprietary controller, which got expensive as programs scaled. I identified this as a bottleneck and proposed a single standalone controller the designers could run themselves.</p>
+      <div class="proj-table" role="table" aria-label="Requirements and constraints">
+        <div role="row"><b role="rowheader">Schedule</b><span role="cell">Mid-October start, done by early December 2025. This drove most of the trade-offs below.</span></div>
+        <div role="row"><b role="rowheader">Electrical</b><span role="cell">Operate reliably for more than 10 hours a day, continuously.</span></div>
+        <div role="row"><b role="rowheader">Mechanical</b><span role="cell">Robust, enclosed and portable between Fremont and LA. Ideally one standalone unit.</span></div>
+        <div role="row"><b role="rowheader">Scope</b><span role="cell">Scalable to future use cases, enough to justify the development effort.</span></div>
+        <div role="row"><b role="rowheader">User experience</b><span role="cell">Full LED control for designers with no firmware support.</span></div>
+      </div>
+      <ol class="proj-time" aria-label="Seven-week plan">
+        <li><b>Wk 1</b>P0 scoping and demo</li><li><b>Wk 2–3</b>P1 parts, firmware, demo, schematic Rev A</li><li><b>Wk 3–4</b>Rev B, start PCB</li><li><b>Wk 5</b>EE review, fab house, DFM, PO, enclosure CAD</li><li><b>Wk 6</b>Solder boards, print enclosure, first build, final code</li><li><b>Wk 7</b>Test, validate, hand off with SOP</li>
+      </ol>
+    </section>
+
+    <section class="proj-ch" id="led-2">
+      <h2><span>2</span> Prototype 0: proof of concept</h2>
+      <div class="proj-grid">
+        <div>
+          <p><b>Goal.</b> Show that a microcontroller can drive the vehicle’s production LED strip, and work out what a scalable tool would actually need.</p>
+          <div class="proj-why"><p class="q">Why build P0 from in-house parts only?</p><p>Ordering parts costs days. Using what was already in the building (Arduino Uno R3, 16×2 LCD, 4×4 keypad, a potentiometer, a breadboard and a bench 12 V supply) meant I could answer the feasibility question in the first week, before spending anything.</p></div>
+          <p><b>How it worked.</b> The keypad selects a colour channel and triggers “set”, the potentiometer sets that channel from 0 to 255, and the LCD shows prompts and values. The Arduino drives the WS2805 strip over its single-wire data line.</p>
+          <p><b>What it taught me.</b> The Uno ran out of pins, firmware updates needed a cable, and adjusting one channel at a time was too slow for a designer. These became the P1 requirements.</p>
+        </div>
+        <figure><img src="img/led-p0.webp" alt="Prototype 0 on the bench driving a blue LED strip"><figcaption>Fig. 1 · P0 driving the production strip.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="proj-ch" id="led-3">
+      <h2><span>3</span> Prototype 1 and microcontroller selection</h2>
+      <div class="proj-table proj-table-3" role="table" aria-label="P0 lessons and P1 changes">
+        <div role="row" class="th"><b>Area</b><b>P0 lesson</b><b>P1 change</b></div>
+        <div role="row"><b>MCU</b><span>Limited pins; wired-only updates</span><span>Formal selection matrix (below)</span></div>
+        <div role="row"><b>LED control</b><span>Proven on one strip</span><span>Multiple strips at once</span></div>
+        <div role="row"><b>Interface</b><span>One channel at a time</span><span>Dedicated slider per channel plus programmable buttons</span></div>
+        <div role="row"><b>Workflow</b><span>No structure, not scalable</span><span>Structured so it maps straight onto a PCB</span></div>
+      </div>
+      <p><b>Selection matrix.</b> Each criterion was weighted by how much it mattered for a tool used more than 40 hours a week. Scores: 1 meets it natively, 0 meets it with simple external modules, −1 doesn’t meet it or needs impractical wiring.</p>
+      <div class="proj-scroll"><table class="proj-mtx">
+        <thead><tr><th>Criterion</th><th>Weight</th><th>Why it matters</th><th>ESP32</th><th>STM32</th><th>Pico W</th></tr></thead>
+        <tbody>
+          <tr><td>Scalability for future features</td><td>3</td><td>Upgradable and reprogrammable without a hardware redesign</td><td>3</td><td>3</td><td>0</td></tr>
+          <tr><td>Long-term reliability</td><td>3</td><td>Used more than 40 hours a week</td><td>3</td><td>3</td><td>3</td></tr>
+          <tr><td>Wireless firmware updates</td><td>3</td><td>Service it without opening the enclosure</td><td>3</td><td>0</td><td>0</td></tr>
+          <tr><td>Multi-peripheral support</td><td>2</td><td>Displays, expanders and LEDs on different protocols</td><td>2</td><td>2</td><td>2</td></tr>
+          <tr><td>Boot and recovery</td><td>1</td><td>Quick recovery from power cycles</td><td>1</td><td>1</td><td>1</td></tr>
+        </tbody>
+        <tfoot><tr><td colspan="3">Weighted total</td><td><b>12</b></td><td>9</td><td>6</td></tr></tfoot>
+      </table></div>
+      <div class="proj-why"><p class="q">Why the ESP32?</p><p>It was the only option that met every criterion natively. The deciding factor was over-the-air updates: once the board is sealed in an enclosure in another city, firmware has to be updatable without anyone opening it.</p></div>
+      <div class="proj-grid">
+        <div>
+          <p><b>Bring-up.</b> I wired the ESP32 to the sliders, buttons and four strips, adding two 3.3 V to 5 V logic level converters on the LED data lines (reasoning in section 4). Two OLEDs form a dashboard: the left one underlines the selected strip and shows its RGBW values, and the right one shows a 0–100% brightness bar. I simulated the wiring first, then built it.</p>
+        </div>
+        <div class="proj-figs">
+          <figure><img src="img/led-p1-hands.webp" alt="Hands wiring the P1 breadboard"><figcaption>Fig. 2 · P1 hardware bring-up.</figcaption></figure>
+          <figure><img src="img/led-oled.webp" alt="OLED dashboard with strip selection, RGBW values and a brightness bar"><figcaption>Fig. 3 · OLED dashboard.</figcaption></figure>
+        </div>
+      </div>
+      <figure class="proj-wide"><img src="img/p1-wiring.webp" alt="Wiring simulation of the P1 circuit"><figcaption>Fig. 4 · P1 wiring, simulated before building.</figcaption></figure>
+    </section>
+
+    <section class="proj-ch" id="led-4">
+      <h2><span>4</span> Schematic: Rev A, then Rev B for the schedule</h2>
+      <p>Rev A was the design I wanted. When I went to order it, several parts couldn’t arrive in time for a seven-week schedule. Rev B replaces each of them with a part I could get within a day. Every swap below does the same job as the original, so the circuit works the same way. The table shows what each block does, what changed, and why the replacement is equivalent.</p>
+      <div class="proj-scroll"><table class="proj-mtx proj-revs">
+        <thead><tr><th>Block and what it does</th><th>Rev A</th><th>Rev B</th><th>Why Rev B still works</th></tr></thead>
+        <tbody>
+          <tr><td><b>Microcontroller</b><br><span class="proj-sub">The brain: reads inputs, drives the LEDs</span></td><td>ESP32-DevKitC</td><td>ESP32-DevKitC</td><td>Unchanged.</td></tr>
+          <tr><td><b>LED output channels</b><br><span class="proj-sub">Screw terminals the LED strips plug into</span></td><td>8 channels</td><td>6 channels</td><td>The studio’s first builds run 6 strips, so 6 channels cover the real use. Fewer channels also means fewer buffers and fewer pins to route.</td></tr>
+          <tr><td><b>3.3 V → 5 V level shifting</b><br><span class="proj-sub">Boosts the ESP32’s 3.3 V data signal to the 5 V the strips expect</span></td><td>1 × 74HCT244<br><span class="proj-sub">one chip, 8 buffers (“octal”)</span></td><td>2 × 74AHCT125<br><span class="proj-sub">two chips, 4 buffers each (“quad”) = 8 buffers</span></td><td>Same function, split across two chips. Both are non-inverting buffers powered at 5 V with TTL-level inputs, so they read the ESP32’s 3.3 V as a clean “high” and output a full 5 V. Two quads give the same 8 buffers as one octal: 6 drive the strips, and the 2 spares are tied off.</td></tr>
+          <tr><td><b>Button inputs</b><br><span class="proj-sub">Adds extra inputs over I²C so the ESP32 doesn’t run out of pins</span></td><td>MCP23017 chip soldered on the board, 16 buttons</td><td>MCP23017 on a ready-made breakout module, 8 buttons</td><td>It’s the exact same chip, on the same I²C bus, with the same firmware library. Only the packaging changed: the module was in stock and plugs into headers instead of needing fine-pitch soldering. 8 buttons covered the first builds.</td></tr>
+          <tr><td><b>Sliders</b><br><span class="proj-sub">Analog inputs for colour values</span></td><td>6 slide potentiometers</td><td>4 slide potentiometers (R, G, B, W), all on ADC1 pins</td><td>One slider per colour channel. Other settings move to the touchscreen. Moving every slider to ADC1 also keeps them readable while Wi-Fi is on (see below).</td></tr>
+          <tr><td><b>12 V → 5 V power</b><br><span class="proj-sub">Steps the 12 V supply down for the display and level shifters</span></td><td>Buck converter module on a connector</td><td>LM2596 buck converter module</td><td>Same job, same 12 V in and 5 V out. The LM2596 module was stocked off the shelf, and I checked its heating myself in section 7.</td></tr>
+          <tr><td><b>Input protection</b><br><span class="proj-sub">Protects the board at the 12 V input</span></td><td>1 A fuse and a series reverse-polarity diode</td><td>13.5 A, 32 V slow-blow fuse</td><td>The fuse is now sized for the real LED load (section 5). A series diode would have to carry the full ~9 A going to the strips, so Rev B drops it and relies on the keyed barrel jack for polarity.</td></tr>
+          <tr><td><b>Display</b><br><span class="proj-sub">3.5" Nextion touchscreen over UART (serial)</span></td><td>With a resistor divider on the display’s TX line</td><td>Connected directly to two ESP32 UART pins</td><td>The display’s serial output is already 3.3 V logic, which the ESP32 reads directly, so the divider wasn’t needed.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="proj-small">Terms: <b>buffer</b> = a gate that repeats a signal at a different voltage level. <b>Octal / quad</b> = 8 or 4 buffers in one chip. <b>I²C</b> and <b>UART</b> = the two-wire and serial links the ESP32 uses to talk to the button chip and the display. <b>ADC</b> = the analog input that reads a slider.</p>
+      <div class="proj-decisions">
+        <div class="proj-why"><p class="q">Why buffer the LED data lines at all?</p><p>The ESP32 drives 3.3 V logic, but the strips’ data inputs expect a high level close to 5 V. A 3.3 V signal sits near the threshold and fails intermittently, especially over long wires. 74HCT and 74AHCT parts, powered at 5 V, have TTL-level inputs (a logic high from about 2 V), so they read 3.3 V cleanly and output a full 5 V swing.</p></div>
+        <div class="proj-why"><p class="q">Why 330 Ω in series on every data line?</p><p>The data lines run off-board to the strips. A small series resistor near the driver damps ringing and reflections on the cable, and limits current into the first LED’s input if the strip is unpowered or hot-plugged.</p></div>
+        <div class="proj-why"><p class="q">Why an I/O expander for the buttons?</p><p>P0 ran out of pins. An MCP23017 adds 16 inputs over I²C using just two ESP32 pins, with 4.7 kΩ pull-ups on SDA and SCL. In Rev B the breakout module was in stock, where the bare IC was not.</p></div>
+        <div class="proj-why"><p class="q">Why an RC filter on each slider?</p><p>The ESP32’s ADC is noisy. A 100 Ω and 100 nF low-pass on each wiper removes high-frequency noise before sampling, so colours don’t flicker when nobody is touching the sliders. Firmware filtering (section 9) handles the rest.</p></div>
+        <div class="proj-why"><p class="q">Why move all sliders onto ADC1 in Rev B?</p><p>On the ESP32, ADC2 can’t be read while Wi-Fi is running. Wireless updates were a core requirement, so every analog input belongs on ADC1 (GPIO32–39).</p></div>
+        <div class="proj-why"><p class="q">Why the bulk and decoupling capacitors?</p><p>A 1000 µF electrolytic at the 12 V input absorbs the current steps when strips change brightness quickly, keeping the rail from sagging. A 100 nF ceramic beside every IC (plus 10 µF at the display) handles local high-frequency demand. Pull resistors on the ESP32’s boot-strapping pins make sure it always starts in run mode.</p></div>
+      </div>
+      <figure class="proj-wide"><img src="img/sch-reva.webp" alt="Rev A schematic: 12 V input, 74HCT244 buffer, MCP23017 with 16 buttons, six slide potentiometers, ESP32, 3.5 inch display, eight LED outputs"><figcaption>Fig. 5 · Schematic Rev A.</figcaption></figure>
+      <figure class="proj-wide"><img src="img/sch-revb.webp" alt="Rev B schematic: 13.5 A fuse, LM2596, two 74AHCT125 buffers, MCP23017 module, four slide potentiometers, ESP32, display, six LED outputs"><figcaption>Fig. 6 · Schematic Rev B, built for the schedule.</figcaption></figure>
+    </section>
+
+    <section class="proj-ch" id="led-5">
+      <h2><span>5</span> Power architecture and fuse sizing</h2>
+      <p><b>Architecture.</b> A 12 V, 144 W adapter feeds the barrel jack. The 12 V rail goes straight to the LED strips. An LM2596 buck converter supplies 5 V for the display and the level shifters, and the ESP32’s 3.3 V regulator powers the logic (ESP32 and MCP23017). All grounds are common.</p>
+      <div class="proj-grid">
+        <div>
+          <div class="proj-calc"><b>Fuse at the 12 V input</b><br>Continuous load: I<sub>rated</sub> = 1.5 × I<sub>max</sub> = 1.5 × 9 A = <b>13.5 A</b><br>V<sub>rated</sub> &gt; V<sub>in</sub> = 12 V → <b>32 V</b> (common off-the-shelf rating)<br>Type: <b>slow-blow</b></div>
+          <div class="proj-why"><p class="q">Why 1.5× the load?</p><p>Fuses are derated for continuous operation. Running one at its full rating for 10+ hours a day causes nuisance blows and heating, so the rated current sits comfortably above the maximum continuous draw.</p></div>
+          <div class="proj-why"><p class="q">Why slow-blow?</p><p>At power-up the uncharged 1000 µF capacitor looks almost like a short, and the inrush spike can trip a fast-blow fuse even though nothing is wrong. A slow-blow fuse rides through that transient (the capacitor charges in about five time constants) while still opening on a sustained fault.</p></div>
+        </div>
+        <div class="proj-figs">
+          <figure><img src="img/fuse-calc.webp" alt="Handwritten fuse sizing notes"><figcaption>Fig. 7 · Fuse sizing notes.</figcaption></figure>
+          <figure><img src="img/fuse-curves.webp" alt="Capacitor charging voltage and current curves over time constants"><figcaption>Fig. 8 · Capacitor charging: the inrush the fuse has to tolerate.</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="proj-ch" id="led-6">
+      <h2><span>6</span> PCB design</h2>
+      <p>A 2-layer mixed-signal board in KiCad, with every component specified and selected by me. I reviewed the layout with the EEs, picked a fab house, ran a DFM check, submitted the PO, then hand-soldered and assembled the boards.</p>
+      <div class="proj-decisions">
+        <div class="proj-why"><p class="q">Why 2 layers?</p><p>The signals are slow (I²C, UART, LED data around 800 kHz), so two layers with a good ground pour are enough. They’re cheaper and faster to fabricate than four, which mattered on this schedule.</p></div>
+        <div class="proj-why"><p class="q">Grounding strategy</p><p>Ground pours on both layers, stitched together, give every return current a short, low-impedance path and shield the analog slider traces from the LED data lines. Ground pads connect with thermal reliefs so they can still be hand-soldered.</p></div>
+        <div class="proj-why"><p class="q">Placement</p><p>Connectors sit on the board edges to match the enclosure openings, sliders and buttons line up with the top-cover slots, and decoupling capacitors sit right beside their IC power pins. High-current 12 V paths to the LED terminals are kept short and wide.</p></div>
+      </div>
+      <figure class="proj-wide"><img src="img/pcb-route2.webp" alt="PCB placement and routing in KiCad"><figcaption>Fig. 9 · Placement and routing.</figcaption></figure>
+      <figure class="proj-wide"><img src="img/pcb-ground.webp" alt="Ground pour across the board with a close-up of thermal relief pads"><figcaption>Fig. 10 · Ground pour and thermal reliefs.</figcaption></figure>
+      <figure class="proj-wide"><img src="img/pcb-renders.webp" alt="3D renders of the top and bottom of the PCB"><figcaption>Fig. 11 · Board renders, top and bottom.</figcaption></figure>
+    </section>
+
+    <section class="proj-ch" id="led-7">
+      <h2><span>7</span> Thermal: does the buck converter need a heatsink?</h2>
+      <p>The LM2596 module’s manufacturer notes say no heatsink is needed below 2 A. Our load is far below that, but I wanted to verify the claim myself before sealing the module inside a plastic enclosure.</p>
+      <div class="proj-grid">
+        <div>
+          <div class="proj-calc">Loads on the 5 V output: display 0.12 A + ESP32 DevKit 0.25 A = <b>0.37 A</b><br>P<sub>out</sub> = 5 V × 0.37 A = <b>1.85 W</b><br>Measured efficiency at 0.37 A (load sweep at 12 V): <b>79%</b><br>P<sub>in</sub> = 1.85 / 0.79 = <b>2.34 W</b> → heat Q = <b>0.49 W</b></div>
+          <div class="proj-why"><p class="q">The model</p><p>A steady-state thermal resistance network from the IC to ambient, with an upward convective path and a downward path through the PCB. Each interface is a resistance (for example, convection from the top of the IC: R = 1/(hA) with h = 7 W/m²·K for still air), combined into an equivalent R<sub>eq</sub> ≈ 130 °C/W.</p></div>
+          <div class="proj-why"><p class="q">Assumptions, all chosen to be conservative</p><p>All heat comes from the one IC (no I²R losses elsewhere), the IC is at a uniform temperature, and radiation is ignored. Each assumption overestimates temperature, so if this passes, the real part passes.</p></div>
+          <div class="proj-calc">ΔT = Q × R<sub>eq</sub> = 0.49 × 130 = <b>63.9 °C</b><br>T<sub>IC</sub> = 20 + 63.9 = <b>83.9 °C</b>, below the 125 °C datasheet maximum<br>→ <b>no heatsink required</b></div>
+        </div>
+        <div class="proj-figs">
+          <figure><img src="img/buck-test.webp" alt="LM2596 load sweep and power calculations"><figcaption>Fig. 12 · Load sweep and power balance.</figcaption></figure>
+          <figure><img src="img/thermal-model.webp" alt="Simplified thermal model with upward and downward heat paths"><figcaption>Fig. 13 · Thermal model.</figcaption></figure>
+          <figure><img src="img/thermal-calc.webp" alt="Thermal resistance network and final temperature calculation"><figcaption>Fig. 14 · Resistance network and result.</figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="proj-ch" id="led-8">
+      <h2><span>8</span> Enclosure</h2>
+      <div class="proj-scroll"><table class="proj-mtx">
+        <thead><tr><th>Parameter</th><th>Prototype (built)</th><th>Production (planned)</th></tr></thead>
+        <tbody>
+          <tr><td>Process</td><td>SLA 3D printing for fast iteration</td><td>Injection moulding for tolerance control and volume</td></tr>
+          <tr><td>Material</td><td>Formlabs Tough 1500, designed for repeated flexing</td><td>PC/ABS blend for strength and impact resistance</td></tr>
+          <tr><td>Closure</td><td>External snap-fits, tool-free</td><td>Screws, so it survives drops</td></tr>
+          <tr><td>Optimised for</td><td>Serviceability: easy to open, debug and replace the fuse</td><td>Durability and security; no snap-hook undercuts, so cheaper tooling</td></tr>
+        </tbody>
+      </table></div>
+      <div class="proj-decisions">
+        <div class="proj-why"><p class="q">Why SLA and Tough 1500 now?</p><p>The first builds will be opened often for testing and fuse changes. SLA gives good dimensional accuracy for snap-fits in a day, and Tough 1500 is formulated for parts that flex repeatedly without cracking.</p></div>
+        <div class="proj-why"><p class="q">Why design for moulding from the start?</p><p>I used draft angles, uniform wall thickness and ribs instead of thick sections, so the move to injection moulding won’t need a redesign. The rib under the PCB uses the same wall thickness as the outer perimeter to avoid sink marks.</p></div>
+        <div class="proj-why"><p class="q">Features and why they’re there</p><p>A rib stops the PCB flexing when buttons are pressed (protecting the solder joints). Bosses locate and mount the PCB, and ribs with 1° draft set its height. Walls guide the slider caps, slots align the keycaps, and display mounting bosses set the screen flush with the top face.</p></div>
+      </div>
+      <div class="proj-grid">
+        <div>
+          <div class="proj-calc"><b>Snap-fit check</b> (cantilever with a step in cross-section)<br>Required deflection at the tip: 0.5 mm<br>I<sub>slender</sub> = bh³/12 = 6 × 1.3³ / 12 = 1.0985 mm⁴ (A to B, 4 mm)<br>I<sub>wide</sub> = 18 × 1.3³ / 12 = 3.2955 mm⁴ (B to C, 2 mm)<br>L/I<sub>eq</sub> = 4/1.0985 + 2/3.2955 → I<sub>eq</sub> = 1.412 mm⁴<br>F = 3δEI/L³ = 0.5 × 3 × 1370 × 1.412 / 6³ = <b>13.45 N</b><br>σ<sub>B</sub> = My/I = (13.45 × 4)(0.65)/1.0985 = <b>31.85 MPa</b><br>σ<sub>C</sub> = (13.45 × 6)(0.65)/3.2955 = 15.9 MPa<br>Flexural yield (Tough 1500 V2) = 41 MPa → <b>FoS ≈ 1.29</b></div>
+          <div class="proj-why"><p class="q">Why accept a factor of safety of 1.29?</p><p>It’s a prototype, and the method is conservative: it ignores deflection above C, which overestimates stress. The fillet is a stress concentration, so I documented that the geometry gets revised if any yielding appears. Production moves to screws anyway.</p></div>
+        </div>
+        <div class="proj-figs">
+          <figure><img src="img/led-exploded.webp" alt="Exploded view of the enclosure, PCBA and display"><figcaption>Fig. 15 · Exploded assembly.</figcaption></figure>
+          <figure><img src="img/led-snapfit.webp" alt="Close-up of the snap-fit hook"><figcaption>Fig. 16 · Snap-fit.</figcaption></figure>
+        </div>
+      </div>
+      <figure class="proj-wide"><img src="img/encl-features.webp" alt="Annotated top and bottom covers of the enclosure"><figcaption>Fig. 17 · Enclosure features, annotated.</figcaption></figure>
+    </section>
+
+    <section class="proj-ch" id="led-9">
+      <h2><span>9</span> Firmware</h2>
+      <p>The main loop reads the buttons, reads and filters the sliders, and only pushes a new colour to the strips when something has actually changed.</p>
+      <div class="proj-decisions">
+        <div class="proj-why"><p class="q">Debouncing (40 ms)</p><p>Mechanical buttons bounce for several milliseconds. Toggling a strip only after the state has held for 40 ms prevents one press from counting several times.</p></div>
+        <div class="proj-why"><p class="q">Median-of-3, then an exponential moving average</p><p>The median removes single-sample spikes from the noisy ADC, and the EMA (weight 2/10) smooths what’s left while still responding quickly to a real slider move. Readings are mapped from 12-bit to 8-bit and inverted to match the slider direction.</p></div>
+        <div class="proj-why"><p class="q">Hysteresis before updating the LEDs</p><p>The strips only update when a value changes by more than a threshold. Otherwise the last bit of ADC noise would make colours shimmer and rewrite every pixel for no reason.</p></div>
+        <div class="proj-why"><p class="q">Brightness as a scale factor</p><p>Brightness multiplies all four channels (bf = Br/255), so dimming keeps the colour’s hue instead of washing it out. Selected strips are written as GRBW frames with NeoPixelBus.</p></div>
+      </div>
+      <figure class="proj-wide"><img src="img/firmware-flow.webp" alt="Firmware flowchart: setup, loop, button debounce, slider filtering, brightness factor, hysteresis check, LED and display updates"><figcaption>Fig. 18 · Firmware flow.</figcaption></figure>
+    </section>
+
+    <section class="proj-ch" id="led-10">
+      <h2><span>10</span> Result</h2>
+      <p>The studio has a standalone controller that designers run without engineering support. Each unit drives six times more LEDs than the off-the-shelf controllers it replaced. I handed off the first builds with an SOP and documentation so the team can keep building and maintaining them.</p>
+      <p><b>Next steps.</b> Move the enclosure to injection-moulded PC/ABS with screw closure, and bring back Rev A’s full channel count once parts lead time is no longer the constraint.</p>
+    </section>
+
+    <footer class="proj-skills"><p>Skills from this project</p><ul><li>Requirements scoping</li><li>Weighted decision matrices</li><li>Schematic design</li><li>2-layer PCB design (KiCad)</li><li>Level shifting and signal integrity</li><li>Fuse and power design</li><li>Thermal resistance modelling</li><li>Snap-fit design</li><li>DFM for injection moulding</li><li>Embedded C++ (ESP32)</li><li>Hand soldering and bring-up</li></ul></footer>
+  </article>
+
+  <article class="proj-sheet" data-proj="level" data-crumb="Level Home · Product Design Engineering Intern · Winter 2026" hidden>
+    <header class="proj-head">
+      <p class="proj-kicker">Project notebook</p>
+      <h1>Smart lock hardware at Level</h1>
+      <p class="proj-lede">Four months on a smart lock going through validation: replacing a failing sensor with magnets, building test fixtures that survive a climate chamber, and chasing tolerances until the bolt stopped binding.</p>
+      <dl class="proj-stats">
+        <div><dt>$12M</dt><dd>projected savings from the sensor swap</dd></div>
+        <div><dt>973 : 1</dt><dd>signal-to-noise in the magnetometer test</dd></div>
+        <div><dt>2M+</dt><dd>validation cycles on my fixture</dd></div>
+        <div><dt>5M+</dt><dd>cycles of life testing, factor of safety 8</dd></div>
+      </dl>
+    </header>
+    <section class="proj-ch">
+      <h2><span>01</span> A flex cable kept failing, so I replaced it with a magnet</h2>
+      <div class="proj-grid">
+        <div>
+          <p class="proj-did"><b>The need.</b> An accelerometer flex inside the lock kept failing during cycle testing because of its FPCA stack-up. Instead of patching the flex, I asked whether we needed it at all: a magnet on the throw arm and two magnetometers could tell us where the bolt is.</p>
+          <p class="proj-did"><b>What I did.</b> Designed the experiment: mount the lock with two magnetometers, put a magnet on the throw-arm base, record raw XYZ readings fully retracted and fully thrown, then cycle the bolt while logging. I modified a part so the sense-flex would sit correctly, wired the main board to a PC through a debugger, and worked with firmware on a program that read both sensors at once.</p>
+          <div class="proj-calc"><b>Static test</b><br>Thrown mean 4.319 · std 0.0023<br>Retracted mean 1.785 · std 0.0029<br>Difference 2.534 · average noise 0.0026<br>Signal-to-noise ≈ <b>973</b></div>
+          <p class="proj-learn"><b>What I had to learn.</b> How to design a clean proof-of-concept experiment, and how to make the case for a design change with data instead of opinion.</p>
+          <p class="proj-res"><b>Result.</b> The concept held up. Swapping two accelerometers and their FPCAs for magnetometers and insert-moulded magnets cut <b>$12 per unit</b>, about <b>$12M</b> in projected savings.</p>
+        </div>
+        <div class="proj-figs">
+          <figure><img src="img/mag-puck.webp" alt="CAD of the lock mechanism with the magnet on the throw arm"><figcaption>Magnet on the throw arm.</figcaption></figure>
+          <figure><img src="img/mag-setup.webp" alt="Bench test setup with a debugger and a magnetometer board wired to the lock"><figcaption>The test bench.</figcaption></figure>
+        </div>
+      </div>
+    </section>
+    <section class="proj-ch">
+      <h2><span>02</span> A test fixture that survives the climate chamber</h2>
+      <div class="proj-grid">
+        <div>
+          <p class="proj-did"><b>V1.</b> Started from the previous build’s capacitive-touch fixture and redesigned the geometry for the new form factor. Solenoids press the keypad automatically, over and over.</p>
+          <p class="proj-did"><b>V2.</b> Then it also had to survive environmental testing from <b>−22 °C to 66 °C</b> and physically fit inside the chamber. V2 is smaller and holds the solenoids by their own mounting holes, so the lid is gone, along with the wires that used to catch in the springs.</p>
+          <p class="proj-res"><b>Result.</b> I designed the fixture and its PCBA, and worked with EE and firmware to resolve <b>14 issues across 2M+ validation cycles</b>, reaching 100% functional success during EVT.</p>
+        </div>
+        <div class="proj-figs">
+          <figure><img src="img/fx-v1.webp" alt="Version 1 of the capacitive-touch test fixture"><figcaption>V1</figcaption></figure>
+          <figure><img src="img/fx-v2.webp" alt="Version 2 of the fixture, redesigned for the climate chamber"><figcaption>V2, chamber-ready</figcaption></figure>
+        </div>
+      </div>
+    </section>
+    <section class="proj-ch">
+      <h2><span>03</span> Making the bolt stop binding</h2>
+      <div class="proj-grid">
+        <div>
+          <p class="proj-did"><b>The need.</b> The bolt was binding in cycle testing.</p>
+          <p class="proj-did"><b>What I did.</b> Ran tolerance stack-ups through the mechanism, defined datums to the bolt’s travel path, and tightened the tolerances that actually mattered.</p>
+          <p class="proj-learn"><b>What I had to learn.</b> A lot of GD&amp;T, and how to run a tolerance analysis that points at the real culprit instead of tightening everything.</p>
+          <p class="proj-res"><b>Result.</b> Actuation-force variability down <b>25%</b> and mechanism pass rate up <b>15%</b>, before production.</p>
+        </div>
+        <figure><img src="img/tol-stack.webp" alt="Cross-section used for a tolerance stack-up"><figcaption>One of the stack-ups.</figcaption></figure>
+      </div>
+    </section>
+    <section class="proj-ch">
+      <h2><span>04</span> Life testing, DFM and the rest</h2>
+      <div class="proj-grid">
+        <div>
+          <p class="proj-did"><b>Cycle testing.</b> Tracked and cycled 12 lock subassemblies for 2.5 months, past 5 million cycles (a factor of safety of 8), and logged every failure.</p>
+          <p class="proj-did"><b>DFM.</b> Led DFM on 20+ plastic and metal injection-moulded and die-cast parts. In supplier tooling reviews I moved parting lines and gates off cosmetic surfaces, eliminating cosmetic defects and cutting tooling cost 8% without changing the industrial design.</p>
+          <p class="proj-did"><b>Also.</b> Redesigned a debug-board fixture and made production 2D drawings for magnets, bushings, die-cuts and moulded parts.</p>
+          <p class="proj-learn"><b>What I took away.</b> GD&amp;T, tolerance analysis, DFM, and what you learn from taking apart and reassembling every subassembly in the lock.</p>
+        </div>
+        <div class="proj-figs">
+          <figure><img src="img/cycle-fail.webp" alt="Photos of a subassembly failure found during cycle testing"><figcaption>A failure caught at 3.7M cycles.</figcaption></figure>
+          <figure><img src="img/dfm-cover.webp" alt="An injection-moulded cover reworked for manufacturability"><figcaption>A moulded part after DFM.</figcaption></figure>
+        </div>
+      </div>
+    </section>
+    <footer class="proj-skills"><p>Skills from this term</p><ul><li>Design of experiments</li><li>Sensor validation</li><li>Test fixture design</li><li>GD&amp;T</li><li>Tolerance stack-ups</li><li>DFM for moulding and die-casting</li><li>Reliability testing</li><li>Production drawings</li></ul></footer>
+  </article>
+
+  <article class="proj-sheet" data-proj="geotab" data-crumb="Geotab · System Verification Intern · Summer 2024" hidden>
+    <header class="proj-head">
+      <p class="proj-kicker">Project notebook</p>
+      <h1>Dashcams at Geotab</h1>
+      <p class="proj-lede">A mechanical engineer on a verification team: I built a test rack to keep dashcams at temperature, then taught myself computer vision for a hackathon and won it.</p>
+      <dl class="proj-stats">
+        <div><dt>1st / 11</dt><dd>Intern Innovation Challenge</dd></div>
+        <div><dt>72%</dt><dd>obstacle detection, 6% false positives</dd></div>
+        <div><dt>26 °C</dt><dd>held by my closed-loop test rack</dd></div>
+        <div><dt>32.4 t</dt><dd>CO₂ cut per year</dd></div>
+      </dl>
+    </header>
+    <section class="proj-ch">
+      <h2><span>01</span> Learning computer vision in a week</h2>
+      <p class="proj-did"><b>The need.</b> Geotab’s 10th Intern Innovation Challenge asked teams to build a video telematics solution with AI and machine learning. I came from mechanical engineering and had never trained a model.</p>
+      <p class="proj-learn"><b>What I had to learn.</b> Everything. I spent two days learning how to train computer vision models, five days building a working one, and the last three polishing it with my team.</p>
+      <p class="proj-did"><b>What I did.</b> I owned the code and video pipeline. We built two models: in-cabin monitoring and front-facing object detection. I trained the in-cabin model to recognise distracted driving (adjusting the radio, drinking, talking) versus attentive driving, with PII blurring, and my teammates built a driver-scoring system on top of it.</p>
+      <p class="proj-res"><b>Result.</b> The only fully working model in the competition, and <b>1st place out of 11 teams</b>. It showed me how fast I can pick up something completely new when it matters.</p>
+    </section>
+    <section class="proj-ch">
+      <h2><span>02</span> The day job: a rack that keeps dashcams at temperature</h2>
+      <p class="proj-did"><b>What I did.</b> Designed a closed-loop, air-cooled test rack for dashcam testing: 3D-printed mounts and low-cost PC fans in a modular plastic enclosure, holding the cameras at <b>26 °C</b>.</p>
+      <p class="proj-res"><b>Result.</b> I also moved AI dashcam testing onto historical feed data, cutting <b>32.4 tonnes of CO₂</b> a year.</p>
+    </section>
+    <footer class="proj-skills"><p>Skills from this term</p><ul><li>Computer vision (Python)</li><li>Model training</li><li>Closed-loop thermal control</li><li>Test rack design</li><li>3D printing</li><li>Learning fast</li></ul></footer>
+  </article>
+
+  <article class="proj-sheet" data-proj="google" data-crumb="Google · Product Design Engineering Intern, Pixel Hardware · Summer 2026" hidden>
+    <header class="proj-head">
+      <p class="proj-kicker">Project notebook</p>
+      <h1>Pixel Watch at Google</h1>
+      <p class="proj-lede">Display glass and validation for the Pixel Watch: getting the glass geometry right, and finding ways to test that don’t destroy expensive prototypes.</p>
+      <dl class="proj-stats">
+        <div><dt>$20K+</dt><dd>in prototypes saved by one drop test</dd></div>
+        <div><dt>$15K</dt><dd>vendor testing saved</dd></div>
+        <div><dt>15</dt><dd>prototypes no longer destroyed per test cycle</dd></div>
+        <div><dt>4</dt><dd>global suppliers on one strain jig</dd></div>
+      </dl>
+    </header>
+    <section class="proj-ch">
+      <h2><span>01</span> What I worked on</h2>
+      <p class="proj-did"><b>Display glass.</b> Owned the design and validation of the screen geometry for precision-moulded glass. I used prototype testing and supplier DFM to eliminate optical distortion while meeting wall-thickness and draft limits.</p>
+      <p class="proj-did"><b>Seal testing without full watches.</b> Developed a production-representative test coupon and fixture that recreates the titanium-to-resin interface, so seal failures can be root-caused without complete watch builds. Saved $15K in vendor testing.</p>
+      <p class="proj-did"><b>A drop test that keeps the prototypes.</b> Developed an installed-condition drop test to validate the dynamic FEA of a preloaded, glass-filled plastic baffle, instead of destroying 15 low-volume prototypes per cycle. Saved $20K+.</p>
+      <p class="proj-did"><b>One jig for everyone.</b> Engineered a universal strain-test jig for resin dogbone specimens, with a mathematically derived elliptical profile and tool-free clamping, standardising 2% strain testing across 4 global suppliers.</p>
+    </section>
+    <footer class="proj-skills"><p>Skills from this term</p><ul><li>Precision-moulded glass</li><li>Supplier DFM</li><li>Test method development</li><li>FEA validation</li><li>Fixture design</li></ul></footer>
+  </article>
+
+  <article class="proj-sheet" data-proj="teslacells" data-crumb="Tesla · Mechanical Design Engineering Intern, Cell Equipment · Winter 2025" hidden>
+    <header class="proj-head">
+      <p class="proj-kicker">Project notebook</p>
+      <h1>Battery cell equipment at Tesla</h1>
+      <p class="proj-lede">Mechanical, electrical and controls design for equipment that handles battery foil, where a tenth of a millimetre matters.</p>
+      <dl class="proj-stats">
+        <div><dt>0.1 mm</dt><dd>clearance held by the clamp</dd></div>
+        <div><dt>30 s → 5 s</dt><dd>clamp setup time</dd></div>
+        <div><dt>−50%</dt><dd>foil wrinkling and creasing</dd></div>
+        <div><dt>±2%</dt><dd>nip force under dynamic load</dd></div>
+      </dl>
+    </header>
+    <section class="proj-ch">
+      <h2><span>01</span> What I worked on</h2>
+      <p class="proj-did"><b>Magnetic clamping for lamination.</b> Designed a high-temperature magnetic clamping assembly that holds 0.1 mm clearance through tolerance stack-ups and a vibration-resistant design. Yield went up 15% and setup time dropped from 30 to 5 seconds.</p>
+      <p class="proj-did"><b>Foil stretching machine.</b> Led the mechanical, electrical and controls design of a modular foil-stretching machine with load-cell tension control, halving wrinkling and creasing failures.</p>
+      <p class="proj-did"><b>Closed-loop control box.</b> Designed and built the control box (Arduino, load cell, amplifier and signal conditioner) for closed-loop pneumatic control of the nip rollers, holding force within ±2% of target under dynamic loading.</p>
+    </section>
+    <footer class="proj-skills"><p>Skills from this term</p><ul><li>Tolerance stack-ups</li><li>Magnetic fixturing</li><li>Closed-loop controls</li><li>Load cells and signal conditioning</li><li>Pneumatics</li></ul></footer>
+  </article>
+
+  <article class="proj-sheet" data-proj="valbruna" data-crumb="Valbruna ASW · Mechanical Engineering Co-op · Fall 2023" hidden>
+    <header class="proj-head">
+      <p class="proj-kicker">Project notebook</p>
+      <h1>A steel mill in Welland</h1>
+      <p class="proj-lede">My second co-op, in a mill that has been making specialty steel since 1918.</p>
+      <dl class="proj-stats"><div><dt>$900K</dt><dd>potential scrap losses found with CFD</dd></div><div><dt>$45K</dt><dd>saved per fan enclosure</dd></div><div><dt>100,000</dt><dd>CFM fan, brought to code</dd></div><div><dt>CFD</dt><dd>my first real simulation work</dd></div></dl>
+    </header>
+    <section class="proj-ch">
+      <h2><span>01</span> What I worked on</h2>
+      <p class="proj-did"><b>Furnace CFD.</b> Modelled scrap melting in an electric arc furnace in ANSYS Fluent and identified thermal inefficiencies worth $900K CAD in potential scrap losses.</p>
+      <p class="proj-did"><b>Reverse engineering.</b> Reverse-engineered arc furnace parts in SolidWorks, with GD&amp;T capturing the original design intent.</p>
+      <p class="proj-did"><b>Fan enclosure.</b> Redesigned a 100,000 CFM fan enclosure to comply with the Ontario Building Code, saving $45K CAD per unit.</p>
+    </section>
+    <footer class="proj-skills"><p>Skills from this term</p><ul><li>CFD (ANSYS Fluent)</li><li>SolidWorks</li><li>GD&amp;T</li><li>Reverse engineering</li><li>Code compliance</li></ul></footer>
+  </article>
+
+  <article class="proj-sheet" data-proj="evercloak" data-crumb="Evercloak · Mechanical Engineering Co-op · Winter 2023" hidden>
+    <header class="proj-head">
+      <p class="proj-kicker">Project notebook</p>
+      <h1>My first co-op, at Evercloak</h1>
+      <p class="proj-lede">A Kitchener cleantech startup building membrane-based dehumidification. My first time designing something meant to be manufactured by someone else.</p>
+      <dl class="proj-stats"><div><dt>+40%</dt><dd>dehumidification performance</dd></div><div><dt>DFMA</dt><dd>first enclosure for off-site manufacturing</dd></div></dl>
+    </header>
+    <section class="proj-ch">
+      <h2><span>01</span> What I worked on</h2>
+      <p class="proj-did"><b>Prototype enclosure.</b> Designed a prototype dehumidifier enclosure with DFMA principles, and made CAD models and GD&amp;T drawings that ensured sealing and enabled off-site manufacturing.</p>
+      <p class="proj-did"><b>Membrane testing.</b> Improved dehumidification performance 40% through membrane material selection, designing custom tests for absorption, evaporation rate and elongation.</p>
+    </section>
+    <footer class="proj-skills"><p>Skills from this term</p><ul><li>DFMA</li><li>GD&amp;T drawings</li><li>Material selection</li><li>Test design</li></ul></footer>
+  </article>
+
+  <article class="proj-sheet" data-proj="waterloo" data-crumb="University of Waterloo · First-year design courses" hidden>
+    <header class="proj-head">
+      <p class="proj-kicker">Project notebook</p>
+      <h1>First-year builds</h1>
+      <p class="proj-lede">The two design-course projects where it started: a wind-up toy and a cake-frosting robot.</p>
+      <dl class="proj-stats"><div><dt>98%</dt><dd>FrostBot icing accuracy</dd></div><div><dt>100</dt><dd>trials</dd></div><div><dt>$50</dt><dd>toy budget per prototype</dd></div></dl>
+    </header>
+    <section class="proj-ch">
+      <h2><span>01</span> ME101 · FrostBot (Summer 2023)</h2>
+      <p class="proj-did"><b>What we built.</b> A robot that ices circular desserts in under three minutes. A worm drive pushes a piston through a hopper, a motor spins the plate, and an EV3 brick runs it all with gyro and touch-sensor feedback. The user enters the dessert’s radius.</p>
+      <p class="proj-learn"><b>What I had to learn.</b> The full loop: needs analysis, mechanical design, firmware and testing. We found LEGO gears couldn’t push real icing without fatigue, so we switched to dyed CoolWhip.</p>
+      <p class="proj-res"><b>Result.</b> <b>98% accuracy</b> across 100 trials on desserts from 5 to 30 cm radius, measured as the share of icing landing inside the target circle.</p>
+    </section>
+    <section class="proj-ch">
+      <h2><span>02</span> ME100 · Wind-up soccer toy (Fall 2022)</h2>
+      <p class="proj-did"><b>What we built.</b> A portable alternative to foosball for kids aged 6 to 12: a cam-and-follower kicker in a laser-cut wooden enclosure with an acrylic leg, on a $50 budget per prototype.</p>
+      <p class="proj-learn"><b>What I had to learn.</b> The engineering design process end to end, plus soldering and simple circuits to drive a mechanism with a small motor.</p>
+    </section>
+    <footer class="proj-skills"><p>Skills from these courses</p><ul><li>Design process</li><li>Mechanisms</li><li>Laser cutting</li><li>EV3 programming</li><li>Testing</li></ul></footer>
+  </article>
+</section>
+
+<div id="world-ui" hidden>
+  <canvas id="world-cv" aria-label="Jillanne's world. Use the arrow keys or WASD to walk, E to open, M for the map, or tap anywhere to walk there."></canvas>
+  <div id="world-labels"></div>
+  <button id="world-prompt" type="button" hidden></button>
+  <div id="world-card" hidden></div>
+  <div id="tod" role="group" aria-label="Time of day"><button type="button" data-p="auto" aria-pressed="true">Auto</button><button type="button" data-p="dawn" aria-pressed="false">Sunrise</button><button type="button" data-p="day" aria-pressed="false">Day</button><button type="button" data-p="dusk" aria-pressed="false">Sunset</button><button type="button" data-p="night" aria-pressed="false">Night</button></div>
+  <div id="bigmap" hidden><div class="bm-in" role="dialog" aria-label="World map"><button type="button" class="bm-close" aria-label="Close map">✕</button><p class="bm-title">Where to?</p><div class="bm-frame"><canvas id="bigmap-img" aria-label="Map of the world"></canvas><div class="bm-pins"></div></div></div></div>
+  <nav id="world-bar" aria-label="World navigation">
+    <div class="bar-box mini-wrap" title="Open the map" role="button" tabindex="0" aria-label="Open the map"><canvas id="minimap" aria-label="Minimap. Click to open the full map."></canvas></div>
+    <div class="side"><button class="b" type="button" id="map-toggle">Map</button><button class="b" type="button" id="go-home">Home</button><button class="b facts" type="button" id="go-facts">Just the facts</button><button class="b contact" type="button" id="go-contact">Contact</button></div>
+    <div class="bar-box tour"><span id="tour-pos">Guided tour</span><div><button class="b" type="button" id="tour-prev">Back</button><button class="b primary" type="button" id="tour-next">Start tour</button></div></div>
+  </nav>
+</div>
+<div class="fade" id="fade"></div>
+
+<script>
+(() => {
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ============ time of day palette ============ */
+const PAL = {
+  day:   {sky:['#7fb8e6','#a9d3f0','#cfe7f5'], far:'#9cc7b4', near:'#7fb78f', grass:'#8fca7c', grass2:'#7ab86a', grass3:'#a6d68f', road:'#e8d3a6', road2:'#d9bf8c', trunk:'#8a6244', leaf:'#5e9e5a', leaf2:'#79b86f', wall:'#e9cfa6', wall2:'#d6b88b', roof:'#c9705a', roof2:'#de8a70', win:'#bfe0ef', lamp:'#5b4a3c', glow:0, cloud:'#ffffff', star:0, sun:'#fff3c4'},
+  dusk:  {sky:['#5b5f9e','#d98a8f','#f4c18a'], far:'#7f7aa0', near:'#6b7f86', grass:'#6e9a6a', grass2:'#5e8a5c', grass3:'#82aa74', road:'#d8b98e', road2:'#c3a077', trunk:'#6e4c38', leaf:'#4c7a54', leaf2:'#5f8f62', wall:'#d9b48f', wall2:'#c19a76', roof:'#a85a4c', roof2:'#bf6d5c', win:'#ffd98a', lamp:'#4a3c32', glow:.6, cloud:'#f6c9b8', star:.2, sun:'#ffd2a1'},
+  night: {sky:['#141a36','#1f2a50','#2d3b66'], far:'#253255', near:'#22334a', grass:'#2f4a45', grass2:'#283f3b', grass3:'#365550', road:'#7c7a7e', road2:'#69676d', trunk:'#3a2c26', leaf:'#22403a', leaf2:'#2b4d44', wall:'#6b5c58', wall2:'#5a4c49', roof:'#4f3438', roof2:'#5e3e42', win:'#ffcf6e', lamp:'#2c2a30', glow:1, cloud:'#3a4670', star:1, sun:'#f2f0dc'},
+  dawn:  {sky:['#6d86c4','#e7a6a0','#f6d6a6'], far:'#93a3b8', near:'#7e9b8e', grass:'#7cae74', grass2:'#6a9c66', grass3:'#90bf84', road:'#e2c79c', road2:'#ceb084', trunk:'#7a5640', leaf:'#548c58', leaf2:'#6aa168', wall:'#e2c4a0', wall2:'#cdac86', roof:'#bb6656', roof2:'#cf7c68', win:'#ffe3a6', lamp:'#52443a', glow:.3, cloud:'#ffe1d2', star:0, sun:'#ffe2b0'}
+};
+const hr = new Date().getHours();
+const phase = hr >= 20 || hr < 5 ? 'night' : hr < 7 ? 'dawn' : hr < 17 ? 'day' : 'dusk';
+const C = PAL[phase];
+let titleOn = true;
+document.documentElement.style.background = C.sky[1]; document.body.style.background = C.sky[1];
+
+/* ============ world ============ */
+const cv = document.getElementById('world'), g = cv.getContext('2d');
+let S = 4, W = 0, H = 0, t0 = performance.now(), cam = 0, last = t0;
+function resize() {
+  S = Math.max(3, Math.round(innerHeight / 190));
+  W = Math.ceil(innerWidth / S); H = Math.ceil(innerHeight / S);
+  cv.width = W; cv.height = H; g.imageSmoothingEnabled = false;
+}
+addEventListener('resize', () => { resize(); buildLayers(); }); resize();
+const R = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(Math.round(x), Math.round(y), w, h); };
+const rnd = s => { const x = Math.sin(s * 127.1) * 43758.5453; return x - Math.floor(x); };
+
+const L = 1400;               // world loop length in px
+const stars = Array.from({length: 90}, (_, i) => [rnd(i + 1) * 2000, rnd(i + 50) * 0.45, rnd(i + 99)]);
+const clouds = Array.from({length: 7}, (_, i) => [rnd(i + 7) * 1600, 10 + rnd(i + 3) * 40, 14 + Math.floor(rnd(i + 11) * 18)]);
+
+function sky() {
+  const bands = 18, h = H * .62;
+  for (let i = 0; i < bands; i++) {
+    const tt = i / (bands - 1), c = tt < .5 ? mix(C.sky[0], C.sky[1], tt * 2) : mix(C.sky[1], C.sky[2], (tt - .5) * 2);
+    R(0, Math.floor(h * i / bands), W, Math.ceil(h / bands) + 1, c);
+  }
+  R(0, h, W, H - h, C.sky[2]);
+  if (C.star) stars.forEach(([x, y, b]) => { const sx = Math.floor(((x - Math.floor(cam * .05)) % W + W) % W); const tw = (Math.sin(performance.now() / 600 + b * 20) + 1) / 2; if (tw > .25 || reduce) R(sx, y * H, 1, 1, b > .8 ? '#ffffff' : '#c9d3f2'); });
+  // sun / moon
+  const sx = W * .78, sy = phase === 'day' ? H * .14 : phase === 'night' ? H * .12 : H * .42;
+  disc(sx, sy, phase === 'night' ? 7 : 9, C.sun);
+  if (phase === 'night') disc(sx + 3, sy - 2, 6, C.sky[0]);
+}
+function disc(cx, cy, r, c) { for (let y = -r; y <= r; y++) { const w = Math.round(Math.sqrt(r * r - y * y)); R(cx - w, cy + y, w * 2, 1, c); } }
+function mix(a, b, t) { const p = s => [1, 3, 5].map(i => parseInt(s.slice(i, i + 2), 16)); const A = p(a), B = p(b); return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, '0')).join(''); }
+
+function cloudsDraw() {
+  clouds.forEach(([x, y, w]) => {
+    const sx = Math.floor(((x - cam * .15 - (performance.now() / 400)) % (W + 80) + W + 80) % (W + 80)) - 40;
+    R(sx, y, w, 4, C.cloud); R(sx + 3, y - 3, w - 8, 3, C.cloud); R(sx + 6, y - 5, w - 14, 2, C.cloud);
+  });
+}
+const LW = 1024; const layers = {};
+function makeLayer(key, base, amp, col, seed) {
+  const c = document.createElement('canvas'); c.width = LW; c.height = H; const x2 = c.getContext('2d');
+  x2.fillStyle = col; const TAU = Math.PI * 2;
+  for (let x = 0; x < LW; x++) {
+    const a = TAU * x / LW;
+    const h = Math.sin(a * 3 + seed) * amp + Math.sin(a * 7 + seed * 2) * amp * .5 + Math.sin(a * 13 + seed * 3) * amp * .2;
+    const top = Math.round(base - h); x2.fillRect(x, top, 1, H - top);
+  }
+  layers[key] = c;
+}
+function makeGround(gy) {
+  const c = document.createElement('canvas'); c.width = LW; c.height = H; const x2 = c.getContext('2d');
+  const top = Math.round(H * .70);
+  x2.fillStyle = C.grass; x2.fillRect(0, top, LW, H - top);
+  for (let x = 0; x < LW; x++) {
+    if (rnd(x) > .82) { x2.fillStyle = C.grass2; x2.fillRect(x, top + Math.floor(rnd(x + 3) * (gy - top - 3)), 1, 1); }
+    if (rnd(x + 9) > .9) { x2.fillStyle = C.grass3; x2.fillRect(x, gy + 10 + Math.floor(rnd(x + 4) * (H - gy - 10)), 1, 1); }
+  }
+  x2.fillStyle = C.road; x2.fillRect(0, gy, LW, 9); x2.fillStyle = C.road2; x2.fillRect(0, gy, LW, 1);
+  for (let x = 0; x < LW; x += 6) x2.fillRect(x, gy + 4, 3, 1);
+  for (let i = 0; i < 70; i++) { x2.fillStyle = ['#f6d36b', '#f2a0a8', '#ffffff', '#c9a0e8'][i % 4]; x2.fillRect(Math.floor(rnd(i + 200) * LW), gy + 12 + Math.floor(rnd(i + 300) * (H - gy - 14)), 1, 1); }
+  layers.ground = c;
+}
+function buildLayers() { const gy = Math.round(H * .80); makeLayer('far', H * .60, 10, C.far, 1); makeLayer('near', H * .67, 7, C.near, 4); makeGround(gy); }
+function drawLayer(key, par, camI) { const c = layers[key]; const off = ((Math.round(camI * par) % LW) + LW) % LW; for (let x = -off; x < W; x += LW) g.drawImage(c, x, 0); }
+
+/* objects placed along the world loop */
+const objs = [
+  {x: 40, k: 'tree'}, {x: 70, k: 'tree', s: 1}, {x: 140, k: 'sign', t: 'WATERLOO'}, {x: 190, k: 'lamp'},
+  {x: 250, k: 'cabin'}, {x: 330, k: 'nsx'}, {x: 372, k: 'c5'}, {x: 420, k: 'tree'}, {x: 450, k: 'tree', s: 1},
+  {x: 510, k: 'lamp'}, {x: 560, k: 'tower'}, {x: 640, k: 'tree'}, {x: 700, k: 'sign', t: 'EVERCLOAK'},
+  {x: 760, k: 'fence'}, {x: 840, k: 'lamp'}, {x: 900, k: 'workshop'}, {x: 990, k: 'tree', s: 1}, {x: 1030, k: 'tree'},
+  {x: 1090, k: 'sign', t: 'CALIFORNIA'}, {x: 1150, k: 'palm'}, {x: 1190, k: 'lamp'}, {x: 1240, k: 'mailbox'}, {x: 1300, k: 'palm'}, {x: 1350, k: 'tree'}
+];
+const flowers = Array.from({length: 80}, (_, i) => [rnd(i + 200) * L, rnd(i + 300), ['#f6d36b', '#f2a0a8', '#ffffff', '#c9a0e8'][i % 4]]);
+
+function tree(x, gy, s) { R(x + 4, gy - 9, 3, 9, C.trunk); const r = s ? 8 : 7; disc(x + 5, gy - 15, r, C.leaf); disc(x + 3, gy - 18, r - 3, C.leaf2); R(x + 1, gy - 14, 2, 1, C.leaf2); }
+function palm(x, gy) { for (let i = 0; i < 22; i++) R(x + Math.round(Math.sin(i / 7) * 2), gy - i, 2, 1, C.trunk); const tx = x + 1, ty = gy - 22; [[-8, 2], [-5, -2], [0, -4], [5, -2], [8, 2]].forEach(([dx, dy]) => { R(tx + Math.min(0, dx), ty + Math.min(0, dy), Math.abs(dx) + 1, 2, C.leaf); R(tx + dx - (dx > 0 ? 1 : 0), ty + dy + 1, 2, 2, C.leaf); }); }
+function lamp(x, gy) { R(x, gy - 18, 1, 18, C.lamp); R(x - 1, gy - 20, 3, 2, C.lamp); if (C.glow) { R(x - 1, gy - 18, 3, 1, '#ffe39a'); g.globalAlpha = .18 * C.glow; disc(x, gy - 17, 7, '#ffe39a'); g.globalAlpha = 1; } }
+function cabin(x, gy) {
+  R(x, gy - 22, 44, 22, C.wall); for (let y = gy - 20; y < gy; y += 3) R(x, y, 44, 1, C.wall2);
+  for (let i = 0; i < 12; i++) R(x - 4 + i, gy - 22 - i, 52 - i * 2, 1, i % 3 ? C.roof : C.roof2);
+  R(x + 32, gy - 36, 5, 8, C.wall2);
+  R(x + 18, gy - 13, 8, 13, C.trunk); R(x + 24, gy - 7, 1, 1, '#f3d36b');
+  R(x + 5, gy - 16, 9, 7, C.win); R(x + 30, gy - 16, 9, 7, C.win); R(x + 9, gy - 16, 1, 7, C.wall2); R(x + 34, gy - 16, 1, 7, C.wall2);
+  if (C.glow) { g.globalAlpha = .25 * C.glow; R(x + 3, gy - 18, 13, 11, '#ffcf6e'); R(x + 28, gy - 18, 13, 11, '#ffcf6e'); g.globalAlpha = 1; }
+}
+function tower(x, gy) { R(x, gy - 40, 16, 40, '#cfc4b4'); R(x - 2, gy - 44, 20, 4, '#8b7aa8'); for (let i = 0; i < 5; i++) R(x + 1 + i * 3, gy - 47, 2, 3, '#8b7aa8'); R(x + 5, gy - 34, 6, 6, C.win); R(x + 5, gy - 20, 6, 6, C.win); R(x + 5, gy - 9, 6, 9, C.trunk); }
+function workshop(x, gy) { R(x, gy - 24, 50, 24, '#b9a089'); for (let i = 0; i < 8; i++) R(x - 3 + i, gy - 24 - i, 56 - i * 2, 1, '#6f7f8f'); R(x + 6, gy - 16, 22, 16, '#8c7a66'); for (let y = gy - 15; y < gy; y += 2) R(x + 6, y, 22, 1, '#7a6956'); R(x + 34, gy - 16, 10, 7, C.win); disc(x + 25, gy - 28, 4, '#d9b24a'); disc(x + 25, gy - 28, 1, '#6f7f8f'); }
+function sign(x, gy) { R(x + 6, gy - 16, 2, 16, C.trunk); R(x, gy - 20, 18, 7, '#c79a62'); R(x + 1, gy - 19, 16, 1, '#dab17b'); R(x + 3, gy - 17, 10, 1, '#7a5232'); R(x + 3, gy - 15, 7, 1, '#7a5232'); }
+function fence(x, gy) { for (let i = 0; i < 6; i++) R(x + i * 7, gy - 8, 2, 8, '#d9c3a0'); R(x, gy - 6, 40, 1, '#d9c3a0'); R(x, gy - 3, 40, 1, '#d9c3a0'); }
+function mailbox(x, gy) { R(x + 3, gy - 9, 2, 9, C.trunk); R(x, gy - 14, 9, 6, '#3f6fb0'); R(x + 9, gy - 15, 1, 4, '#d9644a'); R(x + 10, gy - 15, 2, 2, '#d9644a'); }
+function nsx(x, gy) { // red wedge, pop-ups down
+  R(x, gy - 6, 30, 4, '#c8312c'); R(x + 2, gy - 8, 26, 2, '#c8312c'); R(x + 9, gy - 11, 12, 3, '#c8312c');
+  R(x + 10, gy - 10, 10, 2, '#1d2430'); R(x + 21, gy - 9, 4, 1, '#1d2430'); R(x, gy - 4, 30, 1, '#8f1f1c');
+  R(x + 28, gy - 7, 2, 1, '#f3f1e6'); disc(x + 6, gy - 2, 2, '#1a1a1a'); disc(x + 23, gy - 2, 2, '#1a1a1a'); R(x + 5, gy - 3, 2, 1, '#8a8a8a'); R(x + 22, gy - 3, 2, 1, '#8a8a8a');
+}
+function c5(x, gy) { R(x, gy - 6, 32, 4, '#1c1d22'); R(x + 2, gy - 8, 28, 2, '#1c1d22'); R(x + 10, gy - 11, 12, 3, '#1c1d22'); R(x + 11, gy - 10, 10, 2, '#5d7896'); R(x, gy - 4, 32, 1, '#000'); R(x + 3, gy - 7, 22, 1, '#3a3d46'); R(x + 30, gy - 7, 2, 1, '#f3f1e6'); disc(x + 6, gy - 2, 2, '#0d0d0d'); disc(x + 25, gy - 2, 2, '#0d0d0d'); R(x + 5, gy - 3, 2, 1, '#9a9a9a'); R(x + 24, gy - 3, 2, 1, '#9a9a9a'); }
+
+/* character + Moe */
+const HAIR = '#2a1a14', HAIR2 = '#4a2e22', SKIN = '#e8bfa0';
+function girl(x, gy, f) {
+  const p = (a, b, w, h, c) => R(x + a, gy - 31 + b, w, h, c);
+  p(6, 3, 12, 3, HAIR); p(5, 5, 14, 4, HAIR); p(4, 8, 4, 14, HAIR); p(16, 8, 4, 14, HAIR); p(3, 11, 3, 9, HAIR); p(18, 11, 3, 9, HAIR); p(5, 20, 3, 4, HAIR); p(16, 20, 3, 4, HAIR);
+  [[6, 4], [10, 3], [14, 4], [5, 9], [18, 9], [4, 13], [19, 13], [5, 17], [18, 17], [6, 21], [17, 21]].forEach(([a, b]) => p(a, b, 1, 1, HAIR2));
+  p(8, 7, 8, 8, SKIN);
+  p(8, 7, 3, 1, HAIR); p(13, 7, 3, 1, HAIR); p(8, 8, 1, 2, HAIR); p(15, 8, 1, 2, HAIR);
+  p(9, 9, 2, 1, '#2a1a14'); p(13, 9, 2, 1, '#2a1a14');
+  p(9, 10, 2, 2, '#ffffff'); p(13, 10, 2, 2, '#ffffff'); p(10, 10, 1, 2, '#3b2418'); p(14, 10, 1, 2, '#3b2418'); p(10, 10, 1, 1, '#6b4430'); p(14, 10, 1, 1, '#6b4430');
+  p(8, 12, 1, 1, '#f0b4a0'); p(15, 12, 1, 1, '#f0b4a0'); p(11, 13, 2, 1, '#b5605a');
+  p(10, 15, 4, 2, '#d6a886');
+  p(7, 15, 3, 3, HAIR); p(14, 15, 3, 3, HAIR); p(8, 16, 1, 1, HAIR2); p(15, 16, 1, 1, HAIR2);
+  p(3, 20, 4, 4, HAIR); p(17, 20, 4, 4, HAIR); p(4, 24, 2, 1, HAIR); p(18, 24, 2, 1, HAIR); p(3, 22, 1, 1, HAIR2); p(20, 22, 1, 1, HAIR2);
+  p(7, 17, 10, 9, '#1f2126'); p(8, 17, 8, 1, '#2c2f36'); p(10, 17, 4, 1, '#d6a886');
+  p(5, 18, 3, 3, '#1f2126'); p(16, 18, 3, 3, '#1f2126');
+  p(6, 21, 2, 5, SKIN); p(16, 21, 2, 5, SKIN); p(6, 21, 2, 1, '#d6a886'); p(16, 21, 2, 1, '#d6a886');
+  p(9, 26, 6, 3, '#4f6d8f');
+  if (f === 0) { p(9, 29, 2, 2, '#eceff1'); p(13, 29, 2, 2, '#eceff1'); }
+  else if (f === 1) { p(9, 29, 2, 1, '#4f6d8f'); p(8, 30, 3, 1, '#eceff1'); p(13, 29, 2, 2, '#eceff1'); }
+  else { p(9, 29, 2, 2, '#eceff1'); p(13, 29, 2, 1, '#4f6d8f'); p(13, 30, 3, 1, '#eceff1'); }
+}
+function moe(x, gy, f) {
+  const c = '#f6e7d4', pt = '#e9b98a';
+  R(x, gy - 7, 12, 5, c); R(x + 9, gy - 10, 6, 6, c); R(x + 9, gy - 12, 2, 2, pt); R(x + 13, gy - 12, 2, 2, pt);
+  R(x + 10, gy - 8, 4, 3, pt); R(x + 10, gy - 8, 1, 1, '#7fb3e0'); R(x + 13, gy - 8, 1, 1, '#7fb3e0');
+  R(x - 3, gy - 9 + (f ? 1 : 0), 4, 2, pt); R(x - 4, gy - 11 + (f ? 1 : 0), 2, 2, pt);
+  R(x + 1 + (f ? 1 : 0), gy - 2, 2, 2, pt); R(x + 8 - (f ? 1 : 0), gy - 2, 2, 2, pt);
+}
+
+function frame(now) {
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  if (!reduce) cam += dt * 22;
+  const gy = Math.round(H * .80);            // ground line for road objects
+  const camI = Math.floor(cam);
+  sky(); cloudsDraw();
+  drawLayer('far', .15, camI);
+  drawLayer('near', .35, camI);
+  drawLayer('ground', 1, camI);
+  const sorted = objs;
+  for (const o of sorted) {
+    for (let k = -1; k <= Math.ceil(W / L) + 1; k++) {
+      const sx = o.x + k * L - (camI % L); if (sx < -70 || sx > W + 10) continue;
+      ({tree: () => tree(sx, gy, o.s), palm: () => palm(sx, gy), lamp: () => lamp(sx, gy), cabin: () => cabin(sx, gy), tower: () => tower(sx, gy), workshop: () => workshop(sx, gy), sign: () => sign(sx, gy), fence: () => fence(sx, gy), mailbox: () => mailbox(sx, gy), nsx: () => nsx(sx, gy + 1), c5: () => c5(sx, gy + 1)})[o.k]();
+    }
+  }
+  const f = reduce ? 0 : Math.floor(now / 160) % 4, step = f === 1 ? 1 : f === 3 ? 2 : 0;
+  const px = Math.round(W * .5 - 12);
+  moe(px - 22, gy + 7, reduce ? 0 : Math.floor(now / 200) % 2);
+  girl(px, gy + 7, step);
+  if (C.glow) { g.globalAlpha = .12 * C.glow; R(0, 0, W, H, '#0b1030'); g.globalAlpha = 1; }
+  if (titleOn) requestAnimationFrame(frame);
+}
+buildLayers();
+requestAnimationFrame(frame);
+
+/* ============ menu ============ */
+const items = [...document.querySelectorAll('.menu button')];
+let sel = 0;
+function setSel(i) { sel = (i + items.length) % items.length; items.forEach((b, j) => b.setAttribute('aria-current', j === sel)); items[sel].focus({preventScroll: true}); blip(660 + sel * 110); }
+items.forEach((b, i) => { b.addEventListener('mouseenter', () => { if (sel !== i) setSel(i); }); b.addEventListener('click', () => go(b.dataset.go)); });
+addEventListener('keydown', e => {
+  if (document.getElementById('title').hidden) return;
+  if (e.key === 'ArrowDown' || e.key === 's') { e.preventDefault(); setSel(sel + 1); }
+  else if (e.key === 'ArrowUp' || e.key === 'w') { e.preventDefault(); setSel(sel - 1); }
+  else if ((e.key === 'Enter' || e.key === ' ') && document.activeElement?.closest('.menu') == null) { e.preventDefault(); go(items[sel].dataset.go); }
+});
+const fade = document.getElementById('fade');
+function go(where) {
+  if (where === 'story') { startAudio(); chime(); }
+  fade.classList.add('on');
+  setTimeout(() => {
+    document.getElementById('title').hidden = true;
+    if (where === 'story' && window.World) {
+      titleOn = false; cv.hidden = true; document.querySelector('.badge').hidden = true; window.World.start();
+    } else { titleOn = false; showFacts(); }
+    fade.classList.remove('on');
+  }, reduce ? 0 : 480);
+}
+let musicBeforeFacts = false;
+function showFacts() {
+  if (window.World) window.World.stop();
+  musicBeforeFacts = !!(AC && musicOn); if (AC && musicOn) setMusic(false);
+  const f = document.getElementById('facts'); f.hidden = false; f.scrollTop = 0; f.querySelector('h1').setAttribute('tabindex', '-1'); f.querySelector('h1').focus({preventScroll: true});
+}
+document.getElementById('go-facts').addEventListener('click', () => { fade.classList.add('on'); setTimeout(() => { showFacts(); fade.classList.remove('on'); }, reduce ? 0 : 300); });
+window.__sfx = () => chime();
+document.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => window.__openProject(b.dataset.open)));
+document.querySelectorAll('[data-go-world]').forEach(b => b.addEventListener('click', () => { if (!AC) startAudio(); else if (musicBeforeFacts) setMusic(true); fade.classList.add('on'); setTimeout(() => { document.getElementById('facts').hidden = true; document.getElementById('title').hidden = true; titleOn = false; cv.hidden = true; document.querySelector('.badge').hidden = true; window.World.start(); fade.classList.remove('on'); }, reduce ? 0 : 400); }));
+document.getElementById('f-copy').addEventListener('click', async () => { const b = document.getElementById('f-copy'); try { await navigator.clipboard.writeText('j4yousse@uwaterloo.ca'); b.textContent = 'Copied'; } catch { const r = document.createRange(); r.selectNodeContents(document.getElementById('f-email')); getSelection().removeAllRanges(); getSelection().addRange(r); b.textContent = 'Selected'; } setTimeout(() => b.textContent = 'Copy', 1600); });
+const projEl = document.getElementById('proj');
+window.__openProject = id => { projEl.querySelectorAll('[data-proj]').forEach(a => a.hidden = a.dataset.proj !== id); const a = projEl.querySelector(`[data-proj="${id}"]`); document.getElementById('proj-crumb').textContent = a ? a.dataset.crumb : ''; projEl.hidden = false; projEl.scrollTop = 0; document.getElementById('proj-close').focus({preventScroll: true}); };
+function closeProject() { projEl.hidden = true; const c = document.getElementById('world-cv'); c && c.focus({preventScroll: true}); }
+document.getElementById('proj-close').addEventListener('click', closeProject);
+addEventListener('keydown', e => { if (e.key === 'Escape' && !projEl.hidden) { e.stopImmediatePropagation(); closeProject(); } }, true);
+document.getElementById('back').addEventListener('click', () => { document.getElementById('next').hidden = true; document.getElementById('title').hidden = false; document.querySelector('.badge').hidden = false; cv.hidden = false; if (!titleOn) { titleOn = true; requestAnimationFrame(frame); } setSel(0); });
+
+/* ============ music: original, generated live ============ */
+let AC = null, master = null, musicOn = false, timer = null, nextBar = 0, bar = 0;
+const snd = document.getElementById('sound');
+const N = n => 440 * Math.pow(2, (n - 69) / 12);
+// gentle progression in F: Fmaj9 - Am7 - Dm9 - Bbmaj7(#11) - C6sus
+const PROG = [
+  {bass: 41, chord: [53, 57, 60, 64, 67]},
+  {bass: 45, chord: [52, 57, 60, 64, 67]},
+  {bass: 38, chord: [53, 57, 60, 62, 64]},
+  {bass: 46, chord: [50, 53, 57, 58, 64]},
+  {bass: 36, chord: [52, 55, 57, 60, 65]},
+  {bass: 41, chord: [53, 57, 60, 64, 69]}
+];
+const MEL = [[72, 0, 2], [69, 2, 1], [67, 3, 1], [69, 4, 3], [76, 0, 2], [74, 2, 2], [72, 4, 2], [69, 0, 3], [67, 3, 3], [65, 0, 2], [67, 2, 1], [69, 3, 3], [72, 0, 4], [74, 4, 2]];
+function makeVerb(ctx) {
+  const len = ctx.sampleRate * 3.2, buf = ctx.createBuffer(2, len, ctx.sampleRate);
+  for (let ch = 0; ch < 2; ch++) { const d = buf.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
+  const cv = ctx.createConvolver(); cv.buffer = buf; return cv;
+}
+let bus = null;
+function startAudio() {
+  if (AC) { if (!musicOn) return; return; }
+  try {
+    AC = new (window.AudioContext || window.webkitAudioContext)();
+    master = AC.createGain(); master.gain.value = 0;
+    const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2600;
+    const verb = makeVerb(AC), wet = AC.createGain(); wet.gain.value = .45;
+    bus = AC.createGain(); bus.connect(lp); lp.connect(master); lp.connect(verb); verb.connect(wet); wet.connect(master); master.connect(AC.destination);
+    loadSfx();
+    musicOn = true; snd.setAttribute('aria-pressed', 'true'); snd.setAttribute('aria-label', 'Music on. Turn music off.');
+    master.gain.linearRampToValueAtTime(.22, AC.currentTime + 2.5);
+    nextBar = AC.currentTime + .2; timer = setInterval(schedule, 120);
+  } catch (e) { AC = null; }
+}
+function note(midi, when, dur, vel, type) {
+  const o = AC.createOscillator(), o2 = AC.createOscillator(), gn = AC.createGain();
+  o.type = type || 'triangle'; o2.type = 'sine';
+  o.frequency.value = N(midi); o2.frequency.value = N(midi) * 2.001;
+  const g2 = AC.createGain(); g2.gain.value = .18;
+  o.connect(gn); o2.connect(g2); g2.connect(gn); gn.connect(bus);
+  gn.gain.setValueAtTime(0, when); gn.gain.linearRampToValueAtTime(vel, when + .015);
+  gn.gain.exponentialRampToValueAtTime(vel * .35, when + .4); gn.gain.exponentialRampToValueAtTime(.0005, when + dur);
+  o.start(when); o2.start(when); o.stop(when + dur + .05); o2.stop(when + dur + .05);
+}
+const BEAT = 60 / 68;
+function schedule() {
+  if (!AC) return;
+  while (nextBar < AC.currentTime + 1.5) {
+    const p = PROG[bar % PROG.length], t = nextBar;
+    note(p.bass, t, BEAT * 7, .16, 'sine'); note(p.bass + 12, t + BEAT * 4, BEAT * 3, .07, 'sine');
+    const arp = [0, 2, 1, 3, 2, 4, 3, 1];
+    arp.forEach((ci, i) => { if (bar % 2 || i % 2 === 0 || i === 3) note(p.chord[ci], t + i * BEAT / 2 + (Math.random() * .012), BEAT * 3, .055 + (i === 0 ? .02 : 0)); });
+    if (bar >= 2) { MEL.filter((m, i) => Math.floor(i / 3.5) % PROG.length === (bar % PROG.length) || (bar % 4 === 3 && i % 5 === 0)).slice(0, 3).forEach(([m, b, d]) => note(m, t + b * BEAT, BEAT * (d + 1.5), .08)); }
+    nextBar += BEAT * 8; bar++;
+  }
+}
+function setMusic(on) {
+  if (!AC) { if (on) startAudio(); return; }
+  musicOn = on; snd.setAttribute('aria-pressed', on); snd.setAttribute('aria-label', on ? 'Music on. Turn music off.' : 'Music off. Turn music on.');
+  const now = AC.currentTime; master.gain.cancelScheduledValues(now); master.gain.setValueAtTime(master.gain.value, now);
+  master.gain.linearRampToValueAtTime(on ? .22 : 0, now + .6);
+  if (on) AC.resume();
+}
+snd.addEventListener('click', e => { e.stopPropagation(); setMusic(!(AC && musicOn)); });
+['pointerdown', 'keydown'].forEach(ev => addEventListener(ev, function first(e) {
+  if (AC) return;
+  if (e.target === snd || snd.contains(e.target)) return;
+  const f = document.getElementById('facts');
+  if ((f && !f.hidden) || (e.target.closest && e.target.closest('#opt-facts, #go-facts'))) return;
+  if (ev === 'keydown' && !document.getElementById('title').hidden && items[sel] && items[sel].dataset.go === 'facts' && (e.key === 'Enter' || e.key === ' ')) return;
+  startAudio();
+}));
+function blip(f) { if (!AC || !musicOn) return; const t = AC.currentTime; note(Math.round(69 + 12 * Math.log2(f / 440)), t, .25, .05, 'square'); }
+function rev(kind) {
+  if (!AC || !musicOn) return;
+  const t = AC.currentTime, v8 = kind === 'c5';
+  const out = AC.createGain(); out.gain.value = 0; out.connect(AC.destination);
+  const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = v8 ? 700 : 1600; lp.Q.value = 1.2; lp.connect(out);
+  const ws = AC.createWaveShaper(); const curve = new Float32Array(256); for (let i = 0; i < 256; i++) { const x = i / 128 - 1; curve[i] = Math.tanh(x * 3); } ws.curve = curve; ws.connect(lp);
+  const o1 = AC.createOscillator(), o2 = AC.createOscillator(); o1.type = 'sawtooth'; o2.type = 'square';
+  const f0 = v8 ? 34 : 52, peak = v8 ? 125 : 210, d = v8 ? 1.9 : 1.6;
+  [o1, o2].forEach((o, i) => { const m = i ? .5 : 1; o.frequency.setValueAtTime(f0 * m, t); o.frequency.exponentialRampToValueAtTime(peak * m, t + .55); o.frequency.exponentialRampToValueAtTime(peak * .75 * m, t + .75); o.frequency.exponentialRampToValueAtTime(f0 * 1.15 * m, t + d); o.connect(ws); o.start(t); o.stop(t + d + .1); });
+  if (v8) { const lfo = AC.createOscillator(), lg = AC.createGain(); lfo.frequency.value = 7; lg.gain.value = .35; lfo.connect(lg); lg.connect(out.gain); lfo.start(t); lfo.stop(t + d + .1); }
+  out.gain.linearRampToValueAtTime(v8 ? .5 : .38, t + .05); out.gain.setValueAtTime(v8 ? .5 : .38, t + d - .4); out.gain.linearRampToValueAtTime(0, t + d);
+}
+window.__rev = rev;
+const SFX = {};
+function loadSfx() { ['rev', 'meow'].forEach(k => { if (SFX[k] !== undefined) return; SFX[k] = null; fetch('sfx/' + k + '.mp3').then(r => r.arrayBuffer()).then(b => AC.decodeAudioData(b)).then(buf => { SFX[k] = buf; }).catch(() => {}); }); }
+function playSfx(k, vol) { if (!AC || !musicOn || !SFX[k]) return; const s = AC.createBufferSource(), g = AC.createGain(); g.gain.value = vol; s.buffer = SFX[k]; s.connect(g); g.connect(AC.destination); s.start(); }
+window.__engine = () => playSfx('rev', .55);
+function meow() {
+  if (!AC || !musicOn) return;
+  const t = AC.currentTime, d = .55;
+  const out = AC.createGain(); out.gain.value = 0; out.connect(AC.destination);
+  const src = AC.createOscillator(); src.type = 'sawtooth';
+  src.frequency.setValueAtTime(520, t); src.frequency.linearRampToValueAtTime(780, t + .14); src.frequency.linearRampToValueAtTime(690, t + .3); src.frequency.linearRampToValueAtTime(440, t + d);
+  const vib = AC.createOscillator(), vg = AC.createGain(); vib.frequency.value = 6; vg.gain.value = 8; vib.connect(vg); vg.connect(src.frequency);
+  const f1 = AC.createBiquadFilter(), f2 = AC.createBiquadFilter(); f1.type = f2.type = 'bandpass'; f1.Q.value = 6; f2.Q.value = 8;
+  f1.frequency.setValueAtTime(1500, t); f1.frequency.linearRampToValueAtTime(900, t + .25); f1.frequency.linearRampToValueAtTime(700, t + d);
+  f2.frequency.setValueAtTime(3200, t); f2.frequency.linearRampToValueAtTime(1800, t + .3);
+  const g2 = AC.createGain(); g2.gain.value = .45;
+  src.connect(f1); src.connect(f2); f2.connect(g2); f1.connect(out); g2.connect(out);
+  out.gain.linearRampToValueAtTime(.55, t + .06); out.gain.setValueAtTime(.55, t + d - .2); out.gain.linearRampToValueAtTime(0, t + d);
+  src.start(t); vib.start(t); src.stop(t + d + .05); vib.stop(t + d + .05);
+}
+window.__meow = () => { if (SFX.meow) playSfx('meow', .5); else meow(); };
+function chime() { if (!AC || !musicOn) return; const t = AC.currentTime + .05; [72, 76, 79, 84].forEach((m, i) => note(m, t + i * .07, .9, .06)); }
+
+setSel(0); document.activeElement?.blur?.();
+})();
+</script>
+<script src="world.js"></script>
+
+</body>
+</html>
