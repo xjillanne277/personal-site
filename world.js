@@ -525,7 +525,7 @@ const esc = s => s.replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&g
 const CONTACT = `<div class="w-contact"><code id="w-email">j4yousse@uwaterloo.ca</code><button type="button" class="w-copy">Copy</button></div><p class="w-links"><a href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn</a> <a href="${RES}" target="_blank" rel="noopener">Résumé (PDF)</a></p>`;
 function enterRoom() {
   closeCard(); const fade = document.getElementById('fade'); fade.classList.add('on');
-  setTimeout(() => { worldPos.x = P.x; worldPos.y = P.y; scene = 'room'; resize(); RP.x = 22; RP.dir = 1; RP.tx = null; P.target = null; autoId = 'door'; trail.length = 0; fade.classList.remove('on'); }, reduce ? 0 : 260);
+  setTimeout(() => { worldPos.x = P.x; worldPos.y = P.y; scene = 'room'; window.track && track('enter_room'); resize(); RP.x = 22; RP.dir = 1; RP.tx = null; P.target = null; autoId = 'door'; trail.length = 0; fade.classList.remove('on'); }, reduce ? 0 : 260);
 }
 function exitRoom() {
   closeCard(); const fade = document.getElementById('fade'); fade.classList.add('on');
@@ -548,6 +548,7 @@ function ledCard() {
   card.querySelector('#led-r').focus({preventScroll: true});
 }
 function openCard(l) {
+  window.track && l && track('stop_open', {stop: l.id});
   if (l.kind === 'nsx' || l.kind === 'c5') { autoId = l.id; const n = carClicks[l.kind]++ % 3; if (n === 0) pops[l.kind] = 1; else if (n === 1) { pops[l.kind] = 1; window.__engine && window.__engine(l.kind); } else pops[l.kind] = 0; return; }
   if (l.kind === 'tower') { autoId = l.id; window.__openTower && window.__openTower(); return; }
   if (l.kind === 'cabin') { enterRoom(); return; }
@@ -585,6 +586,7 @@ mini.parentElement.addEventListener('keydown', e => { if (e.key === 'Enter' || e
 updateTour();
 const big = document.getElementById('bigmap'), bigImg = document.getElementById('bigmap-img');
 function openBig() {
+  window.track && track('big_map');
   bigImg.width = map.width / 2; bigImg.height = map.height / 2; const x = bigImg.getContext('2d'); x.imageSmoothingEnabled = false; x.drawImage(map, 0, 0, bigImg.width, bigImg.height);
   big.hidden = false; big.querySelector('.bm-pins').innerHTML = '';
   L.forEach(l => { if (['mail'].includes(l.id)) return; const b = document.createElement('button'); b.type = 'button'; b.className = 'bm-pin' + (l.tour ? ' stop' : ''); b.textContent = l.yr ? `${l.label} · ${l.yr}` : l.label; b.style.left = ((l.tx + l.w / 2) / MW * 100) + '%'; b.style.top = (l.ty / MH * 100) + '%'; b.addEventListener('click', () => { big.hidden = true; if (TOUR.includes(l)) { tourIdx = TOUR.indexOf(l); updateTour(); } teleport(l, true); }); big.querySelector('.bm-pins').appendChild(b); });
