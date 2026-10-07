@@ -19,8 +19,8 @@ else if(t.id==='go-contact')track('contact_open');
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#2f5e46">
-<meta property="og:title" content="Jillanne Youssef">
-<meta property="og:description" content="3B Mechanical Engineering student at the University of Waterloo. Product design, consumer electronics and robotics.">
+<meta property="og:title" content="Jillanne Youssef | Mechanical &amp; Product Design Engineer">
+<meta property="og:description" content="Jillanne Youssef, 3B Mechanical Engineering at the University of Waterloo. Consumer hardware from concept through prototyping, DFM and validation. Open to Summer 2027 roles.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.jillanneyoussef.com/">
 <meta property="og:site_name" content="Jillanne Youssef">
@@ -33,8 +33,8 @@ else if(t.id==='go-contact')track('contact_open');
 <meta name="twitter:image" content="https://www.jillanneyoussef.com/og-image.png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-<title>Jillanne Youssef</title>
-<meta name="description" content="Jillanne Youssef, 3B Mechanical Engineering student at the University of Waterloo.">
+<title>Jillanne Youssef | Mechanical &amp; Product Design Engineer</title>
+<meta name="description" content="Jillanne Youssef, 3B Mechanical Engineering at the University of Waterloo. Consumer hardware from concept through prototyping, DFM and validation. Open to Summer 2027 roles.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
@@ -357,6 +357,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .pf-hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,360px);gap:48px;align-items:end;padding:clamp(56px,11vh,120px) 0 40px}
 #pf h1{margin:0;font:700 clamp(46px,7.2vw,84px)/.98 var(--f-head);letter-spacing:-.035em}
 #pf h1:focus{outline:none}
+.pf-school{margin:12px 0 0;font:500 15px var(--f-mono);color:var(--mute)}
 .pf-lede{margin:22px 0 0;max-width:30ch;font:400 clamp(20px,2.3vw,24px)/1.45 "IBM Plex Sans",system-ui,sans-serif;color:var(--sub)}
 .pf-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:32px}
 .pf-block{border-collapse:collapse;width:100%;font:500 13px/1.3 var(--f-mono);background:#fff;border:2px solid var(--ink)}
@@ -466,6 +467,10 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .pf-inline{font:600 16px var(--f-head);color:var(--acc);background:none;border:0;padding:0;cursor:pointer;text-align:left;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
 .pf-inline:hover{color:var(--acc-d);text-decoration-thickness:2px}
 .pf-first{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.pf-first.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.pf-first.three .pf-fy{grid-template-columns:minmax(0,1fr)}
+.pf-first.three .pf-fy-img{aspect-ratio:16/10;background:#fff}
+@media (max-width:960px){.pf-first.three{grid-template-columns:minmax(0,1fr)}.pf-first.three .pf-fy{grid-template-columns:100px minmax(0,1fr)}.pf-first.three .pf-fy-img{aspect-ratio:1}}
 .pf-fy{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:center;text-align:left;font:inherit;color:inherit;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;cursor:pointer;transition:transform .18s,box-shadow .18s}
 .pf-fy:hover{transform:translateY(-2px);box-shadow:0 12px 26px -14px rgba(22,25,29,.25)}
 .pf-fy-img{display:grid;place-items:center;aspect-ratio:1;background:#f4f3ef;border-radius:8px;overflow:hidden}
@@ -747,7 +752,8 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
     <section class="pf-hero" aria-labelledby="pf-name">
       <div class="pf-hero-text">
         <h1 id="pf-name" tabindex="-1">Jillanne Youssef</h1>
-        <p class="pf-lede">Mechanical engineering student at the University of Waterloo, focused on mechanical design and product design engineering.</p>
+        <p class="pf-lede">I build consumer hardware, from concept through prototyping, DFM and validation.</p>
+        <p class="pf-school">3B Mechanical Engineering · University of Waterloo</p>
         <div class="pf-actions">
           <a class="pf-btn big" href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
           <button type="button" class="pf-btn ghost big" data-copy>Copy email</button>
@@ -765,7 +771,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
     <p class="pf-logos"><span>Work terms at</span> Google <b>·</b> Level Home <b>·</b> Tesla <b>·</b> Geotab <b>·</b> Valbruna <b>·</b> Evercloak</p>
 
     <section class="pf-sec" id="pf-work" aria-labelledby="pf-work-h">
-      <div class="pf-sec-row"><h2 id="pf-work-h" class="pf-label">Selected work</h2><p class="pf-aside">Three projects I can show in depth. Each one opens the full case study.</p></div>
+      <div class="pf-sec-row"><h2 id="pf-work-h" class="pf-label">Selected work</h2><p class="pf-aside">Two projects I can show in depth. Each one opens the full case study.</p></div>
       <button type="button" class="case" data-open="led">
         <span class="case-img"><img src="img/led-exploded.webp" alt="" loading="lazy"></span>
         <span class="case-body">
@@ -788,26 +794,8 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
           <span class="case-cta">Read the case study <span aria-hidden="true">→</span></span>
         </span>
       </button>
-      <button type="button" class="case" data-open="geotab">
-        <span class="case-img wide"><img src="img/gt-app.webp" alt="" loading="lazy"></span>
-        <span class="case-body">
-          <span class="case-kicker"><i>03</i>Geotab hackathon · Summer 2024</span>
-          <span class="case-title">Project Jarvis: distracted-driving detection system</span>
-          <span class="case-sum">A driver-scoring app with computer vision that flags distracted driving from dashcam video. I’d never trained a model before. I learned how, then owned the code and video pipeline.</span>
-          <span class="case-metrics"><span><b>1st</b>of 11 teams</span><span><b>Only</b>fully working demo</span><span><b>PII</b>blurred on device video</span></span>
-          <span class="case-tags"><span>Python</span><span>Computer vision</span><span>Figma</span></span>
-          <span class="case-cta">Read the case study <span aria-hidden="true">→</span></span>
-        </span>
-      </button>
     </section>
 
-    <section class="pf-sec" id="pf-first" aria-labelledby="pf-first-h">
-      <div class="pf-sec-row"><h2 id="pf-first-h" class="pf-label">Projects from first year</h2><p class="pf-aside">Where it started. One of them I came back to.</p></div>
-      <div class="pf-first">
-        <button type="button" class="pf-fy" data-open="waterloo"><span class="pf-fy-img"><img src="img/fb-v2-render.webp" alt="" loading="lazy"></span><span class="pf-fy-body"><span class="pf-kicker">ME101 · 2023, redesigned 2025</span><b>FrostBot</b><span>A LEGO cake-icing robot, rebuilt two years later with an 80/20 frame and a pneumatic piston.</span></span></button>
-        <button type="button" class="pf-fy" data-open="waterloo"><span class="pf-fy-img"><img src="img/toy-photo.webp" alt="" loading="lazy"></span><span class="pf-fy-body"><span class="pf-kicker">ME100 · Fall 2022</span><b>Wind-up soccer toy</b><span>A cam and follower that kicks a ping-pong ball, in laser-cut wood on a $50 budget.</span></span></button>
-      </div>
-    </section>
 
     <section class="pf-sec" id="pf-exp" aria-labelledby="pf-exp-h">
       <div class="pf-sec-row"><h2 id="pf-exp-h" class="pf-label">Experience</h2><p class="pf-aside">Some of this work isn’t approved to share externally. Happy to walk through it in an interview.</p></div>
@@ -820,6 +808,15 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
         <li><span class="when">2023 · Fall</span><span class="who"><b>Valbruna ASW</b>Mechanical Engineering</span><span class="what">Arc furnace CFD that found $900K in scrap losses; a fan enclosure redesign saving $45K per unit.</span><span class="tag no">Not approved to share externally</span></li>
         <li><span class="when">2023 · Winter</span><span class="who"><b>Evercloak</b>Mechanical Engineering</span><span class="what">A prototype dehumidifier enclosure designed for manufacture; +40% performance from membrane selection.</span><span class="tag no">Not approved to share externally</span></li>
       </ol>
+    </section>
+
+    <section class="pf-sec" id="pf-first" aria-labelledby="pf-first-h">
+      <div class="pf-sec-row"><h2 id="pf-first-h" class="pf-label">Other technical work</h2><p class="pf-aside">Smaller projects that show range.</p></div>
+      <div class="pf-first three">
+        <button type="button" class="pf-fy" data-open="geotab"><span class="pf-fy-img"><img src="img/gt-cert.webp" alt="" loading="lazy"></span><span class="pf-fy-body"><span class="pf-kicker">Geotab hackathon · 2024</span><b>Project Jarvis</b><span>Distracted-driving detection with computer vision. 1st of 11 teams.</span></span></button>
+        <button type="button" class="pf-fy" data-open="waterloo"><span class="pf-fy-img"><img src="img/fb-v2-render.webp" alt="" loading="lazy"></span><span class="pf-fy-body"><span class="pf-kicker">ME101 · 2023, redesigned 2025</span><b>FrostBot</b><span>A LEGO cake-icing robot, redesigned in CAD with an 80/20 frame and a pneumatic piston.</span></span></button>
+        <button type="button" class="pf-fy" data-open="waterloo"><span class="pf-fy-img"><img src="img/toy-photo.webp" alt="" loading="lazy"></span><span class="pf-fy-body"><span class="pf-kicker">ME100 · 2022</span><b>Wind-up soccer toy</b><span>A cam and follower that kicks a ping-pong ball, on a $50 budget.</span></span></button>
+      </div>
     </section>
 
     <section class="pf-sec pf-skills" aria-labelledby="pf-skills-h">
@@ -1207,7 +1204,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
       <p class="proj-kicker">Project notebook</p>
       <h1>FrostBot and a wind-up toy</h1>
       <p class="proj-lede">Two first-year design projects. I came back to FrostBot two years later and redesigned it with everything I’d learned on co-op.</p>
-      <dl class="proj-stats"><div><dt>98%</dt><dd>icing placement target, V1</dd></div><div><dt>100</dt><dd>verification trials</dd></div><div><dt>±2 mm</dt><dd>placement target</dd></div><div><dt>9/16″</dt><dd>pneumatic cylinder bore, V2</dd></div></dl>
+      <dl class="proj-stats"><div><dt>98%</dt><dd>icing placement accuracy over 100 trials (target ≥80%)</dd></div><div><dt>100</dt><dd>verification trials</dd></div><div><dt>±2 mm</dt><dd>placement target</dd></div><div><dt>9/16″</dt><dd>pneumatic cylinder bore, V2</dd></div></dl>
     </header>
 
     <section class="proj-ch">
@@ -1215,7 +1212,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
       <figure class="proj-wide fy-video"><video src="vid/frostbot-demo.mp4" poster="img/frostbot-demo-poster.webp" autoplay muted loop playsinline preload="metadata" aria-label="FrostBot V1 icing a dessert"></video><figcaption>Fig. 1 · FrostBot V1 icing a dessert.</figcaption></figure>
       <div class="fy-two">
         <div><h3 class="fy-h">The problem</h3><p>Automate the icing of circular desserts to improve consistency, throughput and precision.</p>
-          <h3 class="fy-h">Objectives</h3><ul class="fy-list"><li>±2 mm icing placement accuracy</li><li>Desserts up to 15 cm in diameter</li><li>98% accuracy in icing placement</li></ul></div>
+          <h3 class="fy-h">Objectives</h3><ul class="fy-list"><li>±2 mm icing placement accuracy</li><li>Desserts up to 15 cm in diameter</li><li>≥80% of icing inside the target circle (we measured 98%)</li></ul></div>
         <div><h3 class="fy-h">Constraints</h3><ul class="fy-list"><li>EV3 controller and motors, LEGO gears, Tetrix structure</li><li>Must include 3D-printed and laser-cut parts</li><li>Under $150 CAD, excluding provided materials</li><li>Demo-ready in 12 weeks (June to August 2023)</li><li>C++, using only what ME101 taught</li></ul></div>
       </div>
       <h3 class="fy-h">How it works</h3>
@@ -1226,7 +1223,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
       <div class="proj-figs fy-grid3"><figure><img src="img/fb-v1-fw1.webp" alt="The lever" loading="lazy"><figcaption>Fig. 8 · Lever.</figcaption></figure><figure><img src="img/fb-v1-fw2.webp" alt="The stop button, a touch sensor" loading="lazy"><figcaption>Fig. 9 · Stop button (touch sensor).</figcaption></figure><figure><video src="vid/frostbot-clip.mp4" poster="img/frostbot-clip-poster.webp" autoplay muted loop playsinline preload="metadata" aria-label="Testing the firmware"></video><figcaption>Fig. 10 · Testing the firmware.</figcaption></figure></div>
       <h3 class="fy-h">Verification and testing</h3>
       <p>100 trials covering ease of use, frosting accuracy, food safety and different dessert sizes, plus software testing of the movement control and the radius and height prompts.</p>
-      <div class="proj-scroll"><table class="proj-mtx fy-tbl"><thead><tr><th>No.</th><th>Characteristic</th><th>Target</th><th>Method</th><th>How it was checked</th></tr></thead><tbody><tr><td>1</td><td>Execution time</td><td>&lt; 3 min</td><td>Test</td><td>Timed with a stopwatch</td></tr><tr><td>2</td><td>Emergency stop while frosting</td><td>—</td><td>Demonstration</td><td>Pressing the touch-button e-stop at any point exits the dispensing function</td></tr><tr><td>3</td><td>User satisfaction</td><td>≥ 8/10</td><td>Test</td><td>Users rated how visually appealing the iced dessert was</td></tr><tr><td>4</td><td>Accuracy</td><td>≥ 80%</td><td>Test</td><td>Frost within a given diameter; at most 20% of icing may land outside the perimeter</td></tr><tr><td>5</td><td>Desserts of varied size and mass</td><td>—</td><td>Demonstration</td><td>Structure stiff enough to ice cakes of different sizes and masses</td></tr><tr><td>6</td><td>Cost of production</td><td>&lt; $150</td><td>Analysis</td><td>Sum of all receipts</td></tr><tr><td>7</td><td>Does not touch the dessert</td><td>—</td><td>Demonstration</td><td>Only the frosting contacts the dessert</td></tr><tr><td>8</td><td>Food safety</td><td>—</td><td>Analysis</td><td>No robot part touches food without a plastic barrier; meets FDA requirements</td></tr></tbody></table></div>
+      <div class="proj-scroll"><table class="proj-mtx fy-tbl"><thead><tr><th>No.</th><th>Characteristic</th><th>Target</th><th>Method</th><th>How it was checked</th></tr></thead><tbody><tr><td>1</td><td>Execution time</td><td>&lt; 3 min</td><td>Test</td><td>Timed with a stopwatch</td></tr><tr><td>2</td><td>Emergency stop while frosting</td><td>—</td><td>Demonstration</td><td>Pressing the touch-button e-stop at any point exits the dispensing function</td></tr><tr><td>3</td><td>User satisfaction</td><td>≥ 8/10</td><td>Test</td><td>Users rated how visually appealing the iced dessert was</td></tr><tr><td>4</td><td>Accuracy</td><td>≥ 80%</td><td>Test</td><td>Frost within a given diameter; at most 20% of icing may land outside the perimeter</td></tr><tr><td>5</td><td>Desserts of varied size and mass</td><td>—</td><td>Demonstration</td><td>Structure stiff enough to ice cakes of different sizes and masses</td></tr><tr><td>6</td><td>Cost of production</td><td>&lt; $150</td><td>Analysis</td><td>Sum of all receipts</td></tr><tr><td>7</td><td>Does not touch the dessert</td><td>—</td><td>Demonstration</td><td>Only the frosting contacts the dessert</td></tr><tr><td>8</td><td>Food safety</td><td>—</td><td>Analysis</td><td>No robot part touches food without a plastic barrier</td></tr></tbody></table></div>
       <h3 class="fy-h">What went wrong, and the fixes</h3>
       <div class="proj-scroll"><table class="proj-mtx fy-tbl"><thead><tr><th>Challenge</th><th>Solution</th></tr></thead><tbody><tr><td><b>Icing consistency.</b> A smooth, even layer was hard to get: the motors were limited and heated up in continuous use.</td><td><b>Cool Whip instead of store-bought icing.</b> The lighter material cut motor load, stopped the overheating and sped up application.</td></tr><tr><td><b>Motor size and power.</b> The small motors overheated, hurting performance and lifespan during frosting.</td><td><b>Gear ratio change.</b> I designed and 3D-printed a smaller gear for more torque on the piston, reducing motor load.</td></tr></tbody></table></div>
     </section>
@@ -1235,7 +1232,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
       <h2><span>02</span> FrostBot V2 · redesign, October 2025</h2>
       <p>V1 worked, but it flexed, it wasn’t precise, and its motor overheated on thicker icing. Two years and four co-ops later, I redesigned it as if it were going on a production line.</p>
       <div class="fy-two">
-        <div><h3 class="fy-h">Mechanical goals</h3><ul class="fy-list"><li>More rigid, more precise</li><li>Adjustable z-axis</li><li>No piston motor to overheat, so thicker icing works</li><li>Modular and scalable</li><li>Safer food-contact materials</li></ul></div>
+        <div><h3 class="fy-h">Mechanical goals</h3><ul class="fy-list"><li>More rigid, more precise</li><li>Adjustable z-axis</li><li>No piston motor to overheat, so thicker icing works</li><li>Modular and scalable</li><li>Better materials where it touches food</li></ul></div>
         <div><h3 class="fy-h">Electrical and controls goals</h3><ul class="fy-list"><li>EV3 replaced with an ESP32</li><li>More reliable motors</li><li>Closed-loop motor control</li><li>A better interface for customising designs</li></ul></div>
       </div>
       <div class="fy-callout">
@@ -1245,7 +1242,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
       </div>
       <div class="proj-figs fy-grid3"><figure><img src="img/fb-v2-side.webp" alt="Side render of the piston and hopper" loading="lazy"><figcaption>Fig. 12 · Piston and hopper.</figcaption></figure><figure><img src="img/fb-v2-slide.webp" alt="Render of the piston on the linear slide over the turntable" loading="lazy"><figcaption>Fig. 13 · Linear slide and turntable.</figcaption></figure><figure><img src="img/fb-v2-front.webp" alt="Front render of the frame" loading="lazy"><figcaption>Fig. 14 · Front view.</figcaption></figure></div>
       <h3 class="fy-h">What changed, and why</h3>
-      <div class="proj-scroll"><table class="proj-mtx fy-tbl"><thead><tr><th>Item</th><th>V1</th><th>V2</th><th>Why</th></tr></thead><tbody><tr><td>Frosting hopper</td><td>3D-printed PLA, fixed height</td><td>Machined Delrin, adjustable height</td><td>Machinable, strong and fatigue-resistant, food safe, sterilisable</td></tr><tr><td>Frame</td><td>Tetrix (a course constraint)</td><td>Aluminium extrusion</td><td>Modular, easy to mount attachments and route cables, can hold several FrostBot modules</td></tr><tr><td>Piston actuation</td><td>Electric motor and worm gear</td><td>Pneumatic, on an aluminium mount fixed to the hopper</td><td>No motor to overheat, so thicker icing works; a rigid mount keeps piston and hopper aligned</td></tr><tr><td>Z-axis</td><td>None</td><td>Piston assembly on an electric linear slide</td><td>Handles desserts of different heights and holds the best nozzle-to-surface distance for an even bead</td></tr></tbody></table></div>
+      <div class="proj-scroll"><table class="proj-mtx fy-tbl"><thead><tr><th>Item</th><th>V1</th><th>V2</th><th>Why</th></tr></thead><tbody><tr><td>Frosting hopper</td><td>3D-printed PLA, fixed height</td><td>Machined Delrin, adjustable height</td><td>Machinable, strong and fatigue-resistant, easier to clean than printed PLA</td></tr><tr><td>Frame</td><td>Tetrix (a course constraint)</td><td>Aluminium extrusion</td><td>Modular, easy to mount attachments and route cables, can hold several FrostBot modules</td></tr><tr><td>Piston actuation</td><td>Electric motor and worm gear</td><td>Pneumatic, on an aluminium mount fixed to the hopper</td><td>No motor to overheat, so thicker icing works; a rigid mount keeps piston and hopper aligned</td></tr><tr><td>Z-axis</td><td>None</td><td>Piston assembly on an electric linear slide</td><td>Handles desserts of different heights and holds the best nozzle-to-surface distance for an even bead</td></tr></tbody></table></div>
       <h3 class="fy-h">Sizing the pneumatic piston</h3>
       <div class="proj-scroll"><table class="proj-mtx fy-tbl"><thead><tr><th>Goal</th><th>Approach</th><th>Outcome</th></tr></thead><tbody><tr><td>Handle the stiffest icing (cold buttercream) with continuous, even flow that keeps up with the plate.<br><br>Make sure piston force, nozzle geometry and speed support the bead rate with no gaps or run-out.</td><td>Estimate worst-case yield stress and viscosity, then the pressure needed for the target flow.<br><br>Convert nozzle pressure to piston area at 90 psig shop air, with a 1.5× safety margin.<br><br>Match volumetric flow to the plate speed for a continuous bead.</td><td><b>9/16″ bore</b> pneumatic cylinder.<br><br>Runs on standard 90 psi factory air, so no new infrastructure.</td></tr></tbody></table></div>
       <ol class="fy-steps"><li>Find the icing flow rate the plate needs, from its diameter, rotation speed and an assumed bead diameter.</li><li>Find the nozzle pressure to extrude it, modelling icing as a Bingham plastic (it doesn’t flow until it passes a yield stress).</li><li>Find the plunger force from the hopper diameter, with a 1.5× factor of safety.</li><li>Find the cylinder bore for 90 psig factory air: <b>9/16″</b>.</li></ol>
@@ -1484,7 +1481,7 @@ function show(m) {
   else if (AC && musicOn && (m === 'portfolio' || prev === 'play')) setMusic(false);
   if (m === 'portfolio') { pfEl.scrollTop = 0; document.getElementById('pf-name').focus({preventScroll: true}); }
   if (m === 'play' && window.World) window.World.start();
-  document.title = m === 'portfolio' ? 'Jillanne Youssef · Portfolio' : m === 'play' ? 'Jillanne Youssef · Game' : 'Jillanne Youssef';
+  document.title = m === 'play' ? 'Jillanne Youssef · Game' : 'Jillanne Youssef | Mechanical & Product Design Engineer';
   window.track && track('section_view', {section: m});
 }
 const ORDER = ['led', 'level', 'google', 'teslacells', 'geotab', 'valbruna', 'evercloak', 'waterloo'];
