@@ -831,6 +831,21 @@ html[data-theme="dark"] .cs-box ul{color:#d6d4cf}
 .cs-box-lead{margin-top:34px!important;border-left:4px solid #8a5a3c;background:#fdf8f3}.cs-box-lead .cs-box-t{font:700 18px/1.3 "IBM Plex Sans",system-ui,sans-serif;letter-spacing:0;text-transform:none;color:#14181d;margin-bottom:6px}html[data-theme="dark"] .cs-box-lead{background:#2b2723}html[data-theme="dark"] .cs-box-lead .cs-box-t{color:#f0ece6}
 .cs-power{justify-content:center}.cs .cs-fig img{cursor:zoom-in}
 .pf-clear{margin:10px 0 12px;padding:14px 18px;border:1px solid #bfe0cf;border-left:4px solid var(--green,#2f7a5f);background:#eef7f2;border-radius:10px;max-width:72ch}.pf-clear b{display:block;font:600 13px var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--green,#2f7a5f);margin-bottom:4px}.pf-clear p{margin:0;font-size:16.5px;line-height:1.55;color:var(--ink)}html[data-theme="dark"] .pf-clear{background:#1f3329;border-color:#2f5240;border-left-color:#6fcf9f}html[data-theme="dark"] .pf-clear b{color:#6fcf9f}
+.pf-now{margin:40px 0 0;padding:22px 26px 20px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:14px}
+.pf-now-head{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin-bottom:8px}
+.pf-now-dot{width:9px;height:9px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 4px rgba(192,71,44,.15);animation:pfnow 1.8s ease-in-out infinite}
+@keyframes pfnow{50%{box-shadow:0 0 0 7px rgba(192,71,44,.05)}}
+@media (prefers-reduced-motion:reduce){.pf-now-dot{animation:none}}
+.pf-now-k{font:600 12px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--acc)}
+.pf-now-meta{font:500 13px var(--f-mono);color:var(--mute)}
+.pf-now h2{margin:0 0 8px;font:700 clamp(21px,2.4vw,26px)/1.25 var(--f-head);letter-spacing:-.015em;color:var(--ink)}
+.pf-now p{margin:0 0 14px;font-size:16.5px;line-height:1.55;color:var(--sub);max-width:78ch}
+.pf-now-facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:0;padding-top:14px;border-top:1px solid var(--line)}
+.pf-now-facts dt{font:500 11.5px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+.pf-now-facts dd{margin:3px 0 0;font:600 15px/1.35 var(--f-head);color:var(--ink)}
+@media (max-width:860px){.pf-now-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.pf-now{padding:18px 18px 16px}.pf-now-facts{grid-template-columns:minmax(0,1fr)}}
+html[data-theme="dark"] .pf-now{background:#26292d}
 #xp-dlg{border:0;padding:0;border-radius:14px;max-width:720px;width:calc(100% - 32px);max-height:86vh;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 #xp-dlg::backdrop{background:rgba(17,20,24,.55)}
 #xp-dlg .xp-in{padding:28px 32px 30px;overflow:auto;max-height:86vh;box-sizing:border-box}
@@ -919,6 +934,18 @@ html[data-theme="dark"] .cs-box ul{color:#d6d4cf}
     </section>
 
     <p class="pf-logos"><span>Work terms at</span> Google <b>·</b> Level Home <b>·</b> Tesla (2×) <b>·</b> Geotab <b>·</b> Valbruna <b>·</b> Evercloak</p>
+
+    <section class="pf-now" aria-labelledby="pf-now-h">
+      <div class="pf-now-head"><span class="pf-now-dot" aria-hidden="true"></span><span class="pf-now-k">Currently building</span><span class="pf-now-meta">Change design team · University of Waterloo · Fall 2026</span></div>
+      <h2 id="pf-now-h">Pressure-relief device for wheelchair users with spinal cord injuries</h2>
+      <p>People with spinal cord injuries can sit 12 to 16 hours a day, and many can’t feel a pressure sore forming. Phone reminders only help users who can act on them, and nothing confirms a pressure relief actually happened. With Spinal Cord Injury Ontario, our team is building a thin, low-cost device that sits on the wheelchair cushion and detects, logs and verifies pressure reliefs.</p>
+      <dl class="pf-now-facts">
+        <div><dt>My role</dt><dd>Mechanical lead</dd></div>
+        <div><dt>Status</dt><dd>Requirements and concepts (week 3 of 12)</dd></div>
+        <div><dt>Next</dt><dd>Functional prototype, tested with SCIO staff who use wheelchairs</dd></div>
+        <div><dt>Target</dt><dd>Pilot-ready design and BOM handed off in December 2026</dd></div>
+      </dl>
+    </section>
 
     <section class="pf-sec" id="pf-work" aria-labelledby="pf-work-h">
       <div class="pf-sec-row"><h2 id="pf-work-h" class="pf-label">Selected work</h2><p class="pf-aside">Two projects I can show in depth. Click one for the full write-up.</p></div>
