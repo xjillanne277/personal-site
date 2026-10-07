@@ -498,7 +498,7 @@ const cur = () => ({L, W: MW, H: MH, block, map});
 const P = {x: 1 * TS + 10, y: 20 * TS + 10, dir: 'right', f: 0, moving: false, target: null, after: null, stuck: 0};
 const trail = []; const moe = {x: P.x - 14, y: P.y + 6};
 const keys = new Set();
-let boat = null, boatCool = 0;
+let boat = null, boatCool = 0, landDir = 0, boat0dir = 0;
 const visited = new Set(); let autoId = null;
 let running = false, last = 0, tourIdx = -1, openId = null, walkT = 0, touch = matchMedia('(pointer: coarse)').matches;
 
@@ -696,7 +696,7 @@ function step(now) {
     P.x = Math.round(boat.x0 + (boat.x1 - boat.x0) * e); P.y = Math.round(boat.y0 + (boat.y1 - boat.y0) * Math.min(1, boat.t * 1.6)); P.dir = boat.x1 > boat.x0 ? 'right' : 'left'; P.moving = false;
     moe.x = P.x + (boat.x1 > boat.x0 ? -12 : 12); moe.y = P.y + 2; trail.length = 0;
     const st = Math.floor(boat.t * 3); if (st > boat.strokes && boat.t < .95) { boat.strokes = st; window.__splash && window.__splash(.55); }
-    if (boat.t >= 1) { boat = null; boatCool = .35; }
+    if (boat.t >= 1) { boat = null; boatCool = .8; P.target = null; P.after = null; landDir = boat0dir; }
     draw(now); requestAnimationFrame(step); return;
   }
   const sp = 175 * dt, len = Math.hypot(vx, vy) || 1;
@@ -711,8 +711,8 @@ function step(now) {
       const ty = Math.floor(P.y / TS), rx = riverX(ty) * TS + 8, dirR = P.x < rx ? 1 : -1;
       let tx = Math.floor(P.x / TS) + dirR; while (tx > 0 && tx < MW - 1 && tiles[idx(tx, ty)] === T.WATER) tx += dirR;
       const okLand = (x, y) => y > 0 && y < MH - 1 && tiles[idx(x, y)] !== T.WATER && tiles[idx(x, y)] !== T.OCEAN && !block[idx(x, y)] && !block[idx(x + dirR, y)];
-      let ly = null; for (const d of [0, 1, -1, 2, -2, 3, -3]) { let x = Math.floor(P.x / TS) + dirR; while (x > 0 && x < MW - 1 && tiles[idx(x, ty + d)] === T.WATER) x += dirR; if (okLand(x, ty + d)) { ly = ty + d; tx = x; break; } }
-      if (ly != null && tx > 0 && tx < MW - 1) { boat = {x0: P.x, x1: tx * TS + 8 + dirR * 2, y0: P.y, y1: ly * TS + 10, t: 0, dur: Math.max(.7, Math.abs(tx * TS - P.x) / 150), strokes: 0}; P.stuck = 0; window.__splash && window.__splash(1); window.__water && window.__water(boat.dur); }
+      let ly = null; let x0 = Math.floor(P.x / TS); for (let k = 0; k < 4 && tiles[idx(x0, ty)] !== T.WATER; k++) x0 += dirR; for (const d of [0, 1, -1, 2, -2, 3, -3]) { let x = x0; while (x > 0 && x < MW - 1 && tiles[idx(x, ty + d)] === T.WATER) x += dirR; if (okLand(x, ty + d)) { ly = ty + d; tx = x; break; } }
+      if (ly != null && tx > 0 && tx < MW - 1 && (tx - x0) * dirR > 0) { boat = {x0: P.x, x1: tx * TS + 8 + dirR * 2, y0: P.y, y1: ly * TS + 10, t: 0, dur: Math.max(.7, Math.abs(tx * TS - P.x) / 150), strokes: 0}; P.stuck = 0; boat0dir = dirR; window.__splash && window.__splash(1); window.__water && window.__water(boat.dur); }
     }
     if (!boat) {
       if (!feetBlocked(P.x + vx, P.y) && !wet(P.x + vx + Math.sign(vx) * 4, P.y)) P.x += vx;

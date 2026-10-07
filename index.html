@@ -1761,7 +1761,7 @@ function rev(kind) {
 }
 window.__rev = rev;
 const SFX = {};
-function loadSfx() { ['rev', 'meow'].forEach(k => { if (SFX[k] !== undefined) return; SFX[k] = null; fetch('sfx/' + k + '.mp3').then(r => r.arrayBuffer()).then(b => AC.decodeAudioData(b)).then(buf => { SFX[k] = buf; }).catch(() => {}); }); }
+function loadSfx() { ['rev', 'meow', 'paddle'].forEach(k => { if (SFX[k] !== undefined) return; SFX[k] = null; fetch('sfx/' + k + '.mp3').then(r => r.arrayBuffer()).then(b => AC.decodeAudioData(b)).then(buf => { SFX[k] = buf; }).catch(() => {}); }); }
 function playSfx(k, vol) { if (!AC || !musicOn || !SFX[k]) return; const s = AC.createBufferSource(), g = AC.createGain(); g.gain.value = vol; s.buffer = SFX[k]; s.connect(g); g.connect(AC.destination); s.start(); }
 window.__engine = () => playSfx('rev', .55);
 function meow() {
@@ -1825,7 +1825,7 @@ function water(d) {
   src.connect(lp); lp.connect(g); g.connect(AC.destination); src.start(t); lfo.start(t); lfo.stop(t + d + .8);
   for (let k = 0; k < d * 6; k++) bubble(t + .2 + Math.random() * d, 500 + Math.random() * 700, .008 + Math.random() * .012);
 }
-window.__splash = splash; window.__water = water;
+window.__splash = v => { if (SFX.paddle) playSfx('paddle', .55 * v); else splash(v); }; window.__water = () => {};
 function chime() { if (!AC || !musicOn) return; const t = AC.currentTime + .05; [72, 76, 79, 84].forEach((m, i) => note(m, t + i * .07, .9, .06)); }
 
 setSel(0, true);
