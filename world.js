@@ -537,7 +537,7 @@ function ledCard() {
   card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
     <h2 id="w-card-title">The LED controller</h2><p class="w-meta">Same controls the lighting studio uses</p>
     <p>I built this for Tesla's interior lighting design studio so designers could set RGBW values without a firmware engineer. Drag the sliders and the room's light strip follows.</p>
-    <p><button type="button" class="w-more" data-proj="led">Read how I built it</button></p>
+    <p><button type="button" class="w-more" data-proj="led">Read how I built it${touch ? '' : ' <span class="w-key">E</span>'}</button></p>
     ${row('r', 'R', 255)}${row('g', 'G', 255)}${row('b', 'B', 255)}${row('w', 'W', 255)}${row('br', 'Brightness', 100)}
     <div class="w-actions"><button type="button" class="w-alt" data-p="255,190,140,60">Warm</button><button type="button" class="w-alt" data-p="120,200,255,40">Cool</button><button type="button" class="w-alt" data-p="255,70,150,0">Pink</button><button type="button" class="w-alt" data-p="60,255,140,0">Green</button></div></div>`;
   card.hidden = false;
@@ -562,7 +562,7 @@ function openCard(l) {
     <h2 id="w-card-title">${esc(c.title)}</h2><p class="w-meta">${esc(c.meta)}</p>
     ${(c.body || []).map(b => `<p>${esc(b)}</p>`).join('')}
     ${c.projects ? `<div class="w-projlist">${c.projects.map(([id, t]) => `<button type="button" class="tw-link" data-proj="${id}">${esc(t)}</button>`).join('')}</div>` : ''}${c.img ? `<img class="w-img" src="${c.img}" alt="${esc(c.imgAlt || '')}">` : ''}${c.contact ? CONTACT : ''}${c.note ? `<p class="w-note">${esc(c.note)}</p>` : ''}
-    ${l.id === 'teslalight' ? '<button type="button" class="w-more" data-proj="led">Read the LED controller story</button>' : l.tour && l.id !== 'next' ? `<button type="button" class="w-more" data-proj="${l.id}">Read the full story</button>` : ''}</div>`;
+    ${l.id === 'teslalight' ? `<button type="button" class="w-more" data-proj="led">Read the LED controller story${touch ? '' : ' <span class="w-key">E</span>'}</button>` : l.tour && l.id !== 'next' ? `<button type="button" class="w-more" data-proj="${l.id}">Read the full story${touch ? '' : ' <span class="w-key">E</span>'}</button>` : ''}</div>`;
   card.hidden = false;
   card.querySelector('.w-close').addEventListener('click', closeCard);
   card.querySelectorAll('[data-proj]').forEach(b => b.addEventListener('click', () => { closeCard(); window.__openProject && window.__openProject(b.dataset.proj); }));
@@ -602,6 +602,8 @@ const KEYMAP = {ArrowUp: 'up', w: 'up', W: 'up', ArrowDown: 'down', s: 'down', S
 addEventListener('keydown', e => {
   if (!running || !document.getElementById('proj').hidden) return;
   if (e.key === 'Escape') { if (!big.hidden) big.hidden = true; else if (!card.hidden) closeCard(); return; }
+  // with a card open, E reads the full story (or closes the card if there isn't one)
+  if ((e.key === 'e' || e.key === 'E') && !card.hidden && !(e.target.closest && e.target.closest('input'))) { e.preventDefault(); const more = card.querySelector('.w-more'); if (more) more.click(); else closeCard(); return; }
   if (e.target.closest && e.target.closest('input,textarea')) return;
   if (KEYMAP[e.key]) { e.preventDefault(); keys.add(KEYMAP[e.key]); P.target = null; if (!card.hidden) closeCard(); }
   else if ((e.key === 'e' || e.key === 'E' || e.key === 'Enter' || e.key === ' ') && card.hidden && document.activeElement === cv && scene === 'room') { const o = roomNearest(); if (o) { e.preventDefault(); roomOpen(o); } }
@@ -620,6 +622,7 @@ cv.addEventListener('pointerdown', e => {
   if (hit) { walkTo(hit, true); return; }
   P.target = {x: wx, y: wy}; P.after = null; P.stuck = 0;
 });
+cv.addEventListener('pointermove', e => { if (scene !== 'world' || !(e.buttons & 1) || e.pointerType === 'touch' && !e.isPrimary) return; const cam = camera(); P.target = {x: (e.clientX - offX) / SC + cam.x, y: (e.clientY - offY) / SC + cam.y}; P.after = null; P.stuck = 0; });
 prompt.addEventListener('click', () => { if (scene === 'room') { const o = roomNearest(); if (o) roomOpen(o); return; } const n = nearest(); if (n) openCard(n); });
 
 /* ---------------- loop ---------------- */
@@ -733,7 +736,7 @@ let welcomed = false; let moeClicks = 0;
 function welcome() {
   welcomed = true;
   const h = document.createElement('div'); h.id = 'w-hint'; h.setAttribute('role', 'status');
-  h.textContent = touch ? 'Follow the numbered path · tap a building to visit' : 'Follow the numbered path · arrow keys to walk, or click a building';
+  h.textContent = touch ? 'Tap or drag to walk · tap a building to open it' : 'Walk with your mouse (click or drag), the arrow keys or WASD · E to open';
   root.appendChild(h);
   const hide = () => { h.classList.add('off'); setTimeout(() => h.remove(), 700); removeEventListener('keydown', hide); cv.removeEventListener('pointerdown', hide); };
   addEventListener('keydown', hide); cv.addEventListener('pointerdown', hide); setTimeout(hide, 7000);
