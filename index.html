@@ -1010,7 +1010,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
         </div>
       </div>
       <div class="cs-eqs">
-        <div class="cs-eq"><span>Fuse current</span><em>Fuse rating = 1.5 × max continuous current (A)</em><b>1.5 × 9 A = 13.5 A</b><p>Derated for 10+ hours of continuous load.</p></div>
+        <div class="cs-eq"><span>Fuse current</span><em>Fuse rating = max continuous current ÷ continuous-load derating (A)</em><b>9 A ÷ 0.67 ≈ 1.5 × 9 A = 13.5 A</b><p>A fuse shouldn’t carry more than about two-thirds of its rating for hours at a time, so it’s sized 1.5× above the 10+ hour load.</p></div>
         <div class="cs-eq"><span>Fuse voltage</span><em>Fuse voltage rating ≥ supply voltage (V)</em><b>&gt; 12 V → 32 V rated</b><p>Next common rating above the supply.</p></div>
         <div class="cs-eq"><span>Fuse type</span><b>Slow-blow</b><p>Rides through the 1000 µF capacitor’s inrush at power-up.</p></div>
       </div>
@@ -1019,7 +1019,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
     <section class="cs-sec">
       <h2><span>06</span>PCB</h2>
       <p class="cs-p">2-layer, mixed-signal, laid out in KiCad, reviewed with the EEs, then fabricated, hand-soldered and assembled by me.</p>
-      <div class="cs-gallery g3"><figure class="cs-fig"><img src="img/cs-route.webp" alt="PCB placement and routing in KiCad" loading="lazy"><figcaption>Placement and routing</figcaption></figure><figure class="cs-fig"><img src="img/cs-pour.webp" alt="Ground pour across the board" loading="lazy"><figcaption>Ground pour on both layers</figcaption></figure><figure class="cs-fig"><img src="img/cs-relief.webp" alt="Thermal relief pads on ground connections" loading="lazy"><figcaption>Thermal reliefs: spokes to the ground pour so pins heat up fast when hand soldering</figcaption></figure></div>
+      <div class="cs-gallery g3"><figure class="cs-fig"><img src="img/cs-route.webp" alt="PCB placement and routing in KiCad" loading="lazy"><figcaption>Placement and routing</figcaption></figure><figure class="cs-fig"><img src="img/cs-pour.webp" alt="Ground pour across the board" loading="lazy"><figcaption>Ground pour on both layers</figcaption></figure><figure class="cs-fig"><img src="img/cs-relief.webp" alt="Thermal relief pads on ground connections" loading="lazy"><figcaption>Thermal reliefs on the pads, plus a via stitching the capacitor’s ground to the other layer</figcaption></figure></div>
       <div class="cs-gallery g2"><figure class="cs-fig"><img src="img/cs-top.webp" alt="3D render of the top of the PCB" loading="lazy"><figcaption>Top</figcaption></figure><figure class="cs-fig"><img src="img/cs-bottom.webp" alt="3D render of the bottom of the PCB" loading="lazy"><figcaption>Bottom</figcaption></figure></div>
     </section>
 
