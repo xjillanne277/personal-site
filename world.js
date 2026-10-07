@@ -797,9 +797,6 @@ function resetCones() { cones = []; for (let i = 0; i < 46; i++) { const x = 120
   for (let y = 0; y < DH; y += 3) for (let x = 0; x < DW; x += 3) { const n = Math.sin(x * .012 + Math.sin(y * .01) * 2) + Math.sin(y * .015 - x * .006) * .9; if (n > 1.25) { a.fillStyle = '#d6c487'; a.fillRect(x, y, 3, 3); } else if (n < -1.3) { a.fillStyle = '#ece0b2'; a.fillRect(x, y, 3, 3); } }
   // ocean on the right with surf
   for (let y = 0; y < DH; y += 2) { const ox = DW - 180 + Math.round(Math.sin(y / 60) * 16); a.fillStyle = '#3f7fb8'; a.fillRect(ox, y, DW - ox, 2); a.fillStyle = '#eef6fb'; a.fillRect(ox - 3, y, 4, 2); a.fillStyle = '#5b9bd5'; a.fillRect(ox + 1, y, 12, 2); }
-  // a winding coast road to follow (optional)
-  a.lineJoin = a.lineCap = 'round'; a.beginPath(); a.moveTo(80, 880); a.bezierCurveTo(300, 600, 200, 260, 520, 220); a.bezierCurveTo(820, 180, 760, 560, 1040, 560); a.bezierCurveTo(1260, 560, 1240, 220, 1360, 120);
-  a.strokeStyle = '#3f4349'; a.lineWidth = 46; a.stroke(); a.strokeStyle = '#f2c14e'; a.lineWidth = 2; a.setLineDash([14, 12]); a.stroke(); a.setLineDash([]);
   // palms, pines and a few beach umbrellas (drive-through, purely decoration)
   for (let i = 0; i < 90; i++) { const x = 40 + rnd(i * 2.7 + 5) * (DW - 260), y = 30 + rnd(i * 6.3 + 9) * (DH - 60);
     if (i % 4 === 0) { a.fillStyle = 'rgba(0,0,0,.12)'; a.fillRect(x - 6, y + 12, 16, 3); a.fillStyle = '#8a6244'; for (let k = 0; k < 16; k++) a.fillRect(x + Math.round(Math.sin(k / 5) * 2), y + 12 - k, 2, 1); a.fillStyle = '#4f9150'; [[-9, 0], [-6, -3], [0, -5], [6, -3], [9, 0]].forEach(([dx, dy]) => { a.fillRect(x + Math.min(0, dx), y - 4 + dy, Math.abs(dx) + 2, 3); a.fillRect(x + dx - 1, y - 2 + dy, 3, 3); }); }
@@ -854,8 +851,8 @@ function trackStep(dt) {
   const steer = (rt ? 1 : 0) - (lf ? 1 : 0), sp = Math.abs(drv.v);
   drv.a += steer * dt * (2.2 + Math.min(1.4, sp / 220)) * (sp < 8 ? sp / 8 : 1) * Math.sign(drv.v || 1);
   drv.x += Math.cos(drv.a) * drv.v * dt; drv.y += Math.sin(drv.a) * drv.v * dt;
-  if (drv.x < 16 || drv.x > DW - 200) { drv.x = Math.max(16, Math.min(DW - 200, drv.x)); drv.v *= .5; drv.shake = .2; }
-  if (drv.y < 16 || drv.y > DH - 16) { drv.y = Math.max(16, Math.min(DH - 16, drv.y)); drv.v *= .5; drv.shake = .2; }
+  if (drv.x < 16 || drv.x > DW - 200) { drv.x = Math.max(16, Math.min(DW - 200, drv.x)); drv.v *= .5; }
+  if (drv.y < 16 || drv.y > DH - 16) { drv.y = Math.max(16, Math.min(DH - 16, drv.y)); drv.v *= .5; }
   // skid marks when turning hard at speed
   if (steer && sp > 150) { const bx = Math.cos(drv.a), by = Math.sin(drv.a), px = -by, py = bx; skc.fillStyle = 'rgba(60,50,40,.22)'; [[-1], [1]].forEach(([s]) => skc.fillRect(Math.round(drv.x - bx * 14 + px * 9 * s), Math.round(drv.y - by * 14 + py * 9 * s), 3, 3)); }
   // boost pads
@@ -871,7 +868,7 @@ function trackStep(dt) {
   const bar = tui.querySelector('.tr-hud'); bar.style.setProperty('--tank', drv.tank); bar.classList.toggle('boosting', drv.boost > 0);
 }
 function drawTrack(now) {
-  const sh = drv.shake > 0 && !reduce ? (Math.random() - .5) * 4 : 0;
+  const sh = 0;
   const cx = Math.round(Math.max(0, Math.min(DW - VW, drv.cx - VW / 2)) + sh), cy = Math.round(Math.max(0, Math.min(DH - VH, drv.cy - VH / 2)) + sh);
   g.fillStyle = '#e3d39c'; g.fillRect(0, 0, VW, VH);
   g.drawImage(dart, -cx, -cy); g.drawImage(skid, -cx, -cy);
