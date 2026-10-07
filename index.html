@@ -175,6 +175,25 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 @media (max-width:480px){.panel{padding:26px 18px 22px}.badge{font-size:12px}}
 @media (prefers-reduced-motion:reduce){.menu button[aria-current="true"]::before,.badge i{animation:none}}
 
+/* game controls: one slim floating panel over the map */
+#world-bar{flex-direction:row;left:50%;right:auto;bottom:calc(12px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);width:max-content;max-width:calc(100% - 24px);box-sizing:border-box;flex-wrap:nowrap;gap:8px;align-items:center;padding:7px;background:var(--panel);box-shadow:0 0 0 3px var(--panel-edge),0 6px 0 3px rgba(0,0,0,.28);pointer-events:auto}
+#world-bar .bar-box{box-shadow:none;background:none;padding:0}
+#world-bar .side{display:flex;gap:6px;width:auto;align-self:center}
+#world-bar .side button,#world-bar .tour div button{width:auto}
+#world-bar button.b{font-size:15px;padding:8px 14px 7px;line-height:1.1}
+#world-bar .tour{width:auto;height:auto;flex-direction:row;align-items:center;gap:10px;padding-left:12px;margin-left:4px;border-left:2px solid #e6d3b0}
+#world-bar .tour div{flex-direction:row;gap:6px}
+#tour-prev{order:0}#tour-next{order:1}
+#tour-pos{display:block;font-size:13px;max-width:190px;text-align:left;color:var(--ink)}
+#world-bar .mini-wrap{width:118px;height:62px;padding:2px;box-shadow:0 0 0 2px #e6d3b0}
+#world-bar .mini-wrap::after{display:none}
+#world-card{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+@media (max-width:760px){
+  #world-bar{flex-wrap:wrap;justify-content:center;width:calc(100% - 24px)}
+  #world-bar .tour{order:-1;border-left:0;padding-left:0;margin-left:0;width:100%;justify-content:center}
+  #tour-pos{display:none}
+  #world-card{bottom:calc(128px + env(safe-area-inset-bottom,0px))}
+}
 /* ---------- project notebook ---------- */
 .proj{position:fixed;inset:0;z-index:22;overflow-y:auto;background:#3a2a20;-webkit-overflow-scrolling:touch}
 .proj-bar{position:sticky;top:0;z-index:2;display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:10px 16px calc(10px);padding-top:calc(10px + env(safe-area-inset-top,0px));background:#2b1f17;color:#e9d8bd;box-shadow:0 2px 0 rgba(0,0,0,.25)}
@@ -1343,7 +1362,7 @@ addEventListener('keydown', e => {
 const fade = document.getElementById('fade');
 const titleEl = document.getElementById('title'), pfEl = document.getElementById('pf'), projEl = document.getElementById('proj'), badge = document.querySelector('.badge');
 function go(where) {
-  if (where === 'play' && !gameMuted) { setMusic(true); chime(); }
+  if (where === 'play' && !gameMuted) { setMusic(true); setTimeout(knock, 60); }
   if (reduce) { location.hash = where; return; }
   fade.classList.add('on');
   setTimeout(() => { location.hash = where; fade.classList.remove('on'); }, 380);
@@ -1401,7 +1420,7 @@ document.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click'
 document.getElementById('go-portfolio').addEventListener('click', () => go('portfolio'));
 pfEl.querySelectorAll('[data-to]').forEach(b => b.addEventListener('click', () => document.getElementById(b.dataset.to).scrollIntoView({behavior: reduce ? 'auto' : 'smooth'})));
 document.querySelectorAll('[data-copy]').forEach(b => { const label = b.textContent; b.addEventListener('click', async () => { try { await navigator.clipboard.writeText('j4yousse@uwaterloo.ca'); b.textContent = 'Copied ✓'; } catch { b.textContent = 'j4yousse@uwaterloo.ca'; } setTimeout(() => b.textContent = label, 1800); }); });
-window.__sfx = () => chime();
+window.__sfx = () => knock();
 
 /* ============ music: original, generated live ============ */
 let AC = null, master = null, musicOn = false, timer = null, nextBar = 0, bar = 0;
@@ -1470,7 +1489,7 @@ snd.addEventListener('click', e => { e.stopPropagation(); const on = !(AC && mus
 // direct visits to #play: browsers need a click or key before sound can start
 ['pointerdown', 'keydown'].forEach(ev => addEventListener(ev, e => { if (mode !== 'play' || gameMuted || (e.target.closest && e.target.closest('#sound'))) return; if (!(AC && musicOn)) setMusic(true); else if (AC.state === 'suspended') AC.resume(); }));
 
-function blip(f) { if (!AC || !musicOn) return; const t = AC.currentTime; note(Math.round(69 + 12 * Math.log2(f / 440)), t, .25, .05, 'square'); }
+function blip() { wood(.4, 1.25); }
 function rev(kind) {
   if (!AC || !musicOn) return;
   const t = AC.currentTime, v8 = kind === 'c5';
@@ -1504,6 +1523,30 @@ function meow() {
   src.start(t); vib.start(t); src.stop(t + d + .05); vib.stop(t + d + .05);
 }
 window.__meow = () => { if (SFX.meow) playSfx('meow', .5); else meow(); };
+/* wood taps for hover and click (game and welcome screen only, and only with sound on) */
+function wood(k, pitch) {
+  if (!AC || !musicOn) return;
+  const t = AC.currentTime, p = (pitch || 1) * (0.96 + Math.random() * .08);
+  [[820, 1, .11], [1390, .5, .06], [2350, .22, .04]].forEach(([f, a, d]) => {
+    const o = AC.createOscillator(), gn = AC.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(f * p, t); o.frequency.exponentialRampToValueAtTime(f * p * .96, t + d);
+    gn.gain.setValueAtTime(0, t); gn.gain.linearRampToValueAtTime(a * .09 * k, t + .002); gn.gain.exponentialRampToValueAtTime(.0001, t + d);
+    o.connect(gn); gn.connect(AC.destination); o.start(t); o.stop(t + d + .02);
+  });
+  const len = Math.floor(AC.sampleRate * .018), buf = AC.createBuffer(1, len, AC.sampleRate), dd = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) dd[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 5);
+  const src = AC.createBufferSource(), bp = AC.createBiquadFilter(), ng = AC.createGain(); src.buffer = buf; bp.type = 'bandpass'; bp.frequency.value = 2200 * p; bp.Q.value = 1.2; ng.gain.value = .14 * k;
+  src.connect(bp); bp.connect(ng); ng.connect(AC.destination); src.start(t);
+}
+function knock() { wood(1, 1); setTimeout(() => wood(.8, 1.06), 110); }
+const TAPPABLE = 'button,a,.w-label,.bm-pin,[role="button"],.mini-wrap';
+let lastHover = null, lastHoverT = 0;
+addEventListener('pointerover', e => {
+  const el = e.target.closest && e.target.closest(TAPPABLE);
+  if (el === lastHover) return; lastHover = el;
+  if (!el || e.pointerType === 'touch' || mode === 'portfolio' || !projEl.hidden) return;
+  const now = performance.now(); if (now - lastHoverT < 60) return; lastHoverT = now; wood(.4, 1.25);
+});
+addEventListener('click', e => { if (mode === 'portfolio' || !projEl.hidden || !(e.target.closest && e.target.closest(TAPPABLE))) return; wood(1, 1); }, true);
 function chime() { if (!AC || !musicOn) return; const t = AC.currentTime + .05; [72, 76, 79, 84].forEach((m, i) => note(m, t + i * .07, .9, .06)); }
 
 setSel(0, true);

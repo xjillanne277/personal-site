@@ -74,7 +74,8 @@ for (let y = 0; y < MH; y++) for (let x = 0; x < MW; x++) {
 }
 
 /* ---------------- bake the map ---------------- */
-const map = document.createElement('canvas'); map.width = MW * TS; map.height = MH * TS;
+const SKIRT = 5; // extra rows of forest below the playable map, so scrolling never shows an empty band
+const map = document.createElement('canvas'); map.width = MW * TS; map.height = (MH + SKIRT) * TS;
 const m = map.getContext('2d');
 const R = (c, x, y, w, h, col) => { c.fillStyle = col; c.fillRect(Math.round(x), Math.round(y), w, h); };
 const lights = [];
@@ -108,10 +109,16 @@ function bake() {
     if (t === T.WATER) { R(m, X, Y, TS, TS, '#5b9bd5'); if (rnd(s) > .6) R(m, X + rnd(s + 1) * 10, Y + rnd(s + 2) * 14, 4, 1, '#8fc1ea'); }
     if (t === T.OCEAN) { R(m, X, Y, TS, TS, '#3f7fb8'); if (rnd(s) > .5) R(m, X + rnd(s + 1) * 10, Y + rnd(s + 2) * 14, 5, 1, '#7fb3de'); if (tiles[idx(x - 1, y)] === T.SAND) for (let k = 0; k < TS; k += 3) R(m, X, Y + k, 2, 2, '#e9f3fa'); }
   }
+  for (let y = MH; y < MH + SKIRT; y++) for (let x = 0; x < MW; x++) {
+    const t = tiles[idx(x, MH - 1)], X = x * TS, Y = y * TS, s = x * 31 + y * 17;
+    R(m, X, Y, TS, TS, {0: '#8fbf7f', 1: '#d7c98c', 2: '#5b9bd5', 5: '#ead9a6', 6: '#3f7fb8'}[t] || '#8fbf7f');
+    if (t === T.GRASS && rnd(s + 3) > .55) R(m, X + 2, Y + 3, 10, 8, '#e8eef2');
+    if (t === T.WATER && rnd(s) > .6) R(m, X + rnd(s + 1) * 10, Y + rnd(s + 2) * 14, 4, 1, '#8fc1ea');
+  }
   // river banks: one long timber board each side, posts every few metres, and a small dock where the path meets the water
   [[23 * TS - 4, 1], [26 * TS, -1]].forEach(([bx, side]) => {
-    R(m, bx, 0, 4, MH * TS, '#a8794e'); R(m, side > 0 ? bx : bx + 3, 0, 1, MH * TS, '#c4935f'); R(m, side > 0 ? bx + 3 : bx, 0, 1, MH * TS, '#6e4a2c');
-    for (let y = 10; y < MH * TS; y += 40) R(m, bx - (side > 0 ? 1 : 0), y, 5, 3, '#6e4a2c');
+    R(m, bx, 0, 4, map.height, '#a8794e'); R(m, side > 0 ? bx : bx + 3, 0, 1, map.height, '#c4935f'); R(m, side > 0 ? bx + 3 : bx, 0, 1, map.height, '#6e4a2c');
+    for (let y = 10; y < map.height; y += 40) R(m, bx - (side > 0 ? 1 : 0), y, 5, 3, '#6e4a2c');
   });
   [[23 * TS - 4, 23 * TS + 10], [26 * TS - 10, 26 * TS + 4]].forEach(([x0, x1]) => { for (let x = x0; x < x1; x += 3) { R(m, x, 7 * TS + 3, 2, 12, '#b98a5c'); R(m, x + 2, 7 * TS + 3, 1, 12, '#8a6040'); } R(m, x0, 7 * TS + 15, x1 - x0, 1, '#6e4a2c'); });
   { const bx = (MW - 2) * TS, by = 3 * TS; R(m, bx - 4, by + 10, TS * 3 + 8, 4, '#c0392b'); R(m, bx - 4, by + 14, TS * 3 + 8, 1, '#8e2a20'); [bx + 6, bx + 34].forEach(tx => { R(m, tx, by - 18, 4, 34, '#c0392b'); R(m, tx - 1, by - 18, 6, 2, '#8e2a20'); R(m, tx, by - 8, 4, 1, '#8e2a20'); }); m.strokeStyle = '#c0392b'; m.lineWidth = 1; m.beginPath(); m.moveTo(bx - 4, by - 2); m.quadraticCurveTo(bx + 22, by + 14, bx + 50, by - 2); m.stroke(); }
@@ -119,6 +126,7 @@ function bake() {
   bakeBay();
   trees.sort((a, b) => a[1] - b[1]).forEach(([x, y, ca]) => ca ? (x > MW - 9 && rnd(x * 7 + y) > .6 ? drawPalm(x * TS, y * TS) : redwood(x * TS, y * TS)) : pine(x * TS, y * TS));
   L.forEach(drawLandmark);
+  for (let y = MH - 1; y < MH + SKIRT; y++) for (let x = 0; x < MW; x++) { const t = tiles[idx(x, Math.min(y, MH - 1))]; if ((t === T.GRASS || t === T.CAGRASS) && rnd(x * 17 + y * 5) < .8 && (y >= MH || block[idx(x, y)])) { if (t === T.GRASS) pine(x * TS, y * TS); else if (x > 42) drawPalm(x * TS, y * TS); else redwood(x * TS, y * TS); } }
 }
 function bakeBay() {
   // rolling golden-hill contours and poppies on the California side
@@ -286,13 +294,13 @@ let SC = 3, VW = 0, VH = 0, offX = 0, offY = 0, FIT = true, PADT = 0, PADB = 0;
 function cvFull() { Object.assign(cv.style, {left: '0px', top: '0px', width: '100%', height: '100%'}); offX = offY = 0; }
 function resize() {
   if (typeof scene !== 'undefined' && scene === 'room') { roomResize(); return; }
-  const bar = document.getElementById('world-bar'), barH = (bar && bar.offsetHeight) || 130, topH = 0;
+  const bar = document.getElementById('world-bar'), barH = ((bar && bar.offsetHeight) || 56) + 14;
   const mw = MW * TS, mh = MH * TS;
-  // fill the height above the bottom bar; if that's wider than the screen, pan sideways (always at least 60% of the map in view)
-  SC = Math.min((innerHeight - barH - 6) / mh, innerWidth / (mw * .6)); FIT = SC >= 1.3; if (!FIT) SC = 2;
+  SC = Math.max(innerWidth / mw, (innerHeight - barH * .5) / mh, 1.6);
+  FIT = innerWidth / SC >= mw * .72;
   root.classList.toggle('fit', FIT);
   VW = Math.ceil(innerWidth / SC); VH = Math.ceil(innerHeight / SC); cv.width = VW; cv.height = VH; g.imageSmoothingEnabled = false; cvFull();
-  PADT = topH / SC; PADB = barH / SC;
+  PADT = 0; PADB = barH / SC;
 }
 addEventListener('resize', resize);
 
@@ -619,7 +627,7 @@ function camera() {
   const px = Math.round(P.x), py = Math.round(P.y);
   const c = cur();
   if (scene === 'room') { const U = VH - Math.round(150 / SC), rw = c.W * TS, rh = c.H * TS; const cx = rw <= VW ? Math.round((rw - VW) / 2) : Math.max(0, Math.min(rw - VW, px - Math.round(VW / 2))); const cy = rh <= U ? Math.round((rh - U) / 2) - 4 : Math.max(0, Math.min(rh - U, py - Math.round(U / 2))); return {x: cx, y: cy}; }
-  const ax = c.W * TS - VW, y0 = -PADT, y1 = c.H * TS - VH + PADB;
+  const ax = c.W * TS - VW, y0 = 0, y1 = Math.min(c.H * TS - VH + PADB, map.height - VH);
   return {x: ax <= 0 ? Math.round(ax / 2) : Math.max(0, Math.min(ax, px - Math.round(VW / 2))), y: y1 <= y0 ? Math.round((y0 + y1) / 2) : Math.round(Math.max(y0, Math.min(y1, py - (VH - PADB + PADT) / 2)))};
 }
 function step(now) {
