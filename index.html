@@ -472,8 +472,9 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .pf-first.three .pf-fy{display:flex;flex-direction:column;padding:0;overflow:hidden;gap:0}
 .pf-first.three .pf-fy-img{width:100%}
 .pf-first.three .pf-fy-img img.fit{object-fit:contain;background:#26305f}
-.pf-first.three .pf-fy-img{aspect-ratio:4/3;background:#f4f3ef;border-radius:0}
-.pf-first.three .pf-fy-img img{object-fit:cover;padding:0}
+.pf-first.three .pf-fy-img{aspect-ratio:4/3;background:#fff;border-radius:0;border-bottom:1px solid var(--line)}
+.pf-first.three .pf-fy-img{position:relative;display:block}
+.pf-first.three .pf-fy-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:10px;box-sizing:border-box}
 .pf-first.three .pf-fy-body{padding:16px 18px 18px}
 .pf-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .pf-tags i{font:500 12.5px var(--f-head);font-style:normal;color:var(--sub);background:#f1f0ec;border-radius:999px;padding:3px 10px}
@@ -818,9 +819,9 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
     </section>
 
     <section class="pf-sec" id="pf-first" aria-labelledby="pf-first-h">
-      <div class="pf-sec-row"><h2 id="pf-first-h" class="pf-label">Other technical work</h2><p class="pf-aside">Earlier and smaller projects, from first year on.</p></div>
+      <div class="pf-sec-row"><h2 id="pf-first-h" class="pf-label">Earlier projects</h2><p class="pf-aside">From my first and second year.</p></div>
       <div class="pf-first three">
-        <button type="button" class="pf-fy" data-open="geotab"><span class="pf-fy-img" style="background:#26305f"><img class="fit" src="img/gt-cert.webp" alt="" loading="lazy"></span><span class="pf-fy-body"><span class="pf-kicker">Geotab hackathon · 2024</span><b>Project Jarvis</b><span>Distracted-driving detection with computer vision. 1st of 11 teams.</span><span class="pf-tags"><i>Model training</i><i>Computer vision</i><i>Learning fast</i></span></span></button>
+        <button type="button" class="pf-fy" data-open="geotab"><span class="pf-fy-img"><img src="img/gt-cert.webp" alt="" loading="lazy"></span><span class="pf-fy-body"><span class="pf-kicker">Geotab hackathon · 2024</span><b>Project Jarvis</b><span>Distracted-driving detection with computer vision. 1st of 11 teams.</span><span class="pf-tags"><i>Model training</i><i>Computer vision</i><i>Learning fast</i></span></span></button>
         <button type="button" class="pf-fy" data-open="waterloo"><span class="pf-fy-img"><img src="img/fb-v2-render.webp" alt="" loading="lazy"></span><span class="pf-fy-body"><span class="pf-kicker">ME101 · 2023, redesigned 2025</span><b>FrostBot</b><span>A LEGO cake-icing robot, redesigned in CAD with an 80/20 frame and a pneumatic piston.</span><span class="pf-tags"><i>Mechanisms</i><i>Pneumatics</i><i>Testing</i></span></span></button>
         <button type="button" class="pf-fy" data-open="waterloo"><span class="pf-fy-img"><img src="img/toy-photo.webp" alt="" loading="lazy"></span><span class="pf-fy-body"><span class="pf-kicker">ME100 · 2022</span><b>Wind-up soccer toy</b><span>A cam and follower that kicks a ping-pong ball, on a $50 budget.</span><span class="pf-tags"><i>Cam and follower</i><i>Laser cutting</i><i>Soldering</i></span></span></button>
       </div>
