@@ -58,8 +58,6 @@ const L = [
    card: {title: 'Geotab', meta: 'System Verification Intern · Oakville · Summer 2024', body: ['Designed a closed-loop, air-cooled test rack for dashcams, with 3D-printed mounts and low-cost PC fans in a modular enclosure, holding them at 26 °C.', 'Built an ML model for an AI dashcam: 72% obstacle detection with 6% false positives. 1st of 11 teams in a 7-day company hackathon.', 'Moved AI dashcam testing to historical feed data, cutting 32.4 t of CO₂ a year.']}},
   {id: 'workshop', label: 'Workshop', tx: 13, ty: 20, w: 5, h: 4, spot: [15, 25], kind: 'workshop',
    card: {title: 'The workshop', meta: 'Every project write-up in one place', body: ['Pick a project to read the full write-up.'], projects: [['led', 'LED controller · Tesla, 2025'], ['level', 'Smart lock hardware · Level Home, 2026'], ['google', 'Pixel Watch · Google, 2026'], ['teslacells', 'Battery cell equipment · Tesla, 2025'], ['geotab', 'Dashcams and a hackathon win · Geotab, 2024'], ['valbruna', 'Steel mill CFD · Valbruna, 2023'], ['evercloak', 'Dehumidifier enclosure · Evercloak, 2023'], ['waterloo', 'First-year builds · Waterloo']]}},
-  {id: 'tower', label: 'Skills tower', tx: 29, ty: 18, w: 3, h: 4, spot: [30, 23], kind: 'tower',
-   card: {title: 'Skills tower', meta: 'What each project taught me', body: ['Skills from every project collect on these shelves.']}},
   {id: 'teslacells', label: 'Tesla · Cells', yr: '2025', tx: 27, ty: 8, w: 5, h: 4, spot: [29, 13], kind: 'modern', tour: 6,
    card: {title: 'Tesla, Cell Equipment', meta: 'Mechanical Design Engineering Intern · Palo Alto · Winter 2025', body: ['Designed a high-temp magnetic clamping assembly for cell lamination: 0.1 mm clearance through tolerance stack-ups and vibration-resistant design, yield up 15%, setup cut from 30 to 5 seconds.', 'Led the mechanical, electrical and controls design of a modular foil-stretching machine with load-cell tension control, halving wrinkling and creasing failures.', 'Built the control box: Arduino, load cell, amplifier and signal conditioner for closed-loop pneumatic nip rollers, holding force within ±2%.']}},
   {id: 'teslalight', label: 'Tesla · Lighting', yr: '2025', tx: 34, ty: 2, w: 5, h: 4, spot: [36, 7], kind: 'modern', tour: 7,
@@ -550,7 +548,6 @@ function ledCard() {
 function openCard(l) {
   window.track && l && track('stop_open', {stop: l.id});
   if (l.kind === 'nsx' || l.kind === 'c5') { autoId = l.id; const n = carClicks[l.kind]++ % 3; if (n === 0) pops[l.kind] = 1; else if (n === 1) { pops[l.kind] = 1; window.__engine && window.__engine(l.kind); } else pops[l.kind] = 0; return; }
-  if (l.kind === 'tower') { autoId = l.id; window.__openTower && window.__openTower(); return; }
   if (l.kind === 'cabin') { enterRoom(); return; }
   if (l.kind === 'door') { exitRoom(); return; }
   if (l.kind === 'led') { ledCard(); return; }
@@ -602,7 +599,7 @@ setPhase('auto');
 /* ---------------- input ---------------- */
 const KEYMAP = {ArrowUp: 'up', w: 'up', W: 'up', ArrowDown: 'down', s: 'down', S: 'down', ArrowLeft: 'left', a: 'left', A: 'left', ArrowRight: 'right', d: 'right', D: 'right'};
 addEventListener('keydown', e => {
-  if (!running || !document.getElementById('proj').hidden || !document.getElementById('tower').hidden) return;
+  if (!running || !document.getElementById('proj').hidden) return;
   if (e.key === 'Escape') { if (!big.hidden) big.hidden = true; else if (!card.hidden) closeCard(); return; }
   if (e.target.closest && e.target.closest('input,textarea')) return;
   if (KEYMAP[e.key]) { e.preventDefault(); keys.add(KEYMAP[e.key]); P.target = null; if (!card.hidden) closeCard(); }
@@ -726,7 +723,7 @@ function draw(now) {
 
 function drawPrompt(cam) {
   const n = nearest();
-  if (n && card.hidden && !P.target && n.kind !== 'nsx' && n.kind !== 'c5') { const verb = n.kind === 'cabin' || n.kind === 'tower' ? (n.kind === 'tower' ? 'enter the skills tower' : 'go inside') : n.kind === 'door' ? 'go outside' : `open ${n.label}`; prompt.hidden = false; prompt.textContent = touch ? `Tap to ${verb}` : `Press E to ${verb}`; prompt.style.transform = `translate(${Math.round((P.x - cam.x) * SC)}px,${Math.round((P.y - 30 - cam.y) * SC)}px) translate(-50%,-100%)`; }
+  if (n && card.hidden && !P.target && n.kind !== 'nsx' && n.kind !== 'c5') { const verb = n.kind === 'cabin' ? 'go inside' : n.kind === 'door' ? 'go outside' : `open ${n.label}`; prompt.hidden = false; prompt.textContent = touch ? `Tap to ${verb}` : `Press E to ${verb}`; prompt.style.transform = `translate(${Math.round((P.x - cam.x) * SC)}px,${Math.round((P.y - 30 - cam.y) * SC)}px) translate(-50%,-100%)`; }
   else prompt.hidden = true;
 }
 /* ---------------- public ---------------- */

@@ -7,14 +7,14 @@
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
 gtag('js',new Date());gtag('config','G-1EQKKFH75R');
 window.track=(n,p)=>{try{gtag('event',n,p||{})}catch(e){}};
-document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('[data-go],a,#go-facts,#go-contact,#go-home,#f-copy,.w-copy,[data-go-world],#map-toggle,.minimap');if(!t)return;const h=t.getAttribute('href')||'';
+document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('[data-go],a,#go-portfolio,#go-contact,[data-copy],.w-copy');if(!t)return;const h=t.getAttribute('href')||'';
 if(t.dataset.go)track('choose_path',{path:t.dataset.go});
 else if(h.endsWith('resume.pdf'))track('resume_download');
 else if(h.includes('linkedin.com'))track('linkedin_click');
-else if(t.id==='f-copy'||t.classList.contains('w-copy'))track('copy_email');
-else if(t.id==='go-facts')track('choose_path',{path:'facts',from:'world'});
+else if(h==='#play')track('choose_path',{path:'play',from:'portfolio'});
+else if(t.hasAttribute('data-copy')||t.classList.contains('w-copy'))track('copy_email');
+else if(t.id==='go-portfolio')track('choose_path',{path:'portfolio',from:'game'});
 else if(t.id==='go-contact')track('contact_open');
-else if(t.hasAttribute('data-go-world'))track('enter_world',{from:'facts'});
 },true);
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -221,52 +221,6 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .proj-skills li{font-size:14px;background:#2f6f5e;color:#f4fbf6;padding:5px 10px 4px}
 .w-more{display:inline-block;margin-top:4px;font:600 16px var(--f-pixel);background:var(--accent);color:#fff8ef;border:0;padding:9px 14px 8px;cursor:pointer;box-shadow:0 3px 0 #9b3f2c}
 
-/* ---------- just the facts ---------- */
-#facts{position:fixed;inset:0;z-index:15;overflow-y:auto;background:#f7f2e8;color:#2b2119;font:400 17px/1.6 "Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif}
-.facts-in{max-width:980px;margin:0 auto;padding:calc(48px + env(safe-area-inset-top,0px)) clamp(16px,4vw,40px) 72px}
-.facts-head{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:28px;align-items:end;padding-bottom:26px;border-bottom:3px solid #2b2119}
-@media (max-width:760px){.facts-head{grid-template-columns:minmax(0,1fr)}}
-#facts h1{margin:0;font:700 clamp(40px,7vw,68px)/1 var(--f-pixel);color:#2b2119}
-.facts-sub{margin:12px 0 0;font-size:clamp(17px,2vw,20px);max-width:44ch;color:#4a3b2e}
-.facts-links{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:flex-start}
-.facts-links a{color:#2b2119;font-weight:700;text-decoration-color:#d9644a;text-decoration-thickness:2px;text-underline-offset:3px}
-.facts-email{display:flex;gap:6px;align-items:center;background:#fff;border:2px solid #2b2119;padding:4px 4px 4px 10px}
-.facts-email code{font:500 14px "IBM Plex Mono",ui-monospace,monospace;user-select:all}
-.facts-email button{font:700 13px var(--f-body,inherit);background:#2b2119;color:#f7f2e8;border:0;padding:6px 10px;cursor:pointer}
-.facts-world{font:600 16px var(--f-pixel);background:#d9644a;color:#fff8ef;border:0;padding:9px 14px 8px;cursor:pointer;box-shadow:0 3px 0 #9b3f2c}
-.facts-world.big{font-size:19px;padding:12px 20px 11px}
-.facts-sec{margin-top:44px}
-#facts h2{margin:0 0 16px;font:700 24px/1.1 var(--f-pixel);color:#2b2119}
-.facts-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
-@media (max-width:900px){.facts-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:480px){.facts-cards{grid-template-columns:minmax(0,1fr)}}
-.facts-card{display:grid;gap:6px;align-content:start;text-align:left;background:#fff;border:2px solid #2b2119;padding:0 0 14px;cursor:pointer;font:inherit;color:inherit;box-shadow:0 4px 0 #2b2119;transition:transform .12s}
-.facts-card:hover{transform:translateY(-2px)}
-.facts-card:focus-visible{outline:3px solid #d9644a;outline-offset:3px}
-.facts-card img,.facts-stat{display:block;width:100%;aspect-ratio:4/3;object-fit:contain;background:#f1ebde;border-bottom:2px solid #2b2119}
-.facts-stat{display:grid;place-items:center;font:700 40px var(--f-pixel);font-style:normal;color:#2f6f5e}
-.facts-card b,.facts-card span{padding:0 14px}
-.facts-card b{font-size:17px;line-height:1.25;margin-top:6px}
-.facts-card span{font-size:14px;line-height:1.45;color:#5a4a3d}
-.facts-exp{list-style:none;margin:0;padding:0;display:grid;gap:0}
-.facts-exp>li{padding:18px 0;border-bottom:1px solid rgba(43,33,25,.18)}
-.fx-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 16px;align-items:baseline}
-.fx-top b{font:700 22px var(--f-pixel)}
-.fx-top span{font:500 14px/1 "IBM Plex Mono",ui-monospace,monospace;color:#7a5a44}
-.fx-role{margin:2px 0 6px;font-weight:700;color:#4a3b2e}
-.facts-exp ul{margin:0;padding-left:20px;max-width:72ch}
-.facts-exp ul li{margin:2px 0}
-.fx-more{margin-top:6px;font:700 14px inherit;background:none;border:0;padding:0;color:#9b3f2c;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
-.facts-two{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:32px}
-@media (max-width:760px){.facts-two{grid-template-columns:minmax(0,1fr)}}
-.facts-skills{margin:0;display:grid;grid-template-columns:11em minmax(0,1fr);gap:8px 14px}
-@media (max-width:480px){.facts-skills{grid-template-columns:minmax(0,1fr)}.facts-skills dd{margin-bottom:6px}}
-.facts-skills dt{font-weight:700}
-.facts-skills dd{margin:0;color:#4a3b2e}
-.facts-two p{margin:0}
-.facts-foot{margin-top:56px;padding:28px;background:#2f5e46;color:#f1f7f2;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;box-shadow:0 0 0 4px #1d3b2d}
-.facts-foot p{margin:0;max-width:46ch;font-size:18px}
-
 /* project pages: technical document */
 .proj-sheet{background:#ffffff;background-image:none;box-shadow:0 0 0 1px #d8cfc3,0 12px 40px rgba(0,0,0,.35);font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16.5px;line-height:1.6;color:#1f2328}
 .proj h1{font:700 clamp(30px,5vw,46px)/1.1 "IBM Plex Sans",system-ui,sans-serif;letter-spacing:-.01em;color:#14181d}
@@ -306,46 +260,191 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .proj-skills{border-top:2px solid #14181d}
 .proj-skills li{background:#eef1f4;color:#1f2328;border:1px solid #d9dde2}
 .proj-ch{scroll-margin-top:64px}
-#facts h1:focus{outline:none}
 .proj-revs td{font-size:14px}
 .proj-revs td:first-child{min-width:170px}
 .proj-revs td:last-child{min-width:260px}
 .proj-sub{font-size:12.5px;color:#59626c}
 
-/* ---------- skills tower ---------- */
-.tower{position:fixed;inset:0;z-index:18;overflow-y:auto;background-color:#3a3448;background-image:linear-gradient(rgba(0,0,0,.18) 2px,transparent 2px),linear-gradient(90deg,rgba(0,0,0,.18) 2px,transparent 2px);background-size:48px 24px,48px 48px;color:#f3ecdf}
-.tw-bar{position:sticky;top:0;z-index:2;display:flex;gap:14px;align-items:center;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top,0px));background:#231f2c;box-shadow:0 2px 0 rgba(0,0,0,.3)}
-.tw-crumb{font:500 14px "IBM Plex Mono",monospace;color:#c9bfd9}
-.tw-in{max-width:1180px;margin:0 auto;padding:28px clamp(16px,3vw,32px) 64px}
-.tw-head h1{margin:0;font:700 clamp(30px,5vw,46px)/1 var(--f-pixel);color:#fbf3e4}
-.tw-head p{margin:10px 0 0;color:#d6cce4;font:400 16px/1.5 "IBM Plex Sans",system-ui,sans-serif}
-.tw-layout{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:24px;margin-top:22px;align-items:start}
-@media (max-width:860px){.tw-layout{grid-template-columns:minmax(0,1fr)}}
-.tw-case{background:#5a3a24;padding:12px 14px 4px;box-shadow:0 0 0 4px #3e2716,0 0 0 8px #2a1a0e,0 14px 0 8px rgba(0,0,0,.3)}
-.tw-shelf{position:relative;padding:28px 6px 0;margin-bottom:10px;background:#2a1a10;box-shadow:inset 0 6px 10px rgba(0,0,0,.45)}
-.tw-shelf::after{content:"";display:block;height:12px;margin:0 -6px;background:#7a5232;box-shadow:inset 0 2px 0 #946540,0 3px 0 #3e2716}
-.tw-plaque{position:absolute;left:10px;top:6px;margin:0;font:600 12px/1 "IBM Plex Mono",monospace;letter-spacing:.04em;background:#c9a54a;color:#2a1a0e;padding:4px 7px 3px;box-shadow:0 0 0 2px #7a5a1e}
-.tw-books{display:flex;flex-wrap:wrap;align-items:flex-end;gap:4px;padding:0 4px;min-height:178px}
-.tw-book{--c:#8b3a3a;--h:96px;position:relative;width:38px;height:var(--h);border:0;padding:6px 0;cursor:pointer;background:var(--c);color:#fbf3e4;box-shadow:inset -4px 0 0 rgba(0,0,0,.22),inset 3px 0 0 rgba(255,255,255,.14);transition:transform .12s ease;display:flex;align-items:center;justify-content:center}
-.tw-book::before,.tw-book::after{content:"";position:absolute;left:0;right:0;height:3px;background:rgba(255,230,160,.55)}
-.tw-book::before{top:8px}.tw-book::after{bottom:8px}
-.tw-book span{writing-mode:vertical-rl;transform:rotate(180deg);font:600 11px/1.1 "IBM Plex Mono",monospace;white-space:nowrap}
-.tw-book:hover{transform:translateY(-6px)}
-.tw-book.on{transform:translateY(-10px);box-shadow:inset -4px 0 0 rgba(0,0,0,.22),0 0 0 3px #f2c14e}
-.tw-book:focus-visible{outline:3px solid #f2c14e;outline-offset:2px}
-@media (prefers-reduced-motion:reduce){.tw-book{transition:none}}
-.tw-detail{position:sticky;top:76px;background:var(--panel);color:var(--ink);padding:18px 20px 16px;box-shadow:0 0 0 4px var(--panel-edge),0 0 0 8px var(--panel-shadow),0 10px 0 8px rgba(0,0,0,.25);font:400 15.5px/1.55 "IBM Plex Sans",system-ui,sans-serif;min-height:160px}
-@media (max-width:860px){.tw-detail{position:static}}
-.tw-hint{margin:0;color:var(--muted)}
-.tw-shelfname{margin:0;font:600 12px "IBM Plex Mono",monospace;letter-spacing:.04em}
-.tw-detail h3{margin:4px 0 8px;font:700 22px/1.15 var(--f-pixel)}
-.tw-detail p{margin:0 0 10px}
-.tw-used{font:600 12px "IBM Plex Mono",monospace;color:var(--muted);margin-top:4px!important}
-.tw-detail ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
 .tw-link{width:100%;text-align:left;font:600 14px "IBM Plex Sans",system-ui,sans-serif;background:#fff;border:2px solid var(--panel-edge);color:var(--ink);padding:7px 10px;cursor:pointer}
 .tw-link::after{content:" →";color:var(--accent)}
 .tw-link:hover,.tw-link:focus-visible{background:#f3e3c6;outline:none}
 .w-projlist{display:grid;gap:6px;margin:4px 0 6px}
+/* ---------- portfolio: clean, readable, recruiter-first ---------- */
+#pf{--bg:#f8f6f1;--card:#ffffff;--ink:#16191d;--sub:#454b53;--mute:#6a7179;--line:#e3dfd6;--acc:#b5452c;--acc-d:#8f3420;--green:#2f6f5e;
+  position:fixed;inset:0;z-index:15;overflow-y:auto;background:var(--bg);color:var(--ink);font:400 17px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){#pf{scroll-behavior:auto}}
+#pf a{color:inherit}
+#pf :focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+.pf-nav{position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:20px;padding:12px clamp(16px,4vw,40px);padding-top:calc(12px + env(safe-area-inset-top,0px));background:rgba(248,246,241,.92);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--line)}
+.pf-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:700 19px/1 var(--f-pixel);white-space:nowrap}
+.pf-brand svg{width:28px;height:28px;image-rendering:pixelated;flex:none}
+.pf-links{display:flex;gap:4px;margin-left:auto}
+.pf-links button{font:500 15px "IBM Plex Sans",system-ui,sans-serif;color:var(--sub);background:none;border:0;padding:8px 10px;border-radius:6px;cursor:pointer}
+.pf-links button:hover{color:var(--ink);background:#eeebe3}
+.pf-cta{display:flex;gap:10px;align-items:center}
+.pf-btn{display:inline-flex;align-items:center;gap:6px;font:600 15px "IBM Plex Sans",system-ui,sans-serif;text-decoration:none;background:var(--ink);color:#fff!important;padding:9px 14px;border-radius:7px;white-space:nowrap;transition:background .15s}
+.pf-btn:hover{background:#2e343b}
+.pf-btn.big{font-size:16px;padding:12px 18px;background:var(--acc)}
+.pf-btn.big:hover{background:var(--acc-d)}
+.pf-game{font:600 14px var(--f-pixel);text-decoration:none;color:#f4fbf6!important;background:var(--green);padding:8px 12px 7px;box-shadow:0 3px 0 #1d4a3e;white-space:nowrap}
+.pf-game:hover{background:#3a8270}
+.pf-text{font-weight:600;text-decoration:underline;text-decoration-color:var(--acc);text-decoration-thickness:2px;text-underline-offset:4px}
+.pf-in{max-width:1080px;margin:0 auto;padding:0 clamp(16px,4vw,40px) 64px}
+
+.pf-hero{padding:clamp(48px,9vh,96px) 0 8px}
+.pf-status{display:inline-flex;align-items:center;gap:8px;margin:0;font:600 14px "IBM Plex Sans",system-ui,sans-serif;color:var(--green);background:#e4f0eb;padding:5px 12px;border-radius:999px}
+.pf-status i{width:8px;height:8px;border-radius:50%;background:#3aa47c;box-shadow:0 0 0 3px rgba(58,164,124,.2)}
+#pf h1{margin:18px 0 0;font:700 clamp(44px,8vw,80px)/1 var(--f-pixel);letter-spacing:.01em}
+#pf h1:focus{outline:none}
+.pf-lede{margin:18px 0 0;max-width:40ch;font-size:clamp(19px,2.3vw,23px);line-height:1.5;color:var(--sub)}
+.pf-actions{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;margin-top:28px}
+.pf-email{display:flex;align-items:center;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:4px 4px 4px 12px}
+.pf-email code{font:500 15px "IBM Plex Mono",ui-monospace,monospace;user-select:all}
+.pf-email button{font:600 13px "IBM Plex Sans",system-ui,sans-serif;background:#eeebe3;color:var(--ink);border:0;border-radius:5px;padding:7px 10px;cursor:pointer}
+.pf-email button:hover{background:#e3dfd6}
+.pf-quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:48px 0 0;border-top:1px solid var(--line)}
+.pf-quick div{padding:16px 20px 0 0;min-width:0}
+.pf-quick div+div{padding-left:20px;border-left:1px solid var(--line)}
+.pf-quick dt{font:500 12.5px "IBM Plex Mono",ui-monospace,monospace;color:var(--mute);letter-spacing:.04em;text-transform:uppercase}
+.pf-quick dd{margin:6px 0 0;font-size:15.5px;line-height:1.45;color:var(--ink)}
+
+.pf-sec{padding-top:88px;scroll-margin-top:40px}
+.pf-sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 24px;margin-bottom:24px}
+#pf h2{margin:0;font:700 clamp(28px,3.6vw,36px)/1.1 "IBM Plex Sans",system-ui,sans-serif;letter-spacing:-.015em}
+.pf-sec-head p{margin:0;color:var(--mute);font-size:15.5px;max-width:52ch}
+
+.pf-kicker{display:block;font:500 12.5px/1.3 "IBM Plex Mono",ui-monospace,monospace;color:var(--mute);letter-spacing:.02em}
+.pf-h3{display:block;margin-top:6px;font:700 20px/1.25 "IBM Plex Sans",system-ui,sans-serif;color:var(--ink);text-wrap:balance}
+.pf-p{display:block;margin-top:8px;font-size:15.5px;line-height:1.55;color:var(--sub)}
+.pf-read{display:inline-block;margin-top:14px;font:600 15px "IBM Plex Sans",system-ui,sans-serif;color:var(--acc)}
+.pf-feature,.pf-card{font:inherit;color:inherit;text-align:left;cursor:pointer;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0;overflow:hidden;transition:transform .18s ease,box-shadow .18s ease,border-color .18s}
+.pf-feature:hover,.pf-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px -14px rgba(22,25,29,.25);border-color:#d3cdc0}
+.pf-feature:hover .pf-read,.pf-card:hover .pf-read{text-decoration:underline;text-underline-offset:4px}
+@media (prefers-reduced-motion:reduce){.pf-feature,.pf-card{transition:none}.pf-feature:hover,.pf-card:hover{transform:none}}
+.pf-feature{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);width:100%}
+.pf-feature-img{display:grid;place-items:center;background:#f1eee7;padding:24px;min-height:320px}
+.pf-feature-img img{max-width:100%;max-height:340px;object-fit:contain;display:block}
+.pf-feature-body{display:block;padding:clamp(22px,3vw,34px)}
+.pf-feature .pf-h3{font-size:clamp(24px,2.8vw,30px)}
+.pf-feature .pf-p{font-size:16.5px}
+.pf-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:20px;border-top:1px solid var(--line)}
+.pf-stats>span{padding:12px 10px 0 0;font-size:13px;line-height:1.35;color:var(--mute);min-width:0}
+.pf-stats>span+span{padding-left:12px;border-left:1px solid var(--line)}
+.pf-stats b{display:block;font:600 22px/1.15 "IBM Plex Mono",ui-monospace,monospace;color:var(--ink);margin-bottom:2px}
+.pf-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
+.pf-tags span{font-size:13px;color:var(--sub);background:#f1eee7;border-radius:999px;padding:3px 10px}
+.pf-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px}
+.pf-card{display:flex;flex-direction:column}
+.pf-thumb{display:grid;place-items:center;aspect-ratio:16/10;background:#f1eee7;overflow:hidden}
+.pf-thumb img{width:100%;height:100%;object-fit:contain;padding:12px;box-sizing:border-box}
+.pf-thumb.icon{place-content:center;justify-items:center;gap:2px;background:linear-gradient(180deg,#f3f0e9,#ebe7de)}
+.pf-thumb.icon img{width:44px;height:44px;padding:0;object-fit:contain;border-radius:8px;background:#fff;box-shadow:0 0 0 1px var(--line);margin-bottom:10px}
+.pf-thumb.icon b{font:600 30px/1 "IBM Plex Mono",ui-monospace,monospace;color:var(--ink)}
+.pf-thumb.icon small{font-size:13px;color:var(--mute)}
+.pf-card-body{display:flex;flex-direction:column;flex:1;padding:18px 20px 20px}
+.pf-card .pf-read{margin-top:auto;padding-top:14px}
+.pf-mini{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:12px;font-size:13.5px;color:var(--mute)}
+.pf-mini b{font:600 14px "IBM Plex Mono",ui-monospace,monospace;color:var(--ink)}
+.pf-more{margin:22px 0 0;color:var(--mute);font-size:15.5px}
+.pf-inline{font:600 15px "IBM Plex Sans",system-ui,sans-serif;color:var(--acc);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.pf-inline:hover{color:var(--acc-d);text-decoration-thickness:2px}
+
+.pf-exp{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.pf-exp>li{display:grid;grid-template-columns:180px minmax(0,1fr);gap:8px 32px;padding:24px 0;border-bottom:1px solid var(--line)}
+.pf-when{font:500 13.5px/1.5 "IBM Plex Mono",ui-monospace,monospace;color:var(--mute);padding-top:4px}
+.pf-exp h3{display:flex;align-items:center;gap:10px;margin:0;font:700 21px/1.2 "IBM Plex Sans",system-ui,sans-serif}
+.pf-exp h3 img{width:26px;height:26px;border-radius:6px;background:#fff;box-shadow:0 0 0 1px var(--line);object-fit:contain}
+.pf-role{margin:4px 0 8px;font-weight:500;color:var(--sub)}
+.pf-exp ul{margin:0 0 10px;padding-left:20px;max-width:70ch;color:var(--sub);font-size:16px}
+.pf-exp ul li{margin:4px 0}
+.pf-exp ul li::marker{color:#b9b2a4}
+
+.pf-skills{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.pf-skills>div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px}
+.pf-skills h3{margin:0 0 12px;font:700 16px/1.2 "IBM Plex Sans",system-ui,sans-serif}
+.pf-skills ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.pf-skills li{font-size:13.5px;line-height:1.3;color:var(--sub);background:#f4f1ea;border-radius:6px;padding:5px 9px}
+
+.pf-about{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:36px;align-items:start}
+.pf-about-text p{margin:0 0 14px;color:var(--sub);font-size:17px;max-width:52ch}
+.pf-photos{display:grid;grid-template-columns:1.3fr 1fr;grid-template-rows:1fr 1fr;gap:10px;height:340px}
+.pf-photos figure{margin:0;overflow:hidden;border-radius:10px;background:#e9e5dc}
+.pf-photos figure:first-child{grid-row:1/3}
+.pf-photos img{width:100%;height:100%;object-fit:cover;display:block}
+.pf-play{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:20px;align-items:center;margin-top:36px;padding:20px 24px;text-decoration:none;background:#203a33;color:#eef6f2!important;box-shadow:0 0 0 3px #16302a,0 6px 0 3px #10241f;transition:transform .15s}
+.pf-play:hover{transform:translateY(-2px)}
+.pf-play-art{width:64px;height:64px;image-rendering:pixelated;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' shape-rendering='crispEdges'%3E%3Crect width='16' height='16' fill='%238fca7c'/%3E%3Crect y='12' width='16' height='4' fill='%23e8d3a6'/%3E%3Crect x='4' y='2' width='8' height='4' fill='%232a1a14'/%3E%3Crect x='3' y='4' width='3' height='8' fill='%232a1a14'/%3E%3Crect x='10' y='4' width='3' height='8' fill='%232a1a14'/%3E%3Crect x='6' y='5' width='4' height='4' fill='%23e8bfa0'/%3E%3Crect x='6' y='6' width='1' height='1' fill='%232a1a14'/%3E%3Crect x='9' y='6' width='1' height='1' fill='%232a1a14'/%3E%3Crect x='5' y='9' width='6' height='4' fill='%231f2126'/%3E%3Crect x='6' y='13' width='4' height='1' fill='%234f6d8f'/%3E%3C/svg%3E") center/contain no-repeat;box-shadow:0 0 0 3px #f4fbf6}
+.pf-play-text b{display:block;font:700 22px/1.2 var(--f-pixel)}
+.pf-play-text span{display:block;margin-top:4px;font-size:15.5px;color:#c7ddd5;max-width:60ch}
+.pf-play-go{font:600 16px var(--f-pixel);background:#d9644a;color:#fff8ef;padding:10px 16px 9px;box-shadow:0 4px 0 #9b3f2c;white-space:nowrap}
+
+.pf-contact{margin-top:88px;padding:40px clamp(20px,4vw,48px) 44px;background:var(--ink);color:#f3f1ec;border-radius:16px}
+.pf-contact h2{color:#fff}
+.pf-contact p{margin:10px 0 0;color:#c9ccd0;max-width:52ch}
+.pf-contact .pf-email{background:#262b31;border-color:#363c44}
+.pf-contact .pf-email button{background:#363c44;color:#fff}
+.pf-contact .pf-text{color:#fff}
+
+@media (max-width:900px){
+  .pf-links{display:none}
+  .pf-cta{margin-left:auto}
+  .pf-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pf-skills{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pf-feature{grid-template-columns:minmax(0,1fr)}
+  .pf-feature-img{min-height:0}
+  .pf-about{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:640px){
+  .pf-brand span{display:none}
+  .pf-grid,.pf-skills{grid-template-columns:minmax(0,1fr)}
+  .pf-quick{grid-template-columns:minmax(0,1fr)}
+  .pf-quick div+div{padding-left:0;border-left:0;border-top:1px solid var(--line)}
+  .pf-quick div{padding-bottom:12px}
+  .pf-exp>li{grid-template-columns:minmax(0,1fr)}
+  .pf-stats b{font-size:18px}
+  .pf-photos{height:260px}
+  .pf-play{grid-template-columns:auto minmax(0,1fr)}
+  .pf-play-go{grid-column:1/-1;justify-self:start}
+  .pf-email code{font-size:13.5px}
+}
+
+/* ---------- welcome doors ---------- */
+.doors{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:26px 0 0;padding:0;list-style:none}
+.doors li{display:flex}
+.menu .door{flex:1;display:grid;gap:6px;align-content:start;text-align:left;font:inherit;color:var(--ink);background:#fff;border:0;cursor:pointer;padding:16px 16px 14px;box-shadow:0 0 0 3px var(--panel-edge),0 5px 0 3px var(--panel-shadow);transition:transform .12s}
+.menu .door b{font:700 23px/1.1 var(--f-pixel);display:flex;align-items:center;gap:8px}
+.menu .door span{font:400 14.5px/1.4 "IBM Plex Sans",system-ui,sans-serif;color:#5d4a3a}
+.menu .door em{font:600 13px "IBM Plex Mono",monospace;font-style:normal;color:var(--accent);margin-top:4px}
+.menu .door.pf{background:#2f6f5e;box-shadow:0 0 0 3px #1d4a3e,0 5px 0 3px #133229}
+.menu .door.pf b,.menu .door.pf span{color:#f4fbf6}.door.pf em{color:#a9e8cd}
+.menu .door:hover,.menu .door[aria-current="true"]{transform:translateY(-3px)}
+.menu .door[aria-current="true"]{outline:3px solid var(--accent);outline-offset:4px}
+.menu .door:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.title-links{margin:18px 0 0;font:500 15px "IBM Plex Sans",system-ui,sans-serif;color:var(--muted)}
+.title-links a{color:var(--ink);font-weight:600;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
+@media (max-width:520px){.doors{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.door{transition:none}}
+
+.menu .door::before{display:none}
+.title-ask{margin:22px 0 0;font:600 16px var(--f-pixel);color:var(--muted)}
+.doors+.title-links{margin-top:20px}
+.panel:has(.doors){max-width:min(620px,100%)}
+/* ---------- project pages (shared by portfolio and game) ---------- */
+.proj{background:#e9e6df}
+.proj-bar{background:rgba(255,255,255,.95);color:#1f2328;box-shadow:none;border-bottom:1px solid #dcd8cf;backdrop-filter:blur(8px)}
+.proj-back{font:600 15px "IBM Plex Sans",system-ui,sans-serif;background:#16191d;color:#fff;border-radius:7px;box-shadow:none;padding:9px 14px}
+.proj-back:hover{background:#2e343b}
+.proj-back:focus-visible{outline:3px solid #b5452c}
+.proj-crumb{color:#5f666e}
+.proj-resume{margin-left:auto}
+.proj-bar .proj-resume{border:0;padding:0;font:600 14px "IBM Plex Sans",system-ui,sans-serif;color:#b5452c;text-decoration:underline;text-underline-offset:4px}
+.proj-pn{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:48px;padding-top:20px;border-top:2px solid #14181d}
+.proj-pn button{font:inherit;text-align:left;background:#f6f8fa;border:1px solid #d9dde2;border-radius:8px;padding:12px 14px;cursor:pointer;color:#1f2328}
+.proj-pn button:hover{border-color:#8a5a3c}
+.proj-pn button small{display:block;font:500 12px "IBM Plex Mono",monospace;color:#59626c}
+.proj-pn button b{font-weight:600}
+.proj-pn .nx{text-align:right;grid-column:2}
+@media (max-width:640px){.proj-pn{grid-template-columns:1fr}.proj-pn .nx{grid-column:1}}
 </style>
 <style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
@@ -367,192 +466,196 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
   <div class="panel">
     <h1>Jillanne Youssef</h1>
     <p class="sub">3B Mechanical Engineering student at the University of Waterloo.</p>
-    <ul class="menu" role="menu" aria-label="Choose a version">
-      <li role="none"><button role="menuitem" id="opt-story" aria-current="true" data-go="story">The full story <small>recommended</small></button></li>
-      <li role="none"><button role="menuitem" id="opt-facts" aria-current="false" data-go="facts">Just the facts</button></li>
+    <p class="title-ask">How do you want to meet me?</p>
+    <ul class="menu doors" role="menu" aria-label="Choose a version">
+      <li role="none"><button role="menuitem" class="door pf" id="opt-pf" aria-current="true" data-go="portfolio"><b>Portfolio</b><span>My engineering work, quick to read. Projects, experience and résumé.</span><em>About 2 minutes</em></button></li>
+      <li role="none"><button role="menuitem" class="door" id="opt-play" aria-current="false" data-go="play"><b>Game</b><span>Get to know me in a small pixel world: my story, my room, my cat.</span><em>About 5 minutes</em></button></li>
     </ul>
-    <p class="hint">Arrow keys and Enter, or click</p>
+    <p class="title-links">Just need the PDF? <a href="resume.pdf" target="_blank" rel="noopener">Download my résumé</a></p>
   </div>
 </main>
 
-<main class="screen next" id="next" hidden>
-  <div class="panel">
-    <h2 id="next-title">The full story</h2>
-    <p id="next-text"></p>
-    <button class="back" type="button" id="back">Back to title</button>
-  </div>
-</main>
+<section id="pf" hidden aria-label="Portfolio">
+  <header class="pf-nav">
+    <a class="pf-brand" href="#" aria-label="Jillanne Youssef, back to the welcome screen">
+      <svg viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><rect width="16" height="16" fill="#2f6f5e"/><rect x="3" y="2" width="10" height="5" fill="#2a1a14"/><rect x="2" y="4" width="3" height="9" fill="#2a1a14"/><rect x="11" y="4" width="3" height="9" fill="#2a1a14"/><rect x="5" y="5" width="6" height="5" fill="#e8bfa0"/><rect x="6" y="7" width="1" height="1" fill="#2a1a14"/><rect x="9" y="7" width="1" height="1" fill="#2a1a14"/><rect x="5" y="11" width="6" height="5" fill="#1f2126"/></svg>
+      <span>Jillanne Youssef</span>
+    </a>
+    <nav class="pf-links" aria-label="Sections">
+      <button type="button" data-to="pf-work">Work</button>
+      <button type="button" data-to="pf-exp">Experience</button>
+      <button type="button" data-to="pf-skills">Skills</button>
+      <button type="button" data-to="pf-about">About</button>
+      <button type="button" data-to="pf-contact">Contact</button>
+    </nav>
+    <div class="pf-cta">
+      <a class="pf-game" href="#play">Play the game</a>
+      <a class="pf-btn" href="resume.pdf" target="_blank" rel="noopener">Résumé <span aria-hidden="true">↓</span></a>
+    </div>
+  </header>
 
-
-
-<section id="facts" class="facts" hidden aria-label="Just the facts">
-  <div class="facts-in">
-    <header class="facts-head">
-      <div>
-        <h1>Jillanne Youssef</h1>
-        <p class="facts-sub">3B Mechanical Engineering student at the University of Waterloo. Product design for consumer electronics, robotics and test fixtures. Looking for a Summer 2027 role.</p>
+  <div class="pf-in">
+    <section class="pf-hero" aria-labelledby="pf-name">
+      <p class="pf-status"><i aria-hidden="true"></i>Open to Summer 2027 internships</p>
+      <h1 id="pf-name" tabindex="-1">Jillanne Youssef</h1>
+      <p class="pf-lede">Mechanical engineering student at the University of Waterloo, in 3B. I design consumer hardware: enclosures, mechanisms and test fixtures, plus the electronics when a project needs them.</p>
+      <div class="pf-actions">
+        <a class="pf-btn big" href="resume.pdf" target="_blank" rel="noopener">Download résumé (PDF)</a>
+        <div class="pf-email"><code>j4yousse@uwaterloo.ca</code><button type="button" data-copy>Copy</button></div>
+        <a class="pf-text" href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn ↗</a>
       </div>
-      <div class="facts-links">
-        <div class="facts-email"><code id="f-email">j4yousse@uwaterloo.ca</code><button type="button" id="f-copy">Copy</button></div>
-        <a href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
-        <button type="button" class="facts-world" data-go-world>Enter the world</button>
-      </div>
-    </header>
-
-    <section class="facts-sec">
-      <h2>Selected projects</h2>
-      <div class="facts-cards">
-        <button type="button" class="facts-card" data-open="led"><img src="img/led-render.webp" alt=""><b>LED controller</b><span>Standalone RGBW controller for Tesla’s lighting studio. My first PCB, 7 weeks to handoff.</span></button>
-        <button type="button" class="facts-card" data-open="level"><img src="img/mag-puck.webp" alt=""><b>Magnets instead of accelerometers</b><span>Smart lock sensing proof of concept at Level. $12/unit, $12M projected.</span></button>
-        <button type="button" class="facts-card" data-open="level"><img src="img/fx-v2.webp" alt=""><b>Climate-chamber test fixture</b><span>Automated cap-touch fixture at Level: 2M+ cycles, 14 issues fixed, 100% pass.</span></button>
-        <button type="button" class="facts-card" data-open="geotab"><i class="facts-stat">1st / 11</i><b>Computer vision in a week</b><span>Geotab intern hackathon: taught myself model training and built the only working demo.</span></button>
-      </div>
+      <dl class="pf-quick">
+        <div><dt>Most recent</dt><dd>Google, Pixel Hardware<br>Summer 2026</dd></div>
+        <div><dt>Focus</dt><dd>Product design for consumer electronics, robotics and test fixtures</dd></div>
+        <div><dt>Education</dt><dd>BASc Mechanical Engineering<br>Waterloo, expected 2029</dd></div>
+      </dl>
     </section>
 
-    <section class="facts-sec">
-      <h2>Experience</h2>
-      <ol class="facts-exp">
-        <li><div class="fx-top"><b>Google</b><span>May–Aug 2026 · Mountain View, CA</span></div><p class="fx-role">Product Design Engineering Intern, Pixel Hardware</p><ul><li>Owned design and validation of the Pixel Watch screen geometry for precision-moulded glass.</li><li>Saved $15K in vendor testing and $20K+ in prototypes with new test coupons, fixtures and an installed-condition drop test.</li></ul><button type="button" class="fx-more" data-open="google">Read more</button></li>
-        <li><div class="fx-top"><b>Level Home</b><span>Jan–Apr 2026 · Redwood City, CA</span></div><p class="fx-role">Product Design Engineering Intern</p><ul><li>Cut $12/unit ($12M projected) by replacing accelerometers and FPCAs with magnetometers and insert-moulded magnets.</li><li>Built an automated solenoid test fixture and PCBA: 14 issues fixed across 2M+ cycles, 100% functional success.</li><li>Reduced actuation-force variability 25% with GD&amp;T and tolerance work; led DFM on 20+ parts, cutting tooling cost 8%.</li></ul><button type="button" class="fx-more" data-open="level">Read more</button></li>
-        <li><div class="fx-top"><b>Tesla</b><span>Sep–Dec 2025 · Fremont, CA</span></div><p class="fx-role">Mechanical Design Engineering Intern, Lighting, Switches &amp; Sensors</p><ul><li>Led Class A surface design of a new interior cabin light in CATIA V6.</li><li>Designed a 2-layer mixed-signal PCB from scratch and built an RGBW LED controller that drives 6× more LEDs per unit.</li></ul><button type="button" class="fx-more" data-open="led">Read more</button></li>
-        <li><div class="fx-top"><b>Tesla</b><span>Jan–Apr 2025 · Palo Alto, CA</span></div><p class="fx-role">Mechanical Design Engineering Intern, Cell Equipment</p><ul><li>Magnetic clamping assembly holding 0.1 mm clearance: yield +15%, setup 30 s → 5 s.</li><li>Foil-stretching machine with closed-loop tension control: wrinkling and creasing down 50%.</li></ul><button type="button" class="fx-more" data-open="teslacells">Read more</button></li>
-        <li><div class="fx-top"><b>Geotab</b><span>May–Aug 2024 · Oakville, ON</span></div><p class="fx-role">System Verification Intern</p><ul><li>Closed-loop air-cooled dashcam test rack holding 26 °C.</li><li>1st of 11 teams in the intern hackathon with a computer vision model (72% detection, 6% false positives).</li></ul><button type="button" class="fx-more" data-open="geotab">Read more</button></li>
-        <li><div class="fx-top"><b>Valbruna ASW</b><span>Sep–Dec 2023 · Welland, ON</span></div><p class="fx-role">Mechanical Engineering Co-op</p><ul><li>Found $900K CAD in potential scrap losses with ANSYS Fluent CFD of an electric arc furnace.</li><li>Redesigned a 100,000 CFM fan enclosure to code, saving $45K CAD per unit.</li></ul><button type="button" class="fx-more" data-open="valbruna">Read more</button></li>
-        <li><div class="fx-top"><b>Evercloak</b><span>Jan–Apr 2023 · Kitchener, ON</span></div><p class="fx-role">Mechanical Engineering Co-op</p><ul><li>Prototype dehumidifier enclosure designed with DFMA and GD&amp;T; +40% performance through membrane selection.</li></ul><button type="button" class="fx-more" data-open="evercloak">Read more</button></li>
+    <section class="pf-sec" id="pf-work" aria-labelledby="pf-work-h">
+      <div class="pf-sec-head">
+        <h2 id="pf-work-h">Selected work</h2>
+        <p>Each project opens a technical write-up: what I built, the decisions I made and why.</p>
+      </div>
+
+      <button type="button" class="pf-feature" data-open="led">
+        <span class="pf-feature-img"><img src="img/led-render.webp" alt="Render of the RGBW LED controller in its enclosure" loading="lazy"></span>
+        <span class="pf-feature-body">
+          <span class="pf-kicker">Tesla · Fall 2025 · Self-proposed</span>
+          <span class="pf-h3">Universal RGBW LED controller</span>
+          <span class="pf-p">A standalone controller so the interior lighting design studio could set colour, brightness and presets on production LED strips without a firmware engineer. My first PCB, designed, assembled and handed off in seven weeks.</span>
+          <span class="pf-stats"><span><b>7 weeks</b>scoping to handoff</span><span><b>6×</b>LEDs per controller</span><span><b>2 revs</b>of the schematic</span></span>
+          <span class="pf-tags"><span>PCB design</span><span>ESP32</span><span>SLA enclosure</span><span>Thermal model</span><span>Snap-fits</span></span>
+          <span class="pf-read">Read the write-up <span aria-hidden="true">→</span></span>
+        </span>
+      </button>
+
+      <div class="pf-grid">
+        <button type="button" class="pf-card" data-open="level">
+          <span class="pf-thumb"><img src="img/mag-puck.webp" alt="" loading="lazy"></span>
+          <span class="pf-card-body">
+            <span class="pf-kicker">Level Home · Winter 2026</span>
+            <span class="pf-h3">Smart lock sensing, fixtures and tolerances</span>
+            <span class="pf-p">Swapped accelerometers for magnetometers and insert-moulded magnets, built a climate-chamber test fixture, and chased tolerances until the bolt stopped binding.</span>
+            <span class="pf-mini"><span><b>$12M</b> projected savings</span><span><b>2M+</b> fixture cycles</span></span>
+            <span class="pf-read">Read the write-up <span aria-hidden="true">→</span></span>
+          </span>
+        </button>
+        <button type="button" class="pf-card" data-open="google">
+          <span class="pf-thumb icon"><img src="img/icon-google.png" alt="" loading="lazy"><b>$20K+</b><small>in prototypes saved</small></span>
+          <span class="pf-card-body">
+            <span class="pf-kicker">Google · Summer 2026</span>
+            <span class="pf-h3">Pixel Watch display glass and validation</span>
+            <span class="pf-p">Owned the screen geometry for precision-moulded glass, and found ways to test that don’t destroy expensive prototypes.</span>
+            <span class="pf-mini"><span><b>$15K</b> vendor testing saved</span><span><b>4</b> suppliers, one strain jig</span></span>
+            <span class="pf-read">Read the write-up <span aria-hidden="true">→</span></span>
+          </span>
+        </button>
+        <button type="button" class="pf-card" data-open="teslacells">
+          <span class="pf-thumb icon"><img src="img/icon-tesla.png" alt="" loading="lazy"><b>0.1 mm</b><small>clearance held</small></span>
+          <span class="pf-card-body">
+            <span class="pf-kicker">Tesla · Winter 2025</span>
+            <span class="pf-h3">Battery cell equipment</span>
+            <span class="pf-p">Mechanical, electrical and controls design for equipment that handles battery foil: a magnetic clamp and a foil-stretching machine with closed-loop tension.</span>
+            <span class="pf-mini"><span><b>30 s → 5 s</b> setup</span><span><b>−50%</b> wrinkling</span></span>
+            <span class="pf-read">Read the write-up <span aria-hidden="true">→</span></span>
+          </span>
+        </button>
+        <button type="button" class="pf-card" data-open="geotab">
+          <span class="pf-thumb icon"><img src="img/icon-geotab.png" alt="" loading="lazy"><b>1st / 11</b><small>intern hackathon</small></span>
+          <span class="pf-card-body">
+            <span class="pf-kicker">Geotab · Summer 2024</span>
+            <span class="pf-h3">Dashcam test rack and a hackathon win</span>
+            <span class="pf-p">Built a closed-loop air-cooled rack to hold dashcams at temperature, then taught myself computer vision in a week and won the intern challenge.</span>
+            <span class="pf-mini"><span><b>26 °C</b> held</span><span><b>72%</b> detection</span></span>
+            <span class="pf-read">Read the write-up <span aria-hidden="true">→</span></span>
+          </span>
+        </button>
+        <button type="button" class="pf-card" data-open="valbruna">
+          <span class="pf-thumb icon"><img src="img/icon-valbruna.png" alt="" loading="lazy"><b>$900K</b><small>scrap losses found</small></span>
+          <span class="pf-card-body">
+            <span class="pf-kicker">Valbruna ASW · Fall 2023</span>
+            <span class="pf-h3">Arc furnace CFD and a fan enclosure</span>
+            <span class="pf-p">Modelled scrap melting in an electric arc furnace in Ansys Fluent, and redesigned a 100,000 CFM fan enclosure to code.</span>
+            <span class="pf-mini"><span><b>$45K</b> saved per enclosure</span></span>
+            <span class="pf-read">Read the write-up <span aria-hidden="true">→</span></span>
+          </span>
+        </button>
+        <button type="button" class="pf-card" data-open="evercloak">
+          <span class="pf-thumb icon"><img src="img/icon-evercloak.png" alt="" loading="lazy"><b>+40%</b><small>dehumidification</small></span>
+          <span class="pf-card-body">
+            <span class="pf-kicker">Evercloak · Winter 2023</span>
+            <span class="pf-h3">Dehumidifier enclosure</span>
+            <span class="pf-p">My first co-op: a prototype enclosure designed with DFMA and GD&amp;T for off-site manufacturing, plus membrane selection.</span>
+            <span class="pf-mini"><span><b>DFMA</b> first design for manufacture</span></span>
+            <span class="pf-read">Read the write-up <span aria-hidden="true">→</span></span>
+          </span>
+        </button>
+      </div>
+      <p class="pf-more">Also: <button type="button" class="pf-inline" data-open="waterloo">first-year design builds at Waterloo →</button></p>
+    </section>
+
+    <section class="pf-sec" id="pf-exp" aria-labelledby="pf-exp-h">
+      <div class="pf-sec-head"><h2 id="pf-exp-h">Experience</h2></div>
+      <ol class="pf-exp">
+        <li><div class="pf-when">May–Aug 2026<br>Mountain View, CA</div><div><h3><img src="img/icon-google.png" alt="">Google</h3><p class="pf-role">Product Design Engineering Intern, Pixel Hardware</p><ul><li>Owned design and validation of the Pixel Watch screen geometry for precision-moulded glass.</li><li>Saved $15K in vendor testing and $20K+ in prototypes with new test coupons, fixtures and an installed-condition drop test.</li></ul><button type="button" class="pf-inline" data-open="google">Read the write-up →</button></div></li>
+        <li><div class="pf-when">Jan–Apr 2026<br>Redwood City, CA</div><div><h3><img src="img/icon-level.png" alt="">Level Home</h3><p class="pf-role">Product Design Engineering Intern</p><ul><li>Cut $12/unit ($12M projected) by replacing accelerometers and FPCAs with magnetometers and insert-moulded magnets.</li><li>Built an automated solenoid test fixture and PCBA: 14 issues fixed across 2M+ cycles, 100% functional success.</li><li>Reduced actuation-force variability 25% with GD&amp;T and tolerance work; led DFM on 20+ parts, cutting tooling cost 8%.</li></ul><button type="button" class="pf-inline" data-open="level">Read the write-up →</button></div></li>
+        <li><div class="pf-when">Sep–Dec 2025<br>Fremont, CA</div><div><h3><img src="img/icon-tesla.png" alt="">Tesla</h3><p class="pf-role">Mechanical Design Engineering Intern, Lighting, Switches &amp; Sensors</p><ul><li>Led Class A surface design of a new interior cabin light in CATIA V6.</li><li>Designed a 2-layer mixed-signal PCB from scratch and built an RGBW LED controller that drives 6× more LEDs per unit.</li></ul><button type="button" class="pf-inline" data-open="led">Read the write-up →</button></div></li>
+        <li><div class="pf-when">Jan–Apr 2025<br>Palo Alto, CA</div><div><h3><img src="img/icon-tesla.png" alt="">Tesla</h3><p class="pf-role">Mechanical Design Engineering Intern, Cell Equipment</p><ul><li>Magnetic clamping assembly holding 0.1 mm clearance: yield +15%, setup 30 s → 5 s.</li><li>Foil-stretching machine with closed-loop tension control: wrinkling and creasing down 50%.</li></ul><button type="button" class="pf-inline" data-open="teslacells">Read the write-up →</button></div></li>
+        <li><div class="pf-when">May–Aug 2024<br>Oakville, ON</div><div><h3><img src="img/icon-geotab.png" alt="">Geotab</h3><p class="pf-role">System Verification Intern</p><ul><li>Closed-loop air-cooled dashcam test rack holding 26 °C.</li><li>1st of 11 teams in the intern hackathon with a computer vision model (72% detection, 6% false positives).</li></ul><button type="button" class="pf-inline" data-open="geotab">Read the write-up →</button></div></li>
+        <li><div class="pf-when">Sep–Dec 2023<br>Welland, ON</div><div><h3><img src="img/icon-valbruna.png" alt="">Valbruna ASW</h3><p class="pf-role">Mechanical Engineering Co-op</p><ul><li>Found $900K CAD in potential scrap losses with Ansys Fluent CFD of an electric arc furnace.</li><li>Redesigned a 100,000 CFM fan enclosure to code, saving $45K CAD per unit.</li></ul><button type="button" class="pf-inline" data-open="valbruna">Read the write-up →</button></div></li>
+        <li><div class="pf-when">Jan–Apr 2023<br>Kitchener, ON</div><div><h3><img src="img/icon-evercloak.png" alt="">Evercloak</h3><p class="pf-role">Mechanical Engineering Co-op</p><ul><li>Prototype dehumidifier enclosure designed with DFMA and GD&amp;T; +40% performance through membrane selection.</li></ul><button type="button" class="pf-inline" data-open="evercloak">Read the write-up →</button></div></li>
       </ol>
     </section>
 
-    <section class="facts-sec facts-two">
-      <div>
-        <h2>Skills</h2>
-        <dl class="facts-skills">
-          <dt>Mechanical design</dt><dd>NX, CATIA V6, SolidWorks · DFMA for injection moulding, die-casting, CNC</dd>
-          <dt>Analysis</dt><dd>Tolerance analysis, FEA (Ansys Mechanical), CFD (Ansys Fluent), RCFA/FMEA, mould flow</dd>
-          <dt>Prototyping</dt><dd>Lathe and mill, SLA/SLS/FDM printing, waterjet and laser cutting</dd>
-          <dt>Electrical &amp; software</dt><dd>PCB design (KiCad, Altium), ESP32, Arduino, Raspberry Pi, C++, Python, MATLAB</dd>
-        </dl>
-      </div>
-      <div>
-        <h2>Education</h2>
-        <p><b>University of Waterloo</b><br>BASc, Mechanical Engineering<br>Expected April 2029</p>
+    <section class="pf-sec" id="pf-skills" aria-labelledby="pf-skills-h">
+      <div class="pf-sec-head"><h2 id="pf-skills-h">Skills</h2></div>
+      <div class="pf-skills">
+        <div><h3>Mechanical design</h3><ul><li>NX</li><li>CATIA V6</li><li>SolidWorks</li><li>Class A surfacing</li><li>DFM / DFMA</li><li>GD&amp;T</li><li>Tolerance stack-ups</li><li>Snap-fits</li><li>Injection moulding</li><li>Die-casting</li><li>CNC</li></ul></div>
+        <div><h3>Analysis</h3><ul><li>FEA (Ansys Mechanical)</li><li>CFD (Ansys Fluent)</li><li>Thermal modelling</li><li>RCFA / FMEA</li><li>Design of experiments</li><li>Mould flow</li></ul></div>
+        <div><h3>Testing and prototyping</h3><ul><li>Test fixture design</li><li>Cycle and reliability testing</li><li>Drop and strain testing</li><li>SLA / SLS / FDM printing</li><li>Lathe and mill</li><li>Laser and waterjet cutting</li></ul></div>
+        <div><h3>Electrical and software</h3><ul><li>PCB design (KiCad, Altium)</li><li>Soldering and bring-up</li><li>ESP32</li><li>Arduino</li><li>Raspberry Pi</li><li>C++</li><li>Python</li><li>MATLAB</li></ul></div>
       </div>
     </section>
 
-    <footer class="facts-foot">
-      <p>This page is the short version. The world has the same work told in more depth, plus a bit more of who I am.</p>
-      <button type="button" class="facts-world big" data-go-world>Enter the world</button>
+    <section class="pf-sec" id="pf-about" aria-labelledby="pf-about-h">
+      <div class="pf-sec-head"><h2 id="pf-about-h">Outside of work</h2></div>
+      <div class="pf-about">
+        <div class="pf-about-text">
+          <p>I like building things I’ll actually use, at work and at home. I built my own PC, and my current side project is a modular pressure-relief system for wheelchairs and beds, for people with spinal cord injuries.</p>
+          <p>When I’m not at a desk I’m on a California road trip, looking at old cars with pop-up headlights (an Acura NSX and a C5 Corvette are the dream), or hanging out with my cat, Moe.</p>
+        </div>
+        <div class="pf-photos">
+          <figure><img src="img/setup.webp" alt="My desk setup" loading="lazy"></figure>
+          <figure><img src="img/moe-window.webp" alt="Moe the cat by a window" loading="lazy"></figure>
+          <figure><img src="img/ca-redwoods.webp" alt="Redwoods at Muir Woods" loading="lazy"></figure>
+        </div>
+      </div>
+      <a class="pf-play" href="#play">
+        <span class="pf-play-art" aria-hidden="true"></span>
+        <span class="pf-play-text"><b>Want the long version?</b><span>Walk through my story in a small pixel world: every co-op is a building, the cabin is my room, and yes, the cars rev.</span></span>
+        <span class="pf-play-go">Play the game →</span>
+      </a>
+    </section>
+
+    <footer class="pf-sec pf-contact" id="pf-contact" aria-labelledby="pf-contact-h">
+      <h2 id="pf-contact-h">Let’s talk</h2>
+      <p>I’m looking for a Summer 2027 role in product design or mechanical engineering. The fastest way to reach me is email.</p>
+      <div class="pf-actions">
+        <div class="pf-email"><code>j4yousse@uwaterloo.ca</code><button type="button" data-copy>Copy</button></div>
+        <a class="pf-btn big" href="resume.pdf" target="_blank" rel="noopener">Download résumé (PDF)</a>
+        <a class="pf-text" href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
     </footer>
   </div>
 </section>
 
 
-<section id="tower" class="tower" hidden aria-label="Skills tower">
-  <div class="tw-bar"><button type="button" class="proj-back" id="tower-close">← Back to the world</button><span class="tw-crumb">Skills tower</span></div>
-  <div class="tw-in">
-    <header class="tw-head">
-      <h1>Skills tower</h1>
-      <p>Every book is a skill, shelved by area. Pick one to see where I’ve used it.</p>
-    </header>
-    <div class="tw-layout">
-      <div class="tw-case" id="tw-case"></div>
-      <aside class="tw-detail" id="tw-detail" aria-live="polite">
-        <p class="tw-hint">Pick a book from the shelves.</p>
-      </aside>
-    </div>
-  </div>
-</section>
-<script>
-(() => {
-  const PROJ = {led: 'LED controller · Tesla, 2025', teslacells: 'Cell equipment · Tesla, 2025', level: 'Smart locks · Level Home, 2026', google: 'Pixel Watch · Google, 2026', geotab: 'Dashcams · Geotab, 2024', valbruna: 'Steel mill · Valbruna, 2023', evercloak: 'Dehumidifier · Evercloak, 2023', waterloo: 'First-year builds · Waterloo'};
-  const SHELVES = [
-    ['Mechanical design', '#8b3a3a', [
-      ['CAD: NX, CATIA V6, SolidWorks', 'Solid and surface modelling across every term.', ['led', 'valbruna', 'evercloak']],
-      ['Class A surfacing', 'Visible, injection-moulded surfaces on a new cabin light, in CATIA V6.', ['led']],
-      ['DFM / DFMA', 'Designing parts so they can actually be moulded, cast and assembled.', ['level', 'google', 'led', 'evercloak']],
-      ['GD&T and drawings', 'Datums, tolerances and production drawings.', ['level', 'valbruna', 'evercloak']],
-      ['Tolerance stack-ups', 'Finding which dimension actually causes the problem.', ['level', 'teslacells']],
-      ['Snap-fit design', 'Cantilever snap-fits checked by hand calculation.', ['led']],
-      ['Test fixture design', 'Fixtures that make testing repeatable, automated or non-destructive.', ['level', 'google', 'geotab']],
-      ['Enclosure design', 'Enclosures that seal, cool, protect and can be serviced.', ['led', 'evercloak', 'valbruna']]
-    ]],
-    ['Analysis', '#2f5e7a', [
-      ['FEA (Ansys Mechanical)', 'Structural simulation, validated against a physical drop test.', ['google']],
-      ['CFD (Ansys Fluent)', 'Modelling scrap melting in an electric arc furnace.', ['valbruna']],
-      ['Thermal modelling', 'Thermal resistance networks and closed-loop cooling.', ['led', 'geotab']],
-      ['Root cause analysis', 'RCFA and FMEA on seal failures and cycle-test failures.', ['google', 'level']],
-      ['Design of experiments', 'Planning a test that cleanly answers one question.', ['level']],
-      ['Decision matrices', 'Weighted, justified component selection.', ['led']],
-      ['Mould flow simulation', 'Listed on my résumé.', []]
-    ]],
-    ['Prototyping', '#6b5a2e', [
-      ['3D printing: SLA, SLS, FDM', 'Enclosures, mounts and fixtures.', ['led', 'geotab', 'level']],
-      ['Machining: lathe, mill', 'Listed on my résumé.', []],
-      ['Laser and waterjet cutting', 'Laser-cut enclosures and parts.', ['waterloo']],
-      ['Hand soldering and bring-up', 'Assembling and bringing up my own boards.', ['led']]
-    ]],
-    ['Electrical and software', '#3d6b4a', [
-      ['PCB design (KiCad, Altium)', 'A 2-layer mixed-signal board, schematic to assembly.', ['led']],
-      ['ESP32, Arduino, Raspberry Pi', 'Microcontrollers for tools, test rigs and control boxes.', ['led', 'teslacells']],
-      ['Embedded C++', 'Firmware with debouncing, filtering and hysteresis.', ['led']],
-      ['Level shifting and signal integrity', '3.3 V to 5 V buffering and series termination.', ['led']],
-      ['Closed-loop control', 'Load cells, signal conditioning and pneumatic rollers.', ['teslacells']],
-      ['Python', 'Training a computer vision model.', ['geotab']],
-      ['Computer vision', 'Detecting distracted driving from dashcam video.', ['geotab']],
-      ['MATLAB', 'Listed on my résumé.', []]
-    ]],
-    ['Testing and validation', '#5a4a7a', [
-      ['Reliability and cycle testing', '5M+ cycles across 12 subassemblies, with failures logged.', ['level']],
-      ['Environmental testing', 'Fixtures built to survive −22 °C to 66 °C.', ['level']],
-      ['Drop testing', 'Installed-condition drop tests that save prototypes.', ['google']],
-      ['Strain testing', 'One universal jig for four suppliers.', ['google']],
-      ['Sensor validation', 'Magnetometer signal-to-noise on a real lock.', ['level']]
-    ]],
-    ['Ways of working', '#7a4a3a', [
-      ['Learning fast', 'Computer vision from zero to a winning demo in a week.', ['geotab']],
-      ['Proposing my own projects', 'Spotting a bottleneck and pitching the fix.', ['led', 'level']],
-      ['Working with EE and firmware', 'Fixtures, PCBAs and debug tools built across teams.', ['level', 'led']],
-      ['Supplier reviews', 'Tooling and DFM reviews with suppliers.', ['level', 'google']],
-      ['Documentation and handoff', 'SOPs so a team can keep building what I made.', ['led']],
-      ['Presenting', 'Pitching results to judges and senior engineers.', ['geotab', 'led']]
-    ]]
-  ];
-  const SHORT = {"CAD: NX, CATIA V6, SolidWorks": "CAD", "Laser and waterjet cutting": "Laser / waterjet", "Hand soldering and bring-up": "Soldering, bring-up", "ESP32, Arduino, Raspberry Pi": "Microcontrollers", "Level shifting and signal integrity": "Signal integrity", "Reliability and cycle testing": "Cycle testing", "Proposing my own projects": "Proposing projects", "Working with EE and firmware": "Cross-team work", "Documentation and handoff": "Docs and handoff", "3D printing: SLA, SLS, FDM": "3D printing", "Machining: lathe, mill": "Machining", "PCB design (KiCad, Altium)": "PCB design", "FEA (Ansys Mechanical)": "FEA", "CFD (Ansys Fluent)": "CFD"};
-  const caseEl = document.getElementById('tw-case'), det = document.getElementById('tw-detail');
-  const tones = c => { const n = parseInt(c.slice(1), 16), r = n >> 16, g = (n >> 8) & 255, b = n & 255; return [0, 22, -18, 36, -8].map(d => `rgb(${Math.max(0, Math.min(255, r + d))},${Math.max(0, Math.min(255, g + d))},${Math.max(0, Math.min(255, b + d))})`); };
-  const esc = s => s.replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
-  let sel = null;
-  SHELVES.forEach(([name, col, books], si) => {
-    const sh = document.createElement('div'); sh.className = 'tw-shelf';
-    sh.innerHTML = `<h2 class="tw-plaque">${esc(name)}</h2><div class="tw-books" role="list"></div>`;
-    const row = sh.querySelector('.tw-books'), t = tones(col);
-    books.forEach(([title, desc, used], bi) => {
-      const b = document.createElement('button'); b.type = 'button'; b.className = 'tw-book'; b.setAttribute('role', 'listitem');
-      b.style.setProperty('--c', t[bi % t.length]); const sp = SHORT[title] || title; b.style.setProperty('--h', Math.round(30 + sp.length * 6.8 + ((bi * 37 + si * 11) % 14)) + 'px');
-      b.innerHTML = `<span>${esc(sp)}</span>`; b.setAttribute('aria-label', title);
-      b.addEventListener('click', () => {
-        if (sel) sel.classList.remove('on'); sel = b; b.classList.add('on');
-        det.innerHTML = `<p class="tw-shelfname" style="color:${col}">${esc(name)}</p><h3>${esc(title)}</h3><p>${esc(desc)}</p>` +
-          (used.length ? `<p class="tw-used">Where I used it</p><ul>${used.map(u => `<li><button type="button" class="tw-link" data-p="${u}">${esc(PROJ[u])}</button></li>`).join('')}</ul>` : '<p class="tw-used">Not written up on the site yet. Happy to talk about it.</p>');
-        det.querySelectorAll('.tw-link').forEach(a => a.addEventListener('click', () => window.__openProject(a.dataset.p)));
-        if (matchMedia('(max-width: 860px)').matches) det.scrollIntoView({behavior: 'smooth', block: 'nearest'});
-      });
-      row.appendChild(b);
-    });
-    caseEl.appendChild(sh);
-  });
-  const tw = document.getElementById('tower');
-  window.__openTower = () => { window.track && track('skills_tower'); tw.hidden = false; tw.scrollTop = 0; document.getElementById('tower-close').focus({preventScroll: true}); };
-  const closeT = () => { tw.hidden = true; const c = document.getElementById('world-cv'); c && c.focus({preventScroll: true}); };
-  document.getElementById('tower-close').addEventListener('click', closeT);
-  addEventListener('keydown', e => { if (e.key === 'Escape' && !tw.hidden && document.getElementById('proj').hidden) { e.stopImmediatePropagation(); closeT(); } }, true);
-})();
-</script>
 
 <section id="proj" class="proj" hidden aria-label="Project notebook">
   <div class="proj-bar">
     <button type="button" class="proj-back" id="proj-close">← Back to the world</button>
     <span class="proj-crumb" id="proj-crumb"></span>
+    <a class="proj-resume" href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
   </div>
   <article class="proj-sheet" data-proj="led" data-crumb="Tesla · Lighting, Switches &amp; Sensors · Fall 2025">
     <header class="proj-head">
@@ -961,7 +1064,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
   <div id="bigmap" hidden><div class="bm-in" role="dialog" aria-label="World map"><button type="button" class="bm-close" aria-label="Close map">✕</button><p class="bm-title">Where to?</p><div class="bm-frame"><canvas id="bigmap-img" aria-label="Map of the world"></canvas><div class="bm-pins"></div></div></div></div>
   <nav id="world-bar" aria-label="World navigation">
     <div class="bar-box mini-wrap" title="Open the map" role="button" tabindex="0" aria-label="Open the map"><canvas id="minimap" aria-label="Minimap. Click to open the full map."></canvas></div>
-    <div class="side"><button class="b" type="button" id="map-toggle">Map</button><button class="b" type="button" id="go-home">Home</button><button class="b facts" type="button" id="go-facts">Just the facts</button><button class="b contact" type="button" id="go-contact">Contact</button></div>
+    <div class="side"><button class="b" type="button" id="map-toggle">Map</button><button class="b" type="button" id="go-home">Home</button><button class="b facts" type="button" id="go-portfolio">Portfolio</button><button class="b contact" type="button" id="go-contact">Contact</button></div>
     <div class="bar-box tour"><span id="tour-pos">Guided tour</span><div><button class="b" type="button" id="tour-prev">Back</button><button class="b primary" type="button" id="tour-next">Start tour</button></div></div>
   </nav>
 </div>
@@ -1053,7 +1156,7 @@ function drawLayer(key, par, camI) { const c = layers[key]; const off = ((Math.r
 const objs = [
   {x: 40, k: 'tree'}, {x: 70, k: 'tree', s: 1}, {x: 140, k: 'sign', t: 'WATERLOO'}, {x: 190, k: 'lamp'},
   {x: 250, k: 'cabin'}, {x: 330, k: 'nsx'}, {x: 372, k: 'c5'}, {x: 420, k: 'tree'}, {x: 450, k: 'tree', s: 1},
-  {x: 510, k: 'lamp'}, {x: 560, k: 'tower'}, {x: 640, k: 'tree'}, {x: 700, k: 'sign', t: 'EVERCLOAK'},
+  {x: 510, k: 'lamp'}, {x: 640, k: 'tree'}, {x: 700, k: 'sign', t: 'EVERCLOAK'},
   {x: 760, k: 'fence'}, {x: 840, k: 'lamp'}, {x: 900, k: 'workshop'}, {x: 990, k: 'tree', s: 1}, {x: 1030, k: 'tree'},
   {x: 1090, k: 'sign', t: 'CALIFORNIA'}, {x: 1150, k: 'palm'}, {x: 1190, k: 'lamp'}, {x: 1240, k: 'mailbox'}, {x: 1300, k: 'palm'}, {x: 1350, k: 'tree'}
 ];
@@ -1138,46 +1241,78 @@ function frame(now) {
 buildLayers();
 requestAnimationFrame(frame);
 
-/* ============ menu ============ */
+/* ============ welcome doors ============ */
 const items = [...document.querySelectorAll('.menu button')];
 let sel = 0;
-function setSel(i) { sel = (i + items.length) % items.length; items.forEach((b, j) => b.setAttribute('aria-current', j === sel)); items[sel].focus({preventScroll: true}); blip(660 + sel * 110); }
-items.forEach((b, i) => { b.addEventListener('mouseenter', () => { if (sel !== i) setSel(i); }); b.addEventListener('click', () => go(b.dataset.go)); });
+function setSel(i, quiet) { sel = (i + items.length) % items.length; items.forEach((b, j) => b.setAttribute('aria-current', j === sel)); if (!quiet) { items[sel].focus({preventScroll: true}); blip(660 + sel * 110); } }
+items.forEach((b, i) => { b.addEventListener('mouseenter', () => { if (sel !== i) setSel(i, true); }); b.addEventListener('click', () => go(b.dataset.go)); });
 addEventListener('keydown', e => {
-  if (document.getElementById('title').hidden) return;
-  if (e.key === 'ArrowDown' || e.key === 's') { e.preventDefault(); setSel(sel + 1); }
-  else if (e.key === 'ArrowUp' || e.key === 'w') { e.preventDefault(); setSel(sel - 1); }
-  else if ((e.key === 'Enter' || e.key === ' ') && document.activeElement?.closest('.menu') == null) { e.preventDefault(); go(items[sel].dataset.go); }
+  if (titleEl.hidden) return;
+  if (['ArrowDown', 'ArrowRight', 's', 'd'].includes(e.key)) { e.preventDefault(); setSel(sel + 1); }
+  else if (['ArrowUp', 'ArrowLeft', 'w', 'a'].includes(e.key)) { e.preventDefault(); setSel(sel - 1); }
+  else if ((e.key === 'Enter' || e.key === ' ') && document.activeElement?.closest('.menu, a, button') == null) { e.preventDefault(); go(items[sel].dataset.go); }
 });
 const fade = document.getElementById('fade');
+const titleEl = document.getElementById('title'), pfEl = document.getElementById('pf'), projEl = document.getElementById('proj'), badge = document.querySelector('.badge');
 function go(where) {
-  if (where === 'story') { startAudio(); chime(); }
+  if (where === 'play') chime();
+  if (reduce) { location.hash = where; return; }
   fade.classList.add('on');
-  setTimeout(() => {
-    document.getElementById('title').hidden = true;
-    if (where === 'story' && window.World) {
-      titleOn = false; cv.hidden = true; document.querySelector('.badge').hidden = true; window.World.start();
-    } else { titleOn = false; showFacts(); }
-    fade.classList.remove('on');
-  }, reduce ? 0 : 480);
+  setTimeout(() => { location.hash = where; fade.classList.remove('on'); }, 380);
 }
-let musicBeforeFacts = false;
-function showFacts() {
-  if (window.World) window.World.stop();
-  musicBeforeFacts = !!(AC && musicOn); if (AC && musicOn) setMusic(false);
-  const f = document.getElementById('facts'); f.hidden = false; f.scrollTop = 0; f.querySelector('h1').setAttribute('tabindex', '-1'); f.querySelector('h1').focus({preventScroll: true});
+
+/* ============ routing: #/ welcome · #portfolio · #play · #project/<id> ============ */
+let mode = null, inner = 0, musicWas = false;
+function show(m) {
+  if (m === mode) return;
+  const prev = mode; mode = m;
+  titleEl.hidden = badge.hidden = cv.hidden = m !== 'welcome';
+  if (m === 'welcome') { if (!titleOn) { titleOn = true; last = performance.now(); requestAnimationFrame(frame); } setSel(sel, true); } else titleOn = false;
+  pfEl.hidden = m !== 'portfolio';
+  snd.hidden = m === 'portfolio';
+  if (prev === 'play' && window.World) window.World.stop();
+  if (m === 'portfolio') { musicWas = !!(AC && musicOn); if (musicWas) setMusic(false); pfEl.scrollTop = 0; document.getElementById('pf-name').focus({preventScroll: true}); }
+  else if (prev === 'portfolio' && musicWas) setMusic(true);
+  if (m === 'play' && window.World) window.World.start();
+  document.title = m === 'portfolio' ? 'Jillanne Youssef · Portfolio' : m === 'play' ? 'Jillanne Youssef · Game' : 'Jillanne Youssef';
+  window.track && track('section_view', {section: m});
 }
-document.getElementById('go-facts').addEventListener('click', () => { fade.classList.add('on'); setTimeout(() => { showFacts(); fade.classList.remove('on'); }, reduce ? 0 : 300); });
-window.__sfx = () => chime();
-document.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => window.__openProject(b.dataset.open)));
-document.querySelectorAll('[data-go-world]').forEach(b => b.addEventListener('click', () => { if (!AC) startAudio(); else if (musicBeforeFacts) setMusic(true); fade.classList.add('on'); setTimeout(() => { document.getElementById('facts').hidden = true; document.getElementById('title').hidden = true; titleOn = false; cv.hidden = true; document.querySelector('.badge').hidden = true; window.World.start(); fade.classList.remove('on'); }, reduce ? 0 : 400); }));
-document.getElementById('f-copy').addEventListener('click', async () => { const b = document.getElementById('f-copy'); try { await navigator.clipboard.writeText('j4yousse@uwaterloo.ca'); b.textContent = 'Copied'; } catch { const r = document.createRange(); r.selectNodeContents(document.getElementById('f-email')); getSelection().removeAllRanges(); getSelection().addRange(r); b.textContent = 'Selected'; } setTimeout(() => b.textContent = 'Copy', 1600); });
-const projEl = document.getElementById('proj');
-window.__openProject = id => { window.track && track('project_view',{project:id}); projEl.querySelectorAll('[data-proj]').forEach(a => a.hidden = a.dataset.proj !== id); const a = projEl.querySelector(`[data-proj="${id}"]`); document.getElementById('proj-crumb').textContent = a ? a.dataset.crumb : ''; projEl.hidden = false; projEl.scrollTop = 0; document.getElementById('proj-close').focus({preventScroll: true}); };
-function closeProject() { projEl.hidden = true; const c = document.getElementById('world-cv'); c && c.focus({preventScroll: true}); }
+const ORDER = ['led', 'level', 'google', 'teslacells', 'geotab', 'valbruna', 'evercloak', 'waterloo'];
+const TITLES = {led: 'RGBW LED controller', level: 'Smart lock hardware', google: 'Pixel Watch', teslacells: 'Battery cell equipment', geotab: 'Dashcams at Geotab', valbruna: 'Steel mill CFD', evercloak: 'Dehumidifier enclosure', waterloo: 'First-year builds'};
+projEl.querySelectorAll('[data-proj]').forEach(a => {
+  const i = ORDER.indexOf(a.dataset.proj); if (i < 0) return;
+  const nav = document.createElement('nav'); nav.className = 'proj-pn'; nav.setAttribute('aria-label', 'More write-ups');
+  const p = ORDER[i - 1], n = ORDER[i + 1];
+  nav.innerHTML = (p ? `<button type="button" data-step="${p}"><small>← Previous</small><b>${TITLES[p]}</b></button>` : '') + (n ? `<button type="button" class="nx" data-step="${n}"><small>Next →</small><b>${TITLES[n]}</b></button>` : '');
+  a.appendChild(nav);
+});
+projEl.addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (b) location.replace('#project/' + b.dataset.step); });
+function openProj(id) {
+  projEl.querySelectorAll('[data-proj]').forEach(a => a.hidden = a.dataset.proj !== id);
+  const a = projEl.querySelector(`[data-proj="${id}"]`);
+  document.getElementById('proj-crumb').textContent = a ? a.dataset.crumb : '';
+  document.getElementById('proj-close').textContent = mode === 'play' ? '← Back to the game' : '← Back to portfolio';
+  projEl.hidden = false; projEl.scrollTop = 0; document.getElementById('proj-close').focus({preventScroll: true});
+  window.track && track('project_view', {project: id});
+}
+function route() {
+  const h = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
+  const pm = h.match(/^project\/(\w+)/);
+  if (pm && projEl.querySelector(`[data-proj="${pm[1]}"]`)) { if (!mode || mode === 'welcome') show('portfolio'); openProj(pm[1]); return; }
+  projEl.hidden = true;
+  show(h === 'portfolio' ? 'portfolio' : h === 'play' ? 'play' : 'welcome');
+}
+addEventListener('hashchange', () => { inner++; route(); });
+addEventListener('DOMContentLoaded', route);
+window.__openProject = id => { location.hash = 'project/' + id; };
+function closeProject() { if (inner > 0) history.back(); else location.hash = mode === 'play' ? 'play' : 'portfolio'; }
 document.getElementById('proj-close').addEventListener('click', closeProject);
 addEventListener('keydown', e => { if (e.key === 'Escape' && !projEl.hidden) { e.stopImmediatePropagation(); closeProject(); } }, true);
-document.getElementById('back').addEventListener('click', () => { document.getElementById('next').hidden = true; document.getElementById('title').hidden = false; document.querySelector('.badge').hidden = false; cv.hidden = false; if (!titleOn) { titleOn = true; requestAnimationFrame(frame); } setSel(0); });
+document.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => window.__openProject(b.dataset.open)));
+document.getElementById('go-portfolio').addEventListener('click', () => go('portfolio'));
+pfEl.querySelectorAll('[data-to]').forEach(b => b.addEventListener('click', () => document.getElementById(b.dataset.to).scrollIntoView({behavior: reduce ? 'auto' : 'smooth'})));
+document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => { const code = b.parentElement.querySelector('code'); try { await navigator.clipboard.writeText('j4yousse@uwaterloo.ca'); b.textContent = 'Copied'; } catch { const r = document.createRange(); r.selectNodeContents(code); getSelection().removeAllRanges(); getSelection().addRange(r); b.textContent = 'Selected'; } setTimeout(() => b.textContent = 'Copy', 1600); }));
+window.__sfx = () => chime();
 
 /* ============ music: original, generated live ============ */
 let AC = null, master = null, musicOn = false, timer = null, nextBar = 0, bar = 0;
@@ -1243,14 +1378,7 @@ function setMusic(on) {
   if (on) AC.resume();
 }
 snd.addEventListener('click', e => { e.stopPropagation(); setMusic(!(AC && musicOn)); });
-['pointerdown', 'keydown'].forEach(ev => addEventListener(ev, function first(e) {
-  if (AC) return;
-  if (e.target === snd || snd.contains(e.target)) return;
-  const f = document.getElementById('facts');
-  if ((f && !f.hidden) || (e.target.closest && e.target.closest('#opt-facts, #go-facts'))) return;
-  if (ev === 'keydown' && !document.getElementById('title').hidden && items[sel] && items[sel].dataset.go === 'facts' && (e.key === 'Enter' || e.key === ' ')) return;
-  startAudio();
-}));
+
 function blip(f) { if (!AC || !musicOn) return; const t = AC.currentTime; note(Math.round(69 + 12 * Math.log2(f / 440)), t, .25, .05, 'square'); }
 function rev(kind) {
   if (!AC || !musicOn) return;
@@ -1287,7 +1415,7 @@ function meow() {
 window.__meow = () => { if (SFX.meow) playSfx('meow', .5); else meow(); };
 function chime() { if (!AC || !musicOn) return; const t = AC.currentTime + .05; [72, 76, 79, 84].forEach((m, i) => note(m, t + i * .07, .9, .06)); }
 
-setSel(0); document.activeElement?.blur?.();
+setSel(0, true);
 })();
 </script>
 <script src="world.js"></script>
