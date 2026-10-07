@@ -340,8 +340,6 @@ const RO = [
   {id: 'minimoe', label: 'Mini Moe', x: 80, y: 36, w: 16, h: 20, stand: 88, kind: 'room',
    card: {title: 'Mini Moe', meta: '3D printed', body: ['I missed Moe while I was away on co-op, so I 3D printed him to watch me study.'], img: 'img/minimoe.webp', imgAlt: 'A white 3D-printed cat figure next to a laptop and handwritten notes'}},
   {id: 'led', label: 'LED strip', x: 40, y: 57, w: 110, h: 8, stand: 96, kind: 'led'},
-  {id: 'printer', label: '3D printer', x: 156, y: 122, w: 28, h: 40, stand: 170, kind: 'room',
-   card: {title: '3D printer', meta: 'Where prototypes start', body: ['Fixtures, enclosures, test parts, and one very specific cat.']}},
   {id: 'photos', label: 'Photo wall', x: 160, y: 18, w: 56, h: 60, stand: 188, kind: 'gallery', gal: 'photos', title: 'Photo wall', meta: 'Four co-op terms in California'},
   {id: 'posters', label: 'Car posters', x: 222, y: 22, w: 72, h: 38, stand: 258, kind: 'room',
    card: {title: 'NSX and C5', meta: 'Pop-up headlights, always', body: ['An original Acura NSX in red and a C5 Corvette in black. The real ones are parked outside, and yes, the headlights work.']}},
