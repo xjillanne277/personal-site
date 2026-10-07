@@ -825,6 +825,8 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
 @media (max-width:760px){.cs-boxes{grid-template-columns:minmax(0,1fr)}}
 html[data-theme="dark"] .cs-box{background:#26292d;border-color:#3a3e44}html[data-theme="dark"] .cs-box p,html[data-theme="dark"] .cs-box ol{color:#d6d4cf}
 .cs-thumbs{margin:8px 0 4px}.cs-thumbs .cs-fig img{aspect-ratio:4/3;object-fit:contain;background:#f6f7f8;cursor:zoom-in}
+.cs .cs-fig figcaption{text-align:center}.cs-box ul{margin:0 0 10px;padding-left:20px;font-size:16.5px;line-height:1.55;color:#2c3138}.cs-box ul li{margin:3px 0}.cs-steps .cs-box{margin-top:12px}.cs-steps>div{display:flex;flex-direction:column}.cs-steps>div .cs-box{flex:1}
+html[data-theme="dark"] .cs-box ul{color:#d6d4cf}
 #xp-dlg{border:0;padding:0;border-radius:14px;max-width:720px;width:calc(100% - 32px);max-height:86vh;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 #xp-dlg::backdrop{background:rgba(17,20,24,.55)}
 #xp-dlg .xp-in{padding:28px 32px 30px;overflow:auto;max-height:86vh;box-sizing:border-box}
@@ -1026,9 +1028,9 @@ html[data-theme="dark"] .cs-box{background:#26292d;border-color:#3a3e44}html[dat
     <section class="cs-sec">
       <h2><span>02</span>Three prototypes in seven weeks</h2>
       <div class="cs-steps">
-        <div><figure class="cs-fig"><img src="img/cs-p0.webp" alt="Prototype 0 on the bench: Arduino, keypad, knob, LCD and a blue LED strip" loading="lazy"><figcaption></figcaption></figure><b>P0 · proof of concept</b><p>Arduino, keypad, knob and LCD from parts on hand. One strip, one colour channel at a time.</p></div>
-        <div><figure class="cs-fig"><img src="img/cs-p1-hands.webp" alt="Prototype 1 being wired on the bench" loading="lazy"><figcaption></figcaption></figure><b>P1 · functional prototype</b><p>ESP32, five sliders, programmable buttons and an OLED. Several strips at once.</p></div>
-        <div><figure class="cs-fig"><img src="img/cs-render.webp" alt="Render of the final controller" loading="lazy"><figcaption></figcaption></figure><b>Final · custom PCB</b><p>My own 2-layer board in an SLA-printed enclosure, handed off to the studio.</p></div>
+        <div><figure class="cs-fig"><img src="img/cs-p0.webp" alt="Prototype 0 on the bench: Arduino, keypad, knob, LCD and a blue LED strip" loading="lazy"><figcaption></figcaption></figure><div class="cs-box"><span class="cs-box-t">P0 · proof of concept</span><p>Arduino, keypad, knob and LCD from parts on hand. One strip, one colour channel at a time.</p></div></div>
+        <div><figure class="cs-fig"><img src="img/cs-p1-hands.webp" alt="Prototype 1 being wired on the bench" loading="lazy"><figcaption></figcaption></figure><div class="cs-box"><span class="cs-box-t">P1 · functional prototype</span><p>ESP32, five sliders, programmable buttons and an OLED. Several strips at once.</p></div></div>
+        <div><figure class="cs-fig"><img src="img/cs-render.webp" alt="Render of the final controller" loading="lazy"><figcaption></figcaption></figure><div class="cs-box"><span class="cs-box-t">Final · custom PCB</span><p>My own 2-layer board in an SLA-printed enclosure, handed off to the studio.</p></div></div>
       </div>
       <div class="cs-box"><span class="cs-box-t">Before ordering P1 parts: simulation</span><p>While waiting for components, I built P1 in an online ESP32 simulator to check the pin mapping, the UI flow and multi-strip control. Debugging the software and wiring early cut bring-up time once the hardware arrived.</p></div>
       <div class="cs-steps cs-thumbs">
@@ -1036,13 +1038,13 @@ html[data-theme="dark"] .cs-box{background:#26292d;border-color:#3a3e44}html[dat
         <figure class="cs-fig"><img src="img/led-p1-oled.webp" alt="OLED dashboard showing the selected strip, RGBW values and a brightness bar" loading="lazy"><figcaption>OLED dashboard: selected strip, RGBW values (0–255) and brightness (0–100%).</figcaption></figure>
         <figure class="cs-fig"><img src="img/led-p1-bringup.webp" alt="P1 hardware bring-up on a breadboard driving LED strips" loading="lazy"><figcaption>P1 bring-up on the bench.</figcaption></figure>
       </div>
-      <p class="cs-cap">Click any image to enlarge.</p>
+      <p class="cs-cap" style="text-align:center">Click any image to enlarge.</p>
       <figure class="cs-fig fy-video" style="margin-top:22px"><video style="max-height:none;height:auto;background:none" src="vid/led-p1.mp4" poster="img/led-p1-poster.webp" autoplay muted loop playsinline preload="metadata" aria-label="P1 prototype driving 3 LED strips"></video><figcaption>P1 driving 3 LED strips.</figcaption></figure>
     </section>
 
     <section class="cs-sec">
       <h2><span>03</span>Choosing the microcontroller</h2>
-      <p class="cs-p">P0 ran out of pins and needed a cable for every firmware update. I scored three options; ESP32 won on wireless updates and room to grow.</p>
+      <div class="cs-box"><span class="cs-box-t">Why switch</span><p>P0 ran out of pins and needed a cable for every firmware update. I scored three options; ESP32 won on wireless updates and room to grow.</p></div>
       <div class="cs-scroll"><table class="cs-table">
         <thead><tr><th>Criterion</th><th>Weight</th><th class="win">ESP32</th><th>Pico W</th><th>STM32</th></tr></thead>
         <tbody>
@@ -1058,7 +1060,7 @@ html[data-theme="dark"] .cs-box{background:#26292d;border-color:#3a3e44}html[dat
 
     <section class="cs-sec">
       <h2><span>04</span>Schematic: Rev A, then Rev B</h2>
-      <p class="cs-p">Several Rev A parts couldn’t arrive in time, so Rev B swaps each one for an equivalent I could get within a day. The circuit works exactly the same.</p>
+      <div class="cs-box"><span class="cs-box-t">Why Rev B</span><p>Several Rev A parts couldn’t arrive in time, so Rev B swaps each one for an equivalent I could get within a day. The circuit works the same.</p></div>
       <div class="cs-pair"><figure class="cs-fig"><img src="img/cs-sch-a.webp" alt="Rev A schematic" loading="lazy"><figcaption>Rev A</figcaption></figure><figure class="cs-fig"><img src="img/cs-sch-b.webp" alt="Rev B schematic" loading="lazy"><figcaption>Rev B · built</figcaption></figure></div>
       <ul class="cs-changes">
         <li><b>Level shifting</b><span>1 × 74HCT244 (8 buffers)</span><span>2 × 74AHCT125 (4 + 4)</span></li>
@@ -1090,7 +1092,7 @@ html[data-theme="dark"] .cs-box{background:#26292d;border-color:#3a3e44}html[dat
 
     <section class="cs-sec">
       <h2><span>06</span>PCB</h2>
-      <p class="cs-p">2-layer, mixed-signal, laid out in KiCad, reviewed with the EEs, then fabricated, hand-soldered and assembled by me.</p>
+      <div class="cs-box"><span class="cs-box-t">Board</span><p>2-layer, mixed-signal, laid out in KiCad and reviewed with the EEs. I had it fabricated, then hand-soldered and assembled it.</p></div>
       <div class="cs-gallery g3"><figure class="cs-fig"><img src="img/cs-route.webp" alt="PCB placement and routing in KiCad" loading="lazy"><figcaption>Placement and routing</figcaption></figure><figure class="cs-fig"><img src="img/cs-pour.webp" alt="Ground pour across the board" loading="lazy"><figcaption>Ground pour on both layers</figcaption></figure><figure class="cs-fig"><img src="img/cs-relief.webp" alt="Thermal relief pads on ground connections" loading="lazy"><figcaption>Thermal reliefs on the pads, plus a via stitching the capacitor’s ground to the other layer</figcaption></figure></div>
       <div class="cs-gallery g2"><figure class="cs-fig"><img src="img/cs-top.webp" alt="3D render of the top of the PCB" loading="lazy"><figcaption>Top</figcaption></figure><figure class="cs-fig"><img src="img/cs-bottom.webp" alt="3D render of the bottom of the PCB" loading="lazy"><figcaption>Bottom</figcaption></figure></div>
     </section>
@@ -1112,13 +1114,7 @@ html[data-theme="dark"] .cs-box{background:#26292d;border-color:#3a3e44}html[dat
       <div class="cs-split2">
         <figure class="cs-fig"><img src="img/cs-exploded.webp" alt="Exploded view of the enclosure, PCBA and display" loading="lazy"><figcaption>Exploded assembly</figcaption></figure>
         <div>
-          <ul class="cs-list">
-            <li><b>Rib under the PCB</b> stops it flexing when buttons are pressed</li>
-            <li><b>Bosses and 1° draft ribs</b> locate the board and set its height</li>
-            <li><b>Slider walls and keycap slots</b> keep the controls aligned</li>
-            <li><b>Display bosses</b> set the screen flush with the top</li>
-            <li><b>Snap-fits</b> for tool-free opening during testing</li>
-          </ul>
+<div class="cs-box"><span class="cs-box-t">Features</span><ul><li>A rib under the PCB stops it flexing when buttons are pressed.</li><li>Bosses and 1° draft ribs locate the board and set its height.</li><li>Slider walls and keycap slots keep the controls aligned.</li><li>Display bosses set the screen flush with the top.</li><li>Snap-fits allow tool-free opening during testing.</li></ul></div>
           <div class="cs-eq wide"><span>Snap-fit check</span><b>31.85 MPa vs 41 MPa yield → FOS 1.29</b><p>0.5 mm deflection needs 13.45 N, in Formlabs Tough 1500</p></div>
           <button type="button" class="cs-more" data-zoom="img/slide-31.webp|img/slide-35.webp">See the full snap-fit calculations <span aria-hidden="true">→</span></button>
         </div>
