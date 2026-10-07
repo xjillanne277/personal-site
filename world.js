@@ -516,7 +516,7 @@ function teleport(l, open) {
 
 /* ---------------- cards ---------------- */
 const esc = s => s.replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
-const CONTACT = `<div class="w-contact"><a href="mailto:j4yousse@uwaterloo.ca"><code id="w-email">j4yousse@uwaterloo.ca</code></a></div><p class="w-links"><a href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn</a> <a href="${RES}" target="_blank" rel="noopener">Résumé (PDF)</a></p>`;
+const CONTACT = `<div class="w-contact"><code id="w-email">j4yousse@uwaterloo.ca</code><button type="button" class="w-copy">Copy</button></div><p class="w-links"><a href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn</a> <a href="${RES}" target="_blank" rel="noopener">Résumé (PDF)</a></p>`;
 function enterRoom() {
   hideDrive(); closeCard(); const fade = document.getElementById('fade'); fade.classList.add('on');
   setTimeout(() => { worldPos.x = P.x; worldPos.y = P.y; scene = 'room'; window.track && track('enter_room'); resize(); RP.x = 22; RP.dir = 1; RP.tx = null; P.target = null; autoId = 'door'; trail.length = 0; fade.classList.remove('on'); }, reduce ? 0 : 260);
