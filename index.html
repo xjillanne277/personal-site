@@ -242,6 +242,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .proj-wide{margin:18px 0 6px}
 .proj-wide img{width:100%;height:auto}
 .proj-slide img{max-height:none!important;object-fit:contain}
+.gt-diagram svg{display:block;width:100%;height:auto;max-width:720px;border:1px solid #d9dde2;background:#fff;padding:12px;box-sizing:border-box}
 .proj-calc{font:400 14px/1.6 "IBM Plex Mono",ui-monospace,monospace;background:#f6f8fa;border:1px solid #d9dde2;border-left:3px solid #8a5a3c}
 .proj-calc b{color:#14181d;font-weight:600}
 .proj-why{margin:12px 0;padding:10px 14px;border:1px solid #d9dde2;border-radius:3px;background:#fbfbfc}
@@ -359,6 +360,12 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .notes ol.keyed li{position:relative;padding-left:32px}
 .notes ol.keyed li::before{content:attr(data-k);position:absolute;left:0;top:2px;display:grid;place-items:center;width:20px;height:20px;border:1.5px solid var(--ink);border-radius:50%;font:600 11px var(--f-mono);color:var(--ink)}
 .v.dark{background:#0d1b2e}
+.sheet-views.wide{grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);grid-template-rows:auto auto;height:auto;align-items:stretch}
+.sheet-views.wide .v{flex-direction:column;justify-content:space-between;overflow:visible}
+.sheet-views.wide .v.full{grid-column:1/-1}
+.sheet-views.wide .v img{position:static;width:100%;height:auto;padding:16px 16px 6px}
+.sheet-views.wide .v figcaption{position:static;align-self:flex-start;padding:4px 10px 10px}
+.sheet-views.wide .v:hover img{transform:none}
 .v.dark figcaption{color:#c9d3e0}
 .v.dark figcaption b{border-color:#c9d3e0;color:#c9d3e0}
 .tblock{border-collapse:collapse;width:100%;font:500 12.5px/1.3 var(--f-mono);border-left:2px solid var(--ink)}
@@ -380,6 +387,8 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
   .v{height:min(62vw,300px)}
   .v.stat{height:auto;padding:28px 0 8px}
   .v.diagram{height:auto;aspect-ratio:560/330}
+  .sheet-views.wide{grid-template-columns:minmax(0,1fr)}
+  .sheet-views.wide .v{height:auto}
   .v.diagram svg{padding:10px 10px 34px}
   .sheet-foot{grid-template-columns:minmax(0,1fr)}
   .tblock{border-left:0;border-top:2px solid var(--ink)}
@@ -619,50 +628,23 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
         <header class="sheet-head"><span class="sheet-no">03</span><h3 id="s3-t">Distracted-driving detection</h3><span class="sheet-meta">Geotab hackathon · Summer 2024</span></header>
         <div class="sheet-frame">
           <div class="zones" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div>
-          <div class="sheet-views" data-open="geotab" role="button" tabindex="-1" aria-hidden="true">
-            <figure class="v main diagram">
-              <svg viewBox="0 0 560 330" role="img" aria-label="Pipeline: dashcam video goes through PII blurring into an in-cabin model that classifies attentive versus distracted driving, feeding a driver score. A front camera feeds an object detection model.">
-                <defs><marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#111418"/></marker></defs>
-                <g font-family="IBM Plex Mono, monospace" font-size="12" fill="#111418">
-                  <text x="20" y="34" font-size="11" fill="#7a8089" letter-spacing="1">IN-CABIN CAMERA</text>
-                  <rect x="20" y="46" width="110" height="64" rx="6" fill="#fff" stroke="#111418" stroke-width="1.5"/>
-                  <text x="75" y="74" text-anchor="middle">Dashcam</text><text x="75" y="92" text-anchor="middle">video</text>
-                  <rect x="170" y="46" width="110" height="64" rx="6" fill="#fdf1ec" stroke="#c0472c" stroke-width="2"/>
-                  <text x="225" y="74" text-anchor="middle">PII blur</text><text x="225" y="92" text-anchor="middle" fill="#c0472c">+ pipeline</text>
-                  <rect x="320" y="34" width="130" height="88" rx="6" fill="#fdf1ec" stroke="#c0472c" stroke-width="2"/>
-                  <text x="385" y="58" text-anchor="middle">In-cabin model</text>
-                  <text x="385" y="80" text-anchor="middle" font-size="11" fill="#4a5059">attentive</text>
-                  <text x="385" y="96" text-anchor="middle" font-size="11" fill="#4a5059">radio · drinking</text>
-                  <text x="385" y="112" text-anchor="middle" font-size="11" fill="#4a5059">talking</text>
-                  <rect x="480" y="56" width="66" height="44" rx="6" fill="#fff" stroke="#111418" stroke-width="1.5"/>
-                  <text x="513" y="76" text-anchor="middle" font-size="11">Driver</text><text x="513" y="91" text-anchor="middle" font-size="11">score</text>
-                  <path d="M130 78H166" stroke="#111418" stroke-width="1.5" marker-end="url(#ar)" fill="none"/><path d="M280 78H316" stroke="#111418" stroke-width="1.5" marker-end="url(#ar)" fill="none"/><path d="M450 78H476" stroke="#111418" stroke-width="1.5" marker-end="url(#ar)" fill="none"/>
-                  <text x="20" y="190" font-size="11" fill="#7a8089" letter-spacing="1">FRONT CAMERA</text>
-                  <rect x="20" y="202" width="110" height="64" rx="6" fill="#fff" stroke="#111418" stroke-width="1.5"/>
-                  <text x="75" y="230" text-anchor="middle">Road</text><text x="75" y="248" text-anchor="middle">video</text>
-                  <rect x="170" y="202" width="180" height="64" rx="6" fill="#fff" stroke="#111418" stroke-width="1.5"/>
-                  <text x="260" y="230" text-anchor="middle">Object detection</text><text x="260" y="248" text-anchor="middle" font-size="11" fill="#4a5059">72% found · 6% false +</text>
-                  <path d="M130 234H166" stroke="#111418" stroke-width="1.5" marker-end="url(#ar)" fill="none"/>
-                  <rect x="20" y="292" width="14" height="14" rx="3" fill="#fdf1ec" stroke="#c0472c" stroke-width="2"/><text x="42" y="304" font-size="11" fill="#4a5059">my part: code, video pipeline, in-cabin model</text>
-                </g>
-              </svg>
-              <figcaption><b>A</b>What we built</figcaption>
-            </figure>
-            <figure class="v stat"><span class="stat-big">1st<small>/11</small></span><span class="stat-cap">teams, Intern Innovation Challenge</span><figcaption><b>B</b>Result</figcaption></figure>
-            <figure class="v stat"><span class="stat-big">0</span><span class="stat-cap">models I’d trained before this</span><figcaption><b>C</b>Starting point</figcaption></figure>
+          <div class="sheet-views wide" data-open="geotab" role="button" tabindex="-1" aria-hidden="true">
+            <figure class="v full"><img src="img/gt-app.webp" alt="" loading="lazy"><figcaption><b>A</b>Driver app, designed in Figma</figcaption></figure>
+            <figure class="v"><img src="img/gt-cv.webp" alt="" loading="lazy"><figcaption><b>B</b>Computer vision, running on real footage</figcaption></figure>
+            <figure class="v"><img src="img/gt-cert.webp" alt="" loading="lazy"><figcaption><b>C</b>1st of 11 teams</figcaption></figure>
           </div>
           <div class="sheet-foot">
             <div class="notes">
               <h4>Notes</h4>
-              <ol>
-                <li>Brief: build a video telematics product with AI, as a team of interns.</li>
-                <li>I’m a mechanical engineer and had never trained a model. I learned how, then owned the code and video pipeline.</li>
-                <li>The only fully working demo in the competition: <b>1st of 11</b>.</li>
+              <ol class="keyed">
+                <li data-k="A"><b>The product.</b> A driver-scoring app for Geotab’s 10th Intern Innovation Challenge, with an AI coach that explains each violation from your own clip.</li>
+                <li data-k="B"><b>My part.</b> I’d never trained a model. I learned how, then owned the code and video pipeline, including PII blurring and the in-cabin distraction model.</li>
+                <li data-k="C"><b>Result.</b> The only fully working demo in the competition: <b>1st place</b>.</li>
               </ol>
             </div>
             <table class="tblock">
-              <tr><th>Part</th><td colspan="3">In-cabin distraction model</td></tr>
-              <tr><th>Tools</th><td colspan="3">Python · Computer vision</td></tr>
+              <tr><th>Part</th><td colspan="3">Project Jarvis</td></tr>
+              <tr><th>Tools</th><td colspan="3">Python · Computer vision · Figma</td></tr>
               <tr><th>Drawn</th><td>J. Youssef</td><th>Sheet</th><td class="big">3/3</td></tr>
             </table>
           </div>
@@ -1004,6 +986,34 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
       <p class="proj-did"><b>What I did.</b> I owned the code and video pipeline. We built two models: in-cabin monitoring and front-facing object detection. I trained the in-cabin model to recognise distracted driving (adjusting the radio, drinking, talking) versus attentive driving, with PII blurring, and my teammates built a driver-scoring system on top of it.</p>
       <p class="proj-res"><b>Result.</b> The only fully working model in the competition, and <b>1st place out of 11 teams</b>. It showed me how fast I can pick up something completely new when it matters.</p>
     </section>
+    <figure class="proj-wide proj-slide"><img src="img/gt-app.webp" alt="Five screens of the driver app: login, score summary, score report, AI score improver and profile" loading="lazy"><figcaption>Fig. 1 · The driver app, designed in Figma.</figcaption></figure>
+      <figure class="proj-wide proj-slide"><img src="img/gt-cv.webp" alt="Computer vision on dashcam footage: tailgating and object detection, street sign detection, and PII blurring with attentive and distracted driving indicators" loading="lazy"><figcaption>Fig. 2 · The models running on real footage.</figcaption></figure>
+      <figure class="proj-wide proj-slide gt-diagram"><svg viewBox="0 0 560 330" role="img" aria-label="Pipeline: dashcam video goes through PII blurring into an in-cabin model that classifies attentive versus distracted driving, feeding a driver score. A front camera feeds an object detection model.">
+                <defs><marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#111418"/></marker></defs>
+                <g font-family="IBM Plex Mono, monospace" font-size="12" fill="#111418">
+                  <text x="20" y="34" font-size="11" fill="#7a8089" letter-spacing="1">IN-CABIN CAMERA</text>
+                  <rect x="20" y="46" width="110" height="64" rx="6" fill="#fff" stroke="#111418" stroke-width="1.5"/>
+                  <text x="75" y="74" text-anchor="middle">Dashcam</text><text x="75" y="92" text-anchor="middle">video</text>
+                  <rect x="170" y="46" width="110" height="64" rx="6" fill="#fdf1ec" stroke="#c0472c" stroke-width="2"/>
+                  <text x="225" y="74" text-anchor="middle">PII blur</text><text x="225" y="92" text-anchor="middle" fill="#c0472c">+ pipeline</text>
+                  <rect x="320" y="34" width="130" height="88" rx="6" fill="#fdf1ec" stroke="#c0472c" stroke-width="2"/>
+                  <text x="385" y="58" text-anchor="middle">In-cabin model</text>
+                  <text x="385" y="80" text-anchor="middle" font-size="11" fill="#4a5059">attentive</text>
+                  <text x="385" y="96" text-anchor="middle" font-size="11" fill="#4a5059">radio · drinking</text>
+                  <text x="385" y="112" text-anchor="middle" font-size="11" fill="#4a5059">talking</text>
+                  <rect x="480" y="56" width="66" height="44" rx="6" fill="#fff" stroke="#111418" stroke-width="1.5"/>
+                  <text x="513" y="76" text-anchor="middle" font-size="11">Driver</text><text x="513" y="91" text-anchor="middle" font-size="11">score</text>
+                  <path d="M130 78H166" stroke="#111418" stroke-width="1.5" marker-end="url(#ar)" fill="none"/><path d="M280 78H316" stroke="#111418" stroke-width="1.5" marker-end="url(#ar)" fill="none"/><path d="M450 78H476" stroke="#111418" stroke-width="1.5" marker-end="url(#ar)" fill="none"/>
+                  <text x="20" y="190" font-size="11" fill="#7a8089" letter-spacing="1">FRONT CAMERA</text>
+                  <rect x="20" y="202" width="110" height="64" rx="6" fill="#fff" stroke="#111418" stroke-width="1.5"/>
+                  <text x="75" y="230" text-anchor="middle">Road</text><text x="75" y="248" text-anchor="middle">video</text>
+                  <rect x="170" y="202" width="180" height="64" rx="6" fill="#fff" stroke="#111418" stroke-width="1.5"/>
+                  <text x="260" y="230" text-anchor="middle">Object detection</text><text x="260" y="248" text-anchor="middle" font-size="11" fill="#4a5059">72% found · 6% false +</text>
+                  <path d="M130 234H166" stroke="#111418" stroke-width="1.5" marker-end="url(#ar)" fill="none"/>
+                  <rect x="20" y="292" width="14" height="14" rx="3" fill="#fdf1ec" stroke="#c0472c" stroke-width="2"/><text x="42" y="304" font-size="11" fill="#4a5059">my part: code, video pipeline, in-cabin model</text>
+                </g>
+              </svg><figcaption>Fig. 3 · How the pieces fit, with my part highlighted.</figcaption></figure>
+      <figure class="proj-wide proj-slide"><img src="img/gt-cert.webp" alt="Certificate of Achievement: first place, Geotab’s 10th Intern Innovation Challenge, Summer 2024, Project Jarvis" loading="lazy" style="max-width:560px"><figcaption>Fig. 4 · First place.</figcaption></figure>
     <section class="proj-ch">
       <h2><span>02</span> The day job: a rack that keeps dashcams at temperature</h2>
       <p class="proj-did"><b>What I did.</b> Designed a closed-loop, air-cooled test rack for dashcam testing: 3D-printed mounts and low-cost PC fans in a modular plastic enclosure, holding the cameras at <b>26 °C</b>.</p>
