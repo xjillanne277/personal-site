@@ -693,7 +693,7 @@ function step(now) {
   if (boat) {
     boat.t = Math.min(1, boat.t + dt / boat.dur);
     const e = boat.t < .5 ? 2 * boat.t * boat.t : 1 - Math.pow(-2 * boat.t + 2, 2) / 2;
-    P.x = boat.x0 + (boat.x1 - boat.x0) * e; P.y = boat.y0 + (boat.y1 - boat.y0) * e; P.dir = boat.x1 > boat.x0 ? 'right' : 'left'; P.moving = false;
+    P.x = Math.round(boat.x0 + (boat.x1 - boat.x0) * e); P.y = Math.round(boat.y0 + (boat.y1 - boat.y0) * Math.min(1, boat.t * 1.6)); P.dir = boat.x1 > boat.x0 ? 'right' : 'left'; P.moving = false;
     moe.x = P.x + (boat.x1 > boat.x0 ? -12 : 12); moe.y = P.y + 2; trail.length = 0;
     const st = Math.floor(boat.t * 3); if (st > boat.strokes && boat.t < .95) { boat.strokes = st; window.__splash && window.__splash(.55); }
     if (boat.t >= 1) { boat = null; boatCool = .35; }
@@ -707,7 +707,7 @@ function step(now) {
     const ox = P.x, oy = P.y;
     const wet = (x, y) => scene === 'world' && tiles[idx(Math.floor(x / TS), Math.floor(y / TS))] === T.WATER;
     boatCool = Math.max(0, boatCool - dt);
-    if (!boatCool && !wet(P.x, P.y) && Math.abs(vx) > Math.abs(vy) * .25 && (wet(P.x + Math.sign(vx) * 10, P.y) || wet(P.x + Math.sign(vx) * 20, P.y))) {
+    if (!boatCool && !wet(P.x, P.y) && Math.abs(vx) > Math.abs(vy) * .25 && [8, 16, 24, 30].some(k => wet(P.x + Math.sign(vx) * k, P.y))) {
       const ty = Math.floor(P.y / TS), rx = riverX(ty) * TS + 8, dirR = P.x < rx ? 1 : -1;
       let tx = Math.floor(P.x / TS) + dirR; while (tx > 0 && tx < MW - 1 && tiles[idx(tx, ty)] === T.WATER) tx += dirR;
       const okLand = (x, y) => y > 0 && y < MH - 1 && tiles[idx(x, y)] !== T.WATER && tiles[idx(x, y)] !== T.OCEAN && !block[idx(x, y)] && !block[idx(x + dirR, y)];
@@ -754,7 +754,7 @@ function draw(now) {
   car(g, c5.tx * TS + 1 - cam.x, c5.ty * TS + 2 - cam.y, CARS.c5, pops.c5);
   // sprites, sorted by y
   const f = P.moving && !reduce ? (Math.floor(walkT * 8) % 2) + 1 : 0;
-  const bob = !P.moving && !reduce && Math.floor(now / 500) % 2 ? 1 : 0;
+  const bob = !P.moving && !boat && !reduce && Math.floor(now / 500) % 2 ? 1 : 0;
   const mf = Math.floor(now / 220) % 2;
   if (boat) { const bx = Math.round(P.x) - 16 - cam.x, by = Math.round(P.y) - 6 - cam.y;
     R(g, bx + 2, by + 9, 30, 3, 'rgba(20,50,90,.35)'); R(g, bx + 3, by, 26, 9, '#8a5a36'); R(g, bx, by + 1, 32, 6, '#8a5a36'); R(g, bx + 2, by + 2, 28, 4, '#b07a4a'); R(g, bx, by + 1, 32, 1, '#6b4426'); R(g, bx + 3, by + 8, 26, 1, '#5e3a20');
