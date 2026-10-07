@@ -829,6 +829,7 @@ html[data-theme="dark"] .cs-box{background:#26292d;border-color:#3a3e44}html[dat
 html[data-theme="dark"] .cs-box ul{color:#d6d4cf}
 .cs-table small{font-size:.8em;color:#7a8089;margin-left:2px}.cs-table td.win small{color:inherit}
 .cs-box-lead{margin-top:34px!important;border-left:4px solid #8a5a3c;background:#fdf8f3}.cs-box-lead .cs-box-t{font:700 18px/1.3 "IBM Plex Sans",system-ui,sans-serif;letter-spacing:0;text-transform:none;color:#14181d;margin-bottom:6px}html[data-theme="dark"] .cs-box-lead{background:#2b2723}html[data-theme="dark"] .cs-box-lead .cs-box-t{color:#f0ece6}
+.cs-power{justify-content:center}.cs .cs-fig img{cursor:zoom-in}
 #xp-dlg{border:0;padding:0;border-radius:14px;max-width:720px;width:calc(100% - 32px);max-height:86vh;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 #xp-dlg::backdrop{background:rgba(17,20,24,.55)}
 #xp-dlg .xp-in{padding:28px 32px 30px;overflow:auto;max-height:86vh;box-sizing:border-box}
@@ -1052,7 +1053,7 @@ html[data-theme="dark"] .cs-box ul{color:#d6d4cf}
         <tbody><tr><td>Upgradable without a hardware redesign</td><td>3</td><td class="win">✓ <small>3</small></td><td>✗ <small>0</small></td><td>✓ <small>3</small></td></tr><tr><td>Reliable for 40+ hours a week</td><td>3</td><td class="win">✓ <small>3</small></td><td>✓ <small>3</small></td><td>✓ <small>3</small></td></tr><tr><td>Built-in wireless firmware updates (OTA)</td><td>3</td><td class="win">✓ <small>3</small></td><td>✗ <small>0</small></td><td>✗ <small>0</small></td></tr><tr><td>Supports peripherals on different buses</td><td>2</td><td class="win">✓ <small>2</small></td><td>✓ <small>2</small></td><td>✓ <small>2</small></td></tr><tr><td>Fast boot and recovery after a power cycle</td><td>1</td><td class="win">✓ <small>1</small></td><td>✓ <small>1</small></td><td>✓ <small>1</small></td></tr></tbody>
         <tfoot><tr><td>Weighted total</td><td></td><td class="win">12</td><td>6</td><td>9</td></tr></tfoot>
       </table></div>
-      <p class="cs-cap">Each option either met what P1 needed or didn’t (✓ = weight, ✗ = 0). The Pico W can do over-the-air updates with a custom bootloader; the ESP32 has OTA built into its framework, which is what I scored.</p>
+      <div class="cs-box"><span class="cs-box-t">How it’s scored</span><p>Each option either met what P1 needed or didn’t (✓ = weight, ✗ = 0). The Pico W can do over-the-air updates with a custom bootloader; the ESP32 has OTA built into its framework, which is what I scored.</p></div>
     </section>
 
     <section class="cs-sec">
@@ -1114,6 +1115,7 @@ html[data-theme="dark"] .cs-box ul{color:#d6d4cf}
 <div class="cs-box"><span class="cs-box-t">Features</span><ul><li>A rib under the PCB stops it flexing when buttons are pressed.</li><li>Bosses and 1° draft ribs locate the board and set its height.</li><li>Slider walls and keycap slots keep the controls aligned.</li><li>Display bosses set the screen flush with the top.</li><li>Snap-fits allow tool-free opening during testing.</li></ul></div>
           <div class="cs-eq wide"><span>Snap-fit check</span><b>31.85 MPa vs 41 MPa yield → FOS 1.29</b><p>0.5 mm deflection needs 13.45 N, in Formlabs Tough 1500</p></div>
           <button type="button" class="cs-more" data-zoom="img/slide-31.webp|img/slide-34.webp|img/slide-35.webp">See the full snap-fit calculations <span aria-hidden="true">→</span></button>
+          <button type="button" class="cs-more" data-zoom="img/slide-29.webp|img/slide-30.webp">See the enclosure design slides <span aria-hidden="true">→</span></button>
         </div>
       </div>
       <div class="cs-gallery g3"><figure class="cs-fig"><img src="img/cs-cover-top.webp" alt="Top cover with slider walls, keycap slots and snap hooks" loading="lazy"><figcaption>Top cover</figcaption></figure><figure class="cs-fig"><img src="img/cs-cover-bottom.webp" alt="Bottom cover with PCB bosses and rib" loading="lazy"><figcaption>Bottom cover</figcaption></figure><figure class="cs-fig"><img src="img/cs-snap.webp" alt="Close-up of the snap-fit hook" loading="lazy"><figcaption>Snap-fit hook</figcaption></figure></div>
