@@ -657,6 +657,12 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .cs-eqs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
 .cs-eq{background:#fff;border:1px solid #e3e6ea;border-left:4px solid #c0472c;border-radius:10px;padding:14px 16px}
 .cs-eq span{display:block;font:600 12px "IBM Plex Mono",monospace;letter-spacing:.05em;text-transform:uppercase;color:#7a8089}
+.cs-more{margin-top:16px;font:600 15px "IBM Plex Sans",sans-serif;color:#fff;background:#14181d;border:0;border-radius:999px;padding:10px 16px;cursor:pointer}
+.cs-more:hover{background:#c0472c}
+html[data-theme="dark"] .cs-more{background:#e9e7e2;color:#1d1f22}
+#zoom.multi{overflow-y:auto;place-items:start center}
+#zoom.multi .zstack{display:grid;gap:16px;max-width:min(1200px,100%);padding:8px 0}
+#zoom.multi img{width:100%;height:auto;max-height:none}
 .cs-eq em{display:block;margin-top:6px;font:500 13px/1.4 "IBM Plex Mono",monospace;font-style:normal;color:#59626c}
 html[data-theme="dark"] .cs-eq em{color:#a3a8af}
 .cs-eq b{display:block;margin-top:6px;font:700 19px/1.3 "IBM Plex Sans",sans-serif;color:#14181d}
@@ -1010,10 +1016,11 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
         </div>
       </div>
       <div class="cs-eqs">
-        <div class="cs-eq"><span>Fuse current</span><em>Fuse rating = max continuous current ÷ continuous-load derating (A)</em><b>9 A ÷ 0.67 ≈ 1.5 × 9 A = 13.5 A</b><p>A fuse shouldn’t carry more than about two-thirds of its rating for hours at a time, so it’s sized 1.5× above the 10+ hour load.</p></div>
-        <div class="cs-eq"><span>Fuse voltage</span><em>Fuse voltage rating ≥ supply voltage (V)</em><b>&gt; 12 V → 32 V rated</b><p>Next common rating above the supply.</p></div>
+        <div class="cs-eq"><span>Fuse current</span><b>1.5 × 9 A = 13.5 A</b><p>Derated for 10+ hours of continuous load.</p></div>
+        <div class="cs-eq"><span>Fuse voltage</span><b>&gt; 12 V → 32 V rated</b><p>Next common rating above the supply.</p></div>
         <div class="cs-eq"><span>Fuse type</span><b>Slow-blow</b><p>Rides through the 1000 µF capacitor’s inrush at power-up.</p></div>
       </div>
+          <button type="button" class="cs-more" data-zoom="img/slide-19.webp">See the full fuse calculations <span aria-hidden="true">→</span></button>
     </section>
 
     <section class="cs-sec">
@@ -1027,11 +1034,12 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
       <h2><span>07</span>Does the buck converter need a heatsink?</h2>
       <div class="cs-verdict"><b>No.</b> Worst case, the IC reaches <strong>83.9 °C</strong>, well under its <strong>125 °C</strong> limit.</div>
       <div class="cs-eqs">
-        <div class="cs-eq"><span>Output power</span><em>Power = voltage × current (W)</em><b>5 V × 0.37 A = 1.85 W</b><p>Display 0.12 A + ESP32 0.25 A</p></div>
-        <div class="cs-eq"><span>Heat lost</span><em>Heat = input power − output power; input = output ÷ efficiency (W)</em><b>2.34 W − 1.85 W = 0.49 W</b><p>79% efficiency, from my own load sweep</p></div>
-        <div class="cs-eq"><span>Temperature rise</span><em>Temperature rise = heat × thermal resistance (°C)</em><b>0.49 W × 130 °C/W = 63.9 °C</b><p>Thermal resistance network, IC to air</p></div>
-        <div class="cs-eq"><span>IC temperature</span><em>IC temperature = ambient + temperature rise (°C)</em><b>20 °C + 63.9 °C = 83.9 °C</b><p>Conservative: all heat from one IC, no radiation</p></div>
+        <div class="cs-eq"><span>Output power</span><b>5 V × 0.37 A = 1.85 W</b><p>Display 0.12 A + ESP32 0.25 A</p></div>
+        <div class="cs-eq"><span>Heat lost</span><b>2.34 W − 1.85 W = 0.49 W</b><p>79% efficiency, from my own load sweep</p></div>
+        <div class="cs-eq"><span>Temperature rise</span><b>0.49 W × 130 °C/W = 63.9 °C</b><p>Thermal resistance network, IC to air</p></div>
+        <div class="cs-eq"><span>IC temperature</span><b>20 °C + 63.9 °C = 83.9 °C</b><p>Conservative: all heat from one IC, no radiation</p></div>
       </div>
+          <button type="button" class="cs-more" data-zoom="img/slide-24.webp|img/slide-25.webp|img/slide-26.webp">See the full thermal calculations <span aria-hidden="true">→</span></button>
     </section>
 
     <section class="cs-sec">
@@ -1571,6 +1579,7 @@ const ORDER = ['led', 'level', 'google', 'teslacells', 'geotab', 'valbruna', 'ev
 const TITLES = {led: 'RGBW LED controller', level: 'Smart lock hardware', google: 'Pixel Watch', teslacells: 'Battery cell equipment', geotab: 'Project Jarvis', valbruna: 'Steel mill CFD', evercloak: 'Dehumidifier enclosure', waterloo: 'FrostBot and a wind-up toy'};
 projEl.addEventListener('click', e => {
   const b = e.target.closest('[data-step]'); if (b && b.dataset.step) { location.replace('#project/' + b.dataset.step); return; }
+  const zb = e.target.closest('[data-zoom]'); if (zb) { const z = document.createElement('div'); z.id = 'zoom'; z.className = 'multi'; z.setAttribute('role', 'dialog'); z.setAttribute('aria-label', 'Full calculations'); z.innerHTML = '<div class="zstack">' + zb.dataset.zoom.split('|').map(u => `<img src="${u}" alt="Calculation slide">`).join('') + '</div>'; z.addEventListener('click', () => z.remove()); document.body.appendChild(z); return; }
   const im = e.target.closest('figure img'); if (im) { const z = document.createElement('div'); z.id = 'zoom'; z.setAttribute('role', 'dialog'); z.setAttribute('aria-label', 'Enlarged image'); z.innerHTML = `<img src="${im.getAttribute('src')}" alt="${im.alt}">`; z.addEventListener('click', () => z.remove()); document.body.appendChild(z); }
 });
 addEventListener('keydown', e => { const z = document.getElementById('zoom'); if (z && e.key === 'Escape') { e.stopImmediatePropagation(); z.remove(); } }, true);
