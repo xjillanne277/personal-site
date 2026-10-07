@@ -846,7 +846,7 @@ html[data-theme="dark"] .cs-box ul{color:#d6d4cf}
 @media (max-width:860px){.pf-now-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:480px){.pf-now{padding:18px 18px 16px}.pf-now-facts{grid-template-columns:minmax(0,1fr)}}
 html[data-theme="dark"] .pf-now{background:#26292d}
-.pf-ring{display:flex;justify-content:center;gap:14px;margin:36px 0 8px;font:500 13px var(--f-mono);letter-spacing:.08em}.pf-ring a{color:var(--mute)!important;text-decoration:none}.pf-ring a:hover{color:var(--ink)!important;text-decoration:underline}
+.ring-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 #xp-dlg{border:0;padding:0;border-radius:14px;max-width:720px;width:calc(100% - 32px);max-height:86vh;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 #xp-dlg::backdrop{background:rgba(17,20,24,.55)}
 #xp-dlg .xp-in{padding:28px 32px 30px;overflow:auto;max-height:86vh;box-sizing:border-box}
@@ -1020,7 +1020,6 @@ html[data-theme="dark"] .pf-now{background:#26292d}
         <span class="pf-play-go">Play →</span>
       </a>
     </footer>
-    <nav class="pf-ring" aria-label="Cybernetics webring"><a href="https://cyb3r17.github.io/Cybernetics-Webring/?nav=prev&amp;from=https://www.jillanneyoussef.com" aria-label="Previous site in the webring">←</a> <a href="https://cyb3r17.github.io/Cybernetics-Webring/">CYBERNETICS WEBRING</a> <a href="https://cyb3r17.github.io/Cybernetics-Webring/?nav=next&amp;from=https://www.jillanneyoussef.com" aria-label="Next site in the webring">→</a></nav>
   </div>
 </section>
 
@@ -1888,5 +1887,6 @@ setSel(0, true);
 <script src="world.js">
 </script>
 
+<nav class="ring-hidden" aria-label="Cybernetics webring"><a href="https://cyb3r17.github.io/Cybernetics-Webring/?nav=prev&amp;from=https://www.jillanneyoussef.com" aria-label="Previous site in the webring">←</a> <a href="https://cyb3r17.github.io/Cybernetics-Webring/">CYBERNETICS WEBRING</a> <a href="https://cyb3r17.github.io/Cybernetics-Webring/?nav=next&amp;from=https://www.jillanneyoussef.com" aria-label="Next site in the webring">→</a></nav>
 </body>
 </html>
