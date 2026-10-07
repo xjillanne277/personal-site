@@ -669,6 +669,57 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .cs-ba-row>i{font-style:normal;font-size:22px;color:#c0472c}
 .cs-ba .cs-fig img{aspect-ratio:1;object-fit:contain;padding:8px;box-sizing:border-box}
 @media (max-width:860px){.cs-gallery.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.cs-ba{grid-template-columns:minmax(0,1fr)}}
+/* theme toggle + soft dark mode (portfolio and case studies) */
+.theme-btn{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:8px;border:1px solid #d6d6cf;background:transparent;color:#111418;cursor:pointer;flex:none}
+.theme-btn:hover{background:rgba(127,127,127,.12)}
+.theme-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.theme-btn .moon{fill:currentColor;stroke:none}
+.theme-btn .sun{display:none}
+.proj-bar .theme-btn{margin-left:10px}
+html[data-theme="dark"] .theme-btn .sun{display:inline}
+html[data-theme="dark"] .theme-btn .moon{display:none}
+html[data-theme="dark"] .theme-btn{color:#e6e4df;border-color:#3a3e44}
+html[data-theme="dark"] #pf{--bg:#1d1f22;--ink:#e9e7e2;--sub:#c3c6cb;--mute:#959aa1;--line:#33373c;--panel:#26292d;--acc:#e07a5f;--acc-d:#f09378;--green:#6fcf9f}
+html[data-theme="dark"] .pf-nav{background:rgba(29,31,34,.9)}
+html[data-theme="dark"] .pf-links button:hover,html[data-theme="dark"] .pf-game:hover{background:#2a2d31}
+html[data-theme="dark"] .pf-btn{background:#e9e7e2;color:#1d1f22!important;border-color:#e9e7e2}
+html[data-theme="dark"] .pf-btn:hover{background:#fff}
+html[data-theme="dark"] .pf-btn.ghost{background:transparent;color:#e9e7e2!important;border-color:#44484e}
+html[data-theme="dark"] .pf-btn.ghost:hover{background:#2a2d31;border-color:#e9e7e2}
+html[data-theme="dark"] .pf-facts,html[data-theme="dark"] .case,html[data-theme="dark"] .pf-fy,html[data-theme="dark"] .pf-contact>div{background:#26292d;border-color:#33373c}
+html[data-theme="dark"] .pf-logos{color:#c3c6cb}
+html[data-theme="dark"] .case-img,html[data-theme="dark"] .pf-first.three .pf-fy-img{background:#fff;border-color:#33373c}
+html[data-theme="dark"] .case-tags span,html[data-theme="dark"] .pf-tags i{background:#2f3337;color:#c3c6cb}
+html[data-theme="dark"] .case-cta{background:#e9e7e2;color:#1d1f22}
+html[data-theme="dark"] .case:hover .case-cta{background:var(--acc);color:#fff}
+html[data-theme="dark"] .pf-exp{border-top-color:#e9e7e2}
+html[data-theme="dark"] .pf-exp .tag{border-color:#44484e}
+html[data-theme="dark"] .pf-exp .tag.ok{background:#1f3329;border-color:#2f5240}
+html[data-theme="dark"] .pf-mail button{background:#2f3337;color:#e9e7e2;border-color:#3a3e44}
+html[data-theme="dark"] .pf-play{background:#1f2c25;border-color:#2f4a3c;color:#e9e7e2!important}
+html[data-theme="dark"] .pf-play-go{background:#3d8f6a}
+html[data-theme="dark"] .proj{background:#1a1c1f}
+html[data-theme="dark"] .proj-bar{background:rgba(29,31,34,.95);border-bottom-color:#33373c;color:#c3c6cb}
+html[data-theme="dark"] .proj-crumb{color:#959aa1}
+html[data-theme="dark"] .proj-back{background:#e9e7e2;color:#1d1f22}
+html[data-theme="dark"] .proj-nav button,html[data-theme="dark"] .proj-pn button{background:#26292d;color:#e9e7e2;border-color:#3a3e44}
+html[data-theme="dark"] .proj-sheet{background:#232528;color:#d6d4cf;box-shadow:0 0 0 1px #33373c,0 12px 40px rgba(0,0,0,.4)}
+html[data-theme="dark"] .proj h1,html[data-theme="dark"] .proj h2,html[data-theme="dark"] .fy-h,html[data-theme="dark"] .cs-stats dt,html[data-theme="dark"] .cs-cards p,html[data-theme="dark"] .cs-steps b,html[data-theme="dark"] .cs-eq b,html[data-theme="dark"] .cs-compare b,html[data-theme="dark"] .cs-flow div,html[data-theme="dark"] .cs-node,html[data-theme="dark"] .cs-verdict,html[data-theme="dark"] .cs-list b,html[data-theme="dark"] .cs-changes li span:last-of-type,html[data-theme="dark"] .cs-gallery>div>b,html[data-theme="dark"] .proj-stats dt{color:#ecebe7}
+html[data-theme="dark"] .cs-lede,html[data-theme="dark"] .cs-p,html[data-theme="dark"] .proj-lede,html[data-theme="dark"] .cs-steps p,html[data-theme="dark"] .cs-list li,html[data-theme="dark"] .cs-gallery>div>p,html[data-theme="dark"] .proj p{color:#c3c6cb}
+html[data-theme="dark"] .cs-stats,html[data-theme="dark"] .cs-table tfoot td,html[data-theme="dark"] .cs-table thead th,html[data-theme="dark"] .cs-changes,html[data-theme="dark"] .proj-stats,html[data-theme="dark"] .proj-pn{border-color:#55595f}
+html[data-theme="dark"] .cs-stats div+div,html[data-theme="dark"] .cs-table td,html[data-theme="dark"] .cs-changes li,html[data-theme="dark"] .proj h2{border-color:#33373c}
+html[data-theme="dark"] .cs-cards div,html[data-theme="dark"] .cs-compare div,html[data-theme="dark"] .cs-flow div,html[data-theme="dark"] .cs-node,html[data-theme="dark"] .cs-ba-row{background:#2a2d31;border-color:#363a3f}
+html[data-theme="dark"] .cs-node.accent{background:#3a2a24;border-color:#5a3a2e}
+html[data-theme="dark"] .cs-eq{background:#26292d;border-color:#363a3f;border-left-color:#e07a5f}
+html[data-theme="dark"] .cs-verdict{background:#1f3329}
+html[data-theme="dark"] .cs-verdict b,html[data-theme="dark"] .cs-verdict strong{color:#7fdcae}
+html[data-theme="dark"] .cs-table{color:#d6d4cf}
+html[data-theme="dark"] .cs-table .win{background:#1f3329;color:#7fdcae}
+html[data-theme="dark"] .cs-fig figcaption,html[data-theme="dark"] .proj figcaption,html[data-theme="dark"] .cs-stats dd,html[data-theme="dark"] .cs-eq p,html[data-theme="dark"] .cs-compare p,html[data-theme="dark"] .cs-flow small{color:#959aa1}
+html[data-theme="dark"] .proj-mtx,html[data-theme="dark"] .proj-mtx th,html[data-theme="dark"] .proj-mtx td{color:#d6d4cf;border-color:#33373c}
+html[data-theme="dark"] .proj-did,html[data-theme="dark"] .proj-learn,html[data-theme="dark"] .proj-res{background:transparent}
+html[data-theme="dark"] .proj-skills li{background:#2a2d31;color:#d6d4cf;border-color:#3a3e44}
+html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color:#3a3e44}
 /* ---------- welcome doors ---------- */
 .doors{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:26px 0 0;padding:0;list-style:none}
 .doors li{display:flex}
@@ -750,6 +801,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
       <button type="button" data-to="pf-contact">Contact</button>
     </nav>
     <div class="pf-cta">
+      <button type="button" class="theme-btn" aria-label="Switch to dark mode" title="Dark mode"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="moon" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><g class="sun"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></g></svg></button>
       <a class="pf-game" href="#play"><span class="pf-sprite" aria-hidden="true"></span>Game</a>
       <a class="pf-btn" href="resume.pdf" target="_blank" rel="noopener">Résumé</a>
     </div>
@@ -856,6 +908,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
     <button type="button" class="proj-back" id="proj-close">← Back to the world</button>
     <span class="proj-crumb" id="proj-crumb"></span>
     <span class="proj-nav"><button type="button" id="proj-prev">← Previous</button><button type="button" id="proj-next"><span class="nx-label">Next: </span><span id="proj-next-t"></span> →</button></span>
+    <button type="button" class="theme-btn" aria-label="Switch to dark mode" title="Dark mode"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="moon" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><g class="sun"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></g></svg></button>
     <a class="proj-resume" href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
   </div>
   <article class="proj-sheet cs" data-proj="led" data-crumb="Tesla · Lighting, Switches &amp; Sensors · Fall 2025" hidden>
@@ -1538,6 +1591,15 @@ pfEl.querySelectorAll('[data-to]').forEach(b => b.addEventListener('click', () =
 document.querySelectorAll('[data-copy]').forEach(b => { const label = b.textContent; b.addEventListener('click', async () => { try { await navigator.clipboard.writeText('j4yousse@uwaterloo.ca'); b.textContent = 'Copied ✓'; } catch { b.textContent = 'j4yousse@uwaterloo.ca'; } setTimeout(() => b.textContent = label, 1800); }); });
 window.__sfx = () => chime();
 
+
+/* theme: light by default; remembered per visitor */
+(function () {
+  const root = document.documentElement;
+  const set = t => { root.dataset.theme = t; document.querySelectorAll('.theme-btn').forEach(b => { const d = t === 'dark'; b.setAttribute('aria-label', d ? 'Switch to light mode' : 'Switch to dark mode'); b.title = d ? 'Light mode' : 'Dark mode'; }); };
+  let saved = 'light'; try { saved = localStorage.getItem('jy-theme') || 'light'; } catch (e) {}
+  set(saved);
+  document.querySelectorAll('.theme-btn').forEach(b => b.addEventListener('click', () => { const t = root.dataset.theme === 'dark' ? 'light' : 'dark'; set(t); try { localStorage.setItem('jy-theme', t); } catch (e) {} window.track && track('theme', {theme: t}); }));
+})();
 /* ============ music: original, generated live ============ */
 let AC = null, master = null, musicOn = false, timer = null, nextBar = 0, bar = 0;
 const snd = document.getElementById('sound');
