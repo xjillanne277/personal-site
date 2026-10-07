@@ -87,7 +87,7 @@ h1{margin:0;font-weight:700;font-size:clamp(34px,7.4vw,58px);line-height:1;lette
 #world-ui{position:fixed;inset:0;z-index:5;background:#1f3a2e}
 #world-ui.fit .mini-wrap,#world-ui.fit #map-toggle{display:none!important}
 #world-ui.fit #world-cv{inset:auto}
-#w-hint{position:fixed;left:50%;top:calc(90px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:9;font:600 14px/1.5 var(--f-pixel);color:#3a3f46;background:#fff;padding:16px 26px 14px;border-radius:40px;pointer-events:none;text-align:center;box-shadow:0 6px 0 rgba(31,35,40,.12),0 10px 30px rgba(31,35,40,.18);transition:opacity 2.6s ease,transform 2.6s ease;animation:w-cloud-in .8s ease}
+#w-hint{position:fixed;left:50%;top:calc(90px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:9;font:600 14px/1.5 var(--f-pixel);color:#3a3f46;background:#fff;padding:16px 26px 14px;border-radius:40px;pointer-events:none;text-align:center;box-shadow:0 6px 0 rgba(31,35,40,.12),0 10px 30px rgba(31,35,40,.18);transition:opacity 3.5s ease,transform 3.5s ease;animation:w-cloud-in .8s ease}
 #w-hint::before,#w-hint::after{content:"";position:absolute;background:#fff;border-radius:50%;z-index:-1}
 #w-hint::before{width:70px;height:70px;top:-26px;left:22%}
 #w-hint::after{width:50px;height:50px;top:-16px;right:20%}
@@ -1795,6 +1795,17 @@ function thock() {
 }
 const TAPPABLE = 'button,a,.w-label,.bm-pin,[role="button"],.mini-wrap';
 addEventListener('click', e => { if (mode === 'portfolio' || !projEl.hidden || !(e.target.closest && e.target.closest(TAPPABLE))) return; thock(); }, true);
+function splash(v = 1) {
+  if (!AC || !musicOn) return;
+  const t = AC.currentTime, d = .5, len = Math.floor(AC.sampleRate * d), buf = AC.createBuffer(1, len, AC.sampleRate), dd = buf.getChannelData(0);
+  for (let i = 0; i < len; i++) { const x = i / len; dd[i] = (Math.random() * 2 - 1) * Math.pow(1 - x, 2.5) * Math.min(1, x * 40); }
+  const src = AC.createBufferSource(), bp = AC.createBiquadFilter(), g = AC.createGain(); src.buffer = buf;
+  bp.type = 'bandpass'; bp.Q.value = 1.2; bp.frequency.setValueAtTime(1100 * (.9 + Math.random() * .2), t); bp.frequency.exponentialRampToValueAtTime(320, t + d);
+  g.gain.value = .11 * v; src.connect(bp); bp.connect(g); g.connect(AC.destination); src.start(t);
+  const o = AC.createOscillator(), og = AC.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(520 + Math.random() * 80, t + .02); o.frequency.exponentialRampToValueAtTime(260, t + .14);
+  og.gain.setValueAtTime(0, t); og.gain.linearRampToValueAtTime(.035 * v, t + .03); og.gain.exponentialRampToValueAtTime(.0001, t + .18); o.connect(og); og.connect(AC.destination); o.start(t); o.stop(t + .2);
+}
+window.__splash = splash;
 function chime() { if (!AC || !musicOn) return; const t = AC.currentTime + .05; [72, 76, 79, 84].forEach((m, i) => note(m, t + i * .07, .9, .06)); }
 
 setSel(0, true);
