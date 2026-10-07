@@ -354,6 +354,12 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .notes li{font-size:15.5px;line-height:1.5;color:var(--sub);padding-left:4px}
 .notes li::marker{font:500 13px var(--f-mono);color:var(--mute)}
 .notes b{color:var(--ink);font-weight:600}
+.notes ol.keyed{list-style:none;padding-left:0;gap:8px}
+.notes ol.keyed li{position:relative;padding-left:32px}
+.notes ol.keyed li::before{content:attr(data-k);position:absolute;left:0;top:2px;display:grid;place-items:center;width:20px;height:20px;border:1.5px solid var(--ink);border-radius:50%;font:600 11px var(--f-mono);color:var(--ink)}
+.v.dark{background:#0d1b2e}
+.v.dark figcaption{color:#c9d3e0}
+.v.dark figcaption b{border-color:#c9d3e0;color:#c9d3e0}
 .tblock{border-collapse:collapse;width:100%;font:500 12.5px/1.3 var(--f-mono);border-left:2px solid var(--ink)}
 .tblock th,.tblock td{border-bottom:1px solid var(--ink);padding:10px 10px;text-align:left}
 .tblock tr:last-child th,.tblock tr:last-child td{border-bottom:0}
@@ -558,7 +564,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
           <div class="zones" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div>
           <div class="sheet-views" data-open="led" role="button" tabindex="-1" aria-hidden="true">
             <figure class="v main"><img src="img/led-exploded.webp" alt="" loading="lazy"><figcaption><b>A</b>Exploded assembly</figcaption></figure>
-            <figure class="v"><img src="img/pcb-renders.webp" alt="" loading="lazy"><figcaption><b>B</b>PCB, top and bottom</figcaption></figure>
+            <figure class="v dark"><img src="img/pcb-route2.webp" alt="" loading="lazy"><figcaption><b>B</b>PCB placement and routing</figcaption></figure>
             <figure class="v"><img src="img/led-render.webp" alt="" loading="lazy"><figcaption><b>C</b>SLA enclosure</figcaption></figure>
           </div>
           <div class="sheet-foot">
@@ -581,25 +587,25 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
       </article>
 
       <article class="sheet" aria-labelledby="s2-t">
-        <header class="sheet-head"><span class="sheet-no">02</span><h3 id="s2-t">Smart lock sensing and validation</h3><span class="sheet-meta">Level Home · Winter 2026</span></header>
+        <header class="sheet-head"><span class="sheet-no">02</span><h3 id="s2-t">Smart lock hardware: three projects</h3><span class="sheet-meta">Level Home · Winter 2026</span></header>
         <div class="sheet-frame">
           <div class="zones" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div>
           <div class="sheet-views" data-open="level" role="button" tabindex="-1" aria-hidden="true">
-            <figure class="v main"><img src="img/fx-v2.webp" alt="" loading="lazy"><figcaption><b>A</b>Climate-chamber test fixture</figcaption></figure>
-            <figure class="v"><img src="img/mag-puck.webp" alt="" loading="lazy"><figcaption><b>B</b>Magnet on the throw arm</figcaption></figure>
-            <figure class="v"><img src="img/tol-stack.webp" alt="" loading="lazy"><figcaption><b>C</b>Bolt tolerance stack-up</figcaption></figure>
+            <figure class="v main"><img src="img/fx-v2.webp" alt="" loading="lazy"><figcaption><b>A</b>Test fixture</figcaption></figure>
+            <figure class="v"><img src="img/mag-puck.webp" alt="" loading="lazy"><figcaption><b>B</b>Magnet sensing</figcaption></figure>
+            <figure class="v"><img src="img/tol-stack.webp" alt="" loading="lazy"><figcaption><b>C</b>Bolt tolerances</figcaption></figure>
           </div>
           <div class="sheet-foot">
             <div class="notes">
               <h4>Notes</h4>
-              <ol>
-                <li>Swapped an accelerometer and flex cable for a magnetometer and insert-moulded magnet: <b>$12M</b> projected savings.</li>
-                <li>Automated fixture built for the climate chamber: <b>2M+</b> cycles, 14 issues fixed.</li>
-                <li>Datums and tolerances on the bolt path: <b>−25%</b> actuation-force variability.</li>
+              <ol class="keyed">
+                <li data-k="A"><b>Test fixture.</b> Automated, and built to survive the climate chamber: <b>2M+</b> cycles, 14 issues fixed.</li>
+                <li data-k="B"><b>Magnet sensing.</b> Replaced an accelerometer and flex cable with a magnetometer and insert-moulded magnet: <b>$12M</b> projected.</li>
+                <li data-k="C"><b>Bolt tolerances.</b> New datums along the bolt path: <b>−25%</b> actuation-force variability.</li>
               </ol>
             </div>
             <table class="tblock">
-              <tr><th>Part</th><td colspan="3">Smart lock, sensing + test</td></tr>
+              <tr><th>Part</th><td colspan="3">Smart lock, 3 sub-projects</td></tr>
               <tr><th>Tools</th><td colspan="3">GD&amp;T · Stack-ups · DFM · Fixtures</td></tr>
               <tr><th>Drawn</th><td>J. Youssef</td><th>Sheet</th><td class="big">2/3</td></tr>
             </table>
