@@ -1500,7 +1500,7 @@ function drawLayer(key, par, camI) { const c = layers[key]; const off = ((Math.r
 /* objects placed along the world loop */
 const objs = [
   {x: 40, k: 'tree'}, {x: 70, k: 'tree', s: 1}, {x: 140, k: 'sign', t: 'WATERLOO'}, {x: 190, k: 'lamp'},
-  {x: 250, k: 'cabin'}, {x: 330, k: 'nsx'}, {x: 372, k: 'c5'}, {x: 420, k: 'tree'}, {x: 450, k: 'tree', s: 1},
+  {x: 250, k: 'cabin'}, {x: 326, k: 'nsx'}, {x: 370, k: 'c5'}, {x: 420, k: 'tree'}, {x: 450, k: 'tree', s: 1},
   {x: 510, k: 'lamp'}, {x: 640, k: 'tree'}, {x: 700, k: 'sign', t: 'EVERCLOAK'},
   {x: 760, k: 'fence'}, {x: 840, k: 'lamp'}, {x: 900, k: 'workshop'}, {x: 990, k: 'tree', s: 1}, {x: 1030, k: 'tree'},
   {x: 1090, k: 'sign', t: 'CALIFORNIA'}, {x: 1150, k: 'palm'}, {x: 1190, k: 'lamp'}, {x: 1240, k: 'mailbox'}, {x: 1300, k: 'palm'}, {x: 1350, k: 'tree'}
@@ -1523,12 +1523,23 @@ function workshop(x, gy) { R(x, gy - 24, 50, 24, '#b9a089'); for (let i = 0; i <
 function sign(x, gy) { R(x + 6, gy - 16, 2, 16, C.trunk); R(x, gy - 20, 18, 7, '#c79a62'); R(x + 1, gy - 19, 16, 1, '#dab17b'); R(x + 3, gy - 17, 10, 1, '#7a5232'); R(x + 3, gy - 15, 7, 1, '#7a5232'); }
 function fence(x, gy) { for (let i = 0; i < 6; i++) R(x + i * 7, gy - 8, 2, 8, '#d9c3a0'); R(x, gy - 6, 40, 1, '#d9c3a0'); R(x, gy - 3, 40, 1, '#d9c3a0'); }
 function mailbox(x, gy) { R(x + 3, gy - 9, 2, 9, C.trunk); R(x, gy - 14, 9, 6, '#3f6fb0'); R(x + 9, gy - 15, 1, 4, '#d9644a'); R(x + 10, gy - 15, 2, 2, '#d9644a'); }
-function nsx(x, gy) { // red wedge, pop-ups down
-  R(x, gy - 6, 30, 4, '#c8312c'); R(x + 2, gy - 8, 26, 2, '#c8312c'); R(x + 9, gy - 11, 12, 3, '#c8312c');
-  R(x + 10, gy - 10, 10, 2, '#1d2430'); R(x + 21, gy - 9, 4, 1, '#1d2430'); R(x, gy - 4, 30, 1, '#8f1f1c');
-  R(x + 28, gy - 7, 2, 1, '#f3f1e6'); disc(x + 6, gy - 2, 2, '#1a1a1a'); disc(x + 23, gy - 2, 2, '#1a1a1a'); R(x + 5, gy - 3, 2, 1, '#8a8a8a'); R(x + 22, gy - 3, 2, 1, '#8a8a8a');
+function wheel(x, gy, hub) { R(x, gy - 5, 6, 5, '#141414'); R(x + 1, gy - 6, 4, 1, '#141414'); R(x + 2, gy - 4, 2, 2, hub); }
+function nsx(x, gy) { // red mid-engine wedge, pop-ups down, front to the right
+  const r = '#c8312c', d = '#8f1f1c';
+  R(x + 1, gy - 8, 33, 4, r); R(x + 3, gy - 9, 9, 1, r); R(x + 22, gy - 9, 11, 1, r);
+  R(x + 11, gy - 13, 11, 4, '#1d2430'); R(x + 13, gy - 14, 8, 1, r); R(x + 11, gy - 13, 1, 4, r);
+  R(x + 1, gy - 4, 33, 1, d); R(x + 14, gy - 7, 5, 1, d);
+  R(x + 33, gy - 7, 1, 1, '#f3f1e6'); R(x + 1, gy - 7, 1, 2, '#ff6a50');
+  wheel(x + 4, gy, '#8a8a8a'); wheel(x + 25, gy, '#8a8a8a');
 }
-function c5(x, gy) { R(x, gy - 6, 32, 4, '#1c1d22'); R(x + 2, gy - 8, 28, 2, '#1c1d22'); R(x + 10, gy - 11, 12, 3, '#1c1d22'); R(x + 11, gy - 10, 10, 2, '#5d7896'); R(x, gy - 4, 32, 1, '#000'); R(x + 3, gy - 7, 22, 1, '#3a3d46'); R(x + 30, gy - 7, 2, 1, '#f3f1e6'); disc(x + 6, gy - 2, 2, '#0d0d0d'); disc(x + 25, gy - 2, 2, '#0d0d0d'); R(x + 5, gy - 3, 2, 1, '#9a9a9a'); R(x + 24, gy - 3, 2, 1, '#9a9a9a'); }
+function c5(x, gy) { // black front-engine coupe, long hood, front to the right
+  const k = '#1c1d22';
+  R(x, gy - 8, 36, 4, k); R(x + 2, gy - 9, 10, 1, k); R(x + 20, gy - 9, 14, 1, k);
+  R(x + 8, gy - 13, 11, 4, '#5d7896'); R(x + 10, gy - 14, 8, 1, k); R(x + 18, gy - 13, 1, 4, k);
+  R(x, gy - 4, 36, 1, '#000'); R(x + 3, gy - 7, 30, 1, '#3a3d46');
+  R(x + 35, gy - 7, 1, 1, '#f3f1e6'); R(x, gy - 7, 1, 2, '#d23a2a');
+  wheel(x + 4, gy, '#9a9a9a'); wheel(x + 27, gy, '#9a9a9a');
+}
 
 /* character + Moe */
 const HAIR = '#2a1a14', HAIR2 = '#4a2e22', SKIN = '#e8bfa0';
