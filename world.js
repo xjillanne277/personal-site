@@ -229,9 +229,9 @@ function drawLandmark(l) {
 bake();
 /* ---------------- sprites ---------------- */
 const H = '#2a1a14', H2 = '#4a2e22', S = '#e8bfa0', S2 = '#d6a886', TEE = '#1f2126', J = '#4f6d8f', SH = '#eceff1';
-function girl(c, ox, oy, dir, f) {
+function girl(c, ox, oy, dir, f, noShadow) {
   const P = (x, y, w, h, k) => R(c, ox + x, oy + y, w, h, k);
-  P(4, 24, 12, 2, 'rgba(0,0,0,.18)');
+  if (!noShadow) P(4, 24, 12, 2, 'rgba(0,0,0,.18)');
   const lift = f === 1 ? 1 : 0, lift2 = f === 2 ? 1 : 0;
   if (dir === 'down' || dir === 'up') {
     P(5, 1, 10, 2, H); P(4, 3, 12, 3, H); P(3, 5, 3, 12, H); P(14, 5, 3, 12, H); P(2, 8, 2, 8, H); P(16, 8, 2, 8, H);
@@ -264,9 +264,9 @@ function moeSprite(c, ox, oy, f) {
   P(3, 10 + (f ? 0 : 1), 2, 2, pt); P(9, 10 + (f ? 1 : 0), 2, 2, pt);
 }
 const pops = {nsx: 0, c5: 0}, popT = {nsx: 0, c5: 0}; const carClicks = {nsx: 0, c5: 0};
-function car(c, X, Y, o, up) {
+function car(c, X, Y, o, up, noShadow) {
   const P = (x, y, w, h, k) => R(c, X + x, Y + y, w, h, k), B = o.body, D = shade(B, -35), Lt = shade(B, 30);
-  P(2, 39, 26, 4, 'rgba(0,0,0,.22)');
+  if (!noShadow) P(2, 39, 26, 4, 'rgba(0,0,0,.22)');
   P(0, 7, 3, 8, '#141414'); P(27, 7, 3, 8, '#141414'); P(0, 27, 3, 9, '#141414'); P(27, 27, 3, 9, '#141414');
   P(3, 1, 24, 1, B); P(2, 2, 26, 36, B); P(3, 38, 24, 1, D); P(2, 2, 26, 1, Lt);
   if (o.nsx) { P(4, 3, 22, 2, '#5a0f0f'); P(5, 3, 5, 2, '#ff4a3d'); P(20, 3, 5, 2, '#ff4a3d'); P(4, 6, 22, 1, D); }
@@ -329,7 +329,7 @@ const RMW = 360, RMH = 180, FLOOR = 172;
 const room = document.createElement('canvas'); room.width = RMW; room.height = RMH;
 const rc = room.getContext('2d');
 const led = {r: 255, g: 190, b: 140, w: 60, br: 80};
-function ledRGB() { const k = .35 + .65 * led.br / 100, mx = c => Math.round(Math.min(255, c + led.w * .8) * k); return [mx(led.r), mx(led.g), mx(led.b)]; }
+function ledRGB() { const k = led.br / 100, mx = c => Math.round(Math.min(255, c + led.w * .8) * k); return [mx(led.r), mx(led.g), mx(led.b)]; }
 const GAL = {
   photos: [['img/ca-sunset-gull.webp', 'Ventura Pier, Santa Barbara, after a long road trip'], ['img/ca-redwoods.webp', 'Muir Woods'], ['img/ca-palms.webp', 'The Pacifica Taco Bell'], ['img/ca-pier.webp', 'Santa Monica Pier'], ['img/ca-coast-night.webp', 'Half Moon Bay, by the Ritz golf course']],
   moe: [["img/moe-1.webp", "My cat"], ["img/moe-2.webp", "My cat"], ["img/moe-3.webp", "My cat"], ["img/moe-4.webp", "My cat"], ["img/moe-5.webp", "My cat"], ["img/moe-6.webp", "My cat"], ["img/moe-7.webp", "My cat"]]
@@ -342,8 +342,6 @@ const RO = [
    card: {title: 'Mini Moe', meta: '3D printed', body: ['I missed Moe while I was away on co-op, so I 3D printed him to watch me study.'], img: 'img/minimoe.webp', imgAlt: 'A white 3D-printed cat figure next to a laptop and handwritten notes'}},
   {id: 'led', label: 'LED strip', x: 40, y: 57, w: 110, h: 8, stand: 96, kind: 'led'},
   {id: 'photos', label: 'Photo wall', x: 160, y: 18, w: 56, h: 60, stand: 188, kind: 'gallery', gal: 'photos', title: 'Photo wall', meta: 'Four co-op terms in California'},
-  {id: 'posters', label: 'Car posters', x: 222, y: 22, w: 72, h: 38, stand: 258, kind: 'room',
-   card: {title: 'NSX and C5', meta: 'Pop-up headlights, always', body: ['An original Acura NSX in red and a C5 Corvette in black. The real ones are parked outside, and yes, the headlights work.']}},
   {id: 'tv', label: 'Arcade', x: 304, y: 110, w: 48, h: 50, stand: 334, kind: 'arcade'},
   {id: 'moe', label: 'Moe', x: 116, y: 156, w: 34, h: 18, stand: 108, kind: 'gallery', gal: 'moe', title: 'Moe', meta: 'My cat'}
 ];
@@ -478,7 +476,7 @@ function drawRoomFront(now) {
   // lighting
   if (TINT) { g.globalAlpha = .7; g.fillStyle = TINT; g.fillRect(0, 0, VW, VH); g.globalAlpha = 1; }
   g.globalCompositeOperation = 'lighter';
-  const k = PHASE === 'night' ? .26 : PHASE === 'day' ? .12 : .2;
+  const k = (PHASE === 'night' ? .26 : PHASE === 'day' ? .12 : .2) * led.br / 100;
   for (let x = 46; x < 148; x += 16) { const gx = x - cam.x, gy = 59 - cam.y, gr = g.createRadialGradient(gx, gy, 0, gx, gy + 8, 24); gr.addColorStop(0, `rgba(${lr},${lg},${lb},${k})`); gr.addColorStop(1, `rgba(${lr},${lg},${lb},0)`); g.fillStyle = gr; g.fillRect(gx - 30, gy - 4, 60, 44); }
   [[93, 99, 26], [129, 99, 26], [328, 125, 30]].forEach(([x, y, r]) => { const gx = x - cam.x, gy = y - cam.y, gr = g.createRadialGradient(gx, gy, 0, gx, gy, r); gr.addColorStop(0, PHASE === 'night' ? 'rgba(150,200,255,.25)' : 'rgba(150,200,255,.1)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(gx - r, gy - r, r * 2, r * 2); });
   if (PHASE !== 'night') { const gx = 327 - cam.x, gy = 55 - cam.y, gr = g.createRadialGradient(gx, gy, 0, gx, gy, 60); gr.addColorStop(0, 'rgba(255,240,200,.18)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(gx - 60, gy - 60, 120, 120); }
@@ -518,7 +516,7 @@ function teleport(l, open) {
 
 /* ---------------- cards ---------------- */
 const esc = s => s.replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
-const CONTACT = `<div class="w-contact"><code id="w-email">j4yousse@uwaterloo.ca</code><button type="button" class="w-copy">Copy</button></div><p class="w-links"><a href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn</a> <a href="${RES}" target="_blank" rel="noopener">Résumé (PDF)</a></p>`;
+const CONTACT = `<div class="w-contact"><a href="mailto:j4yousse@uwaterloo.ca"><code id="w-email">j4yousse@uwaterloo.ca</code></a></div><p class="w-links"><a href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn</a> <a href="${RES}" target="_blank" rel="noopener">Résumé (PDF)</a></p>`;
 function enterRoom() {
   hideDrive(); closeCard(); const fade = document.getElementById('fade'); fade.classList.add('on');
   setTimeout(() => { worldPos.x = P.x; worldPos.y = P.y; scene = 'room'; window.track && track('enter_room'); resize(); RP.x = 22; RP.dir = 1; RP.tx = null; P.target = null; autoId = 'door'; trail.length = 0; fade.classList.remove('on'); }, reduce ? 0 : 260);
@@ -536,12 +534,12 @@ function ledCard() {
     <p>I built this for Tesla's interior lighting design studio so designers could set RGBW values without a firmware engineer. Drag the sliders and the room's light strip follows.</p>
     <p><button type="button" class="w-more" data-proj="led">Read how I built it${touch ? '' : ' <span class="w-key">E</span>'}</button></p>
     ${row('r', 'R', 255)}${row('g', 'G', 255)}${row('b', 'B', 255)}${row('w', 'W', 255)}${row('br', 'Brightness', 100)}
-    <div class="w-actions"><button type="button" class="w-alt" data-p="255,190,140,60">Warm</button><button type="button" class="w-alt" data-p="120,200,255,40">Cool</button><button type="button" class="w-alt" data-p="255,70,150,0">Pink</button><button type="button" class="w-alt" data-p="60,255,140,0">Green</button></div></div>`;
+    <div class="w-actions"><button type="button" class="w-alt" data-p="255,190,140,60,80">Warm</button><button type="button" class="w-alt" data-p="120,200,255,40,100">Cool</button><button type="button" class="w-alt" data-p="255,70,150,0,60">Pink</button><button type="button" class="w-alt" data-p="60,255,140,0,70">Green</button><button type="button" class="w-alt" data-p="0,0,0,0,0">Off</button></div></div>`;
   card.hidden = false;
   card.querySelector('.w-close').addEventListener('click', closeCard);
   card.querySelectorAll('[data-proj]').forEach(b => b.addEventListener('click', () => { closeCard(); window.__openProject && window.__openProject(b.dataset.proj); }));
   ['r', 'g', 'b', 'w', 'br'].forEach(k => { const i = card.querySelector('#led-' + k); i.addEventListener('input', () => { led[k] = +i.value; card.querySelector('#led-' + k + '-v').textContent = i.value; }); });
-  card.querySelectorAll('[data-p]').forEach(b => b.addEventListener('click', () => { const [r, g2, b2, w] = b.dataset.p.split(',').map(Number); Object.assign(led, {r, g: g2, b: b2, w}); ['r', 'g', 'b', 'w'].forEach(k => { card.querySelector('#led-' + k).value = led[k]; card.querySelector('#led-' + k + '-v').textContent = led[k]; }); }));
+  card.querySelectorAll('[data-p]').forEach(b => b.addEventListener('click', () => { const [r, g2, b2, w, br] = b.dataset.p.split(',').map(Number); Object.assign(led, {r, g: g2, b: b2, w, br}); ['r', 'g', 'b', 'w', 'br'].forEach(k => { card.querySelector('#led-' + k).value = led[k]; card.querySelector('#led-' + k + '-v').textContent = led[k]; }); }));
   card.querySelector('#led-r').focus({preventScroll: true});
 }
 function openCard(l) {
@@ -576,13 +574,13 @@ function arcadeCard() {
   let best = 0; try { best = +localStorage.getItem('jy-runner-best') || 0; } catch (e) {}
   card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
     <h2 id="w-card-title">Commute</h2><p class="w-meta">${touch ? 'Tap the screen to jump' : 'Space or ↑ to jump · Esc to leave'}</p>
-    <canvas id="rn" width="240" height="84" style="display:block;width:100%;image-rendering:pixelated;background:#cfe9f7;border:3px solid var(--panel-edge);cursor:pointer;touch-action:manipulation"></canvas>
+    <div style="position:relative"><canvas id="rn" width="240" height="84" style="display:block;width:100%;image-rendering:pixelated;background:#cfe9f7;border:3px solid var(--panel-edge);cursor:pointer;touch-action:manipulation"></canvas><div id="rn-msg" style="position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);font:600 15px var(--f-pixel);color:#fff;background:rgba(31,35,40,.82);padding:7px 14px;border-radius:999px;white-space:nowrap;pointer-events:none"></div></div>
     <p class="w-cap" id="rn-s" style="margin-top:8px">Score 0 · Best ${best}</p></div>`;
   card.hidden = false;
   card.querySelector('.w-close').addEventListener('click', closeCard);
   const c = card.querySelector('#rn'), x = c.getContext('2d'), out = card.querySelector('#rn-s');
   const GY = 70;
-  arc = {c, x, out, best, y: 0, vy: 0, obs: [], t: 0, sp: 90, score: 0, over: false, started: false, last: performance.now(), f: 0, spawn: 1};
+  arc = {c, x, out, msg: card.querySelector('#rn-msg'), best, y: 0, vy: 0, obs: [], t: 0, sp: 90, score: 0, over: false, started: false, last: performance.now(), f: 0, spawn: 1};
   const jump = () => { if (arc.over) { Object.assign(arc, {obs: [], y: 0, vy: 0, sp: 90, score: 0, over: false, spawn: 1}); return; } arc.started = true; if (arc.y === 0) arc.vy = 185; };
   arc.jump = jump;
   c.addEventListener('pointerdown', e => { e.preventDefault(); jump(); });
@@ -604,9 +602,9 @@ function arcadeCard() {
     P(0, GY, 240, 14, '#8fca7c'); P(0, GY, 240, 2, '#6fae5f');
     for (let i = 0; i < 240; i += 12) P((i - (arc.t += 0) - (arc.score * 4) % 12 + 240) % 240, GY + 7, 4, 1, '#6fae5f');
     arc.obs.forEach(o => { if (o.k === 'cone') { P(o.x + 3, GY - 11, 2, 2, '#f08a24'); P(o.x + 2, GY - 9, 4, 3, '#f08a24'); P(o.x + 2, GY - 6, 4, 1, '#ffffff'); P(o.x + 1, GY - 5, 6, 3, '#f08a24'); P(o.x, GY - 2, 8, 2, '#c4651a'); } else { P(o.x, GY - 9, 12, 9, '#a8794e'); P(o.x, GY - 9, 12, 2, '#c4935f'); P(o.x + 5, GY - 9, 2, 9, '#6e4a2c'); } });
-    girl(x, 22, GY - 26 - Math.round(arc.y), 'right', arc.started && !arc.over && arc.y === 0 ? (Math.floor(arc.f) % 2) + 1 : 0);
-    if (!arc.started) { x.fillStyle = 'rgba(31,35,40,.75)'; x.fillRect(58, 30, 124, 18); x.fillStyle = '#fff'; x.font = '9px sans-serif'; x.fillText(touch ? 'Tap to start' : 'Press space to start', 74, 42); }
-    if (arc.over) { x.fillStyle = 'rgba(31,35,40,.75)'; x.fillRect(58, 26, 124, 26); x.fillStyle = '#fff'; x.font = '9px sans-serif'; x.fillText('Bonk. ' + (touch ? 'Tap' : 'Space') + ' to try again', 66, 42); }
+    P(25, GY - 1, 13, 2, 'rgba(0,0,0,.18)');
+    girl(x, 22, GY - 26 - Math.round(arc.y), 'right', arc.started && !arc.over && arc.y === 0 ? (Math.floor(arc.f) % 2) + 1 : 0, true);
+    arc.msg.hidden = arc.started && !arc.over; arc.msg.textContent = !arc.started ? (touch ? 'Tap to start' : 'Press Space to start') : 'Bonk! ' + (touch ? 'Tap' : 'Press Space') + ' to try again';
     arc.out.textContent = `Score ${Math.floor(arc.score)} · Best ${arc.best}`;
     requestAnimationFrame(frame);
   }
@@ -879,7 +877,8 @@ function drawTrack(now) {
   cones.forEach(c => { g.save(); g.translate(Math.round(drv.x - cx + wrapD(c.x - drv.x, DW)), Math.round(drv.y - cy + wrapD(c.y - drv.y, DH))); g.rotate(c.a); const P_ = (x, y, w, h, k) => { g.fillStyle = k; g.fillRect(x, y, w, h); }; P_(-4, 3, 9, 2, 'rgba(0,0,0,.18)'); P_(-1, -6, 2, 2, '#f08a24'); P_(-2, -4, 4, 3, '#f08a24'); P_(-2, -1, 4, 1, '#ffffff'); P_(-3, 0, 6, 3, '#f08a24'); P_(-4, 3, 8, 2, '#c4651a'); g.restore(); });
   const bx = drv.x - cx, by = drv.y - cy;
   if (drv.boost > 0) { g.save(); g.translate(bx, by); g.rotate(drv.a - Math.PI / 2); const f = Math.floor(drv.flame) % 3; [['#ffe066', 6 + f], ['#ff8a2a', 10 + f * 2], ['#e8442c', 14 + f * 2]].reverse().forEach(([c, len]) => { g.fillStyle = c; g.fillRect(-7, -22 - len, 4, len); g.fillRect(3, -22 - len, 4, len); }); g.restore(); }
-  cbx.clearRect(0, 0, 32, 44); car(cbx, 1, 0, CARS[drv.kind], 1);
+  g.fillStyle = 'rgba(0,0,0,.18)'; g.beginPath(); g.ellipse(Math.round(bx) + 3, Math.round(by) + 5, 17, 17, 0, 0, Math.PI * 2); g.fill();
+  cbx.clearRect(0, 0, 32, 44); car(cbx, 1, 0, CARS[drv.kind], 1, true);
   g.save(); g.translate(Math.round(bx), Math.round(by)); g.rotate(drv.a - Math.PI / 2); g.drawImage(carBuf, -16, -22); g.restore();
   if (TINT) { g.fillStyle = TINT; g.fillRect(0, 0, VW, VH); }
 }

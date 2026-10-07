@@ -11,6 +11,7 @@ document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest
 if(t.dataset.go)track('choose_path',{path:t.dataset.go});
 else if(h.endsWith('resume.pdf'))track('resume_download');
 else if(h.includes('linkedin.com'))track('linkedin_click');
+else if(h.startsWith('mailto:'))track('email_click');
 else if(h==='#play')track('choose_path',{path:'play',from:'portfolio'});
 else if(t.hasAttribute('data-copy')||t.classList.contains('w-copy'))track('copy_email');
 else if(t.id==='go-portfolio')track('choose_path',{path:'portfolio',from:'game'});
@@ -758,8 +759,10 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
 .menu .door em{font:600 13px "IBM Plex Mono",monospace;font-style:normal;color:var(--accent);margin-top:4px}
 .menu .door.pf{background:#2f6f5e;box-shadow:0 0 0 3px #1d4a3e,0 5px 0 3px #133229}
 .menu .door.pf b,.menu .door.pf span{color:#f4fbf6}.door.pf em{color:#a9e8cd}
-.menu .door:hover,.menu .door[aria-current="true"]{transform:translateY(-3px)}
-.menu .door[aria-current="true"]{outline:3px solid var(--accent);outline-offset:4px}
+.menu .door:hover{transform:translateY(-3px)}
+.menu .door[aria-current="true"]{outline:none}
+.menu .door:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
+.doors{align-items:stretch}
 .menu .door:focus-visible{outline:3px solid var(--accent);outline-offset:4px}
 .title-links{margin:18px 0 0;font:500 15px "IBM Plex Sans",system-ui,sans-serif;color:var(--muted)}
 .title-links a{color:var(--ink);font-weight:600;text-decoration-color:var(--accent);text-decoration-thickness:2px;text-underline-offset:3px}
@@ -844,7 +847,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
         <p class="pf-school">3B Mechanical Engineering · University of Waterloo</p>
         <div class="pf-actions">
           <a class="pf-btn big" href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
-          <button type="button" class="pf-btn ghost big" data-copy>Copy email</button>
+          <a class="pf-btn ghost big" href="mailto:j4yousse@uwaterloo.ca">Email me</a>
           <a class="pf-btn ghost big" href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn</a>
         </div>
       </div>
@@ -920,7 +923,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
     <footer class="pf-contact" id="pf-contact" aria-labelledby="pf-contact-h">
       <div>
         <h2 id="pf-contact-h">Let’s talk.</h2>
-        <p class="pf-mail"><code>j4yousse@uwaterloo.ca</code><button type="button" data-copy>Copy</button></p>
+        <p class="pf-mail"><a href="mailto:j4yousse@uwaterloo.ca"><code>j4yousse@uwaterloo.ca</code></a></p>
         <p class="pf-foot-links"><a href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a><a href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn</a></p>
       </div>
       <a class="pf-play" href="#play">
@@ -1000,7 +1003,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
         <li><b>Button inputs</b><span>MCP23017 chip, 16 buttons</span><span>Same chip on a module, 8 buttons</span></li>
         <li><b>Sliders</b><span>6 sliders</span><span>4 sliders (R, G, B, W), all on ADC1</span></li>
         <li><b>LED outputs</b><span>8 channels</span><span>6 channels, what the studio runs</span></li>
-        <li><b>Input protection</b><span>1 A fuse + series diode</span><span>13.5 A slow-blow fuse</span></li>
+        <li><b>Input protection</b><span>1 A fuse + series diode</span><span>15 A slow-blow fuse</span></li>
       </ul>
     </section>
 
@@ -1008,7 +1011,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
       <h2><span>05</span>Power and protection</h2>
       <div class="cs-power">
         <div class="cs-node">12 V, 144 W adapter</div><i>→</i>
-        <div class="cs-node accent">13.5 A slow-blow fuse</div><i>→</i>
+        <div class="cs-node accent">15 A slow-blow fuse</div><i>→</i>
         <div class="cs-split">
           <div class="cs-node">12 V → LED strips</div>
           <div class="cs-node">LM2596 buck → 5 V → display, level shifters</div>
@@ -1016,7 +1019,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
         </div>
       </div>
       <div class="cs-eqs">
-        <div class="cs-eq"><span>Fuse current</span><b>1.5 × 9 A = 13.5 A</b><p>Derated for 10+ hours of continuous load.</p></div>
+        <div class="cs-eq"><span>Fuse current</span><b>1.5 × 9 A = 13.5 A → 15 A</b><p>9 A max draw, derated for continuous load. 15 A is the next standard size.</p></div>
         <div class="cs-eq"><span>Fuse voltage</span><b>&gt; 12 V → 32 V rated</b><p>Next common rating above the supply.</p></div>
         <div class="cs-eq"><span>Fuse type</span><b>Slow-blow</b><p>Rides through the 1000 µF capacitor’s inrush at power-up.</p></div>
       </div>
@@ -1215,7 +1218,6 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
       <p class="proj-did"><b>What I did.</b> Designed a closed-loop, air-cooled test rack for dashcam testing: 3D-printed mounts and low-cost PC fans in a modular plastic enclosure, holding the cameras at <b>26 °C</b>.</p>
       <p class="proj-res"><b>Result.</b> I also moved AI dashcam testing onto historical feed data, cutting <b>32.4 tonnes of CO₂</b> a year.</p>
     </section>
-    <footer class="proj-skills"><p>Skills from this term</p><ul><li>Computer vision (Python)</li><li>Model training</li><li>Closed-loop thermal control</li><li>Test rack design</li><li>3D printing</li><li>Learning fast</li></ul></footer>
   </article>
 
   <article class="proj-sheet" data-proj="google" data-crumb="Google · Product Design Engineering Intern, Pixel Hardware · Summer 2026" hidden>
@@ -1237,7 +1239,6 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
       <p class="proj-did"><b>A drop test that keeps the prototypes.</b> Developed an installed-condition drop test to validate the dynamic FEA of a preloaded, glass-filled plastic baffle, instead of destroying 15 low-volume prototypes per cycle. Saved $20K+.</p>
       <p class="proj-did"><b>One jig for everyone.</b> Engineered a universal strain-test jig for resin dogbone specimens, with a mathematically derived elliptical profile and tool-free clamping, standardising 2% strain testing across 4 global suppliers.</p>
     </section>
-    <footer class="proj-skills"><p>Skills from this term</p><ul><li>Precision-moulded glass</li><li>Supplier DFM</li><li>Test method development</li><li>FEA validation</li><li>Fixture design</li></ul></footer>
   </article>
 
   <article class="proj-sheet" data-proj="teslacells" data-crumb="Tesla · Mechanical Design Engineering Intern, Cell Equipment · Winter 2025" hidden>
@@ -1258,7 +1259,6 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
       <p class="proj-did"><b>Foil stretching machine.</b> Led the mechanical, electrical and controls design of a modular foil-stretching machine with load-cell tension control, halving wrinkling and creasing failures.</p>
       <p class="proj-did"><b>Closed-loop control box.</b> Designed and built the control box (Arduino, load cell, amplifier and signal conditioner) for closed-loop pneumatic control of the nip rollers, holding force within ±2% of target under dynamic loading.</p>
     </section>
-    <footer class="proj-skills"><p>Skills from this term</p><ul><li>Tolerance stack-ups</li><li>Magnetic fixturing</li><li>Closed-loop controls</li><li>Load cells and signal conditioning</li><li>Pneumatics</li></ul></footer>
   </article>
 
   <article class="proj-sheet" data-proj="valbruna" data-crumb="Valbruna ASW · Mechanical Engineering Co-op · Fall 2023" hidden>
@@ -1274,7 +1274,6 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
       <p class="proj-did"><b>Reverse engineering.</b> Reverse-engineered arc furnace parts in SolidWorks, with GD&amp;T capturing the original design intent.</p>
       <p class="proj-did"><b>Fan enclosure.</b> Redesigned a 100,000 CFM fan enclosure to comply with the Ontario Building Code, saving $45K CAD per unit.</p>
     </section>
-    <footer class="proj-skills"><p>Skills from this term</p><ul><li>CFD (ANSYS Fluent)</li><li>SolidWorks</li><li>GD&amp;T</li><li>Reverse engineering</li><li>Code compliance</li></ul></footer>
   </article>
 
   <article class="proj-sheet" data-proj="evercloak" data-crumb="Evercloak · Mechanical Engineering Co-op · Winter 2023" hidden>
@@ -1289,7 +1288,6 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
       <p class="proj-did"><b>Prototype enclosure.</b> Designed a prototype dehumidifier enclosure with DFMA principles, and made CAD models and GD&amp;T drawings that ensured sealing and enabled off-site manufacturing.</p>
       <p class="proj-did"><b>Membrane testing.</b> Improved dehumidification performance 40% through membrane material selection, designing custom tests for absorption, evaporation rate and elongation.</p>
     </section>
-    <footer class="proj-skills"><p>Skills from this term</p><ul><li>DFMA</li><li>GD&amp;T drawings</li><li>Material selection</li><li>Test design</li></ul></footer>
   </article>
 
   <article class="proj-sheet" data-proj="waterloo" data-crumb="University of Waterloo · First-year design, and a 2025 redesign" hidden>
@@ -1350,7 +1348,6 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
       <p>The first prototype used a gearbox to drive the kick. The second moved to a TT motor and cam on a car base, which was simpler and kicked more reliably.</p>
       <div class="proj-figs fy-grid2"><figure><img src="img/toy-gearbox.webp" alt="Pencil drawing of the first prototype with a gearbox driving the kick" loading="lazy"><figcaption>Fig. 21 · First prototype: a gearbox drives the kick.</figcaption></figure><figure><img src="img/toy-exploded.webp" alt="Pencil exploded view of the second prototype" loading="lazy"><figcaption>Fig. 22 · Second prototype, exploded.</figcaption></figure><figure><img src="img/toy-photo.webp" alt="The finished toy with a ping-pong ball under its acrylic leg" loading="lazy"><figcaption>Fig. 23 · The finished toy.</figcaption></figure><figure><img src="img/toy-labelled.webp" alt="Labelled exterior and interior" loading="lazy"><figcaption>Fig. 24 · Exterior and interior, labelled.</figcaption></figure></div>
     </section>
-    <footer class="proj-skills"><p>Skills from these projects</p><ul><li>Design process</li><li>Mechanisms</li><li>Pneumatics</li><li>Non-Newtonian flow</li><li>80/20 framing</li><li>Laser cutting</li><li>EV3 and ESP32</li><li>Testing</li></ul></footer>
   </article>
 </section>
 
