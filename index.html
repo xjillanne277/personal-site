@@ -242,6 +242,8 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .proj-wide{margin:18px 0 6px}
 .proj-wide img{width:100%;height:auto}
 .proj-slide img{max-height:none!important;object-fit:contain}
+.proj-figs.two{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:14px;align-items:start}
+@media (max-width:640px){.proj-figs.two{grid-template-columns:minmax(0,1fr)}}
 .gt-diagram svg{display:block;width:100%;height:auto;max-width:720px;border:1px solid #d9dde2;background:#fff;padding:12px;box-sizing:border-box}
 .proj-calc{font:400 14px/1.6 "IBM Plex Mono",ui-monospace,monospace;background:#f6f8fa;border:1px solid #d9dde2;border-left:3px solid #8a5a3c}
 .proj-calc b{color:#14181d;font-weight:600}
@@ -401,6 +403,9 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .pf-go{margin-top:22px;font:600 16px var(--f-head);color:var(--acc);background:none;border:0;padding:0;cursor:pointer}
 .pf-go:hover{color:var(--acc-d)}
 .pf-go.sm{margin:0;font-size:14px;white-space:nowrap}
+.pf-more{margin:40px 0 0;color:var(--mute);font-size:16px}
+.pf-inline{font:600 16px var(--f-head);color:var(--acc);background:none;border:0;padding:0;cursor:pointer;text-align:left;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:4px}
+.pf-inline:hover{color:var(--acc-d);text-decoration-thickness:2px}
 /* experience */
 .pf-exp{list-style:none;margin:0;padding:0;border-top:1px solid var(--ink)}
 .pf-exp li{display:grid;grid-template-columns:140px minmax(0,1.1fr) minmax(0,2fr) 96px;gap:8px 28px;align-items:baseline;padding:20px 0;border-bottom:1px solid var(--line)}
@@ -651,6 +656,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
         </div>
         <button type="button" class="sheet-go" data-open="geotab">Read the full write-up <span aria-hidden="true">→</span></button>
       </article>
+      <p class="pf-more">Also: <button type="button" class="pf-inline" data-open="waterloo">FrostBot, from a first-year LEGO robot to a 2025 pneumatic redesign →</button></p>
     </section>
 
     <section class="pf-sec" id="pf-exp" aria-labelledby="pf-exp-h">
@@ -1096,25 +1102,33 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
     <footer class="proj-skills"><p>Skills from this term</p><ul><li>DFMA</li><li>GD&amp;T drawings</li><li>Material selection</li><li>Test design</li></ul></footer>
   </article>
 
-  <article class="proj-sheet" data-proj="waterloo" data-crumb="University of Waterloo · First-year design courses" hidden>
+  <article class="proj-sheet" data-proj="waterloo" data-crumb="University of Waterloo · First-year design, and a 2025 redesign" hidden>
     <header class="proj-head">
       <p class="proj-kicker">Project notebook</p>
-      <h1>First-year builds</h1>
-      <p class="proj-lede">The two design-course projects where it started: a wind-up toy and a cake-frosting robot.</p>
-      <dl class="proj-stats"><div><dt>98%</dt><dd>FrostBot icing accuracy</dd></div><div><dt>100</dt><dd>trials</dd></div><div><dt>$50</dt><dd>toy budget per prototype</dd></div></dl>
+      <h1>FrostBot and a wind-up toy</h1>
+      <p class="proj-lede">Two first-year design projects. I came back to FrostBot two years later and redesigned it with everything I’d learned on co-op.</p>
+      <dl class="proj-stats"><div><dt>98%</dt><dd>icing placement accuracy, V1</dd></div><div><dt>100</dt><dd>verification trials</dd></div><div><dt>±2 mm</dt><dd>placement target</dd></div><div><dt>9/16″</dt><dd>pneumatic cylinder bore, V2</dd></div></dl>
     </header>
     <section class="proj-ch">
-      <h2><span>01</span> ME101 · FrostBot (Summer 2023)</h2>
-      <p class="proj-did"><b>What we built.</b> A robot that ices circular desserts in under three minutes. A worm drive pushes a piston through a hopper, a motor spins the plate, and an EV3 brick runs it all with gyro and touch-sensor feedback. The user enters the dessert’s radius.</p>
-      <p class="proj-learn"><b>What I had to learn.</b> The full loop: needs analysis, mechanical design, firmware and testing. We found LEGO gears couldn’t push real icing without fatigue, so we switched to dyed CoolWhip.</p>
-      <p class="proj-res"><b>Result.</b> <b>98% accuracy</b> across 100 trials on desserts from 5 to 30 cm radius, measured as the share of icing landing inside the target circle.</p>
+      <h2><span>01</span> FrostBot V1 · ME101, Summer 2023</h2>
+      <p class="proj-did"><b>The brief.</b> Automate the icing of circular desserts for consistency, throughput and precision, inside the LEGO EV3 ecosystem with 3D-printed and laser-cut parts, for under $150.</p>
+      <p class="proj-res"><b>Result.</b> <b>98% accuracy</b> in icing placement over 100 trials. When the small motors overheated pushing real icing, we switched to Cool Whip and designed a smaller 3D-printed gear for more torque.</p>
+      <figure class="proj-wide proj-slide"><img src="img/fb-05.webp" alt="Project background and objectives" loading="lazy"><figcaption>Fig. 1 · Background and objectives.</figcaption></figure><figure class="proj-wide proj-slide"><img src="img/fb-06.webp" alt="Project limitations and the EV3 kit" loading="lazy"><figcaption>Fig. 2 · Constraints.</figcaption></figure><figure class="proj-wide proj-slide"><img src="img/fb-07.webp" alt="CAD and build photos of the solution" loading="lazy"><figcaption>Fig. 3 · Solution overview.</figcaption></figure><figure class="proj-wide proj-slide"><img src="img/fb-08.webp" alt="Firmware and the built robot" loading="lazy"><figcaption>Fig. 4 · Firmware.</figcaption></figure><figure class="proj-wide proj-slide"><img src="img/fb-09.webp" alt="Verification and testing table" loading="lazy"><figcaption>Fig. 5 · Verification and testing.</figcaption></figure><figure class="proj-wide proj-slide"><img src="img/fb-10.webp" alt="Engineering challenges and solutions" loading="lazy"><figcaption>Fig. 6 · Challenges and fixes.</figcaption></figure>
     </section>
     <section class="proj-ch">
-      <h2><span>02</span> ME100 · Wind-up soccer toy (Fall 2022)</h2>
-      <p class="proj-did"><b>What we built.</b> A portable alternative to foosball for kids aged 6 to 12: a cam-and-follower kicker in a laser-cut wooden enclosure with an acrylic leg, on a $50 budget per prototype.</p>
-      <p class="proj-learn"><b>What I had to learn.</b> The engineering design process end to end, plus soldering and simple circuits to drive a mechanism with a small motor.</p>
+      <h2><span>02</span> FrostBot V2 · redesign, October 2025</h2>
+      <p class="proj-did"><b>Why revisit it.</b> V1 worked, but it was flexible, imprecise and its motor overheated on thicker icing. Two years and five co-ops later, I redesigned it as if it were going on a production line.</p>
+      <p class="proj-learn"><b>What changed.</b> An 80/20 aluminium frame for rigidity, a pneumatic piston instead of a motor and worm drive, a motorised z-axis for dessert height, an electric linear slide for radius, a machined Delrin hopper for food contact, and an ESP32 with closed-loop motor control in place of the EV3.</p>
+      <p class="proj-res"><b>Sizing the piston.</b> I modelled icing as a Bingham plastic, worked back from the flow rate the plate needs to the nozzle pressure and plunger force, then sized the cylinder with a 1.5 factor of safety for standard 90 psi shop air: a <b>9/16″ bore</b>.</p>
+      <figure class="proj-wide proj-slide"><img src="img/fb-12.webp" alt="Redesign objectives" loading="lazy"><figcaption>Fig. 7 · Redesign objectives.</figcaption></figure><figure class="proj-wide proj-slide"><img src="img/fb-13.webp" alt="Annotated CAD of FrostBot V2" loading="lazy"><figcaption>Fig. 8 · V2 design.</figcaption></figure><figure class="proj-wide proj-slide"><img src="img/fb-20.webp" alt="Three renders of FrostBot V2" loading="lazy"><figcaption>Fig. 9 · V2 renders.</figcaption></figure><figure class="proj-wide proj-slide"><img src="img/fb-14.webp" alt="V1 versus V2 comparison table" loading="lazy"><figcaption>Fig. 10 · What changed, and why.</figcaption></figure><figure class="proj-wide proj-slide"><img src="img/fb-15.webp" alt="Pneumatic piston sizing approach" loading="lazy"><figcaption>Fig. 11 · Piston sizing approach.</figcaption></figure><figure class="proj-wide proj-slide"><img src="img/fb-16.webp" alt="Piston sizing calculation summary" loading="lazy"><figcaption>Fig. 12 · Piston sizing calculations.</figcaption></figure><figure class="proj-wide proj-slide"><img src="img/fb-21.webp" alt="Handwritten piston sizing calculations" loading="lazy"><figcaption>Fig. 13 · Full hand calculations.</figcaption></figure>
     </section>
-    <footer class="proj-skills"><p>Skills from these courses</p><ul><li>Design process</li><li>Mechanisms</li><li>Laser cutting</li><li>EV3 programming</li><li>Testing</li></ul></footer>
+    <section class="proj-ch">
+      <h2><span>03</span> Wind-up soccer toy · ME100, Fall 2022</h2>
+      <p class="proj-did"><b>What we built.</b> A portable alternative to foosball for kids aged 6 to 12: a motor turns a cam, the cam drives a follower, and the follower swings an acrylic leg to kick the ball. Laser-cut wood, on a $50 budget per prototype.</p>
+      <p class="proj-learn"><b>How it evolved.</b> The first prototype used a gearbox to drive the kick. The second moved to a TT motor and cam on a car base, which was simpler and kicked more reliably.</p>
+      <div class="proj-figs two"><figure><img src="img/toy-gearbox.webp" alt="Pencil drawing of the first prototype with a gearbox driving the kicking mechanism" loading="lazy"><figcaption>Fig. 14 · First prototype: a gearbox drives the kick.</figcaption></figure><figure><img src="img/toy-exploded.webp" alt="Pencil exploded view of the second prototype: TT motor, cam, breadboard, battery, follower, leg and car base" loading="lazy"><figcaption>Fig. 15 · Second prototype, exploded.</figcaption></figure><figure><img src="img/toy-photo.webp" alt="The finished toy with a ping-pong ball under its acrylic leg" loading="lazy"><figcaption>Fig. 16 · The finished toy.</figcaption></figure><figure><img src="img/toy-labelled.webp" alt="Labelled exterior and interior: cam, follower, follower housing, leg, TT motor, breadboard, AAA battery, car base" loading="lazy"><figcaption>Fig. 17 · Exterior and interior, labelled.</figcaption></figure></div>
+    </section>
+    <footer class="proj-skills"><p>Skills from these projects</p><ul><li>Design process</li><li>Mechanisms</li><li>Pneumatics</li><li>Non-Newtonian flow</li><li>80/20 framing</li><li>Laser cutting</li><li>EV3 and ESP32</li><li>Testing</li></ul></footer>
   </article>
 </section>
 
@@ -1342,7 +1356,7 @@ function show(m) {
   window.track && track('section_view', {section: m});
 }
 const ORDER = ['led', 'level', 'google', 'teslacells', 'geotab', 'valbruna', 'evercloak', 'waterloo'];
-const TITLES = {led: 'RGBW LED controller', level: 'Smart lock hardware', google: 'Pixel Watch', teslacells: 'Battery cell equipment', geotab: 'Dashcams at Geotab', valbruna: 'Steel mill CFD', evercloak: 'Dehumidifier enclosure', waterloo: 'First-year builds'};
+const TITLES = {led: 'RGBW LED controller', level: 'Smart lock hardware', google: 'Pixel Watch', teslacells: 'Battery cell equipment', geotab: 'Dashcams at Geotab', valbruna: 'Steel mill CFD', evercloak: 'Dehumidifier enclosure', waterloo: 'FrostBot and a wind-up toy'};
 projEl.querySelectorAll('[data-proj]').forEach(a => {
   const i = ORDER.indexOf(a.dataset.proj); if (i < 0) return;
   const nav = document.createElement('nav'); nav.className = 'proj-pn'; nav.setAttribute('aria-label', 'More write-ups');
