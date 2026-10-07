@@ -738,6 +738,10 @@ function draw(now) {
   const cam = camera();
   g.fillStyle = forest; forest.setTransform && forest.setTransform(new DOMMatrix().translate(-cam.x, -cam.y)); g.fillRect(0, 0, VW, VH);
   g.drawImage(cur().map, -cam.x, -cam.y);
+  // tall screens: repeat the forest band (same river, banks, trees and coast per column) above and below the map
+  if (scene === 'world') { const bh = SKIRT * TS, by0 = MH * TS, mp = cur().map;
+    for (let y = -cam.y - bh; y > -bh; y -= bh) g.drawImage(mp, 0, by0, mp.width, bh, -cam.x, y, mp.width, bh);
+    for (let y = mp.height - cam.y; y < VH; y += bh) g.drawImage(mp, 0, by0, mp.width, bh, -cam.x, y, mp.width, bh); }
   // cars (dynamic so headlights can pop)
   const nsx = L.find(l => l.id === 'nsx'), c5 = L.find(l => l.id === 'c5');
   car(g, nsx.tx * TS + 1 - cam.x, nsx.ty * TS + 2 - cam.y, CARS.nsx, pops.nsx);
