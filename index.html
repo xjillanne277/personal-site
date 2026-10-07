@@ -573,6 +573,79 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 @media (max-width:760px){.proj-crumb{display:none}.proj-nav .nx-label{display:none}.proj-bar .proj-resume{display:none}}
 #zoom{position:fixed;inset:0;z-index:40;background:rgba(15,18,22,.88);display:grid;place-items:center;padding:24px;cursor:zoom-out}
 #zoom img{max-width:100%;max-height:100%;object-fit:contain;background:#fff;border-radius:6px}
+/* LED case study: visual, short, legible */
+.proj-sheet.cs{max-width:1120px}
+.cs h1{margin:6px 0 12px}
+.cs-kicker{margin:0;font:500 13.5px "IBM Plex Mono",monospace;color:#8a5a3c}
+.cs-hero{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:32px;align-items:center}
+.cs-lede{margin:0;font-size:clamp(18px,1.9vw,21px);line-height:1.5;color:#2c3138;max-width:46ch}
+.cs-hero-img{width:100%;height:auto;max-height:320px;object-fit:contain}
+.cs-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:28px 0 0;border-top:2px solid #14181d}
+.cs-stats div{padding:14px 12px 0 0}.cs-stats div+div{padding-left:14px;border-left:1px solid #e3e6ea}
+.cs-stats dt{font:700 clamp(24px,2.6vw,32px)/1 "IBM Plex Sans",sans-serif;letter-spacing:-.02em;color:#14181d}
+.cs-stats dd{margin:6px 0 0;font-size:14px;color:#59626c}
+.cs-sec{margin-top:56px}
+.cs h2{display:flex;align-items:baseline;gap:12px;margin:0 0 18px;padding:0;border:0;font:700 clamp(22px,2.4vw,28px)/1.2 "IBM Plex Sans",sans-serif;letter-spacing:-.015em;color:#14181d}
+.cs h2 span{font:600 14px "IBM Plex Mono",monospace;color:#c0472c}
+.cs-p{margin:0 0 18px;font-size:17.5px;line-height:1.55;color:#2c3138;max-width:68ch}
+.cs-cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.cs-cards div{background:#f6f7f8;border-radius:12px;padding:18px}
+.cs-cards b{display:block;font:600 13px "IBM Plex Mono",monospace;letter-spacing:.04em;text-transform:uppercase;color:#8a5a3c;margin-bottom:8px}
+.cs-cards p{margin:0;font-size:17px;line-height:1.4;font-weight:600;color:#14181d}
+.cs-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.cs-steps b{display:block;margin-top:12px;font:700 17px "IBM Plex Sans",sans-serif;color:#14181d}
+.cs-steps p{margin:4px 0 0;font-size:15.5px;line-height:1.45;color:#454b53}
+.cs-fig{margin:0}
+.cs-fig img{display:block;width:100%;height:auto;background:#fff;border:1px solid #e3e6ea;border-radius:10px;cursor:zoom-in}
+.cs-steps .cs-fig img{aspect-ratio:4/3;object-fit:contain;background:#f6f7f8}
+.cs-fig figcaption{margin-top:8px;font:500 13px "IBM Plex Mono",monospace;color:#59626c}
+.cs-fig figcaption:empty{display:none}
+.cs-scroll{overflow-x:auto}
+.cs-table{width:100%;min-width:560px;border-collapse:collapse;font-size:16px}
+.cs-table th,.cs-table td{padding:11px 14px;border-bottom:1px solid #e3e6ea;text-align:center}
+.cs-table th:first-child,.cs-table td:first-child{text-align:left}
+.cs-table thead th{font:600 13px "IBM Plex Mono",monospace;color:#59626c;border-bottom:2px solid #14181d}
+.cs-table tfoot td{font-weight:700;font-size:18px;border-top:2px solid #14181d;border-bottom:0}
+.cs-table .win{background:#eef7f2;color:#1d6b4e;font-weight:700}
+.cs-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.cs-changes{list-style:none;margin:20px 0 0;padding:0;border-top:2px solid #14181d}
+.cs-changes li{display:grid;grid-template-columns:170px minmax(0,1fr) minmax(0,1fr);gap:16px;padding:12px 0;border-bottom:1px solid #e3e6ea;font-size:16px;align-items:baseline}
+.cs-changes li span:first-of-type{color:#7a8089;text-decoration:line-through;text-decoration-color:#c9cdd2}
+.cs-changes li span:last-of-type{color:#14181d;font-weight:600}
+.cs-changes li span:last-of-type::before{content:"→ ";color:#c0472c}
+.cs-power{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.cs-power>i{font-style:normal;font-size:22px;color:#c0472c}
+.cs-node{background:#f6f7f8;border:1px solid #e3e6ea;border-radius:10px;padding:12px 14px;font:600 15.5px "IBM Plex Sans",sans-serif;color:#14181d}
+.cs-node.accent{background:#fdf1ec;border-color:#efc6b8}
+.cs-split{display:grid;gap:8px}
+.cs-eqs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.cs-eq{background:#fff;border:1px solid #e3e6ea;border-left:4px solid #c0472c;border-radius:10px;padding:14px 16px}
+.cs-eq span{display:block;font:600 12px "IBM Plex Mono",monospace;letter-spacing:.05em;text-transform:uppercase;color:#7a8089}
+.cs-eq b{display:block;margin-top:6px;font:700 19px/1.3 "IBM Plex Sans",sans-serif;color:#14181d}
+.cs-eq p{margin:6px 0 0;font-size:14.5px;line-height:1.45;color:#59626c}
+.cs-eq.wide{margin-top:16px}
+.cs-verdict{margin:0 0 18px;padding:18px 22px;background:#eef7f2;border-radius:12px;font-size:19px;line-height:1.45;color:#14181d}
+.cs-verdict b,.cs-verdict strong{color:#1d6b4e}
+.cs-gallery{display:grid;gap:16px;margin-top:16px}
+.cs-gallery.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.cs-gallery.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.cs-gallery .cs-fig img{aspect-ratio:4/3;object-fit:contain;padding:10px;box-sizing:border-box}
+.cs-split2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;align-items:center}
+.cs-split2 .cs-fig img{max-height:460px;object-fit:contain}
+.cs-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.cs-list li{font-size:16.5px;line-height:1.45;color:#454b53;padding-left:16px;position:relative}
+.cs-list li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:#c0472c}
+.cs-list b{color:#14181d}
+.cs-compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:20px}
+.cs-compare div{background:#f6f7f8;border-radius:12px;padding:16px 18px}
+.cs-compare span{font:600 12px "IBM Plex Mono",monospace;letter-spacing:.05em;text-transform:uppercase;color:#8a5a3c}
+.cs-compare b{display:block;margin-top:6px;font:700 17px "IBM Plex Sans",sans-serif;color:#14181d}
+.cs-compare p{margin:4px 0 0;font-size:15px;color:#59626c}
+.cs-flow{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap}
+.cs-flow div{flex:1 1 170px;background:#f6f7f8;border:1px solid #e3e6ea;border-radius:12px;padding:16px;font:700 17px "IBM Plex Sans",sans-serif;color:#14181d}
+.cs-flow small{display:block;margin-top:6px;font:400 14.5px/1.4 "IBM Plex Sans",sans-serif;color:#59626c}
+.cs-flow>i{align-self:center;font-style:normal;font-size:22px;color:#c0472c}
+@media (max-width:860px){.cs-hero,.cs-split2,.cs-pair{grid-template-columns:minmax(0,1fr)}.cs-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.cs-steps,.cs-gallery.g3{grid-template-columns:minmax(0,1fr)}.cs-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.cs-stats div:nth-child(3){border-left:0;padding-left:0}.cs-changes li{grid-template-columns:minmax(0,1fr)}.cs-flow>i{transform:rotate(90deg);margin:0 auto}.cs-power{flex-direction:column;align-items:stretch}.cs-power>i{transform:rotate(90deg);text-align:center}}
 /* ---------- welcome doors ---------- */
 .doors{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:26px 0 0;padding:0;list-style:none}
 .doors li{display:flex}
@@ -771,202 +844,134 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
     <span class="proj-nav"><button type="button" id="proj-prev">← Previous</button><button type="button" id="proj-next"><span class="nx-label">Next: </span><span id="proj-next-t"></span> →</button></span>
     <a class="proj-resume" href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
   </div>
-  <article class="proj-sheet" data-proj="led" data-crumb="Tesla · Lighting, Switches &amp; Sensors · Fall 2025">
-    <header class="proj-head">
-      <p class="proj-kicker">Technical write-up</p>
-      <h1>Universal RGBW LED controller</h1>
-      <p class="proj-lede">A standalone controller that lets Tesla’s interior lighting design studio set colour, brightness and presets on production LED strips without a firmware engineer. Concept to handoff in seven weeks, including my first PCB.</p>
-      <figure class="proj-hero"><img src="img/led-render.webp" alt="Render of the finished controller: enclosure with slide potentiometers, programmable buttons and a touchscreen"></figure>
-      <dl class="proj-stats">
-        <div><dt>7 weeks</dt><dd>scoping to handoff</dd></div>
-        <div><dt>6×</dt><dd>LEDs per controller vs off-the-shelf</dd></div>
-        <div><dt>2 revs</dt><dd>schematic Rev A → Rev B</dd></div>
-        <div><dt>&gt;10 h/day</dt><dd>continuous duty target</dd></div>
-      </dl>
-      <nav class="proj-toc" aria-label="Sections"><a href="#led-1">Problem</a><a href="#led-2">P0</a><a href="#led-3">P1 and MCU</a><a href="#led-4">Schematic</a><a href="#led-5">Power and fuse</a><a href="#led-6">PCB</a><a href="#led-7">Thermal</a><a href="#led-8">Enclosure</a><a href="#led-9">Firmware</a><a href="#led-10">Result</a></nav>
+  <article class="proj-sheet cs" data-proj="led" data-crumb="Tesla · Lighting, Switches &amp; Sensors · Fall 2025" hidden>
+    <header class="cs-hero">
+      <div>
+        <p class="cs-kicker">Tesla · Lighting, Switches &amp; Sensors · Fall 2025</p>
+        <h1>Universal RGBW LED controller</h1>
+        <p class="cs-lede">Lighting designers needed a firmware engineer every time they wanted to try a colour preset. I proposed a standalone controller so they don’t, and built it from scratch, including my first PCB.</p>
+      </div>
+      <img class="cs-hero-img" src="img/cs-render.webp" alt="Render of the finished controller: enclosure with slide potentiometers, programmable buttons and a touchscreen">
     </header>
+    <dl class="cs-stats">
+      <div><dt>7 weeks</dt><dd>concept to handoff</dd></div>
+      <div><dt>6×</dt><dd>more LEDs per controller</dd></div>
+      <div><dt>2 revs</dt><dd>schematic, A → B</dd></div>
+      <div><dt>10+ h</dt><dd>a day, continuous duty</dd></div>
+    </dl>
 
-    <section class="proj-ch" id="led-1">
-      <h2><span>1</span> Problem and requirements</h2>
-      <p>The interior lighting design studio in LA tests lighting presets for new vehicles. Every time a designer wanted to change a colour or animation, a firmware engineer had to reprogram the LEDs. Each supplier’s LEDs also needed its own proprietary controller, which got expensive as programs scaled. I identified this as a bottleneck and proposed a single standalone controller the designers could run themselves.</p>
-      <div class="proj-table" role="table" aria-label="Requirements and constraints">
-        <div role="row"><b role="rowheader">Schedule</b><span role="cell">Mid-October start, done by early December 2025. This drove most of the trade-offs below.</span></div>
-        <div role="row"><b role="rowheader">Electrical</b><span role="cell">Operate reliably for more than 10 hours a day, continuously.</span></div>
-        <div role="row"><b role="rowheader">Mechanical</b><span role="cell">Robust, enclosed and portable between Fremont and LA. Ideally one standalone unit.</span></div>
-        <div role="row"><b role="rowheader">Scope</b><span role="cell">Scalable to future use cases, enough to justify the development effort.</span></div>
-        <div role="row"><b role="rowheader">User experience</b><span role="cell">Full LED control for designers with no firmware support.</span></div>
-      </div>
-      <ol class="proj-time" aria-label="Seven-week plan">
-        <li><b>Wk 1</b>P0 scoping and demo</li><li><b>Wk 2–3</b>P1 parts, firmware, demo, schematic Rev A</li><li><b>Wk 3–4</b>Rev B, start PCB</li><li><b>Wk 5</b>EE review, fab house, DFM, PO, enclosure CAD</li><li><b>Wk 6</b>Solder boards, print enclosure, first build, final code</li><li><b>Wk 7</b>Test, validate, hand off with SOP</li>
-      </ol>
-    </section>
-
-    <section class="proj-ch" id="led-2">
-      <h2><span>2</span> Prototype 0: proof of concept</h2>
-      <div class="proj-grid">
-        <div>
-          <p><b>Goal.</b> Show that a microcontroller can drive the vehicle’s production LED strip, and work out what a scalable tool would actually need.</p>
-          <div class="proj-why"><p class="q">Why build P0 from in-house parts only?</p><p>Ordering parts costs days. Using what was already in the building (Arduino Uno R3, 16×2 LCD, 4×4 keypad, a potentiometer, a breadboard and a bench 12 V supply) meant I could answer the feasibility question in the first week, before spending anything.</p></div>
-          <p><b>How it worked.</b> The keypad selects a colour channel and triggers “set”, the potentiometer sets that channel from 0 to 255, and the LCD shows prompts and values. The Arduino drives the WS2805 strip over its single-wire data line.</p>
-          <p><b>What it taught me.</b> The Uno ran out of pins, firmware updates needed a cable, and adjusting one channel at a time was too slow for a designer. These became the P1 requirements.</p>
-        </div>
-        <figure><img src="img/led-p0.webp" alt="Prototype 0 on the bench driving a blue LED strip"><figcaption>Fig. 1 · P0 driving the production strip.</figcaption></figure>
+    <section class="cs-sec">
+      <h2><span>01</span>Requirements</h2>
+      <div class="cs-cards">
+        <div><b>Time</b><p>Done in 2 months, by December 2025</p></div>
+        <div><b>Electrical</b><p>Reliable for 10+ hours a day</p></div>
+        <div><b>Mechanical</b><p>Enclosed, robust, portable between Fremont and LA</p></div>
+        <div><b>User experience</b><p>Full LED control, no firmware help needed</p></div>
       </div>
     </section>
 
-    <section class="proj-ch" id="led-3">
-      <h2><span>3</span> Prototype 1 and microcontroller selection</h2>
-      <div class="proj-table proj-table-3" role="table" aria-label="P0 lessons and P1 changes">
-        <div role="row" class="th"><b>Area</b><b>P0 lesson</b><b>P1 change</b></div>
-        <div role="row"><b>MCU</b><span>Limited pins; wired-only updates</span><span>Formal selection matrix (below)</span></div>
-        <div role="row"><b>LED control</b><span>Proven on one strip</span><span>Multiple strips at once</span></div>
-        <div role="row"><b>Interface</b><span>One channel at a time</span><span>Dedicated slider per channel plus programmable buttons</span></div>
-        <div role="row"><b>Workflow</b><span>No structure, not scalable</span><span>Structured so it maps straight onto a PCB</span></div>
+    <section class="cs-sec">
+      <h2><span>02</span>Three prototypes in seven weeks</h2>
+      <div class="cs-steps">
+        <div><figure class="cs-fig"><img src="img/cs-p0.webp" alt="Prototype 0 on the bench: Arduino, keypad, knob, LCD and a blue LED strip" loading="lazy"><figcaption></figcaption></figure><b>P0 · proof of concept</b><p>Arduino, keypad, knob and LCD from parts on hand. One strip, one colour channel at a time.</p></div>
+        <div><figure class="cs-fig"><img src="img/cs-p1-hands.webp" alt="Prototype 1 being wired on the bench" loading="lazy"><figcaption></figcaption></figure><b>P1 · functional prototype</b><p>ESP32, five sliders, programmable buttons and an OLED. Several strips at once.</p></div>
+        <div><figure class="cs-fig"><img src="img/cs-render.webp" alt="Render of the final controller" loading="lazy"><figcaption></figcaption></figure><b>Final · custom PCB</b><p>My own 2-layer board in an SLA-printed enclosure, handed off to the studio.</p></div>
       </div>
-      <p><b>Selection matrix.</b> Each criterion was weighted by how much it mattered for a tool used more than 40 hours a week. Scores: 1 meets it natively, 0 meets it with simple external modules, −1 doesn’t meet it or needs impractical wiring.</p>
-      <div class="proj-scroll"><table class="proj-mtx">
-        <thead><tr><th>Criterion</th><th>Weight</th><th>Why it matters</th><th>ESP32</th><th>STM32</th><th>Pico W</th></tr></thead>
+    </section>
+
+    <section class="cs-sec">
+      <h2><span>03</span>Choosing the microcontroller</h2>
+      <p class="cs-p">P0 ran out of pins and needed a cable for every firmware update. I scored three options; ESP32 won on wireless updates and room to grow.</p>
+      <div class="cs-scroll"><table class="cs-table">
+        <thead><tr><th>Criterion</th><th>Weight</th><th class="win">ESP32</th><th>Pico W</th><th>STM32</th></tr></thead>
         <tbody>
-          <tr><td>Scalability for future features</td><td>3</td><td>Upgradable and reprogrammable without a hardware redesign</td><td>3</td><td>3</td><td>0</td></tr>
-          <tr><td>Long-term reliability</td><td>3</td><td>Used more than 40 hours a week</td><td>3</td><td>3</td><td>3</td></tr>
-          <tr><td>Wireless firmware updates</td><td>3</td><td>Service it without opening the enclosure</td><td>3</td><td>0</td><td>0</td></tr>
-          <tr><td>Multi-peripheral support</td><td>2</td><td>Displays, expanders and LEDs on different protocols</td><td>2</td><td>2</td><td>2</td></tr>
-          <tr><td>Boot and recovery</td><td>1</td><td>Quick recovery from power cycles</td><td>1</td><td>1</td><td>1</td></tr>
+          <tr><td>Scalable without a hardware redesign</td><td>3</td><td class="win">3</td><td>0</td><td>3</td></tr>
+          <tr><td>Reliable for 40+ hours a week</td><td>3</td><td class="win">3</td><td>3</td><td>3</td></tr>
+          <tr><td>Wireless firmware updates</td><td>3</td><td class="win">3</td><td>0</td><td>0</td></tr>
+          <tr><td>Multi-peripheral, flexible buses</td><td>2</td><td class="win">2</td><td>2</td><td>2</td></tr>
+          <tr><td>Fast boot and recovery</td><td>1</td><td class="win">1</td><td>1</td><td>1</td></tr>
         </tbody>
-        <tfoot><tr><td colspan="3">Weighted total</td><td><b>12</b></td><td>9</td><td>6</td></tr></tfoot>
+        <tfoot><tr><td>Weighted total</td><td></td><td class="win">12</td><td>6</td><td>9</td></tr></tfoot>
       </table></div>
-      <div class="proj-why"><p class="q">Why the ESP32?</p><p>It was the only option that met every criterion natively. The deciding factor was over-the-air updates: once the board is sealed in an enclosure in another city, firmware has to be updatable without anyone opening it.</p></div>
-      <div class="proj-grid">
+    </section>
+
+    <section class="cs-sec">
+      <h2><span>04</span>Schematic: Rev A, then Rev B</h2>
+      <p class="cs-p">Several Rev A parts couldn’t arrive in time, so Rev B swaps each one for an equivalent I could get within a day. Same circuit, same behaviour.</p>
+      <div class="cs-pair"><figure class="cs-fig"><img src="img/cs-sch-a.webp" alt="Rev A schematic" loading="lazy"><figcaption>Rev A</figcaption></figure><figure class="cs-fig"><img src="img/cs-sch-b.webp" alt="Rev B schematic" loading="lazy"><figcaption>Rev B · built</figcaption></figure></div>
+      <ul class="cs-changes">
+        <li><b>Level shifting</b><span>1 × 74HCT244 (8 buffers)</span><span>2 × 74AHCT125 (4 + 4)</span></li>
+        <li><b>Button inputs</b><span>MCP23017 chip, 16 buttons</span><span>Same chip on a module, 8 buttons</span></li>
+        <li><b>Sliders</b><span>6 sliders</span><span>4 sliders (R, G, B, W), all on ADC1</span></li>
+        <li><b>LED outputs</b><span>8 channels</span><span>6 channels, what the studio runs</span></li>
+        <li><b>Input protection</b><span>1 A fuse + series diode</span><span>13.5 A slow-blow fuse</span></li>
+      </ul>
+    </section>
+
+    <section class="cs-sec">
+      <h2><span>05</span>Power and protection</h2>
+      <div class="cs-power">
+        <div class="cs-node">12 V, 144 W adapter</div><i>→</i>
+        <div class="cs-node accent">13.5 A slow-blow fuse</div><i>→</i>
+        <div class="cs-split">
+          <div class="cs-node">12 V → LED strips</div>
+          <div class="cs-node">LM2596 buck → 5 V → display, level shifters</div>
+          <div class="cs-node">ESP32 regulator → 3.3 V logic</div>
+        </div>
+      </div>
+      <div class="cs-eqs">
+        <div class="cs-eq"><span>Fuse current</span><b>1.5 × 9 A = 13.5 A</b><p>Derated for 10+ hours of continuous load.</p></div>
+        <div class="cs-eq"><span>Fuse voltage</span><b>&gt; 12 V → 32 V rated</b><p>Next common rating above the supply.</p></div>
+        <div class="cs-eq"><span>Fuse type</span><b>Slow-blow</b><p>Rides through the 1000 µF capacitor’s inrush at power-up.</p></div>
+      </div>
+    </section>
+
+    <section class="cs-sec">
+      <h2><span>06</span>PCB</h2>
+      <p class="cs-p">2-layer, mixed-signal, laid out in KiCad, reviewed with the EEs, then fabricated, hand-soldered and assembled by me.</p>
+      <div class="cs-gallery g3"><figure class="cs-fig"><img src="img/cs-route.webp" alt="PCB placement and routing in KiCad" loading="lazy"><figcaption>Placement and routing</figcaption></figure><figure class="cs-fig"><img src="img/cs-pour.webp" alt="Ground pour across the board" loading="lazy"><figcaption>Ground pour on both layers</figcaption></figure><figure class="cs-fig"><img src="img/cs-relief.webp" alt="Thermal relief pads on ground connections" loading="lazy"><figcaption>Thermal reliefs for hand soldering</figcaption></figure></div>
+      <div class="cs-gallery g2"><figure class="cs-fig"><img src="img/cs-top.webp" alt="3D render of the top of the PCB" loading="lazy"><figcaption>Top</figcaption></figure><figure class="cs-fig"><img src="img/cs-bottom.webp" alt="3D render of the bottom of the PCB" loading="lazy"><figcaption>Bottom</figcaption></figure></div>
+    </section>
+
+    <section class="cs-sec">
+      <h2><span>07</span>Does the buck converter need a heatsink?</h2>
+      <div class="cs-verdict"><b>No.</b> Worst case, the IC reaches <strong>83.9 °C</strong>, well under its <strong>125 °C</strong> limit.</div>
+      <div class="cs-eqs">
+        <div class="cs-eq"><span>Output power</span><b>5 V × 0.37 A = 1.85 W</b><p>Display 0.12 A + ESP32 0.25 A</p></div>
+        <div class="cs-eq"><span>Heat lost</span><b>2.34 W − 1.85 W = 0.49 W</b><p>79% efficiency, from my own load sweep</p></div>
+        <div class="cs-eq"><span>Temperature rise</span><b>0.49 W × 130 °C/W = 63.9 °C</b><p>Thermal resistance network, IC to air</p></div>
+        <div class="cs-eq"><span>IC temperature</span><b>20 °C + 63.9 °C = 83.9 °C</b><p>Conservative: all heat from one IC, no radiation</p></div>
+      </div>
+    </section>
+
+    <section class="cs-sec">
+      <h2><span>08</span>Enclosure</h2>
+      <div class="cs-split2">
+        <figure class="cs-fig"><img src="img/cs-exploded.webp" alt="Exploded view of the enclosure, PCBA and display" loading="lazy"><figcaption>Exploded assembly</figcaption></figure>
         <div>
-          <p><b>Bring-up.</b> I wired the ESP32 to the sliders, buttons and four strips, adding two 3.3 V to 5 V logic level converters on the LED data lines (reasoning in section 4). Two OLEDs form a dashboard: the left one underlines the selected strip and shows its RGBW values, and the right one shows a 0–100% brightness bar. I simulated the wiring first, then built it.</p>
-        </div>
-        <div class="proj-figs">
-          <figure><img src="img/led-p1-hands.webp" alt="Hands wiring the P1 breadboard"><figcaption>Fig. 2 · P1 hardware bring-up.</figcaption></figure>
-          <figure><img src="img/led-oled.webp" alt="OLED dashboard with strip selection, RGBW values and a brightness bar"><figcaption>Fig. 3 · OLED dashboard.</figcaption></figure>
-        </div>
-      </div>
-      <figure class="proj-wide proj-slide"><img src="img/slide-12.webp" alt="P1 wiring simulation" loading="lazy"><figcaption>Fig. 4 · P1 wiring, simulated before building.</figcaption></figure>
-    </section>
-
-    <section class="proj-ch" id="led-4">
-      <h2><span>4</span> Schematic: Rev A, then Rev B for the schedule</h2>
-      <p>Rev A was the design I wanted. When I went to order it, several parts couldn’t arrive in time for a seven-week schedule. Rev B replaces each of them with a part I could get within a day. Every swap below does the same job as the original, so the circuit works the same way. The table shows what each block does, what changed, and why the replacement is equivalent.</p>
-      <div class="proj-scroll"><table class="proj-mtx proj-revs">
-        <thead><tr><th>Block and what it does</th><th>Rev A</th><th>Rev B</th><th>Why Rev B still works</th></tr></thead>
-        <tbody>
-          <tr><td><b>Microcontroller</b><br><span class="proj-sub">The brain: reads inputs, drives the LEDs</span></td><td>ESP32-DevKitC</td><td>ESP32-DevKitC</td><td>Unchanged.</td></tr>
-          <tr><td><b>LED output channels</b><br><span class="proj-sub">Screw terminals the LED strips plug into</span></td><td>8 channels</td><td>6 channels</td><td>The studio’s first builds run 6 strips, so 6 channels cover the real use. Fewer channels also means fewer buffers and fewer pins to route.</td></tr>
-          <tr><td><b>3.3 V → 5 V level shifting</b><br><span class="proj-sub">Boosts the ESP32’s 3.3 V data signal to the 5 V the strips expect</span></td><td>1 × 74HCT244<br><span class="proj-sub">one chip, 8 buffers (“octal”)</span></td><td>2 × 74AHCT125<br><span class="proj-sub">two chips, 4 buffers each (“quad”) = 8 buffers</span></td><td>Same function, split across two chips. Both are non-inverting buffers powered at 5 V with TTL-level inputs, so they read the ESP32’s 3.3 V as a clean “high” and output a full 5 V. Two quads give the same 8 buffers as one octal: 6 drive the strips, and the 2 spares are tied off.</td></tr>
-          <tr><td><b>Button inputs</b><br><span class="proj-sub">Adds extra inputs over I²C so the ESP32 doesn’t run out of pins</span></td><td>MCP23017 chip soldered on the board, 16 buttons</td><td>MCP23017 on a ready-made breakout module, 8 buttons</td><td>It’s the exact same chip, on the same I²C bus, with the same firmware library. Only the packaging changed: the module was in stock and plugs into headers instead of needing fine-pitch soldering. 8 buttons covered the first builds.</td></tr>
-          <tr><td><b>Sliders</b><br><span class="proj-sub">Analog inputs for colour values</span></td><td>6 slide potentiometers</td><td>4 slide potentiometers (R, G, B, W), all on ADC1 pins</td><td>One slider per colour channel. Other settings move to the touchscreen. Moving every slider to ADC1 also keeps them readable while Wi-Fi is on (see below).</td></tr>
-          <tr><td><b>12 V → 5 V power</b><br><span class="proj-sub">Steps the 12 V supply down for the display and level shifters</span></td><td>Buck converter module on a connector</td><td>LM2596 buck converter module</td><td>Same job, same 12 V in and 5 V out. The LM2596 module was stocked off the shelf, and I checked its heating myself in section 7.</td></tr>
-          <tr><td><b>Input protection</b><br><span class="proj-sub">Protects the board at the 12 V input</span></td><td>1 A fuse and a series reverse-polarity diode</td><td>13.5 A, 32 V slow-blow fuse</td><td>The fuse is now sized for the real LED load (section 5). A series diode would have to carry the full ~9 A going to the strips, so Rev B drops it and relies on the keyed barrel jack for polarity.</td></tr>
-          <tr><td><b>Display</b><br><span class="proj-sub">3.5" Nextion touchscreen over UART (serial)</span></td><td>With a resistor divider on the display’s TX line</td><td>Connected directly to two ESP32 UART pins</td><td>The display’s serial output is already 3.3 V logic, which the ESP32 reads directly, so the divider wasn’t needed.</td></tr>
-        </tbody>
-      </table></div>
-      <p class="proj-small">Terms: <b>buffer</b> = a gate that repeats a signal at a different voltage level. <b>Octal / quad</b> = 8 or 4 buffers in one chip. <b>I²C</b> and <b>UART</b> = the two-wire and serial links the ESP32 uses to talk to the button chip and the display. <b>ADC</b> = the analog input that reads a slider.</p>
-      <div class="proj-decisions">
-        <div class="proj-why"><p class="q">Why buffer the LED data lines at all?</p><p>The ESP32 drives 3.3 V logic, but the strips’ data inputs expect a high level close to 5 V. A 3.3 V signal sits near the threshold and fails intermittently, especially over long wires. 74HCT and 74AHCT parts, powered at 5 V, have TTL-level inputs (a logic high from about 2 V), so they read 3.3 V cleanly and output a full 5 V swing.</p></div>
-        <div class="proj-why"><p class="q">Why 330 Ω in series on every data line?</p><p>The data lines run off-board to the strips. A small series resistor near the driver damps ringing and reflections on the cable, and limits current into the first LED’s input if the strip is unpowered or hot-plugged.</p></div>
-        <div class="proj-why"><p class="q">Why an I/O expander for the buttons?</p><p>P0 ran out of pins. An MCP23017 adds 16 inputs over I²C using just two ESP32 pins, with 4.7 kΩ pull-ups on SDA and SCL. In Rev B the breakout module was in stock, where the bare IC was not.</p></div>
-        <div class="proj-why"><p class="q">Why an RC filter on each slider?</p><p>The ESP32’s ADC is noisy. A 100 Ω and 100 nF low-pass on each wiper removes high-frequency noise before sampling, so colours don’t flicker when nobody is touching the sliders. Firmware filtering (section 9) handles the rest.</p></div>
-        <div class="proj-why"><p class="q">Why move all sliders onto ADC1 in Rev B?</p><p>On the ESP32, ADC2 can’t be read while Wi-Fi is running. Wireless updates were a core requirement, so every analog input belongs on ADC1 (GPIO32–39).</p></div>
-        <div class="proj-why"><p class="q">Why the bulk and decoupling capacitors?</p><p>A 1000 µF electrolytic at the 12 V input absorbs the current steps when strips change brightness quickly, keeping the rail from sagging. A 100 nF ceramic beside every IC (plus 10 µF at the display) handles local high-frequency demand. Pull resistors on the ESP32’s boot-strapping pins make sure it always starts in run mode.</p></div>
-      </div>
-      <figure class="proj-wide proj-slide"><img src="img/slide-17.webp" alt="Rev A schematic" loading="lazy"><figcaption>Fig. 5 · Schematic Rev A.</figcaption></figure>
-      <figure class="proj-wide proj-slide"><img src="img/slide-18.webp" alt="Rev B schematic" loading="lazy"><figcaption>Fig. 6 · Schematic Rev B, built for the schedule.</figcaption></figure>
-    </section>
-
-    <section class="proj-ch" id="led-5">
-      <h2><span>5</span> Power architecture and fuse sizing</h2>
-      <p><b>Architecture.</b> A 12 V, 144 W adapter feeds the barrel jack. The 12 V rail goes straight to the LED strips. An LM2596 buck converter supplies 5 V for the display and the level shifters, and the ESP32’s 3.3 V regulator powers the logic (ESP32 and MCP23017). All grounds are common.</p>
-      <div class="proj-grid">
-        <div>
-          <div class="proj-why"><p class="q">Why 1.5× the load?</p><p>Fuses are derated for continuous operation. Running one at its full rating for 10+ hours a day causes nuisance blows and heating, so the rated current sits comfortably above the maximum continuous draw.</p></div>
-          <div class="proj-why"><p class="q">Why slow-blow?</p><p>At power-up the uncharged 1000 µF capacitor looks almost like a short, and the inrush spike can trip a fast-blow fuse even though nothing is wrong. A slow-blow fuse rides through that transient (the capacitor charges in about five time constants) while still opening on a sustained fault.</p></div>
-        </div>
-        <div class="proj-figs">
-          <figure class="proj-wide proj-slide"><img src="img/slide-19.webp" alt="Fuse sizing calculation and capacitor charging curves" loading="lazy"><figcaption>Fig. 7 · Fuse sizing.</figcaption></figure>
+          <ul class="cs-list">
+            <li><b>Rib under the PCB</b> stops it flexing when buttons are pressed</li>
+            <li><b>Bosses and 1° draft ribs</b> locate the board and set its height</li>
+            <li><b>Slider walls and keycap slots</b> keep the controls aligned</li>
+            <li><b>Display bosses</b> set the screen flush with the top</li>
+            <li><b>Snap-fits</b> for tool-free opening during testing</li>
+          </ul>
+          <div class="cs-eq wide"><span>Snap-fit check</span><b>31.85 MPa vs 41 MPa yield → FOS 1.29</b><p>0.5 mm deflection needs 13.45 N, in Formlabs Tough 1500</p></div>
         </div>
       </div>
+      <div class="cs-gallery g3"><figure class="cs-fig"><img src="img/cs-cover-top.webp" alt="Top cover with slider walls, keycap slots and snap hooks" loading="lazy"><figcaption>Top cover</figcaption></figure><figure class="cs-fig"><img src="img/cs-cover-bottom.webp" alt="Bottom cover with PCB bosses and rib" loading="lazy"><figcaption>Bottom cover</figcaption></figure><figure class="cs-fig"><img src="img/cs-snap.webp" alt="Close-up of the snap-fit hook" loading="lazy"><figcaption>Snap-fit hook</figcaption></figure></div>
+      <div class="cs-compare"><div><span>Now · prototype</span><b>SLA, Tough 1500, snap-fits</b><p>Easy to open, debug and change the fuse</p></div><div><span>Next · production</span><b>Injection-moulded PC/ABS, screws</b><p>Tougher, secure, no snap-hook undercuts in the tool</p></div></div>
     </section>
 
-    <section class="proj-ch" id="led-6">
-      <h2><span>6</span> PCB design</h2>
-      <p>A 2-layer mixed-signal board in KiCad, with every component specified and selected by me. I reviewed the layout with the EEs, picked a fab house, ran a DFM check, submitted the PO, then hand-soldered and assembled the boards.</p>
-      <div class="proj-decisions">
-        <div class="proj-why"><p class="q">Why 2 layers?</p><p>The signals are slow (I²C, UART, LED data around 800 kHz), so two layers with a good ground pour are enough. They’re cheaper and faster to fabricate than four, which mattered on this schedule.</p></div>
-        <div class="proj-why"><p class="q">Grounding strategy</p><p>Ground pours on both layers, stitched together, give every return current a short, low-impedance path and shield the analog slider traces from the LED data lines. Ground pads connect with thermal reliefs so they can still be hand-soldered.</p></div>
-        <div class="proj-why"><p class="q">Placement</p><p>Connectors sit on the board edges to match the enclosure openings, sliders and buttons line up with the top-cover slots, and decoupling capacitors sit right beside their IC power pins. High-current 12 V paths to the LED terminals are kept short and wide.</p></div>
-      </div>
-      <figure class="proj-wide proj-slide"><img src="img/slide-21.webp" alt="PCB placement and routing in KiCad" loading="lazy"><figcaption>Fig. 8 · Placement and routing.</figcaption></figure>
-      <figure class="proj-wide proj-slide"><img src="img/slide-22.webp" alt="Ground pour and thermal relief pads" loading="lazy"><figcaption>Fig. 9 · Grounding strategy.</figcaption></figure>
-      <figure class="proj-wide proj-slide"><img src="img/slide-23.webp" alt="3D renders of the top and bottom of the PCB" loading="lazy"><figcaption>Fig. 10 · Board renders, top and bottom.</figcaption></figure>
+    <section class="cs-sec">
+      <h2><span>09</span>Firmware</h2>
+      <div class="cs-flow"><div>Read buttons<small>40 ms debounce</small></div><i>→</i><div>Read sliders<small>median of 3, then smoothing</small></div><i>→</i><div>Changed enough?<small>hysteresis, no flicker</small></div><i>→</i><div>Update strips<small>brightness scales all channels</small></div></div>
     </section>
 
-    <section class="proj-ch" id="led-7">
-      <h2><span>7</span> Thermal: does the buck converter need a heatsink?</h2>
-      <p>The LM2596 module’s manufacturer notes say no heatsink is needed below 2 A. Our load is far below that, but I wanted to verify the claim myself before sealing the module inside a plastic enclosure.</p>
-      <div class="proj-grid">
-        <div>
-          <div class="proj-why"><p class="q">The model</p><p>A steady-state thermal resistance network from the IC to ambient, with an upward convective path and a downward path through the PCB. Each interface is a resistance (for example, convection from the top of the IC: R = 1/(hA) with h = 7 W/m²·K for still air), combined into an equivalent R<sub>eq</sub> ≈ 130 °C/W.</p></div>
-          <div class="proj-why"><p class="q">Assumptions, all chosen to be conservative</p><p>All heat comes from the one IC (no I²R losses elsewhere), the IC is at a uniform temperature, and radiation is ignored. Each assumption overestimates temperature, so if this passes, the real part passes.</p></div>
-        </div>
-        <div class="proj-figs">
-          <figure class="proj-wide proj-slide"><img src="img/slide-24.webp" alt="LM2596 load sweep and power calculations" loading="lazy"><figcaption>Fig. 11 · Load sweep and power balance.</figcaption></figure>
-          <figure class="proj-wide proj-slide"><img src="img/slide-25.webp" alt="Simplified thermal model with heat paths" loading="lazy"><figcaption>Fig. 12 · Thermal model.</figcaption></figure>
-          <figure class="proj-wide proj-slide"><img src="img/slide-26.webp" alt="Thermal resistance network and result" loading="lazy"><figcaption>Fig. 13 · Thermal resistance calculations.</figcaption></figure>
-        </div>
-      </div>
+    <section class="cs-sec">
+      <h2><span>10</span>Result</h2>
+      <div class="cs-verdict">Designers now set colours and presets themselves. Each controller drives <strong>6× more LEDs</strong> than the off-the-shelf units it replaced, and the team has an SOP to build more.</div>
     </section>
-
-    <section class="proj-ch" id="led-8">
-      <h2><span>8</span> Enclosure</h2>
-      <div class="proj-scroll"><table class="proj-mtx">
-        <thead><tr><th>Parameter</th><th>Prototype (built)</th><th>Production (planned)</th></tr></thead>
-        <tbody>
-          <tr><td>Process</td><td>SLA 3D printing for fast iteration</td><td>Injection moulding for tolerance control and volume</td></tr>
-          <tr><td>Material</td><td>Formlabs Tough 1500, designed for repeated flexing</td><td>PC/ABS blend for strength and impact resistance</td></tr>
-          <tr><td>Closure</td><td>External snap-fits, tool-free</td><td>Screws, so it survives drops</td></tr>
-          <tr><td>Optimised for</td><td>Serviceability: easy to open, debug and replace the fuse</td><td>Durability and security; no snap-hook undercuts, so cheaper tooling</td></tr>
-        </tbody>
-      </table></div>
-      <div class="proj-decisions">
-        <div class="proj-why"><p class="q">Why SLA and Tough 1500 now?</p><p>The first builds will be opened often for testing and fuse changes. SLA gives good dimensional accuracy for snap-fits in a day, and Tough 1500 is formulated for parts that flex repeatedly without cracking.</p></div>
-        <div class="proj-why"><p class="q">Why design for moulding from the start?</p><p>I used draft angles, uniform wall thickness and ribs instead of thick sections, so the move to injection moulding won’t need a redesign. The rib under the PCB uses the same wall thickness as the outer perimeter to avoid sink marks.</p></div>
-        <div class="proj-why"><p class="q">Features and why they’re there</p><p>A rib stops the PCB flexing when buttons are pressed (protecting the solder joints). Bosses locate and mount the PCB, and ribs with 1° draft set its height. Walls guide the slider caps, slots align the keycaps, and display mounting bosses set the screen flush with the top face.</p></div>
-      </div>
-      <div class="proj-grid">
-        <div>
-          <div class="proj-why"><p class="q">Why accept a factor of safety of 1.29?</p><p>It’s a prototype, and the method is conservative: it ignores deflection above C, which overestimates stress. The fillet is a stress concentration, so I documented that the geometry gets revised if any yielding appears. Production moves to screws anyway.</p></div>
-        </div>
-        <div class="proj-figs">
-          <figure><img src="img/led-exploded.webp" alt="Exploded view of the enclosure, PCBA and display"><figcaption>Fig. 14 · Exploded assembly.</figcaption></figure>
-          <figure class="proj-wide proj-slide"><img src="img/slide-31.webp" alt="Snap-fit calculation summary" loading="lazy"><figcaption>Fig. 15 · Snap-fit calculations.</figcaption></figure><figure class="proj-wide proj-slide"><img src="img/slide-35.webp" alt="Full snap-fit calculation" loading="lazy"><figcaption>Fig. 16 · Snap-fit calculation, worked.</figcaption></figure>
-        </div>
-      </div>
-      <figure class="proj-wide proj-slide"><img src="img/slide-30.webp" alt="Annotated top and bottom covers" loading="lazy"><figcaption>Fig. 17 · Enclosure features.</figcaption></figure>
-    </section>
-
-    <section class="proj-ch" id="led-9">
-      <h2><span>9</span> Firmware</h2>
-      <p>The main loop reads the buttons, reads and filters the sliders, and only pushes a new colour to the strips when something has actually changed.</p>
-      <div class="proj-decisions">
-        <div class="proj-why"><p class="q">Debouncing (40 ms)</p><p>Mechanical buttons bounce for several milliseconds. Toggling a strip only after the state has held for 40 ms prevents one press from counting several times.</p></div>
-        <div class="proj-why"><p class="q">Median-of-3, then an exponential moving average</p><p>The median removes single-sample spikes from the noisy ADC, and the EMA (weight 2/10) smooths what’s left while still responding quickly to a real slider move. Readings are mapped from 12-bit to 8-bit and inverted to match the slider direction.</p></div>
-        <div class="proj-why"><p class="q">Hysteresis before updating the LEDs</p><p>The strips only update when a value changes by more than a threshold. Otherwise the last bit of ADC noise would make colours shimmer and rewrite every pixel for no reason.</p></div>
-        <div class="proj-why"><p class="q">Brightness as a scale factor</p><p>Brightness multiplies all four channels (bf = Br/255), so dimming keeps the colour’s hue instead of washing it out. Selected strips are written as GRBW frames with NeoPixelBus.</p></div>
-      </div>
-      <figure class="proj-wide proj-slide"><img src="img/slide-33.webp" alt="Firmware flowchart" loading="lazy"><figcaption>Fig. 18 · Firmware flow.</figcaption></figure>
-    </section>
-
-    <section class="proj-ch" id="led-10">
-      <h2><span>10</span> Result</h2>
-      <p>The studio has a standalone controller that designers run without engineering support. Each unit drives six times more LEDs than the off-the-shelf controllers it replaced. I handed off the first builds with an SOP and documentation so the team can keep building and maintaining them.</p>
-      <p><b>Next steps.</b> Move the enclosure to injection-moulded PC/ABS with screw closure, and bring back Rev A’s full channel count once parts lead time is no longer the constraint.</p>
-    </section>
-
-    <footer class="proj-skills"><p>Skills from this project</p><ul><li>Requirements scoping</li><li>Weighted decision matrices</li><li>Schematic design</li><li>2-layer PCB design (KiCad)</li><li>Level shifting and signal integrity</li><li>Fuse and power design</li><li>Thermal resistance modelling</li><li>Snap-fit design</li><li>DFM for injection moulding</li><li>Embedded C++ (ESP32)</li><li>Hand soldering and bring-up</li></ul></footer>
   </article>
 
   <article class="proj-sheet" data-proj="level" data-crumb="Level Home · Product Design Engineering Intern · Winter 2026" hidden>
