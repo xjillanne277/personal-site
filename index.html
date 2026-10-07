@@ -862,7 +862,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
     <p class="pf-logos"><span>Work terms at</span> Google <b>·</b> Level Home <b>·</b> Tesla <b>·</b> Geotab <b>·</b> Valbruna <b>·</b> Evercloak</p>
 
     <section class="pf-sec" id="pf-work" aria-labelledby="pf-work-h">
-      <div class="pf-sec-row"><h2 id="pf-work-h" class="pf-label">Selected work</h2><p class="pf-aside">Two projects I can show in depth. Each one opens the full case study.</p></div>
+      <div class="pf-sec-row"><h2 id="pf-work-h" class="pf-label">Selected work</h2><p class="pf-aside">Two projects I can show in depth. Click one for the full write-up.</p></div>
       <button type="button" class="case" data-open="led">
         <span class="case-img"><img src="img/led-exploded.webp" alt="" loading="lazy"></span>
         <span class="case-body">
@@ -964,7 +964,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
       <div class="cs-cards">
         <div><b>Time</b><p>Done in 2 months, by December 2025</p></div>
         <div><b>Electrical</b><p>Reliable for 10+ hours a day</p></div>
-        <div><b>Mechanical</b><p>Enclosed, robust, portable between Fremont and LA</p></div>
+        <div><b>Mechanical</b><p>Enclosed and sturdy enough to carry between Fremont and LA</p></div>
         <div><b>User experience</b><p>Full LED control, no firmware help needed</p></div>
       </div>
     </section>
@@ -996,7 +996,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
 
     <section class="cs-sec">
       <h2><span>04</span>Schematic: Rev A, then Rev B</h2>
-      <p class="cs-p">Several Rev A parts couldn’t arrive in time, so Rev B swaps each one for an equivalent I could get within a day. Same circuit, same behaviour.</p>
+      <p class="cs-p">Several Rev A parts couldn’t arrive in time, so Rev B swaps each one for an equivalent I could get within a day. The circuit works exactly the same.</p>
       <div class="cs-pair"><figure class="cs-fig"><img src="img/cs-sch-a.webp" alt="Rev A schematic" loading="lazy"><figcaption>Rev A</figcaption></figure><figure class="cs-fig"><img src="img/cs-sch-b.webp" alt="Rev B schematic" loading="lazy"><figcaption>Rev B · built</figcaption></figure></div>
       <ul class="cs-changes">
         <li><b>Level shifting</b><span>1 × 74HCT244 (8 buffers)</span><span>2 × 74AHCT125 (4 + 4)</span></li>
@@ -1111,7 +1111,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
 
     <section class="cs-sec">
       <h2><span>02</span>A magnet instead of a failing sensor</h2>
-      <p class="cs-p">An accelerometer flex inside the lock kept failing in cycle testing. Instead of patching it, I tested whether a magnet on the throw arm and two magnetometers could tell us where the bolt is.</p>
+      <p class="cs-p">An accelerometer flex inside the lock kept failing in cycle testing. I tested whether a magnet on the throw arm and two magnetometers could tell us where the bolt is instead.</p>
       <div class="cs-gallery g3" style="margin-top:0"><figure class="cs-fig"><img src="img/lc-puck-retracted.webp" alt="Lock mechanism with the magnet on the throw arm, bolt retracted" loading="lazy"><figcaption>Magnet on the throw arm</figcaption></figure><figure class="cs-fig"><img src="img/lc-bench.webp" alt="Test setup: debugger, main board and magnetometer flex on the lock" loading="lazy"><figcaption>Test setup</figcaption></figure><figure class="cs-fig"><img src="img/lc-bench2.webp" alt="The lock on the test bench" loading="lazy"><figcaption>Test setup</figcaption></figure></div>
       <div class="cs-flow" style="margin-top:20px"><div>Mount 2 magnetometers<small>on a modified part in the lock</small></div><i>→</i><div>Magnet on the throw arm<small>at its base</small></div><i>→</i><div>Record XYZ<small>fully retracted and fully thrown</small></div><i>→</i><div>Cycle and log<small>custom firmware reads both sensors</small></div></div>
       <div class="cs-eqs" style="margin-top:20px">
@@ -1125,7 +1125,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
 
     <section class="cs-sec">
       <h2><span>03</span>Making the bolt stop binding</h2>
-      <p class="cs-p">The bolt was binding in cycle testing. I ran tolerance analyses through the mechanism to find the dimensions that actually mattered. A few of them:</p>
+      <p class="cs-p">The bolt was binding in cycle testing. I ran tolerance analyses through the mechanism to find which dimensions mattered. A few of them:</p>
       <div class="cs-gallery g3" style="margin-top:0"><figure class="cs-fig"><img src="img/lv-tol2.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol5.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol4.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol1.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol3.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol6.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure></div>
       <p class="cs-p" style="margin-top:14px">…and many more.</p>
       <div class="cs-verdict">As a result: <strong>25% less variability</strong> in actuation force and a <strong>15% higher pass rate</strong> for the mechanism, before production.</div>
@@ -1170,7 +1170,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
     <header class="proj-head">
       <p class="proj-kicker">Project notebook</p>
       <h1>Project Jarvis: distracted-driving detection system</h1>
-      <p class="proj-lede">Geotab’s Intern Innovation Challenge, Summer 2024. I worked with two other interns; I’d never trained a model, learned how, then owned the code and video pipeline. We placed first of 11 teams.</p>
+      <p class="proj-lede">Geotab’s Intern Innovation Challenge, Summer 2024, with two other interns. I’d never trained a model before, learned how that week, and ended up owning the code and video pipeline. We placed first of 11 teams.</p>
       <dl class="proj-stats">
         <div><dt>1st / 11</dt><dd>Intern Innovation Challenge</dd></div>
         <div><dt>72%</dt><dd>obstacle detection, 6% false positives</dd></div>
@@ -1180,10 +1180,10 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
     </header>
     <section class="proj-ch">
       <h2><span>01</span> Learning computer vision in a week</h2>
-      <p class="proj-did"><b>The need.</b> Geotab’s 10th Intern Innovation Challenge asked teams to build a video telematics solution with AI and machine learning. I came from mechanical engineering and had never trained a model.</p>
-      <p class="proj-learn"><b>What I had to learn.</b> Everything. I spent two days learning how to train computer vision models, five days building a working one, and the last three polishing it with my team.</p>
-      <p class="proj-did"><b>What I did.</b> I owned the code and video pipeline. We built two models: in-cabin monitoring and front-facing object detection. I trained the in-cabin model to recognise distracted driving (adjusting the radio, drinking, talking) versus attentive driving, with PII blurring, and my teammates built a driver-scoring system on top of it.</p>
-      <p class="proj-res"><b>Result.</b> The only fully working model in the competition, and <b>1st place out of 11 teams</b>. It showed me how fast I can pick up something completely new when it matters.</p>
+      <p class="proj-did">Geotab’s 10th Intern Innovation Challenge asked teams to build a video telematics product using AI. I’m a mechanical engineer and had never trained a model.</p>
+      <p class="proj-learn">So I spent two days learning how to train computer vision models, five days building one that worked, and the last three polishing it with my team.</p>
+      <p class="proj-did">I owned the code and the video pipeline. We built two models, one watching the driver and one doing object detection out the front. I trained the in-cabin one to tell attentive driving from distracted driving (adjusting the radio, drinking, talking), with PII blurred out of the video. My teammates built a driver score on top of it.</p>
+      <p class="proj-res">Ours was the only model in the competition that fully worked, and we placed <b>1st out of 11 teams</b>.</p>
     </section>
     <figure class="proj-wide proj-slide"><img src="img/gt-app.webp" alt="Five screens of the driver app: login, score summary, score report, AI score improver and profile" loading="lazy"><figcaption>Fig. 1 · The driver app, designed in Figma.</figcaption></figure>
       <figure class="proj-wide proj-slide"><img src="img/gt-cv.webp" alt="Computer vision on dashcam footage: tailgating and object detection, street sign detection, and PII blurring with attentive and distracted driving indicators" loading="lazy"><figcaption>Fig. 2 · The models running on real footage.</figcaption></figure>
@@ -1214,9 +1214,9 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
               </svg><figcaption>Fig. 3 · How the pieces fit, with my part highlighted.</figcaption></figure>
       <figure class="proj-wide proj-slide"><img src="img/gt-cert.webp" alt="Certificate of Achievement: first place, Geotab’s 10th Intern Innovation Challenge, Summer 2024, Project Jarvis" loading="lazy" style="max-width:560px"><figcaption>Fig. 4 · First place.</figcaption></figure>
     <section class="proj-ch">
-      <h2><span>02</span> The day job: a rack that keeps dashcams at temperature</h2>
-      <p class="proj-did"><b>What I did.</b> Designed a closed-loop, air-cooled test rack for dashcam testing: 3D-printed mounts and low-cost PC fans in a modular plastic enclosure, holding the cameras at <b>26 °C</b>.</p>
-      <p class="proj-res"><b>Result.</b> I also moved AI dashcam testing onto historical feed data, cutting <b>32.4 tonnes of CO₂</b> a year.</p>
+      <h2><span>02</span> My actual co-op work: a dashcam test rack</h2>
+      <p class="proj-did">I designed a closed-loop, air-cooled test rack for the dashcams: 3D-printed mounts and cheap PC fans in a modular plastic enclosure. It holds the cameras at <b>26 °C</b>.</p>
+      <p class="proj-res">I also moved AI dashcam testing onto historical feed data, which cuts <b>32.4 tonnes of CO₂</b> a year.</p>
     </section>
   </article>
 
@@ -1234,10 +1234,10 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
     </header>
     <section class="proj-ch">
       <h2><span>01</span> What I worked on</h2>
-      <p class="proj-did"><b>Display glass.</b> Owned the design and validation of the screen geometry for precision-moulded glass. I used prototype testing and supplier DFM to eliminate optical distortion while meeting wall-thickness and draft limits.</p>
-      <p class="proj-did"><b>Seal testing without full watches.</b> Developed a production-representative test coupon and fixture that recreates the titanium-to-resin interface, so seal failures can be root-caused without complete watch builds. Saved $15K in vendor testing.</p>
-      <p class="proj-did"><b>A drop test that keeps the prototypes.</b> Developed an installed-condition drop test to validate the dynamic FEA of a preloaded, glass-filled plastic baffle, instead of destroying 15 low-volume prototypes per cycle. Saved $20K+.</p>
-      <p class="proj-did"><b>One jig for everyone.</b> Engineered a universal strain-test jig for resin dogbone specimens, with a mathematically derived elliptical profile and tool-free clamping, standardising 2% strain testing across 4 global suppliers.</p>
+      <p class="proj-did">I owned the design and validation of the screen geometry for the precision-moulded display glass. Between prototype testing and DFM with the supplier, I got rid of the optical distortion while staying inside the wall-thickness and draft limits.</p>
+      <p class="proj-did">For seal testing, I made a production-representative test coupon and fixture that recreates the titanium-to-resin interface, so seal failures can be root-caused without building complete watches. That saved $15K in vendor testing.</p>
+      <p class="proj-did">Validating the dynamic FEA of a preloaded, glass-filled plastic baffle meant destroying 15 low-volume prototypes per cycle. I developed an installed-condition drop test that validates it without that, which saved $20K+.</p>
+      <p class="proj-did">I also designed a strain-test jig for resin dogbone specimens. The profile is an ellipse I derived mathematically, and the clamps don’t need tools. All 4 global suppliers now run their 2% strain tests on the same jig.</p>
     </section>
   </article>
 
@@ -1245,7 +1245,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
     <header class="proj-head">
       <p class="proj-kicker">Project notebook</p>
       <h1>Battery cell equipment at Tesla</h1>
-      <p class="proj-lede">Mechanical, electrical and controls design for equipment that handles battery foil, where a tenth of a millimetre matters.</p>
+      <p class="proj-lede">Mechanical, electrical and controls design for equipment that handles battery foil.</p>
       <dl class="proj-stats">
         <div><dt>0.1 mm</dt><dd>clearance held by the clamp</dd></div>
         <div><dt>30 s → 5 s</dt><dd>clamp setup time</dd></div>
@@ -1255,9 +1255,9 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
     </header>
     <section class="proj-ch">
       <h2><span>01</span> What I worked on</h2>
-      <p class="proj-did"><b>Magnetic clamping for lamination.</b> Designed a high-temperature magnetic clamping assembly that holds 0.1 mm clearance through tolerance stack-ups and a vibration-resistant design. Yield went up 15% and setup time dropped from 30 to 5 seconds.</p>
-      <p class="proj-did"><b>Foil stretching machine.</b> Led the mechanical, electrical and controls design of a modular foil-stretching machine with load-cell tension control, halving wrinkling and creasing failures.</p>
-      <p class="proj-did"><b>Closed-loop control box.</b> Designed and built the control box (Arduino, load cell, amplifier and signal conditioner) for closed-loop pneumatic control of the nip rollers, holding force within ±2% of target under dynamic loading.</p>
+      <p class="proj-did">I designed a high-temperature magnetic clamping assembly for lamination. Tolerance stack-ups and a vibration-resistant design keep it at 0.1 mm clearance. Yield went up 15%, and setup went from 30 seconds to 5.</p>
+      <p class="proj-did">I led the mechanical, electrical and controls design of a modular foil-stretching machine with load-cell tension control. It halved wrinkling and creasing failures.</p>
+      <p class="proj-did">I also designed and built the control box (Arduino, load cell, amplifier, signal conditioner) for closed-loop pneumatic control of the nip rollers. It holds the nip force within ±2% of target under dynamic load.</p>
     </section>
   </article>
 
@@ -1270,9 +1270,9 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
     </header>
     <section class="proj-ch">
       <h2><span>01</span> What I worked on</h2>
-      <p class="proj-did"><b>Furnace CFD.</b> Modelled scrap melting in an electric arc furnace in ANSYS Fluent and identified thermal inefficiencies worth $900K CAD in potential scrap losses.</p>
-      <p class="proj-did"><b>Reverse engineering.</b> Reverse-engineered arc furnace parts in SolidWorks, with GD&amp;T capturing the original design intent.</p>
-      <p class="proj-did"><b>Fan enclosure.</b> Redesigned a 100,000 CFM fan enclosure to comply with the Ontario Building Code, saving $45K CAD per unit.</p>
+      <p class="proj-did">I modelled scrap melting in an electric arc furnace in ANSYS Fluent and found thermal inefficiencies worth $900K CAD in potential scrap losses.</p>
+      <p class="proj-did">I reverse-engineered arc furnace parts in SolidWorks, using GD&amp;T to capture the original design intent.</p>
+      <p class="proj-did">I also redesigned a 100,000 CFM fan enclosure to meet the Ontario Building Code, which saves $45K CAD per unit.</p>
     </section>
   </article>
 
@@ -1285,8 +1285,8 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
     </header>
     <section class="proj-ch">
       <h2><span>01</span> What I worked on</h2>
-      <p class="proj-did"><b>Prototype enclosure.</b> Designed a prototype dehumidifier enclosure with DFMA principles, and made CAD models and GD&amp;T drawings that ensured sealing and enabled off-site manufacturing.</p>
-      <p class="proj-did"><b>Membrane testing.</b> Improved dehumidification performance 40% through membrane material selection, designing custom tests for absorption, evaporation rate and elongation.</p>
+      <p class="proj-did">I designed a prototype dehumidifier enclosure using DFMA, with the CAD and GD&amp;T drawings needed for it to seal and be manufactured off-site.</p>
+      <p class="proj-did">I also improved dehumidification performance by 40% by picking a better membrane material. I designed the tests for it myself: absorption, evaporation rate and elongation.</p>
     </section>
   </article>
 
@@ -1335,7 +1335,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
       <h3 class="fy-h">What changed, and why</h3>
       <div class="proj-scroll"><table class="proj-mtx fy-tbl"><thead><tr><th>Item</th><th>V1</th><th>V2</th><th>Why</th></tr></thead><tbody><tr><td>Frosting hopper</td><td>3D-printed PLA, fixed height</td><td>Machined Delrin, adjustable height</td><td>Machinable, strong and fatigue-resistant, easier to clean than printed PLA</td></tr><tr><td>Frame</td><td>Tetrix (a course constraint)</td><td>Aluminium extrusion</td><td>Modular, easy to mount attachments and route cables, can hold several FrostBot modules</td></tr><tr><td>Piston actuation</td><td>Electric motor and worm gear</td><td>Pneumatic, on an aluminium mount fixed to the hopper</td><td>No motor to overheat, so thicker icing works; a rigid mount keeps piston and hopper aligned</td></tr><tr><td>Z-axis</td><td>None</td><td>Piston assembly on an electric linear slide</td><td>Handles desserts of different heights and holds the best nozzle-to-surface distance for an even bead</td></tr></tbody></table></div>
       <h3 class="fy-h">Sizing the pneumatic piston</h3>
-      <div class="proj-scroll"><table class="proj-mtx fy-tbl"><thead><tr><th>Goal</th><th>Approach</th><th>Outcome</th></tr></thead><tbody><tr><td>Handle the stiffest icing (cold buttercream) with continuous, even flow that keeps up with the plate.<br><br>Make sure piston force, nozzle geometry and speed support the bead rate with no gaps or run-out.</td><td>Estimate worst-case yield stress and viscosity, then the pressure needed for the target flow.<br><br>Convert nozzle pressure to piston area at 90 psig shop air, with a 1.5× safety margin.<br><br>Match volumetric flow to the plate speed for a continuous bead.</td><td><b>9/16″ bore</b> pneumatic cylinder.<br><br>Runs on standard 90 psi factory air, so no new infrastructure.</td></tr></tbody></table></div>
+      <div class="proj-scroll"><table class="proj-mtx fy-tbl"><thead><tr><th>Goal</th><th>Approach</th><th>Outcome</th></tr></thead><tbody><tr><td>Handle the stiffest icing (cold buttercream) with continuous, even flow that keeps up with the plate.<br><br>Make sure piston force, nozzle geometry and speed support the bead rate with no gaps or run-out.</td><td>Estimate worst-case yield stress and viscosity, then the pressure needed for the target flow.<br><br>Convert nozzle pressure to piston area at 90 psig shop air, with a 1.5× safety margin.<br><br>Match volumetric flow to the plate speed for a continuous bead.</td><td><b>9/16″ bore</b> pneumatic cylinder.<br><br>It runs on standard 90 psi factory air, so it doesn’t need new infrastructure.</td></tr></tbody></table></div>
       <ol class="fy-steps"><li>Find the icing flow rate the plate needs, from its diameter, rotation speed and an assumed bead diameter.</li><li>Find the nozzle pressure to extrude it, modelling icing as a Bingham plastic (it doesn’t flow until it passes a yield stress).</li><li>Find the plunger force from the hopper diameter, with a 1.5× factor of safety.</li><li>Find the cylinder bore for 90 psig factory air: <b>9/16″</b>.</li></ol>
       <div class="proj-figs fy-grid2"><figure><img src="img/fb-bingham.webp" alt="Shear stress versus shear rate for a Bingham plastic and a Newtonian liquid" loading="lazy"><figcaption>Fig. 15 · Why icing is a Bingham plastic.</figcaption></figure><figure><img src="img/fb-cylinder.webp" alt="A small pneumatic air cylinder" loading="lazy"><figcaption>Fig. 16 · The cylinder type selected.</figcaption></figure></div>
       <h3 class="fy-h">My hand calculations</h3>
