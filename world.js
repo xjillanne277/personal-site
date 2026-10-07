@@ -894,13 +894,17 @@ let welcomed = false; let moeClicks = 0;
 function welcome() {
   welcomed = true;
   const h = document.createElement('div'); h.id = 'w-hint'; h.setAttribute('role', 'status');
-  h.textContent = touch ? 'Tap or drag to walk · tap a building to open it' : 'Walk with your mouse (click or drag), the arrow keys or WASD · E to open';
+  h.innerHTML = touch
+    ? '<b>How to move</b><span>Tap somewhere to walk there</span><span>Drag to steer</span><span>Tap a building to open it</span>'
+    : '<b>How to move</b><span>WASD or the arrow keys</span><span>Click somewhere to walk there</span><span>Click and drag to steer</span><span>E to open things</span>';
   root.appendChild(h);
-  const hide = () => { h.classList.add('off'); setTimeout(() => h.remove(), 700); removeEventListener('keydown', hide); cv.removeEventListener('pointerdown', hide); };
-  addEventListener('keydown', hide); cv.addEventListener('pointerdown', hide); setTimeout(hide, 7000);
+  let gone = false;
+  const hide = () => { if (gone) return; gone = true; h.classList.add('off'); setTimeout(() => h.remove(), 3000); removeEventListener('keydown', early); cv.removeEventListener('pointerdown', early); };
+  const t0 = performance.now(); const early = () => { setTimeout(hide, Math.max(0, 4000 - (performance.now() - t0))); };
+  addEventListener('keydown', early); cv.addEventListener('pointerdown', early); setTimeout(hide, 10000);
 }
 window.World = {
-  start() { resize(); root.hidden = false; running = true; last = performance.now(); cv.setAttribute('tabindex', '0'); cv.focus({preventScroll: true}); requestAnimationFrame(step); if (!welcomed) welcome(); },
+  start() { if (!welcomed) { const c = L.find(l => l.id === 'cabin'); P.x = (c.tx + c.w + .7) * TS; P.y = (c.ty - .2) * TS; P.dir = 'down'; P.target = null; moe.x = P.x - 14; moe.y = P.y + 4; trail.length = 0; } resize(); root.hidden = false; running = true; last = performance.now(); cv.setAttribute('tabindex', '0'); cv.focus({preventScroll: true}); requestAnimationFrame(step); if (!welcomed) welcome(); },
   stop() { if (scene === 'track') leaveTrack(true); hideDrive(); running = false; root.hidden = true; keys.clear(); closeCard(); }
 };
 })();
