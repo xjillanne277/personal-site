@@ -816,6 +816,14 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
 #xp-dlg .xp-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 10px}#xp-dlg .xp-h h3{margin:0}#xp-dlg .tag{font:500 11px/1.3 var(--f-mono);border:1px solid var(--line);border-radius:4px;padding:3px 7px;color:var(--mute);white-space:nowrap}#xp-dlg .tag.ok{color:var(--green,#2f7a5f);border-color:#bfe0cf;background:#eef7f2}html[data-theme="dark"] #xp-dlg .tag.ok{background:#1f3329;border-color:#2f5240;color:#6fcf9f}html[data-theme="dark"] #xp-dlg .tag{border-color:#44484e}
 #xp-dlg .xp-fig{margin:4px 0 8px}#xp-dlg .xp-fig img,#xp-dlg .xp-fig video{display:block;width:100%;max-height:420px;object-fit:contain;background:#0001;border-radius:8px}#xp-dlg .xp-fig figcaption{font-size:13px;color:var(--mute);margin-top:6px;line-height:1.45}#xp-dlg .xp-media{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media (max-width:640px){#xp-dlg .xp-media{grid-template-columns:1fr}}
 .gt-limits{margin:18px 0 8px;padding:14px 18px;border-left:3px solid var(--acc,#c0472c);background:rgba(192,71,44,.06);border-radius:0 8px 8px 0}.gt-limits b{display:block;font:600 12px var(--f-mono,monospace);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}.gt-limits p{margin:0;line-height:1.55}
+.cs-box{margin:16px 0;padding:14px 18px 4px;border:1px solid #e1e4e8;border-radius:10px;background:#fbfbfc}
+.cs-box p,.cs-box ol{max-width:none!important;margin:0 0 10px;font-size:16.5px;line-height:1.55;color:#2c3138}
+.cs-box ol{padding-left:20px}.cs-box li{margin:3px 0}
+.cs-box-t{display:block;margin-bottom:6px;font:600 12px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:#8a5a3c}
+.cs-boxes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.cs-boxes .cs-box{margin:0 0 16px}
+.cs-cap{margin:4px 0 8px;font:500 13px "IBM Plex Mono",monospace;color:#59626c}
+@media (max-width:760px){.cs-boxes{grid-template-columns:minmax(0,1fr)}}
+html[data-theme="dark"] .cs-box{background:#26292d;border-color:#3a3e44}html[data-theme="dark"] .cs-box p,html[data-theme="dark"] .cs-box ol{color:#d6d4cf}
 #xp-dlg{border:0;padding:0;border-radius:14px;max-width:720px;width:calc(100% - 32px);max-height:86vh;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 #xp-dlg::backdrop{background:rgba(17,20,24,.55)}
 #xp-dlg .xp-in{padding:28px 32px 30px;overflow:auto;max-height:86vh;box-sizing:border-box}
@@ -1137,8 +1145,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
       <div class="cs-split2">
         <div class="cs-pair"><figure class="cs-fig"><img src="img/lc-v2.webp" alt="Test fixture mounted on the lock" loading="lazy"><figcaption>Fixture on the capacitive-touch keypad</figcaption></figure><figure class="cs-fig"><img src="img/lc-v2-solenoids.webp" alt="Solenoids held by their own mounting holes" loading="lazy"><figcaption>Solenoid mounting</figcaption></figure></div>
         <div>
-          <p class="cs-p">I designed an automated fixture for lifetime testing of the lock’s capacitive-touch keypad. Solenoids mounted over the keypad press the keys, and the fixture sits inside the temperature chamber with the lock, so the keypad can be cycled from −22 °C to 66 °C. We ran 10,000 cycles at each temperature to see whether the touch sensing failed over time.</p>
-          <p class="cs-p">Each solenoid is held by its own mounting holes, so the fixture doesn’t need a lid. Without the lid, the wires no longer catch in the solenoid springs. I worked with EE and firmware to configure the board and drive the solenoids.</p>
+<div class="cs-box"><span class="cs-box-t">What it does</span><p>Automated lifetime testing of the capacitive-touch keypad. Solenoids press the keys while the fixture and lock sit in the temperature chamber: −22 °C to 66 °C, 10,000 cycles at each temperature.</p></div><div class="cs-box"><span class="cs-box-t">Design</span><p>Each solenoid is held by its own mounting holes, so there’s no lid and the wires can’t catch in the solenoid springs. I worked with EE and firmware to configure the board and drive the solenoids.</p></div>
           <div class="cs-eq wide"><span>Result</span><b>14 issues found across 2M+ cycles</b><p>For example, pressing a key several times very quickly dropped some presses. All 14 were fixed with EE and firmware, and the keypad reached 100% functional success in EVT.</p></div>
         </div>
       </div>
@@ -1146,39 +1153,40 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
 
     <section class="cs-sec">
       <h2><span>02</span>Lock retraction sensing</h2>
-      <p class="cs-p">The lock used two accelerometers on flex circuits (FPCAs) to detect whether the bolt was retracted. They were noisy, didn’t always detect the fully locked and fully retracted positions, reported intermediate positions we didn’t need, and were expensive. I proposed replacing them with magnetometers and insert-molded magnets, which are simpler and more robust, and tested the idea.</p>
+<div class="cs-boxes"><div class="cs-box"><span class="cs-box-t">Problem</span><p>Two accelerometers on flex circuits (FPCAs) detected whether the bolt was retracted. They were noisy, missed the fully locked and fully retracted positions, reported intermediate positions we didn’t need, and were expensive.</p></div><div class="cs-box"><span class="cs-box-t">Proposal</span><p>Replace them with magnetometers and insert-molded magnets: simpler and more robust. I tested the idea before it went to review.</p></div></div>
       <div class="cs-gallery g3" style="margin-top:0"><figure class="cs-fig"><img src="img/lc-puck-retracted.webp" alt="Lock mechanism, bolt retracted" loading="lazy"><figcaption>Mechanism, bolt retracted</figcaption></figure><figure class="cs-fig"><img src="img/lc-puck-thrown.webp" alt="Lock mechanism, bolt thrown" loading="lazy"><figcaption>Mechanism, bolt thrown</figcaption></figure><figure class="cs-fig"><img src="img/lc-bench2.webp" alt="Test setup: debugger, main board and magnetometer flex on the lock" loading="lazy"><figcaption>Test setup: debugger, main board and magnetometer flex on the lock</figcaption></figure></div>
-      <ol class="cs-p" style="margin-top:18px;padding-left:22px">
+      <div class="cs-box"><span class="cs-box-t">Test</span><ol>
         <li>Mounted magnets on the part of the mechanism that moves with the bolt, at the base of the throw arm.</li>
         <li>Mounted two magnetometers on a modified part of the lock.</li>
         <li>With custom firmware, recorded the magnetic field (X, Y and Z) from both magnetometers with the bolt fully retracted and fully thrown, over repeated cycles.</li>
         <li>Compared the difference between the two positions to the noise in the reading.</li>
-      </ol>
+      </ol></div>
       <div class="cs-eqs" style="margin-top:8px">
         <div class="cs-eq"><span>Bolt thrown</span><b>4.32</b><p>Average magnetometer reading</p></div>
         <div class="cs-eq"><span>Bolt retracted</span><b>1.78</b><p>Average magnetometer reading</p></div>
         <div class="cs-eq"><span>Noise</span><b>0.0026</b><p>Variation in the reading at a fixed position</p></div>
         <div class="cs-eq"><span>Signal-to-noise</span><b>973 : 1</b><p>(4.32 − 1.78) ÷ noise</p></div>
       </div>
-      <p class="cs-p" style="margin-top:18px">I then repeated the test in the full assembly, with all the ferromagnetic parts installed. The signal-to-noise was still high enough that it was clear whether the bolt was retracted, which was the proof it would work.</p>
+      <div class="cs-box"><span class="cs-box-t">Why it works</span><p>The two positions differ by 2.54 while the noise is 0.0026, a 973 : 1 signal-to-noise ratio, so a thrown bolt can’t be read as retracted. I repeated the test in the full assembly with every ferromagnetic part installed, and the two positions stayed clearly separated.</p></div>
       <div class="cs-verdict">The proposal was approved and signed off, and the design was updated. Replacing two accelerometers and their flex circuits with magnetometers and insert-molded magnets cut BOM cost by <strong>$12 per unit</strong>, about <strong>$12M</strong> in projected savings.</div>
     </section>
 
     <section class="cs-sec">
       <h2><span>03</span>Tolerance analysis to fix bolt binding</h2>
-      <p class="cs-p">In cycle testing, the bolt sometimes bound while extending and retracting, mostly when cycled fast or when the lock was knocked. It didn’t happen on every prototype, because part tolerances varied from build to build. I took every dimension that affects the bolt travel path and ran tolerance stack-ups on them, with datums defined to the travel path. Wherever a tolerance was too tight, I changed it in CAD, and the parts were remade and retested. A few of the stack-ups:</p>
+<div class="cs-boxes"><div class="cs-box"><span class="cs-box-t">Problem</span><p>In cycle testing, the bolt sometimes bound while extending and retracting, mostly when cycled fast or when the lock was knocked. Only some prototypes did it, because part tolerances varied between builds.</p></div><div class="cs-box"><span class="cs-box-t">What I did</span><p>Ran tolerance stack-ups on every dimension in the bolt travel path, with datums defined to the travel path. I opened up any tolerance that was too tight in CAD, and the parts were remade and retested.</p></div></div>
+      <p class="cs-cap">A few of the stack-ups:</p>
       <div class="cs-gallery g3" style="margin-top:0"><figure class="cs-fig"><img src="img/lv-tol2.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol5.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol4.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol1.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol3.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol6.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure></div>
       <div class="cs-verdict" style="margin-top:14px">Actuation-force variability down <strong>25%</strong>, so the mechanism is much more consistent. Cycle-test pass rate up <strong>15%</strong>, to essentially 100% before production.</div>
     </section>
 
     <section class="cs-sec">
       <h2><span>04</span>DFM on molded parts</h2>
-      <p class="cs-p">I led DFM on 20+ plastic injection-molded and die-cast parts. In supplier tooling reviews, I moved parting lines and gates off cosmetic surfaces without changing the industrial design. The two parts below are both cosmetic: the customer sees them when they open the box.</p>
+      <div class="cs-box"><span class="cs-box-t">Molded and die-cast parts</span><p>I led DFM on 20+ plastic injection-molded and die-cast parts. In supplier tooling reviews, I moved parting lines and gates off cosmetic surfaces without changing the industrial design. Both parts below are cosmetic: the customer sees them when they open the box.</p></div>
       <div class="cs-ba">
         <div class="cs-ba-row"><figure class="cs-fig"><img src="img/lv-dfm4.webp" alt="Cosmetic eyelet before DFM" loading="lazy"><figcaption>Cosmetic eyelet · before DFM</figcaption></figure><i>→</i><figure class="cs-fig"><img src="img/lv-dfm1.webp" alt="Cosmetic eyelet after DFM" loading="lazy"><figcaption>Cosmetic eyelet · after DFM</figcaption></figure></div>
         <div class="cs-ba-row"><figure class="cs-fig"><img src="img/lv-dfm3.webp" alt="Cosmetic clip before DFM" loading="lazy"><figcaption>Cosmetic clip · before DFM</figcaption></figure><i>→</i><figure class="cs-fig"><img src="img/lv-dfm2.webp" alt="Cosmetic clip after DFM" loading="lazy"><figcaption>Cosmetic clip · after DFM</figcaption></figure></div>
       </div>
-      <p class="cs-p" style="margin-top:18px">For the die-cut adhesives, I designed for assembly: pin-and-slot locating features placed where they’re easy to reach on the line. I wrote the assembly docs for the line, ran calls with the assemblers, and moved slots when something was hard to reach.</p>
+      <div class="cs-box"><span class="cs-box-t">Die-cut adhesives</span><p>Designed for assembly: pin-and-slot locating features placed where they’re easy to reach on the line. I wrote the assembly docs, ran calls with the assemblers, and moved slots when something was hard to reach.</p></div>
       <div class="cs-eqs">
         <div class="cs-eq"><span>Tooling cost</span><b>−8%</b><p>Across 20+ parts</p></div>
         <div class="cs-eq"><span>Cosmetic defects</span><b>Eliminated</b><p>Gates and parting lines off visible faces</p></div>
@@ -1190,7 +1198,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
       <div class="cs-split2">
         <figure class="cs-fig"><img src="img/lc-fail.webp" alt="Photos of a subassembly failure found during cycle testing" loading="lazy"><figcaption>A failure at 3.7M cycles</figcaption></figure>
         <div>
-          <p class="cs-p">An example of the lifetime testing for locking and unlocking. 12 subassemblies were tracked and cycled over 2.5 months, past 5M cycles (a factor of safety of 8), and each failure was identified and logged.</p>
+          <div class="cs-box"><span class="cs-box-t">Lifetime testing</span><p>An example of the lifetime testing for locking and unlocking. 12 subassemblies were tracked and cycled over 2.5 months, past 5M cycles (a factor of safety of 8). Each failure was identified and logged.</p></div>
         </div>
       </div>
     </section>
