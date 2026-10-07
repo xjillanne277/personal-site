@@ -45,7 +45,7 @@ const L = [
   {id: 'google', label: 'Google', yr: '2026', tx: 31, ty: 10, w: 5, h: 4, spot: [33, 14], kind: 'modern2', tour: 8,
    card: {title: 'Google, Pixel Hardware', meta: 'Product Design Engineering Intern · Mountain View · Summer 2026', img: 'img/google-welcome.webp', imgAlt: 'Google intern welcome box with a propeller hat that says Intern, a backpack and a water bottle', imgCap: 'My intern welcome box.', body: ['Owned the design and validation of the Pixel Watch screen geometry for precision-molded glass, eliminating optical distortion within wall-thickness and draft limits.', 'Saved $15K in vendor testing with a production-representative test coupon and fixture recreating a titanium-to-resin interface.', 'Developed an installed-condition drop test for dynamic FEA of a watch baffle, avoiding the loss of 15 prototypes per cycle and saving $20K+.', 'Engineered a universal strain-test jig used across 4 global suppliers.']}},
   {id: 'next', label: 'Your team?', yr: '2027', tx: 27, ty: 18, w: 4, h: 3, spot: [29, 21], kind: 'plot', tour: 9,
-   card: {title: 'Reserved: Summer 2027', meta: 'The next stop on the road', body: ["I'm looking for a Summer 2027 mechanical or product design role, ideally consumer electronics or robotics."], contact: true}},
+   card: {title: 'Reserved: Summer 2027', meta: 'The next stop on the road', body: ["I'm looking for a Summer 2027 mechanical or product design internship, ideally consumer electronics or robotics."], contact: true}},
   {id: 'cabin', label: 'Home', tx: 33, ty: 17, w: 5, h: 4, spot: [35, 21], kind: 'cabin',
    card: {title: 'Home', meta: 'The cabin', body: ['My room: the workbench, my PC, Moe, and the LED controller running the lights.']}},
   {id: 'mail', label: 'Contact', tx: 38, ty: 20, w: 1, h: 1, spot: [38, 21], kind: 'mail', nolabel: 1,
@@ -550,7 +550,7 @@ function openCard(l) {
   if (l.kind === 'led') { ledCard(); return; }
   openId = l.id; autoId = l.id; if (l.tour) { visited.add(l.id); labelNodes[L.indexOf(l)].classList.add('w-visited'); }
   if (l.kind === 'nsx' || l.kind === 'c5') { const n = carClicks[l.kind]++ % 3; if (n === 0) pops[l.kind] = 1; else if (n === 1) { pops[l.kind] = 1; window.__engine && window.__engine(l.kind); } else pops[l.kind] = 0; }
-  const c = l.card === 'contact' ? {title: 'Say hi', meta: 'Mailbox', body: ["I'm looking for a Summer 2027 role in mechanical or product design."], contact: true} : l.card;
+  const c = l.card === 'contact' ? {title: 'Say hi', meta: 'Mailbox', body: ["I'm looking for a Summer 2027 internship in mechanical or product design."], contact: true} : l.card;
   const tourBits = '';
   card.innerHTML = `<div class="w-card-in" role="dialog" aria-modal="false" aria-labelledby="w-card-title">
     <button type="button" class="w-close" aria-label="Close">✕</button>${tourBits}
