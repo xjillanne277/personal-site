@@ -1079,12 +1079,7 @@ html[data-theme="dark"] .cs-box ul{color:#d6d4cf}
           <div class="cs-node">ESP32 regulator → 3.3 V logic</div>
         </div>
       </div>
-      <div class="cs-eqs">
-        <div class="cs-eq"><span>Fuse current</span><b>1.5 × 9 A = 13.5 A → 15 A</b><p>9 A max draw, derated for continuous load. 15 A is the next standard size.</p></div>
-        <div class="cs-eq"><span>Fuse voltage</span><b>&gt; 12 V → 32 V rated</b><p>Next common rating above the supply.</p></div>
-        <div class="cs-eq"><span>Fuse type</span><b>Slow-blow</b><p>Rides through the 1000 µF capacitor’s inrush at power-up.</p></div>
-      </div>
-          <button type="button" class="cs-more" data-zoom="img/slide-19.webp?v=2">See the full fuse calculations <span aria-hidden="true">→</span></button>
+      <figure class="cs-fig"><img src="img/slide-19.webp?v=2" alt="Fuse sizing hand calculations with capacitor charging voltage and current curves" loading="lazy"><figcaption>Fuse sizing: continuous-load derating, inrush from the 1000 µF capacitor, and voltage rating.</figcaption></figure>
     </section>
 
     <section class="cs-sec">
