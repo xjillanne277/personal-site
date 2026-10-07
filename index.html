@@ -1000,19 +1000,14 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 
     <section class="cs-sec">
       <h2><span>01</span>A test fixture that survives the climate chamber</h2>
-      <p class="cs-p">Solenoids press the lock’s capacitive-touch keypad over and over. I took the previous build’s fixture and redesigned it twice.</p>
-      <div class="cs-steps">
-        <div><figure class="cs-fig"><img src="img/lc-p3.webp" alt="The previous build’s fixture" loading="lazy"><figcaption></figcaption></figure><b>Starting point</b><p>The previous build’s fixture.</p></div>
-        <div><figure class="cs-fig"><img src="img/lc-v1.webp" alt="Fixture V1 on the new lock" loading="lazy"><figcaption></figcaption></figure><b>V1 · new form factor</b><p>Geometry redesigned to fit the new lock.</p></div>
-        <div><figure class="cs-fig"><img src="img/lc-v2.webp" alt="Fixture V2, smaller and chamber-ready" loading="lazy"><figcaption></figcaption></figure><b>V2 · chamber-ready</b><p>Survives −22 °C to 66 °C and fits inside the chamber.</p></div>
-      </div>
-      <div class="cs-split2" style="margin-top:22px">
-        <figure class="cs-fig"><img src="img/lc-v2-solenoids.webp" alt="V2 solenoids held by their own mounting holes" loading="lazy"><figcaption>Solenoids held by their own mounting holes</figcaption></figure>
+      <p class="cs-p">An automated fixture where solenoids press the lock’s capacitive-touch keypad, built to run inside the temperature chamber from −22 °C to 66 °C.</p>
+      <div class="cs-split2">
+        <div class="cs-pair"><figure class="cs-fig"><img src="img/lc-v2.webp" alt="Chamber-ready test fixture on the lock" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lc-v2-solenoids.webp" alt="Solenoids held by their own mounting holes" loading="lazy"><figcaption></figcaption></figure></div>
         <div>
           <ul class="cs-list">
             <li><b>No lid.</b> Each solenoid is held by its own mounting holes.</li>
             <li><b>No snagged wires.</b> Without the lid, wires no longer catch in the springs.</li>
-            <li><b>Smaller.</b> Fits inside the temperature chamber with the lock.</li>
+            <li><b>Compact.</b> Fits inside the temperature chamber with the lock.</li>
           </ul>
           <div class="cs-eq wide"><span>Result</span><b>14 issues fixed across 2M+ cycles</b><p>Fixture and PCBA, with EE and firmware: 100% functional success in EVT.</p></div>
         </div>
@@ -1022,24 +1017,23 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
     <section class="cs-sec">
       <h2><span>02</span>A magnet instead of a failing sensor</h2>
       <p class="cs-p">An accelerometer flex inside the lock kept failing in cycle testing. Instead of patching it, I tested whether a magnet on the throw arm and two magnetometers could tell us where the bolt is.</p>
-      <div class="cs-gallery g3" style="margin-top:0"><figure class="cs-fig"><img src="img/lc-puck-retracted.webp" alt="Lock mechanism with the magnet on the throw arm, bolt retracted" loading="lazy"><figcaption>Magnet on the throw arm</figcaption></figure><figure class="cs-fig"><img src="img/lc-bench.webp" alt="Test setup: debugger, main board and magnetometer flex on the lock" loading="lazy"><figcaption>Test bench</figcaption></figure><figure class="cs-fig"><img src="img/lc-bench2.webp" alt="The lock on the bench during data collection" loading="lazy"><figcaption>Logging readings</figcaption></figure></div>
+      <div class="cs-gallery g3" style="margin-top:0"><figure class="cs-fig"><img src="img/lc-puck-retracted.webp" alt="Lock mechanism with the magnet on the throw arm, bolt retracted" loading="lazy"><figcaption>Magnet on the throw arm</figcaption></figure><figure class="cs-fig"><img src="img/lc-bench.webp" alt="Test setup: debugger, main board and magnetometer flex on the lock" loading="lazy"><figcaption>Test setup</figcaption></figure><figure class="cs-fig"><img src="img/lc-bench2.webp" alt="The lock on the test bench" loading="lazy"><figcaption>Test setup</figcaption></figure></div>
       <div class="cs-flow" style="margin-top:20px"><div>Mount 2 magnetometers<small>on a modified part in the lock</small></div><i>→</i><div>Magnet on the throw arm<small>at its base</small></div><i>→</i><div>Record XYZ<small>fully retracted and fully thrown</small></div><i>→</i><div>Cycle and log<small>custom firmware reads both sensors</small></div></div>
-      <div class="cs-scroll" style="margin-top:20px"><table class="cs-table">
-        <thead><tr><th>Static test</th><th>Mean</th><th>Std dev</th></tr></thead>
-        <tbody><tr><td>Bolt thrown</td><td>4.319</td><td>0.0023</td></tr><tr><td>Bolt retracted</td><td>1.785</td><td>0.0029</td></tr><tr><td>Difference vs average noise</td><td>2.534</td><td>0.0026</td></tr></tbody>
-        <tfoot><tr><td>Signal-to-noise</td><td class="win" colspan="2">973 : 1</td></tr></tfoot>
-      </table></div>
+      <div class="cs-eqs" style="margin-top:20px">
+        <div class="cs-eq"><span>Bolt thrown</span><b>4.32</b><p>Average magnetometer reading</p></div>
+        <div class="cs-eq"><span>Bolt retracted</span><b>1.78</b><p>Average magnetometer reading</p></div>
+        <div class="cs-eq"><span>Noise</span><b>0.0026</b><p>How much the reading wobbles</p></div>
+        <div class="cs-eq"><span>Signal-to-noise</span><b>973 : 1</b><p>The two positions are impossible to confuse</p></div>
+      </div>
       <div class="cs-verdict" style="margin-top:20px"><b>Concept validated.</b> Replacing two accelerometers and their flex circuits with magnetometers and insert-moulded magnets saves <strong>$12 per unit</strong>, about <strong>$12M</strong> projected.</div>
     </section>
 
     <section class="cs-sec">
       <h2><span>03</span>Making the bolt stop binding</h2>
-      <p class="cs-p">The bolt was binding in cycle testing. I ran stack-ups through the mechanism, set datums along the bolt’s travel path, and tightened only the tolerances that mattered.</p>
-      <div class="cs-gallery g3" style="margin-top:0"><figure class="cs-fig"><img src="img/lv-tol2.webp" alt="Stack-up along the bolt path" loading="lazy"><figcaption>Bolt path</figcaption></figure><figure class="cs-fig"><img src="img/lv-tol5.webp" alt="Stack-up through the throw arm" loading="lazy"><figcaption>Throw arm</figcaption></figure><figure class="cs-fig"><img src="img/lv-tol4.webp" alt="Gap check at the housing" loading="lazy"><figcaption>Gap check</figcaption></figure><figure class="cs-fig"><img src="img/lv-tol1.webp" alt="Stack-up near the latch" loading="lazy"><figcaption>Latch</figcaption></figure><figure class="cs-fig"><img src="img/lv-tol3.webp" alt="Stack-up with datums A, B and C" loading="lazy"><figcaption>Datums A, B, C</figcaption></figure><figure class="cs-fig"><img src="img/lv-tol6.webp" alt="Second case with datums A, B and C" loading="lazy"><figcaption>Datums A, B, C, second case</figcaption></figure></div>
-      <div class="cs-eqs" style="margin-top:18px">
-        <div class="cs-eq"><span>Actuation force</span><b>−25% variability</b><p>From datums on the bolt’s travel path</p></div>
-        <div class="cs-eq"><span>Mechanism</span><b>+15% pass rate</b><p>Before production</p></div>
-      </div>
+      <p class="cs-p">The bolt was binding in cycle testing. I ran tolerance analyses through the mechanism to find the dimensions that actually mattered. A few of them:</p>
+      <div class="cs-gallery g3" style="margin-top:0"><figure class="cs-fig"><img src="img/lv-tol2.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol5.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol4.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol1.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol3.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol6.webp" alt="Tolerance stack-up cross-section" loading="lazy"><figcaption></figcaption></figure></div>
+      <p class="cs-p" style="margin-top:14px">…and many more.</p>
+      <div class="cs-verdict">As a result: <strong>25% less variability</strong> in actuation force and a <strong>15% higher pass rate</strong> for the mechanism, before production.</div>
     </section>
 
     <section class="cs-sec">
@@ -1056,13 +1050,24 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
     </section>
 
     <section class="cs-sec">
-      <h2><span>05</span>Also this term</h2>
-      <div class="cs-gallery g4" style="margin-top:0">
-        <div><figure class="cs-fig"><img src="img/lc-fail.webp" alt="A subassembly failure photographed during cycle testing" loading="lazy"><figcaption></figcaption></figure><b>Life testing</b><p>12 subassemblies, 2.5 months, 5M+ cycles (FoS 8). Caught this failure at 3.7M.</p></div>
-        <div><figure class="cs-fig"><img src="img/lc-debug.webp" alt="Redesigned debug-board fixture" loading="lazy"><figcaption></figcaption></figure><b>Debug-board fixture</b><p>Redesigned for the new board.</p></div>
-        <div><figure class="cs-fig"><img src="img/lc-dwg1.webp" alt="A production 2D drawing" loading="lazy"><figcaption></figcaption></figure><b>Production drawings</b><p>Magnets, bushings, die-cuts and moulded parts.</p></div>
-        <div><figure class="cs-fig"><img src="img/lc-covers.webp" alt="Corner covers on the test rig frame" loading="lazy"><figcaption></figcaption></figure><b>Corner covers</b><p>For the test rig’s aluminium frame.</p></div>
+      <h2><span>05</span>Life testing</h2>
+      <div class="cs-split2">
+        <figure class="cs-fig"><img src="img/lc-fail.webp" alt="Photos of a subassembly failure found during cycle testing" loading="lazy"><figcaption>A failure at 3.7M cycles</figcaption></figure>
+        <div>
+          <div class="cs-eqs">
+            <div class="cs-eq"><span>Subassemblies</span><b>12</b><p>Tracked and cycled</p></div>
+            <div class="cs-eq"><span>Duration</span><b>2.5 months</b><p>Of cycle testing</p></div>
+            <div class="cs-eq"><span>Cycles</span><b>5M+</b><p>Factor of safety of 8</p></div>
+            <div class="cs-eq"><span>Failures</span><b>Logged</b><p>Each one identified and logged</p></div>
+          </div>
+        </div>
       </div>
+    </section>
+
+    <section class="cs-sec">
+      <h2><span>06</span>Production drawings</h2>
+      <p class="cs-p">2D drawings for magnets, bushings, die-cuts and moulded parts.</p>
+      <div class="cs-gallery g3" style="margin-top:0"><figure class="cs-fig"><img src="img/lc-dwg1.webp" alt="Production drawing" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lc-dwg2.webp" alt="Production drawing" loading="lazy"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lc-dwg3.webp" alt="Production drawing" loading="lazy"><figcaption></figcaption></figure></div>
     </section>
   </article>
 
