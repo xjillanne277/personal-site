@@ -1064,7 +1064,7 @@ html[data-theme="dark"] .cs-box ul{color:#d6d4cf}
         <li><b>Button inputs</b><span>MCP23017 chip, 16 buttons</span><span>Same chip on a module, 8 buttons</span></li>
         <li><b>Sliders</b><span>6 sliders</span><span>4 sliders (R, G, B, W), all on ADC1</span></li>
         <li><b>LED outputs</b><span>8 channels</span><span>6 channels, what the studio runs</span></li>
-        <li><b>Input protection</b><span>1 A fuse + series diode</span><span>15 A slow-blow fuse</span></li>
+        <li><b>Input protection</b><span>1 A fuse + series diode</span><span>15 A time-delay fuse</span></li>
       </ul>
     </section>
 
@@ -1072,7 +1072,7 @@ html[data-theme="dark"] .cs-box ul{color:#d6d4cf}
       <h2><span>05</span>Power and protection</h2>
       <div class="cs-power">
         <div class="cs-node">12 V, 144 W adapter</div><i>→</i>
-        <div class="cs-node accent">15 A slow-blow fuse</div><i>→</i>
+        <div class="cs-node accent">15 A time-delay fuse</div><i>→</i>
         <div class="cs-split">
           <div class="cs-node">12 V → LED strips</div>
           <div class="cs-node">LM2596 buck → 5 V → display, level shifters</div>
@@ -1080,9 +1080,9 @@ html[data-theme="dark"] .cs-box ul{color:#d6d4cf}
         </div>
       </div>
       <div class="cs-eqs">
-        <div class="cs-eq"><span>Fuse current</span><b>1.5 × 9 A = 13.5 A → 15 A</b><p>9 A max draw, derated for continuous load. 15 A is the next standard size.</p></div>
-        <div class="cs-eq"><span>Fuse voltage</span><b>&gt; 12 V → 32 V rated</b><p>Next common rating above the supply.</p></div>
-        <div class="cs-eq"><span>Fuse type</span><b>Slow-blow</b><p>Rides through the 1000 µF capacitor’s inrush at power-up.</p></div>
+        <div class="cs-eq"><span>Fuse current</span><b>9 A / 0.75 = 12 A → 15 A</b><p>9 A max load is 60% of the selected 15 A fuse rating, below the 75% derating guideline.</p></div>
+        <div class="cs-eq"><span>Fuse voltage</span><b>12 V system → 32 VDC rated</b><p>Fuse voltage rating exceeds the maximum system voltage.</p></div>
+        <div class="cs-eq"><span>Fuse type</span><b>Time-delay</b><p>Selected to tolerate the 1000 µF bulk capacitor’s startup inrush without nuisance opening.</p></div>
       </div>
           <button type="button" class="cs-more" data-zoom="img/slide-19b.webp">See the full fuse calculations <span aria-hidden="true">→</span></button>
     </section>
