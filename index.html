@@ -646,6 +646,14 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .cs-flow small{display:block;margin-top:6px;font:400 14.5px/1.4 "IBM Plex Sans",sans-serif;color:#59626c}
 .cs-flow>i{align-self:center;font-style:normal;font-size:22px;color:#c0472c}
 @media (max-width:860px){.cs-hero,.cs-split2,.cs-pair{grid-template-columns:minmax(0,1fr)}.cs-cards{grid-template-columns:repeat(2,minmax(0,1fr))}.cs-steps,.cs-gallery.g3{grid-template-columns:minmax(0,1fr)}.cs-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.cs-stats div:nth-child(3){border-left:0;padding-left:0}.cs-changes li{grid-template-columns:minmax(0,1fr)}.cs-flow>i{transform:rotate(90deg);margin:0 auto}.cs-power{flex-direction:column;align-items:stretch}.cs-power>i{transform:rotate(90deg);text-align:center}}
+.cs-gallery.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.cs-gallery>div>b{display:block;margin-top:10px;font:700 16px "IBM Plex Sans",sans-serif;color:#14181d}
+.cs-gallery>div>p{margin:4px 0 0;font-size:14.5px;line-height:1.45;color:#454b53}
+.cs-ba{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.cs-ba-row{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:center;background:#f6f7f8;border-radius:12px;padding:12px}
+.cs-ba-row>i{font-style:normal;font-size:22px;color:#c0472c}
+.cs-ba .cs-fig img{aspect-ratio:1;object-fit:contain;padding:8px;box-sizing:border-box}
+@media (max-width:860px){.cs-gallery.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.cs-ba{grid-template-columns:minmax(0,1fr)}}
 /* ---------- welcome doors ---------- */
 .doors{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:26px 0 0;padding:0;list-style:none}
 .doors li{display:flex}
@@ -974,75 +982,88 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
     </section>
   </article>
 
-  <article class="proj-sheet" data-proj="level" data-crumb="Level Home · Product Design Engineering Intern · Winter 2026" hidden>
-    <header class="proj-head">
-      <p class="proj-kicker">Project notebook</p>
-      <h1>Smart lock hardware at Level</h1>
-      <p class="proj-lede">Four months on a smart lock going through validation: replacing a failing sensor with magnets, building test fixtures that survive a climate chamber, and chasing tolerances until the bolt stopped binding.</p>
-      <dl class="proj-stats">
-        <div><dt>$12M</dt><dd>projected savings from the sensor swap</dd></div>
-        <div><dt>973 : 1</dt><dd>signal-to-noise in the magnetometer test</dd></div>
-        <div><dt>2M+</dt><dd>validation cycles on my fixture</dd></div>
-        <div><dt>5M+</dt><dd>cycles of life testing, factor of safety 8</dd></div>
-      </dl>
+  <article class="proj-sheet cs" data-proj="level" data-crumb="Level Home · Product Design Engineering Intern · Winter 2026" hidden>
+    <header class="cs-hero">
+      <div>
+        <p class="cs-kicker">Level Home · Product Design Engineering · Winter 2026</p>
+        <h1>Smart lock hardware: four projects</h1>
+        <p class="cs-lede">Four months on a smart lock going through validation: a test fixture that survives the climate chamber, a magnet that replaced a failing sensor, stack-ups that stopped the bolt binding, and DFM on moulded parts.</p>
+      </div>
+      <img class="cs-hero-img" src="img/lc-v2-full.webp" alt="CAD of the chamber-ready test fixture mounted on the lock">
     </header>
-    <section class="proj-ch">
-      <h2><span>01</span> A flex cable kept failing, so I replaced it with a magnet</h2>
-      <div class="proj-grid">
+    <dl class="cs-stats">
+      <div><dt>$12M</dt><dd>projected savings</dd></div>
+      <div><dt>973 : 1</dt><dd>signal-to-noise, magnet test</dd></div>
+      <div><dt>2M+</dt><dd>cycles on my fixture</dd></div>
+      <div><dt>−25%</dt><dd>actuation-force variability</dd></div>
+    </dl>
+
+    <section class="cs-sec">
+      <h2><span>01</span>A test fixture that survives the climate chamber</h2>
+      <p class="cs-p">Solenoids press the lock’s capacitive-touch keypad over and over. I took the previous build’s fixture and redesigned it twice.</p>
+      <div class="cs-steps">
+        <div><figure class="cs-fig"><img src="img/lc-p3.webp" alt="The previous build’s fixture" loading="lazy"><figcaption></figcaption></figure><b>Starting point</b><p>The previous build’s fixture.</p></div>
+        <div><figure class="cs-fig"><img src="img/lc-v1.webp" alt="Fixture V1 on the new lock" loading="lazy"><figcaption></figcaption></figure><b>V1 · new form factor</b><p>Geometry redesigned to fit the new lock.</p></div>
+        <div><figure class="cs-fig"><img src="img/lc-v2.webp" alt="Fixture V2, smaller and chamber-ready" loading="lazy"><figcaption></figcaption></figure><b>V2 · chamber-ready</b><p>Survives −22 °C to 66 °C and fits inside the chamber.</p></div>
+      </div>
+      <div class="cs-split2" style="margin-top:22px">
+        <figure class="cs-fig"><img src="img/lc-v2-solenoids.webp" alt="V2 solenoids held by their own mounting holes" loading="lazy"><figcaption>Solenoids held by their own mounting holes</figcaption></figure>
         <div>
-          <p class="proj-did"><b>The need.</b> An accelerometer flex inside the lock kept failing during cycle testing because of its FPCA stack-up. Instead of patching the flex, I asked whether we needed it at all: a magnet on the throw arm and two magnetometers could tell us where the bolt is.</p>
-          <p class="proj-did"><b>What I did.</b> Designed the experiment: mount the lock with two magnetometers, put a magnet on the throw-arm base, record raw XYZ readings fully retracted and fully thrown, then cycle the bolt while logging. I modified a part so the sense-flex would sit correctly, wired the main board to a PC through a debugger, and worked with firmware on a program that read both sensors at once.</p>
-          <div class="proj-calc"><b>Static test</b><br>Thrown mean 4.319 · std 0.0023<br>Retracted mean 1.785 · std 0.0029<br>Difference 2.534 · average noise 0.0026<br>Signal-to-noise ≈ <b>973</b></div>
-          <p class="proj-learn"><b>What I had to learn.</b> How to design a clean proof-of-concept experiment, and how to make the case for a design change with data instead of opinion.</p>
-          <p class="proj-res"><b>Result.</b> The concept held up. Swapping two accelerometers and their FPCAs for magnetometers and insert-moulded magnets cut <b>$12 per unit</b>, about <b>$12M</b> in projected savings.</p>
-        </div>
-        <div class="proj-figs">
-          <figure><img src="img/mag-puck.webp" alt="CAD of the lock mechanism with the magnet on the throw arm"><figcaption>Magnet on the throw arm.</figcaption></figure>
-          <figure><img src="img/mag-setup.webp" alt="Bench test setup with a debugger and a magnetometer board wired to the lock"><figcaption>The test bench.</figcaption></figure>
+          <ul class="cs-list">
+            <li><b>No lid.</b> Each solenoid is held by its own mounting holes.</li>
+            <li><b>No snagged wires.</b> Without the lid, wires no longer catch in the springs.</li>
+            <li><b>Smaller.</b> Fits inside the temperature chamber with the lock.</li>
+          </ul>
+          <div class="cs-eq wide"><span>Result</span><b>14 issues fixed across 2M+ cycles</b><p>Fixture and PCBA, with EE and firmware: 100% functional success in EVT.</p></div>
         </div>
       </div>
     </section>
-    <section class="proj-ch">
-      <h2><span>02</span> A test fixture that survives the climate chamber</h2>
-      <div class="proj-grid">
-        <div>
-          <p class="proj-did"><b>V1.</b> Started from the previous build’s capacitive-touch fixture and redesigned the geometry for the new form factor. Solenoids press the keypad automatically, over and over.</p>
-          <p class="proj-did"><b>V2.</b> Then it also had to survive environmental testing from <b>−22 °C to 66 °C</b> and physically fit inside the chamber. V2 is smaller and holds the solenoids by their own mounting holes, so the lid is gone, along with the wires that used to catch in the springs.</p>
-          <p class="proj-res"><b>Result.</b> I designed the fixture and its PCBA, and worked with EE and firmware to resolve <b>14 issues across 2M+ validation cycles</b>, reaching 100% functional success during EVT.</p>
-        </div>
-        <div class="proj-figs">
-          <figure><img src="img/fx-v1.webp" alt="Version 1 of the capacitive-touch test fixture"><figcaption>V1</figcaption></figure>
-          <figure><img src="img/fx-v2.webp" alt="Version 2 of the fixture, redesigned for the climate chamber"><figcaption>V2, chamber-ready</figcaption></figure>
-        </div>
+
+    <section class="cs-sec">
+      <h2><span>02</span>A magnet instead of a failing sensor</h2>
+      <p class="cs-p">An accelerometer flex inside the lock kept failing in cycle testing. Instead of patching it, I tested whether a magnet on the throw arm and two magnetometers could tell us where the bolt is.</p>
+      <div class="cs-gallery g3" style="margin-top:0"><figure class="cs-fig"><img src="img/lc-puck-retracted.webp" alt="Lock mechanism with the magnet on the throw arm, bolt retracted" loading="lazy"><figcaption>Magnet on the throw arm</figcaption></figure><figure class="cs-fig"><img src="img/lc-bench.webp" alt="Test setup: debugger, main board and magnetometer flex on the lock" loading="lazy"><figcaption>Test bench</figcaption></figure><figure class="cs-fig"><img src="img/lc-bench2.webp" alt="The lock on the bench during data collection" loading="lazy"><figcaption>Logging readings</figcaption></figure></div>
+      <div class="cs-flow" style="margin-top:20px"><div>Mount 2 magnetometers<small>on a modified part in the lock</small></div><i>→</i><div>Magnet on the throw arm<small>at its base</small></div><i>→</i><div>Record XYZ<small>fully retracted and fully thrown</small></div><i>→</i><div>Cycle and log<small>custom firmware reads both sensors</small></div></div>
+      <div class="cs-scroll" style="margin-top:20px"><table class="cs-table">
+        <thead><tr><th>Static test</th><th>Mean</th><th>Std dev</th></tr></thead>
+        <tbody><tr><td>Bolt thrown</td><td>4.319</td><td>0.0023</td></tr><tr><td>Bolt retracted</td><td>1.785</td><td>0.0029</td></tr><tr><td>Difference vs average noise</td><td>2.534</td><td>0.0026</td></tr></tbody>
+        <tfoot><tr><td>Signal-to-noise</td><td class="win" colspan="2">973 : 1</td></tr></tfoot>
+      </table></div>
+      <div class="cs-verdict" style="margin-top:20px"><b>Concept validated.</b> Replacing two accelerometers and their flex circuits with magnetometers and insert-moulded magnets saves <strong>$12 per unit</strong>, about <strong>$12M</strong> projected.</div>
+    </section>
+
+    <section class="cs-sec">
+      <h2><span>03</span>Making the bolt stop binding</h2>
+      <p class="cs-p">The bolt was binding in cycle testing. I ran stack-ups through the mechanism, set datums along the bolt’s travel path, and tightened only the tolerances that mattered.</p>
+      <div class="cs-gallery g3" style="margin-top:0"><figure class="cs-fig"><img src="img/lv-tol2.webp" alt="Stack-up along the bolt path" loading="lazy"><figcaption>Bolt path</figcaption></figure><figure class="cs-fig"><img src="img/lv-tol5.webp" alt="Stack-up through the throw arm" loading="lazy"><figcaption>Throw arm</figcaption></figure><figure class="cs-fig"><img src="img/lv-tol4.webp" alt="Gap check at the housing" loading="lazy"><figcaption>Gap check</figcaption></figure><figure class="cs-fig"><img src="img/lv-tol1.webp" alt="Stack-up near the latch" loading="lazy"><figcaption>Latch</figcaption></figure><figure class="cs-fig"><img src="img/lv-tol3.webp" alt="Stack-up with datums A, B and C" loading="lazy"><figcaption>Datums A, B, C</figcaption></figure><figure class="cs-fig"><img src="img/lv-tol6.webp" alt="Second case with datums A, B and C" loading="lazy"><figcaption>Datums A, B, C, second case</figcaption></figure></div>
+      <div class="cs-eqs" style="margin-top:18px">
+        <div class="cs-eq"><span>Actuation force</span><b>−25% variability</b><p>From datums on the bolt’s travel path</p></div>
+        <div class="cs-eq"><span>Mechanism</span><b>+15% pass rate</b><p>Before production</p></div>
       </div>
     </section>
-    <section class="proj-ch">
-      <h2><span>03</span> Making the bolt stop binding</h2>
-      <div class="proj-grid">
-        <div>
-          <p class="proj-did"><b>The need.</b> The bolt was binding in cycle testing.</p>
-          <p class="proj-did"><b>What I did.</b> Ran tolerance stack-ups through the mechanism, defined datums to the bolt’s travel path, and tightened the tolerances that actually mattered.</p>
-          <p class="proj-learn"><b>What I had to learn.</b> A lot of GD&amp;T, and how to run a tolerance analysis that points at the real culprit instead of tightening everything.</p>
-          <p class="proj-res"><b>Result.</b> Actuation-force variability down <b>25%</b> and mechanism pass rate up <b>15%</b>, before production.</p>
-        </div>
-        <div class="proj-figs fy-grid3 lv-grid"><figure><img src="img/lv-tol1.webp" alt="Cross-section stack-up near the latch" loading="lazy"><figcaption>Stack-up 1</figcaption></figure><figure><img src="img/lv-tol2.webp" alt="Cross-section stack-up along the bolt path" loading="lazy"><figcaption>Stack-up 2: bolt path</figcaption></figure><figure><img src="img/lv-tol3.webp" alt="Stack-up with datums A, B and C" loading="lazy"><figcaption>Stack-up 3</figcaption></figure><figure><img src="img/lv-tol4.webp" alt="Close-up gap check at the housing" loading="lazy"><figcaption>Stack-up 4: gap check</figcaption></figure><figure><img src="img/lv-tol5.webp" alt="Stack-up through the throw arm" loading="lazy"><figcaption>Stack-up 5: throw arm</figcaption></figure><figure><img src="img/lv-tol6.webp" alt="Stack-up with datums A, B and C, second case" loading="lazy"><figcaption>Stack-up 6</figcaption></figure></div>
+
+    <section class="cs-sec">
+      <h2><span>04</span>DFM on moulded parts</h2>
+      <p class="cs-p">In supplier tooling reviews on 20+ moulded and die-cast parts, I moved parting lines and gates off cosmetic surfaces without changing the industrial design.</p>
+      <div class="cs-ba">
+        <div class="cs-ba-row"><figure class="cs-fig"><img src="img/lv-dfm4.webp" alt="Eyelet before DFM" loading="lazy"><figcaption>Eyelet · pre-DFM</figcaption></figure><i>→</i><figure class="cs-fig"><img src="img/lv-dfm1.webp" alt="Eyelet after DFM" loading="lazy"><figcaption>Eyelet · post-DFM</figcaption></figure></div>
+        <div class="cs-ba-row"><figure class="cs-fig"><img src="img/lv-dfm3.webp" alt="Plastic holder before DFM" loading="lazy"><figcaption>Plastic holder · pre-DFM</figcaption></figure><i>→</i><figure class="cs-fig"><img src="img/lv-dfm2.webp" alt="Plastic holder after DFM" loading="lazy"><figcaption>Plastic holder · post-DFM</figcaption></figure></div>
+      </div>
+      <div class="cs-eqs" style="margin-top:18px">
+        <div class="cs-eq"><span>Tooling cost</span><b>−8%</b><p>Across 20+ parts</p></div>
+        <div class="cs-eq"><span>Cosmetic defects</span><b>Eliminated</b><p>Gates and parting lines off visible faces</p></div>
       </div>
     </section>
-    <section class="proj-ch">
-      <h2><span>04</span> Life testing, DFM and the rest</h2>
-      <div class="proj-grid">
-        <div>
-          <p class="proj-did"><b>Cycle testing.</b> Tracked and cycled 12 lock subassemblies for 2.5 months, past 5 million cycles (a factor of safety of 8), and logged every failure.</p>
-          <p class="proj-did"><b>DFM.</b> Led DFM on 20+ plastic and metal injection-moulded and die-cast parts. In supplier tooling reviews I moved parting lines and gates off cosmetic surfaces, eliminating cosmetic defects and cutting tooling cost 8% without changing the industrial design.</p>
-          <p class="proj-did"><b>Also.</b> Redesigned a debug-board fixture and made production 2D drawings for magnets, bushings, die-cuts and moulded parts.</p>
-          <p class="proj-learn"><b>What I took away.</b> GD&amp;T, tolerance analysis, DFM, and what you learn from taking apart and reassembling every subassembly in the lock.</p>
-        </div>
-        <div class="proj-figs">
-          <figure><img src="img/cycle-fail.webp" alt="Photos of a subassembly failure found during cycle testing"><figcaption>A failure caught at 3.7M cycles.</figcaption></figure>
-          </div><h3 class="fy-h">DFM: before and after</h3><div class="proj-figs fy-grid2 lv-grid"><figure><img src="img/lv-dfm4.webp" alt="Eyelet before DFM" loading="lazy"><figcaption>Eyelet, pre-DFM</figcaption></figure><figure><img src="img/lv-dfm1.webp" alt="Eyelet after DFM" loading="lazy"><figcaption>Eyelet, post-DFM</figcaption></figure><figure><img src="img/lv-dfm3.webp" alt="Plastic holder before DFM" loading="lazy"><figcaption>Plastic holder, pre-DFM</figcaption></figure><figure><img src="img/lv-dfm2.webp" alt="Plastic holder after DFM" loading="lazy"><figcaption>Plastic holder, post-DFM</figcaption></figure></div>
+
+    <section class="cs-sec">
+      <h2><span>05</span>Also this term</h2>
+      <div class="cs-gallery g4" style="margin-top:0">
+        <div><figure class="cs-fig"><img src="img/lc-fail.webp" alt="A subassembly failure photographed during cycle testing" loading="lazy"><figcaption></figcaption></figure><b>Life testing</b><p>12 subassemblies, 2.5 months, 5M+ cycles (FoS 8). Caught this failure at 3.7M.</p></div>
+        <div><figure class="cs-fig"><img src="img/lc-debug.webp" alt="Redesigned debug-board fixture" loading="lazy"><figcaption></figcaption></figure><b>Debug-board fixture</b><p>Redesigned for the new board.</p></div>
+        <div><figure class="cs-fig"><img src="img/lc-dwg1.webp" alt="A production 2D drawing" loading="lazy"><figcaption></figcaption></figure><b>Production drawings</b><p>Magnets, bushings, die-cuts and moulded parts.</p></div>
+        <div><figure class="cs-fig"><img src="img/lc-covers.webp" alt="Corner covers on the test rig frame" loading="lazy"><figcaption></figcaption></figure><b>Corner covers</b><p>For the test rig’s aluminium frame.</p></div>
       </div>
     </section>
-    <footer class="proj-skills"><p>Skills from this term</p><ul><li>Design of experiments</li><li>Sensor validation</li><li>Test fixture design</li><li>GD&amp;T</li><li>Tolerance stack-ups</li><li>DFM for moulding and die-casting</li><li>Reliability testing</li><li>Production drawings</li></ul></footer>
   </article>
 
   <article class="proj-sheet" data-proj="geotab" data-crumb="Geotab · System Verification Intern · Summer 2024" hidden>
