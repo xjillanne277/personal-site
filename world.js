@@ -263,7 +263,7 @@ function moeSprite(c, ox, oy, f) {
   P(11, 7 + (f ? 1 : 0), 3, 2, pt); P(13, 5 + (f ? 1 : 0), 2, 3, pt);
   P(3, 10 + (f ? 0 : 1), 2, 2, pt); P(9, 10 + (f ? 1 : 0), 2, 2, pt);
 }
-const pops = {nsx: 0, c5: 0}; const carClicks = {nsx: 0, c5: 0};
+const pops = {nsx: 0, c5: 0}, popT = {nsx: 0, c5: 0}; const carClicks = {nsx: 0, c5: 0};
 function car(c, X, Y, o, up) {
   const P = (x, y, w, h, k) => R(c, X + x, Y + y, w, h, k), B = o.body, D = shade(B, -35), Lt = shade(B, 30);
   P(2, 39, 26, 4, 'rgba(0,0,0,.22)');
@@ -544,7 +544,7 @@ function ledCard() {
 }
 function openCard(l) {
   window.track && l && track('stop_open', {stop: l.id});
-  if (l.kind === 'nsx' || l.kind === 'c5') { autoId = l.id; const n = carClicks[l.kind]++ % 3; if (n === 0) pops[l.kind] = 1; else if (n === 1) { pops[l.kind] = 1; window.__engine && window.__engine(l.kind); } else pops[l.kind] = 0; showDrive(l.kind); return; }
+  if (l.kind === 'nsx' || l.kind === 'c5') { autoId = l.id; window.__engine && window.__engine(l.kind); showDrive(l.kind); return; }
   if (l.kind === 'cabin') { enterRoom(); return; }
   if (l.kind === 'door') { exitRoom(); return; }
   if (l.kind === 'led') { ledCard(); return; }
@@ -679,6 +679,8 @@ function step(now) {
   const dt = Math.min(.05, (now - last) / 1000); last = now;
   if (scene === 'room') { roomStep(dt); drawRoomFront(now); requestAnimationFrame(step); return; }
   if (scene === 'track') { trackStep(dt); drawTrack(now); requestAnimationFrame(step); return; }
+  // pop-up headlights rise when you walk up to a car and drop a minute after you leave
+  ['nsx', 'c5'].forEach(k => { const c = L.find(o => o.id === k), near = rectDist(c) < 40; if (near) { pops[k] = 1; popT[k] = now; } else if (pops[k] && now - popT[k] > 60000) pops[k] = 0; });
   if (driveFor && Math.hypot(spotPx(L.find(o => o.id === driveFor)).x - P.x, spotPx(L.find(o => o.id === driveFor)).y - P.y) > 90) hideDrive();
   let vx = 0, vy = 0;
   if (keys.has('left')) vx -= 1; if (keys.has('right')) vx += 1; if (keys.has('up')) vy -= 1; if (keys.has('down')) vy += 1;

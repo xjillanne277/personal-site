@@ -657,6 +657,8 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .cs-eqs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
 .cs-eq{background:#fff;border:1px solid #e3e6ea;border-left:4px solid #c0472c;border-radius:10px;padding:14px 16px}
 .cs-eq span{display:block;font:600 12px "IBM Plex Mono",monospace;letter-spacing:.05em;text-transform:uppercase;color:#7a8089}
+.cs-eq em{display:block;margin-top:6px;font:500 13px/1.4 "IBM Plex Mono",monospace;font-style:normal;color:#59626c}
+html[data-theme="dark"] .cs-eq em{color:#a3a8af}
 .cs-eq b{display:block;margin-top:6px;font:700 19px/1.3 "IBM Plex Sans",sans-serif;color:#14181d}
 .cs-eq p{margin:6px 0 0;font-size:14.5px;line-height:1.45;color:#59626c}
 .cs-eq.wide{margin-top:16px}
@@ -1008,8 +1010,8 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
         </div>
       </div>
       <div class="cs-eqs">
-        <div class="cs-eq"><span>Fuse current</span><b>1.5 × 9 A = 13.5 A</b><p>Derated for 10+ hours of continuous load.</p></div>
-        <div class="cs-eq"><span>Fuse voltage</span><b>&gt; 12 V → 32 V rated</b><p>Next common rating above the supply.</p></div>
+        <div class="cs-eq"><span>Fuse current</span><em>Fuse rating = 1.5 × max continuous current (A)</em><b>1.5 × 9 A = 13.5 A</b><p>Derated for 10+ hours of continuous load.</p></div>
+        <div class="cs-eq"><span>Fuse voltage</span><em>Fuse voltage rating ≥ supply voltage (V)</em><b>&gt; 12 V → 32 V rated</b><p>Next common rating above the supply.</p></div>
         <div class="cs-eq"><span>Fuse type</span><b>Slow-blow</b><p>Rides through the 1000 µF capacitor’s inrush at power-up.</p></div>
       </div>
     </section>
@@ -1017,7 +1019,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
     <section class="cs-sec">
       <h2><span>06</span>PCB</h2>
       <p class="cs-p">2-layer, mixed-signal, laid out in KiCad, reviewed with the EEs, then fabricated, hand-soldered and assembled by me.</p>
-      <div class="cs-gallery g3"><figure class="cs-fig"><img src="img/cs-route.webp" alt="PCB placement and routing in KiCad" loading="lazy"><figcaption>Placement and routing</figcaption></figure><figure class="cs-fig"><img src="img/cs-pour.webp" alt="Ground pour across the board" loading="lazy"><figcaption>Ground pour on both layers</figcaption></figure><figure class="cs-fig"><img src="img/cs-relief.webp" alt="Thermal relief pads on ground connections" loading="lazy"><figcaption>Thermal reliefs for hand soldering</figcaption></figure></div>
+      <div class="cs-gallery g3"><figure class="cs-fig"><img src="img/cs-route.webp" alt="PCB placement and routing in KiCad" loading="lazy"><figcaption>Placement and routing</figcaption></figure><figure class="cs-fig"><img src="img/cs-pour.webp" alt="Ground pour across the board" loading="lazy"><figcaption>Ground pour on both layers</figcaption></figure><figure class="cs-fig"><img src="img/cs-relief.webp" alt="Thermal relief pads on ground connections" loading="lazy"><figcaption>Thermal reliefs: spokes to the ground pour so pins heat up fast when hand soldering</figcaption></figure></div>
       <div class="cs-gallery g2"><figure class="cs-fig"><img src="img/cs-top.webp" alt="3D render of the top of the PCB" loading="lazy"><figcaption>Top</figcaption></figure><figure class="cs-fig"><img src="img/cs-bottom.webp" alt="3D render of the bottom of the PCB" loading="lazy"><figcaption>Bottom</figcaption></figure></div>
     </section>
 
@@ -1025,10 +1027,10 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
       <h2><span>07</span>Does the buck converter need a heatsink?</h2>
       <div class="cs-verdict"><b>No.</b> Worst case, the IC reaches <strong>83.9 °C</strong>, well under its <strong>125 °C</strong> limit.</div>
       <div class="cs-eqs">
-        <div class="cs-eq"><span>Output power</span><b>5 V × 0.37 A = 1.85 W</b><p>Display 0.12 A + ESP32 0.25 A</p></div>
-        <div class="cs-eq"><span>Heat lost</span><b>2.34 W − 1.85 W = 0.49 W</b><p>79% efficiency, from my own load sweep</p></div>
-        <div class="cs-eq"><span>Temperature rise</span><b>0.49 W × 130 °C/W = 63.9 °C</b><p>Thermal resistance network, IC to air</p></div>
-        <div class="cs-eq"><span>IC temperature</span><b>20 °C + 63.9 °C = 83.9 °C</b><p>Conservative: all heat from one IC, no radiation</p></div>
+        <div class="cs-eq"><span>Output power</span><em>Power = voltage × current (W)</em><b>5 V × 0.37 A = 1.85 W</b><p>Display 0.12 A + ESP32 0.25 A</p></div>
+        <div class="cs-eq"><span>Heat lost</span><em>Heat = input power − output power; input = output ÷ efficiency (W)</em><b>2.34 W − 1.85 W = 0.49 W</b><p>79% efficiency, from my own load sweep</p></div>
+        <div class="cs-eq"><span>Temperature rise</span><em>Temperature rise = heat × thermal resistance (°C)</em><b>0.49 W × 130 °C/W = 63.9 °C</b><p>Thermal resistance network, IC to air</p></div>
+        <div class="cs-eq"><span>IC temperature</span><em>IC temperature = ambient + temperature rise (°C)</em><b>20 °C + 63.9 °C = 83.9 °C</b><p>Conservative: all heat from one IC, no radiation</p></div>
       </div>
     </section>
 
