@@ -290,6 +290,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .fy-video video{width:100%;max-height:520px;background:#000;display:block}
 .fy-callout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:center;margin:18px 0}
 .fy-callout img{width:100%;height:auto;border:1px solid #d9dde2;background:#fff}
+.lv-grid img{background:#fff}
 .fy-tbl{min-width:620px}.fy-tbl td{font-size:14.5px;line-height:1.45}
 @media (max-width:700px){.fy-two,.fy-callout,.fy-grid3,.fy-grid2{grid-template-columns:minmax(0,1fr)}}
 .gt-diagram svg{display:block;width:100%;height:auto;max-width:720px;border:1px solid #d9dde2;background:#fff;padding:12px;box-sizing:border-box}
@@ -473,6 +474,40 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .pf-fy-body>span:last-child{font-size:14.5px;line-height:1.45;color:var(--sub)}
 @media (max-width:760px){.pf-first{grid-template-columns:minmax(0,1fr)}.pf-fy{grid-template-columns:100px minmax(0,1fr)}}
 @media (prefers-reduced-motion:reduce){.pf-fy{transition:none}}
+/* selected work: one teaser per project, the whole card opens the case study */
+.case{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:0;width:100%;margin:0 0 22px;padding:0;text-align:left;font:inherit;color:inherit;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease,border-color .2s}
+.case:hover{transform:translateY(-3px);box-shadow:0 18px 40px -18px rgba(22,25,29,.3);border-color:#d6d2c8}
+.case-img{display:grid;place-items:center;background:#fff;border-right:1px solid var(--line);min-height:380px;padding:28px;box-sizing:border-box}
+.case-img img{max-width:100%;max-height:360px;object-fit:contain;transition:transform .4s ease}
+.case:hover .case-img img{transform:scale(1.03)}
+.case-body{display:flex;flex-direction:column;gap:14px;padding:clamp(24px,3vw,40px)}
+.case-kicker{display:flex;align-items:center;gap:10px;font:500 13.5px var(--f-mono);color:var(--mute)}
+.case-kicker i{font-style:normal;font-weight:600;color:#fff;background:var(--acc);border-radius:6px;padding:2px 7px}
+.case-title{font:700 clamp(26px,2.8vw,34px)/1.12 var(--f-head);letter-spacing:-.025em;color:var(--ink);text-wrap:balance}
+.case-sum{font-size:17.5px;line-height:1.55;color:#2c3138}
+.case-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:14px 0 2px;border-top:1px solid var(--line)}
+.case-metrics span{font-size:13.5px;line-height:1.35;color:var(--mute)}
+.case-metrics b{display:block;font:700 clamp(22px,2.2vw,28px)/1.1 var(--f-head);letter-spacing:-.02em;color:var(--ink);margin-bottom:3px}
+.case-tags{display:flex;flex-wrap:wrap;gap:6px}
+.case-tags span{font-size:13px;color:var(--sub);background:#f3f2ee;border-radius:999px;padding:4px 11px}
+.case-cta{align-self:flex-start;margin-top:auto;display:inline-flex;align-items:center;gap:8px;font:600 15.5px var(--f-head);color:#fff;background:var(--ink);border-radius:999px;padding:11px 18px}
+.case-cta span{transition:transform .15s}
+.case:hover .case-cta{background:var(--acc)}
+.case:hover .case-cta span{transform:translateX(4px)}
+@media (prefers-reduced-motion:reduce){.case,.case-img img,.case-cta span{transition:none}.case:hover{transform:none}}
+@media (max-width:860px){.case{grid-template-columns:minmax(0,1fr)}.case-img{min-height:0;height:min(64vw,320px)}.case-img img{max-height:100%}.case-sum{font-size:16.5px}}
+/* section headings: label then intro, both left-aligned */
+.pf-sec-row{display:block;margin-bottom:28px}
+.pf-sec-row .pf-label{margin:0 0 8px!important}
+.pf-sec-row .pf-aside{font-size:17px;color:var(--sub);max-width:60ch}
+/* hero facts */
+.pf-facts{margin:0;display:grid;gap:0;background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px 20px}
+.pf-facts div{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--line)}
+.pf-facts div:last-child{border-bottom:0}
+.pf-facts dt{font:500 12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);padding-top:2px}
+.pf-facts dd{margin:0;font:600 15px var(--f-head);color:var(--ink);text-align:right}
+.pf-facts .ok dd{color:var(--green)}
+.pf-facts .ok i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#3aa47c;margin-right:8px;box-shadow:0 0 0 3px rgba(58,164,124,.18);vertical-align:1px}
 /* experience */
 .pf-exp{list-style:none;margin:0;padding:0;border-top:1px solid var(--ink)}
 .pf-exp li{display:grid;grid-template-columns:140px minmax(0,1.1fr) minmax(0,2fr) 160px;gap:8px 28px;align-items:baseline;padding:20px 0;border-bottom:1px solid var(--line)}
@@ -507,7 +542,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 
 @media (max-width:960px){
   .pf-hero{grid-template-columns:minmax(0,1fr);align-items:start;gap:36px}
-  .pf-block{max-width:420px}
+  .pf-facts{max-width:440px}
   .pf-exp li{grid-template-columns:120px minmax(0,1fr);}
   .pf-exp .what{grid-column:2}
   .pf-exp .pf-go,.pf-exp .tag{grid-column:2;justify-self:start}
@@ -625,103 +660,51 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
           <a class="pf-btn ghost big" href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn</a>
         </div>
       </div>
-      <table class="pf-block" aria-label="Summary">
-        <caption>Title block</caption>
-        <tr><th scope="row">Name</th><td>J. Youssef</td><th scope="row" class="rev">Rev</th><td class="rev">3B</td></tr>
-        <tr><th scope="row">Discipline</th><td colspan="3">Mechanical Engineering</td></tr>
-        <tr><th scope="row">School</th><td colspan="3">University of Waterloo · 2029</td></tr>
-        <tr><th scope="row">Latest</th><td colspan="3">Google · Pixel Hardware</td></tr>
-        <tr><th scope="row">Status</th><td colspan="3" class="ok"><i aria-hidden="true"></i>Open to Summer 2027</td></tr>
-      </table>
+      <dl class="pf-facts">
+        <div class="ok"><dt>Status</dt><dd><i aria-hidden="true"></i>Open to Summer 2027</dd></div>
+        <div><dt>Most recent</dt><dd>Google, Pixel Hardware</dd></div>
+        <div><dt>School</dt><dd>University of Waterloo, 2029</dd></div>
+        <div><dt>Focus</dt><dd>Mechanical and product design</dd></div>
+      </dl>
     </section>
 
     <p class="pf-logos"><span>Work terms at</span> Google <b>·</b> Level Home <b>·</b> Tesla <b>·</b> Geotab <b>·</b> Valbruna <b>·</b> Evercloak</p>
 
     <section class="pf-sec" id="pf-work" aria-labelledby="pf-work-h">
-      <div class="pf-sec-row"><h2 id="pf-work-h" class="pf-label">Selected work · 3 sheets</h2><p class="pf-aside">Click any view for the full write-up.</p></div>
-
-      <article class="sheet" aria-labelledby="s1-t">
-        <header class="sheet-head"><span class="sheet-no">01</span><h3 id="s1-t">Universal RGBW LED controller</h3><span class="sheet-meta">Tesla · Fall 2025</span></header>
-        <div class="sheet-frame">
-          <div class="zones" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div>
-          <div class="sheet-views" data-open="led" role="button" tabindex="-1" aria-hidden="true">
-            <figure class="v main"><img src="img/led-exploded.webp" alt="" loading="lazy"><figcaption><b>A</b>Exploded assembly</figcaption></figure>
-            <figure class="v dark"><img src="img/slide-21.webp" alt="" loading="lazy"><figcaption><b>B</b>PCB placement and routing</figcaption></figure>
-            <figure class="v"><img src="img/led-render.webp" alt="" loading="lazy"><figcaption><b>C</b>SLA enclosure</figcaption></figure>
-          </div>
-          <div class="sheet-foot">
-            <div class="notes">
-              <h4>Notes</h4>
-              <ol>
-                <li>Lets the lighting design studio set colour on production strips without a firmware engineer.</li>
-                <li>Concept to handoff in <b>7 weeks</b>, including my first PCB.</li>
-                <li>Drives <b>6×</b> the LEDs of the off-the-shelf controller.</li>
-              </ol>
-            </div>
-            <table class="tblock">
-              <tr><th>Part</th><td colspan="3">RGBW LED controller</td></tr>
-              <tr><th>Tools</th><td colspan="3">KiCad · ESP32 · C++ · SLA</td></tr>
-              <tr><th>Drawn</th><td>J. Youssef</td><th>Sheet</th><td class="big">1/3</td></tr>
-            </table>
-          </div>
-        </div>
-        <button type="button" class="sheet-go" data-open="led">Read the full write-up <span aria-hidden="true">→</span></button>
-      </article>
-
-      <article class="sheet" aria-labelledby="s2-t">
-        <header class="sheet-head"><span class="sheet-no">02</span><h3 id="s2-t">Smart lock hardware: four projects</h3><span class="sheet-meta">Level Home · Winter 2026</span></header>
-        <div class="sheet-frame">
-          <div class="zones" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div>
-          <div class="sheet-views grid4" data-open="level" role="button" tabindex="-1" aria-hidden="true">
-            <figure class="v a"><img src="img/fx-v2.webp" alt="" loading="lazy"><figcaption><b>A</b>Test fixture</figcaption></figure><figure class="v"><img src="img/mag-puck.webp" alt="" loading="lazy"><figcaption><b>B</b>Magnet sensing</figcaption></figure><figure class="v"><img src="img/lv-tol2.webp" alt="" loading="lazy"><figcaption><b>C</b>Stack-up, bolt path</figcaption></figure><figure class="v"><img src="img/lv-tol5.webp" alt="" loading="lazy"><figcaption><b>C</b>Stack-up, throw arm</figcaption></figure><figure class="v"><img src="img/lv-tol4.webp" alt="" loading="lazy"><figcaption><b>C</b>Stack-up, gap check</figcaption></figure><figure class="v"><img src="img/lv-dfm1.webp" alt="" loading="lazy"><figcaption><b>D</b>Moulded cover</figcaption></figure><figure class="v"><img src="img/lv-dfm2.webp" alt="" loading="lazy"><figcaption><b>D</b>Clip, before</figcaption></figure><figure class="v"><img src="img/lv-dfm3.webp" alt="" loading="lazy"><figcaption><b>D</b>Clip, after</figcaption></figure><figure class="v"><img src="img/lv-dfm4.webp" alt="" loading="lazy"><figcaption><b>D</b>Bracket</figcaption></figure>
-          </div>
-          <div class="sheet-foot">
-            <div class="notes">
-              <h4>Notes</h4>
-              <ol class="keyed">
-                <li data-k="A"><b>Test fixture.</b> Automated, and built to survive the climate chamber: <b>2M+</b> cycles, 14 issues fixed.</li>
-                <li data-k="B"><b>Magnet sensing.</b> Replaced an accelerometer and flex cable with a magnetometer and insert-moulded magnet: <b>$12M</b> projected.</li>
-                <li data-k="C"><b>Tolerance stack-ups.</b> New datums along the bolt path: <b>−25%</b> actuation-force variability.</li>
-                <li data-k="D"><b>DFM.</b> Parting lines and gates moved off cosmetic surfaces on <b>20+</b> moulded and die-cast parts: tooling cost <b>−8%</b>.</li>
-              </ol>
-            </div>
-            <table class="tblock">
-              <tr><th>Part</th><td colspan="3">Smart lock, 4 sub-projects</td></tr>
-              <tr><th>Tools</th><td colspan="3">GD&amp;T · Stack-ups · DFM · Fixtures</td></tr>
-              <tr><th>Drawn</th><td>J. Youssef</td><th>Sheet</th><td class="big">2/3</td></tr>
-            </table>
-          </div>
-        </div>
-        <button type="button" class="sheet-go" data-open="level">Read the full write-up <span aria-hidden="true">→</span></button>
-      </article>
-
-      <article class="sheet" aria-labelledby="s3-t">
-        <header class="sheet-head"><span class="sheet-no">03</span><h3 id="s3-t">Project Jarvis: distracted-driving detection system</h3><span class="sheet-meta">Geotab hackathon · Summer 2024</span></header>
-        <div class="sheet-frame">
-          <div class="zones" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div>
-          <div class="sheet-views wide" data-open="geotab" role="button" tabindex="-1" aria-hidden="true">
-            <figure class="v full"><img src="img/gt-app.webp" alt="" loading="lazy"><figcaption><b>A</b>Driver app, designed in Figma</figcaption></figure>
-            <figure class="v"><img src="img/gt-cv.webp" alt="" loading="lazy"><figcaption><b>B</b>Computer vision, running on real footage</figcaption></figure>
-            <figure class="v"><img src="img/gt-cert.webp" alt="" loading="lazy"><figcaption><b>C</b>1st of 11 teams</figcaption></figure>
-          </div>
-          <div class="sheet-foot">
-            <div class="notes">
-              <h4>Notes</h4>
-              <ol class="keyed">
-                <li data-k="A"><b>The product.</b> A driver-scoring app for Geotab’s 10th Intern Innovation Challenge, with an AI coach that explains each violation from your own clip.</li>
-                <li data-k="B"><b>My part.</b> I’d never trained a model. I learned how, then owned the code and video pipeline, including PII blurring and the in-cabin distraction model.</li>
-                <li data-k="C"><b>Result.</b> The only fully working demo in the competition: <b>1st place</b>.</li>
-              </ol>
-            </div>
-            <table class="tblock">
-              <tr><th>Part</th><td colspan="3">Project Jarvis</td></tr>
-              <tr><th>Tools</th><td colspan="3">Python · Computer vision · Figma</td></tr>
-              <tr><th>Drawn</th><td>J. Youssef</td><th>Sheet</th><td class="big">3/3</td></tr>
-            </table>
-          </div>
-        </div>
-        <button type="button" class="sheet-go" data-open="geotab">Read the full write-up <span aria-hidden="true">→</span></button>
-      </article>
+      <div class="pf-sec-row"><h2 id="pf-work-h" class="pf-label">Selected work</h2><p class="pf-aside">Three projects I can show in depth. Each one opens the full case study.</p></div>
+      <button type="button" class="case" data-open="led">
+        <span class="case-img"><img src="img/led-exploded.webp" alt="" loading="lazy"></span>
+        <span class="case-body">
+          <span class="case-kicker"><i>01</i>Tesla · Fall 2025</span>
+          <span class="case-title">Universal RGBW LED controller</span>
+          <span class="case-sum">A standalone controller so lighting designers can test colour on production LED strips without a firmware engineer. I proposed it, designed my first PCB, and handed it off in seven weeks.</span>
+          <span class="case-metrics"><span><b>7 wk</b>concept to handoff</span><span><b>6×</b>LEDs per controller</span><span><b>2-layer</b>PCB, designed and assembled</span></span>
+          <span class="case-tags"><span>KiCad</span><span>ESP32</span><span>C++</span><span>SLA enclosure</span><span>Thermal analysis</span></span>
+          <span class="case-cta">Read the case study <span aria-hidden="true">→</span></span>
+        </span>
+      </button>
+      <button type="button" class="case" data-open="level">
+        <span class="case-img"><img src="img/fx-v2.webp" alt="" loading="lazy"></span>
+        <span class="case-body">
+          <span class="case-kicker"><i>02</i>Level Home · Winter 2026</span>
+          <span class="case-title">Smart lock hardware: four projects</span>
+          <span class="case-sum">A test fixture that survives the climate chamber, a magnet-based sensor that replaced an accelerometer, tolerance stack-ups on the bolt, and DFM on moulded parts.</span>
+          <span class="case-metrics"><span><b>$12M</b>projected savings</span><span><b>2M+</b>cycles on my fixture</span><span><b>−25%</b>actuation-force variability</span></span>
+          <span class="case-tags"><span>GD&amp;T</span><span>Tolerance stack-ups</span><span>DFM</span><span>Test fixtures</span></span>
+          <span class="case-cta">Read the case study <span aria-hidden="true">→</span></span>
+        </span>
+      </button>
+      <button type="button" class="case" data-open="geotab">
+        <span class="case-img wide"><img src="img/gt-app.webp" alt="" loading="lazy"></span>
+        <span class="case-body">
+          <span class="case-kicker"><i>03</i>Geotab hackathon · Summer 2024</span>
+          <span class="case-title">Project Jarvis: distracted-driving detection system</span>
+          <span class="case-sum">A driver-scoring app with computer vision that flags distracted driving from dashcam video. I’d never trained a model before. I learned how, then owned the code and video pipeline.</span>
+          <span class="case-metrics"><span><b>1st</b>of 11 teams</span><span><b>Only</b>fully working demo</span><span><b>PII</b>blurred on device video</span></span>
+          <span class="case-tags"><span>Python</span><span>Computer vision</span><span>Figma</span></span>
+          <span class="case-cta">Read the case study <span aria-hidden="true">→</span></span>
+        </span>
+      </button>
     </section>
 
     <section class="pf-sec" id="pf-first" aria-labelledby="pf-first-h">
@@ -736,10 +719,10 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
       <div class="pf-sec-row"><h2 id="pf-exp-h" class="pf-label">Experience</h2><p class="pf-aside">Some of this work isn’t approved to share externally. Happy to walk through it in an interview.</p></div>
       <ol class="pf-exp">
         <li><span class="when">2026 · Summer</span><span class="who"><b>Google</b>Product Design Engineering, Pixel Hardware</span><span class="what">Pixel Watch display glass geometry and validation. New test methods saved $20K+ in prototypes and $15K in vendor testing.</span><span class="tag no">Not approved to share externally</span></li>
-        <li><span class="when">2026 · Winter</span><span class="who"><b>Level Home</b>Product Design Engineering</span><span class="what">Magnet-based sensing ($12M projected), a 2M-cycle test fixture, and DFM on 20+ parts.</span><button type="button" class="pf-go sm" data-open="level"><span class="tag ok">Approved to share</span> Sheet 02 →</button></li>
-        <li><span class="when">2025 · Fall</span><span class="who"><b>Tesla</b>Mechanical Design, Lighting, Switches &amp; Sensors</span><span class="what">Class A surfacing for a new cabin light in CATIA V6, and the RGBW LED controller.</span><button type="button" class="pf-go sm" data-open="led"><span class="tag ok">Approved to share</span> Sheet 01 →</button></li>
+        <li><span class="when">2026 · Winter</span><span class="who"><b>Level Home</b>Product Design Engineering</span><span class="what">Magnet-based sensing ($12M projected), a 2M-cycle test fixture, and DFM on 20+ parts.</span><button type="button" class="pf-go sm" data-open="level"><span class="tag ok">Approved to share</span> Case study →</button></li>
+        <li><span class="when">2025 · Fall</span><span class="who"><b>Tesla</b>Mechanical Design, Lighting, Switches &amp; Sensors</span><span class="what">Class A surfacing for a new cabin light in CATIA V6, and the RGBW LED controller.</span><button type="button" class="pf-go sm" data-open="led"><span class="tag ok">Approved to share</span> Case study →</button></li>
         <li><span class="when">2025 · Winter</span><span class="who"><b>Tesla</b>Mechanical Design, Cell Equipment</span><span class="what">A magnetic clamp holding 0.1 mm clearance (+15% yield) and a foil-stretching machine with closed-loop tension (−50% wrinkling).</span><span class="tag no">Not approved to share externally</span></li>
-        <li><span class="when">2024 · Summer</span><span class="who"><b>Geotab</b>System Verification</span><span class="what">A closed-loop dashcam test rack held at 26 °C, and 1st of 11 teams in the intern hackathon.</span><button type="button" class="pf-go sm" data-open="geotab"><span class="tag ok">Approved to share</span> Sheet 03 →</button></li>
+        <li><span class="when">2024 · Summer</span><span class="who"><b>Geotab</b>System Verification</span><span class="what">A closed-loop dashcam test rack held at 26 °C, and 1st of 11 teams in the intern hackathon.</span><button type="button" class="pf-go sm" data-open="geotab"><span class="tag ok">Approved to share</span> Case study →</button></li>
         <li><span class="when">2023 · Fall</span><span class="who"><b>Valbruna ASW</b>Mechanical Engineering</span><span class="what">Arc furnace CFD that found $900K in scrap losses; a fan enclosure redesign saving $45K per unit.</span></li>
         <li><span class="when">2023 · Winter</span><span class="who"><b>Evercloak</b>Mechanical Engineering</span><span class="what">A prototype dehumidifier enclosure designed for manufacture; +40% performance from membrane selection.</span></li>
       </ol>
@@ -1025,7 +1008,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
           <p class="proj-learn"><b>What I had to learn.</b> A lot of GD&amp;T, and how to run a tolerance analysis that points at the real culprit instead of tightening everything.</p>
           <p class="proj-res"><b>Result.</b> Actuation-force variability down <b>25%</b> and mechanism pass rate up <b>15%</b>, before production.</p>
         </div>
-        <figure><img src="img/tol-stack.webp" alt="Cross-section used for a tolerance stack-up"><figcaption>One of the stack-ups.</figcaption></figure>
+        <div class="proj-figs fy-grid3 lv-grid"><figure><img src="img/lv-tol1.webp" alt="Cross-section stack-up near the latch" loading="lazy"><figcaption>Stack-up 1</figcaption></figure><figure><img src="img/lv-tol2.webp" alt="Cross-section stack-up along the bolt path" loading="lazy"><figcaption>Stack-up 2: bolt path</figcaption></figure><figure><img src="img/lv-tol3.webp" alt="Stack-up with datums A, B and C" loading="lazy"><figcaption>Stack-up 3</figcaption></figure><figure><img src="img/lv-tol4.webp" alt="Close-up gap check at the housing" loading="lazy"><figcaption>Stack-up 4: gap check</figcaption></figure><figure><img src="img/lv-tol5.webp" alt="Stack-up through the throw arm" loading="lazy"><figcaption>Stack-up 5: throw arm</figcaption></figure><figure><img src="img/lv-tol6.webp" alt="Stack-up with datums A, B and C, second case" loading="lazy"><figcaption>Stack-up 6</figcaption></figure></div>
       </div>
     </section>
     <section class="proj-ch">
@@ -1039,7 +1022,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
         </div>
         <div class="proj-figs">
           <figure><img src="img/cycle-fail.webp" alt="Photos of a subassembly failure found during cycle testing"><figcaption>A failure caught at 3.7M cycles.</figcaption></figure>
-          <figure><img src="img/dfm-cover.webp" alt="An injection-moulded cover reworked for manufacturability"><figcaption>A moulded part after DFM.</figcaption></figure>
+          </div><h3 class="fy-h">DFM parts</h3><div class="proj-figs fy-grid2 lv-grid"><figure><img src="img/lv-dfm1.webp" alt="Injection-moulded eyelet" loading="lazy"><figcaption>Eyelet</figcaption></figure><figure><img src="img/lv-dfm4.webp" alt="The same eyelet from another angle" loading="lazy"><figcaption>Eyelet, second view</figcaption></figure><figure><img src="img/lv-dfm2.webp" alt="Injection-moulded plastic holder" loading="lazy"><figcaption>Plastic holder</figcaption></figure><figure><img src="img/lv-dfm3.webp" alt="The same plastic holder from another angle" loading="lazy"><figcaption>Plastic holder, second view</figcaption></figure>
         </div>
       </div>
     </section>
