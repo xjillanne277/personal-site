@@ -119,7 +119,6 @@ function bake() {
     R(m, bx, 0, 4, map.height, '#a8794e'); R(m, side > 0 ? bx : bx + 3, 0, 1, map.height, '#c4935f'); R(m, side > 0 ? bx + 3 : bx, 0, 1, map.height, '#6e4a2c');
     for (let y = 10; y < map.height; y += 40) R(m, bx - (side > 0 ? 1 : 0), y, 5, 3, '#6e4a2c');
   });
-  [[23 * TS - 4, 23 * TS + 10], [26 * TS - 10, 26 * TS + 4]].forEach(([x0, x1]) => { for (let x = x0; x < x1; x += 3) { R(m, x, 7 * TS + 3, 2, 12, '#b98a5c'); R(m, x + 2, 7 * TS + 3, 1, 12, '#8a6040'); } R(m, x0, 7 * TS + 15, x1 - x0, 1, '#6e4a2c'); });
   { const bx = (MW - 2) * TS, by = 3 * TS; R(m, bx - 4, by + 10, TS * 3 + 8, 4, '#c0392b'); R(m, bx - 4, by + 14, TS * 3 + 8, 1, '#8e2a20'); [bx + 6, bx + 34].forEach(tx => { R(m, tx, by - 18, 4, 34, '#c0392b'); R(m, tx - 1, by - 18, 6, 2, '#8e2a20'); R(m, tx, by - 8, 4, 1, '#8e2a20'); }); m.strokeStyle = '#c0392b'; m.lineWidth = 1; m.beginPath(); m.moveTo(bx - 4, by - 2); m.quadraticCurveTo(bx + 22, by + 14, bx + 50, by - 2); m.stroke(); }
   // trees, sorted by y so lower ones overlap
   bakeBay();
