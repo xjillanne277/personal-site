@@ -790,24 +790,24 @@ const dart = document.createElement('canvas'); dart.width = DW; dart.height = DH
 const skid = document.createElement('canvas'); skid.width = DW; skid.height = DH; const skc = skid.getContext('2d');
 const PADS = [[420, 300, 0], [900, 620, Math.PI], [1200, 250, Math.PI / 2], [300, 760, -Math.PI / 4], [760, 160, Math.PI / 4]];
 let cones = [];
-function resetCones() { cones = []; for (let i = 0; i < 46; i++) { const x = 120 + rnd(i * 4.3 + 1) * (DW - 420), y = 90 + rnd(i * 9.1 + 2) * (DH - 180); cones.push({x, y, vx: 0, vy: 0, spin: 0, a: 0, hit: false}); } }
+function resetCones() { cones = []; for (let i = 0; i < 46; i++) { const x = 20 + rnd(i * 4.3 + 1) * (DW - 40), y = 20 + rnd(i * 9.1 + 2) * (DH - 40); cones.push({x, y, vx: 0, vy: 0, spin: 0, a: 0, hit: false}); } }
 (function bakeDrive() {
   const a = dart.getContext('2d'); a.imageSmoothingEnabled = false;
   a.fillStyle = '#e3d39c'; a.fillRect(0, 0, DW, DH);
-  for (let y = 0; y < DH; y += 3) for (let x = 0; x < DW; x += 3) { const n = Math.sin(x * .012 + Math.sin(y * .01) * 2) + Math.sin(y * .015 - x * .006) * .9; if (n > 1.25) { a.fillStyle = '#d6c487'; a.fillRect(x, y, 3, 3); } else if (n < -1.3) { a.fillStyle = '#ece0b2'; a.fillRect(x, y, 3, 3); } }
-  // ocean on the right with surf
-  for (let y = 0; y < DH; y += 2) { const ox = DW - 180 + Math.round(Math.sin(y / 60) * 16); a.fillStyle = '#3f7fb8'; a.fillRect(ox, y, DW - ox, 2); a.fillStyle = '#eef6fb'; a.fillRect(ox - 3, y, 4, 2); a.fillStyle = '#5b9bd5'; a.fillRect(ox + 1, y, 12, 2); }
+  const TX = Math.PI * 2 / DW, TY = Math.PI * 2 / DH;
+  for (let y = 0; y < DH; y += 3) for (let x = 0; x < DW; x += 3) { const n = Math.sin(x * TX * 3 + Math.sin(y * TY * 2) * 2) + Math.sin(y * TY * 3 - x * TX * 2) * .9; if (n > 1.25) { a.fillStyle = '#d6c487'; a.fillRect(x, y, 3, 3); } else if (n < -1.3) { a.fillStyle = '#ece0b2'; a.fillRect(x, y, 3, 3); } }
   // palms, pines and a few beach umbrellas (drive-through, purely decoration)
-  for (let i = 0; i < 90; i++) { const x = 40 + rnd(i * 2.7 + 5) * (DW - 260), y = 30 + rnd(i * 6.3 + 9) * (DH - 60);
+  for (let i = 0; i < 90; i++) for (const [ox, oy] of [[0, 0], [-DW, 0], [DW, 0], [0, -DH], [0, DH]]) { const x = ox + 20 + rnd(i * 2.7 + 5) * (DW - 40), y = oy + 20 + rnd(i * 6.3 + 9) * (DH - 40);
     if (i % 4 === 0) { a.fillStyle = 'rgba(0,0,0,.12)'; a.fillRect(x - 6, y + 12, 16, 3); a.fillStyle = '#8a6244'; for (let k = 0; k < 16; k++) a.fillRect(x + Math.round(Math.sin(k / 5) * 2), y + 12 - k, 2, 1); a.fillStyle = '#4f9150'; [[-9, 0], [-6, -3], [0, -5], [6, -3], [9, 0]].forEach(([dx, dy]) => { a.fillRect(x + Math.min(0, dx), y - 4 + dy, Math.abs(dx) + 2, 3); a.fillRect(x + dx - 1, y - 2 + dy, 3, 3); }); }
     else if (i % 4 === 1) { a.fillStyle = 'rgba(0,0,0,.12)'; a.fillRect(x - 6, y + 10, 14, 3); a.fillStyle = '#8b4a32'; a.fillRect(x, y + 2, 3, 9); for (let r = 0; r < 4; r++) { a.fillStyle = r % 2 ? '#2c5a37' : '#356a42'; a.fillRect(x + 1 - (3 + r), y - 12 + r * 4, (3 + r) * 2 + 1, 4); } }
     else if (i % 9 === 2) { const c = ['#e35d50', '#5b8ee6', '#f2c14e'][i % 3]; a.fillStyle = '#7a5a3a'; a.fillRect(x, y - 2, 1, 12); a.fillStyle = c; a.fillRect(x - 8, y - 6, 17, 4); a.fillRect(x - 6, y - 8, 13, 2); a.fillStyle = '#fff'; a.fillRect(x - 2, y - 6, 5, 4); } }
   // boost pads
   PADS.forEach(([x, y, r]) => { a.save(); a.translate(x, y); a.rotate(r); a.fillStyle = '#2b2d31'; a.fillRect(-22, -14, 44, 28); for (let k = 0; k < 3; k++) { a.fillStyle = '#ffb02e'; a.beginPath(); a.moveTo(-14 + k * 11, -9); a.lineTo(-4 + k * 11, 0); a.lineTo(-14 + k * 11, 9); a.lineTo(-10 + k * 11, 9); a.lineTo(0 + k * 11, 0); a.lineTo(-10 + k * 11, -9); a.fill(); } a.restore(); });
-  a.fillStyle = '#7a5232'; a.fillRect(640, 380, 220, 34); a.fillStyle = '#fbf3e4'; a.fillRect(643, 383, 214, 28); a.fillStyle = '#3a2617'; a.font = 'bold 15px sans-serif'; a.textAlign = 'center'; a.fillText('PACIFIC COAST · FREE ROAM', 750, 403);
 })();
 const carBuf = document.createElement('canvas'); carBuf.width = 32; carBuf.height = 44; const cbx = carBuf.getContext('2d');
 let drv = null, driveFor = null, lastGas = 0;
+const wrapD = (d, n) => { d = ((d % n) + n) % n; return d > n / 2 ? d - n : d; };
+const mod = (v, n) => ((v % n) + n) % n;
 const driveBtn = document.createElement('button'); driveBtn.type = 'button'; driveBtn.id = 'drive-btn'; driveBtn.hidden = true; root.appendChild(driveBtn);
 const tui = document.createElement('div'); tui.id = 'track-ui'; tui.hidden = true;
 const coarse = matchMedia('(pointer: coarse)').matches;
@@ -828,7 +828,7 @@ function enterTrack(kind) {
   setTimeout(() => {
     worldPos.x = P.x; worldPos.y = P.y; scene = 'track';
     let top = 0; try { top = +localStorage.getItem('jy-top-' + kind) || 0; } catch (e) {}
-    drv = {kind, x: 520, y: 260, a: 0, v: 0, top, boost: 0, tank: 1, cones: 0, flame: 0, cx: 520, cy: 260, shake: 0};
+    drv = {kind, x: 800, y: 500, a: 0, v: 0, top, boost: 0, tank: 1, cones: 0, flame: 0, cx: 800, cy: 500, shake: 0};
     skc.clearRect(0, 0, DW, DH); resetCones();
     keys.clear(); P.target = null; tui.hidden = false; document.getElementById('world-bar').hidden = true; document.getElementById('tod').hidden = true; prompt.hidden = true; roomLabel.hidden = true;
     labelNodes.forEach(n => n.hidden = true); iconNodes.forEach(([, im]) => im.hidden = true);
@@ -851,14 +851,12 @@ function trackStep(dt) {
   const steer = (rt ? 1 : 0) - (lf ? 1 : 0), sp = Math.abs(drv.v);
   drv.a += steer * dt * (2.2 + Math.min(1.4, sp / 220)) * (sp < 8 ? sp / 8 : 1) * Math.sign(drv.v || 1);
   drv.x += Math.cos(drv.a) * drv.v * dt; drv.y += Math.sin(drv.a) * drv.v * dt;
-  if (drv.x < 16 || drv.x > DW - 200) { drv.x = Math.max(16, Math.min(DW - 200, drv.x)); drv.v *= .5; }
-  if (drv.y < 16 || drv.y > DH - 16) { drv.y = Math.max(16, Math.min(DH - 16, drv.y)); drv.v *= .5; }
   // skid marks when turning hard at speed
-  if (steer && sp > 150) { const bx = Math.cos(drv.a), by = Math.sin(drv.a), px = -by, py = bx; skc.fillStyle = 'rgba(60,50,40,.22)'; [[-1], [1]].forEach(([s]) => skc.fillRect(Math.round(drv.x - bx * 14 + px * 9 * s), Math.round(drv.y - by * 14 + py * 9 * s), 3, 3)); }
+  if (steer && sp > 150) { const bx = Math.cos(drv.a), by = Math.sin(drv.a), px = -by, py = bx; skc.fillStyle = 'rgba(60,50,40,.22)'; [[-1], [1]].forEach(([s]) => skc.fillRect(Math.round(mod(drv.x - bx * 14 + px * 9 * s, DW)), Math.round(mod(drv.y - by * 14 + py * 9 * s, DH)), 3, 3)); }
   // boost pads
-  PADS.forEach(([x, y]) => { if (Math.hypot(drv.x - x, drv.y - y) < 24 && drv.boost < .9) { drv.boost = 1.1; window.__sfx && window.__sfx(); } });
+  PADS.forEach(([x, y]) => { if (Math.hypot(wrapD(drv.x - x, DW), wrapD(drv.y - y, DH)) < 24 && drv.boost < .9) { drv.boost = 1.1; window.__sfx && window.__sfx(); } });
   // cones fly when hit
-  cones.forEach(c => { if (!c.hit && Math.hypot(drv.x - c.x, drv.y - c.y) < 16 && sp > 20) { c.hit = true; c.vx = Math.cos(drv.a) * sp * .9 + (Math.random() - .5) * 120; c.vy = Math.sin(drv.a) * sp * .9 + (Math.random() - .5) * 120; c.spin = (Math.random() - .5) * 20; drv.cones++; }
+  cones.forEach(c => { if (!c.hit && Math.hypot(wrapD(drv.x - c.x, DW), wrapD(drv.y - c.y, DH)) < 16 && sp > 20) { c.hit = true; c.vx = Math.cos(drv.a) * sp * .9 + (Math.random() - .5) * 120; c.vy = Math.sin(drv.a) * sp * .9 + (Math.random() - .5) * 120; c.spin = (Math.random() - .5) * 20; drv.cones++; }
     if (c.hit) { c.x += c.vx * dt; c.y += c.vy * dt; c.vx *= .96; c.vy *= .96; c.a += c.spin * dt; c.spin *= .96; } });
   const kmh = Math.round(sp * .8); if (kmh > drv.top) { drv.top = kmh; try { localStorage.setItem('jy-top-' + drv.kind, kmh); } catch (e) {} }
   drv.flame += dt * 30; drv.shake = Math.max(0, drv.shake - dt);
@@ -869,10 +867,10 @@ function trackStep(dt) {
 }
 function drawTrack(now) {
   const sh = 0;
-  const cx = Math.round(Math.max(0, Math.min(DW - VW, drv.cx - VW / 2)) + sh), cy = Math.round(Math.max(0, Math.min(DH - VH, drv.cy - VH / 2)) + sh);
+  const cx = Math.round(drv.cx - VW / 2), cy = Math.round(drv.cy - VH / 2);
   g.fillStyle = '#e3d39c'; g.fillRect(0, 0, VW, VH);
-  g.drawImage(dart, -cx, -cy); g.drawImage(skid, -cx, -cy);
-  cones.forEach(c => { g.save(); g.translate(Math.round(c.x - cx), Math.round(c.y - cy)); g.rotate(c.a); const P_ = (x, y, w, h, k) => { g.fillStyle = k; g.fillRect(x, y, w, h); }; P_(-4, 3, 9, 2, 'rgba(0,0,0,.18)'); P_(-1, -6, 2, 2, '#f08a24'); P_(-2, -4, 4, 3, '#f08a24'); P_(-2, -1, 4, 1, '#ffffff'); P_(-3, 0, 6, 3, '#f08a24'); P_(-4, 3, 8, 2, '#c4651a'); g.restore(); });
+  for (let ty = -mod(cy, DH); ty < VH; ty += DH) for (let tx = -mod(cx, DW); tx < VW; tx += DW) { g.drawImage(dart, tx, ty); g.drawImage(skid, tx, ty); }
+  cones.forEach(c => { g.save(); g.translate(Math.round(drv.x - cx + wrapD(c.x - drv.x, DW)), Math.round(drv.y - cy + wrapD(c.y - drv.y, DH))); g.rotate(c.a); const P_ = (x, y, w, h, k) => { g.fillStyle = k; g.fillRect(x, y, w, h); }; P_(-4, 3, 9, 2, 'rgba(0,0,0,.18)'); P_(-1, -6, 2, 2, '#f08a24'); P_(-2, -4, 4, 3, '#f08a24'); P_(-2, -1, 4, 1, '#ffffff'); P_(-3, 0, 6, 3, '#f08a24'); P_(-4, 3, 8, 2, '#c4651a'); g.restore(); });
   const bx = drv.x - cx, by = drv.y - cy;
   if (drv.boost > 0) { g.save(); g.translate(bx, by); g.rotate(drv.a - Math.PI / 2); const f = Math.floor(drv.flame) % 3; [['#ffe066', 6 + f], ['#ff8a2a', 10 + f * 2], ['#e8442c', 14 + f * 2]].reverse().forEach(([c, len]) => { g.fillStyle = c; g.fillRect(-7, -22 - len, 4, len); g.fillRect(3, -22 - len, 4, len); }); g.restore(); }
   cbx.clearRect(0, 0, 32, 44); car(cbx, 1, 0, CARS[drv.kind], 1);
