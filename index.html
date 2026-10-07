@@ -181,6 +181,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 #world-bar .side{display:flex;gap:6px;width:auto;align-self:center}
 #world-bar .side button,#world-bar .tour div button{width:auto}
 #world-bar button.b{font-size:15px;padding:8px 14px 7px;line-height:1.1}
+#world-bar .tour[hidden]{display:none!important}
 #world-bar .tour{width:auto;height:auto;flex-direction:row;align-items:center;gap:10px;padding-left:12px;margin-left:4px;border-left:2px solid #e6d3b0}
 #world-bar .tour div{flex-direction:row;gap:6px}
 #tour-prev{order:0}#tour-next{order:1}
@@ -1273,7 +1274,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
   <nav id="world-bar" aria-label="World navigation">
     <div class="bar-box mini-wrap" title="Open the map" role="button" tabindex="0" aria-label="Open the map"><canvas id="minimap" aria-label="Minimap. Click to open the full map."></canvas></div>
     <div class="side"><button class="b" type="button" id="map-toggle">Map</button><button class="b facts" type="button" id="go-portfolio">Portfolio</button><button class="b contact" type="button" id="go-contact">Contact</button></div>
-    <div class="bar-box tour"><span id="tour-pos">Guided tour</span><div><button class="b" type="button" id="tour-prev">Back</button><button class="b primary" type="button" id="tour-next">Start tour</button></div></div>
+    <div class="bar-box tour" hidden><span id="tour-pos">Guided tour</span><div><button class="b" type="button" id="tour-prev">Back</button><button class="b primary" type="button" id="tour-next">Start tour</button></div></div>
   </nav>
 </div>
 <div class="fade" id="fade"></div>

@@ -332,14 +332,12 @@ const led = {r: 255, g: 190, b: 140, w: 60, br: 80};
 function ledRGB() { const k = .35 + .65 * led.br / 100, mx = c => Math.round(Math.min(255, c + led.w * .8) * k); return [mx(led.r), mx(led.g), mx(led.b)]; }
 const GAL = {
   photos: [['img/ca-sunset-gull.webp', 'Ventura Pier, Santa Barbara, after a long road trip'], ['img/ca-redwoods.webp', 'Muir Woods'], ['img/ca-palms.webp', 'The Pacifica Taco Bell'], ['img/ca-pier.webp', 'Santa Monica Pier'], ['img/ca-coast-night.webp', 'Half Moon Bay, by the Ritz golf course']],
-  moe: [['img/moe-window.webp', 'Moe at the window'], ['img/moe-rug.webp', 'Moe on the rug'], ['img/moe-stare.webp', 'Moe, unimpressed'], ['img/moe-bath.webp', 'Bath day. He did not enjoy it.']]
+  moe: [["img/moe-1.webp", "My cat"], ["img/moe-2.webp", "My cat"], ["img/moe-3.webp", "My cat"], ["img/moe-4.webp", "My cat"], ["img/moe-5.webp", "My cat"], ["img/moe-6.webp", "My cat"], ["img/moe-7.webp", "My cat"]]
 };
 const RO = [
   {id: 'door', label: 'Back outside', x: 6, y: 66, w: 28, h: 94, stand: 22, kind: 'door'},
   {id: 'desk', label: 'My setup', x: 40, y: 82, w: 110, h: 46, stand: 92, kind: 'room',
    card: {title: 'My setup', meta: 'The bunny case is non-negotiable', img: 'img/setup.webp', imgAlt: 'Jillanne’s desk setup with a white bunny-eared PC case and two monitors', body: ['Ironside build in a bunny case: Intel Core i5-12400F, GeForce RTX 4060, 32 GB DDR4-3200, 1 TB PCIe 4.0 NVMe, 650 W Gold PSU and individually sleeved cherry-blossom pink cables.', 'Two MSI 27" 1440p 170 Hz monitors.']}},
-  {id: 'trophy', label: 'Trophy shelf', x: 42, y: 30, w: 34, h: 26, stand: 60, kind: 'room',
-   card: {title: '1st place, Geotab Intern Innovation Challenge', meta: 'Summer 2024 · 1st of 11 teams', body: ['A 7-day company hackathon on AI video telematics. I had never trained a model, so I spent two days learning, then built the in-cabin computer vision model that detects distracted driving.', 'We were the only team with a fully working demo.'], img: 'img/gt-cert.webp', imgAlt: 'Certificate of Achievement, first place, Geotab 10th Intern Innovation Challenge'}},
   {id: 'minimoe', label: 'Mini Moe', x: 80, y: 36, w: 16, h: 20, stand: 88, kind: 'room',
    card: {title: 'Mini Moe', meta: '3D printed', body: ['I missed Moe while I was away on co-op, so I 3D printed him to watch me study.'], img: 'img/minimoe.webp', imgAlt: 'A white 3D-printed cat figure next to a laptop and handwritten notes'}},
   {id: 'led', label: 'LED strip', x: 40, y: 57, w: 110, h: 8, stand: 96, kind: 'led'},
@@ -348,9 +346,8 @@ const RO = [
   {id: 'photos', label: 'Photo wall', x: 160, y: 18, w: 56, h: 60, stand: 188, kind: 'gallery', gal: 'photos', title: 'Photo wall', meta: 'Four co-op terms in California'},
   {id: 'posters', label: 'Car posters', x: 222, y: 22, w: 72, h: 38, stand: 258, kind: 'room',
    card: {title: 'NSX and C5', meta: 'Pop-up headlights, always', body: ['An original Acura NSX in red and a C5 Corvette in black. The real ones are parked outside, and yes, the headlights work.']}},
-  {id: 'bench', label: 'Workbench', x: 196, y: 104, w: 98, h: 58, stand: 244, kind: 'room',
-   card: {title: 'On the bench', meta: 'Current project', body: ['A modular spinal pressure-relief system for wheelchairs and beds, for people with spinal cord injuries.', 'Soldering station, helping hands and a multimeter for everything else.']}},
-  {id: 'moe', label: 'Moe', x: 116, y: 156, w: 34, h: 18, stand: 108, kind: 'gallery', gal: 'moe', title: 'Moe', meta: 'Cream, blue eyes, professional napper'}
+  {id: 'tv', label: 'Arcade', x: 304, y: 110, w: 48, h: 50, stand: 334, kind: 'arcade'},
+  {id: 'moe', label: 'Moe', x: 116, y: 156, w: 34, h: 18, stand: 108, kind: 'gallery', gal: 'moe', title: 'Moe', meta: 'My cat'}
 ];
 (function bakeRoom() {
   const P_ = (x, y, w, h, k) => R(rc, x, y, w, h, k);
@@ -379,7 +376,6 @@ const RO = [
   P_(140, 110, 6, 10, '#f3f3f3'); P_(141, 104, 1, 6, '#5e8f52'); P_(144, 102, 1, 8, '#5e8f52'); P_(139, 101, 3, 3, '#e98aa6'); P_(143, 99, 3, 3, '#f2b5c6'); P_(145, 104, 2, 2, '#e98aa6');
   // shelf above desk with trophies
   P_(40, 54, 110, 4, '#7a5232'); P_(40, 54, 110, 1, '#946540'); P_(46, 58, 3, 4, '#5a3d28'); P_(141, 58, 3, 4, '#5a3d28');
-  P_(44, 32, 30, 22, '#c9a227'); P_(46, 34, 26, 18, '#fbf6e6'); P_(49, 37, 20, 2, '#3a3f47'); P_(51, 41, 16, 1, '#9aa0a6'); P_(51, 44, 12, 1, '#9aa0a6'); P_(61, 46, 6, 6, '#d9a62a'); P_(63, 48, 2, 2, '#f2d27a');
   P_(82, 42, 10, 12, '#ffffff'); P_(82, 39, 3, 3, '#ffffff'); P_(89, 39, 3, 3, '#ffffff'); P_(84, 45, 1, 1, '#3949ab'); P_(89, 45, 1, 1, '#3949ab'); P_(86, 48, 2, 1, '#c9b8b8'); P_(91, 50, 4, 3, '#ffffff');
   P_(100, 46, 8, 8, '#e53935'); P_(100, 46, 4, 4, '#fdd835'); P_(104, 50, 4, 4, '#1e88e5'); P_(104, 46, 4, 4, '#43a047'); P_(100, 50, 4, 4, '#fb8c00'); P_(100, 49, 8, 1, '#111111'); P_(103, 46, 1, 8, '#111111');
   P_(114, 44, 22, 10, '#d7b06e'); P_(114, 44, 22, 1, '#e9c88a'); P_(118, 46, 8, 5, '#bfe0ef'); P_(129, 46, 2, 5, '#5c4a3a'); P_(132, 46, 2, 5, '#5c4a3a');
@@ -435,6 +431,7 @@ function roomResize() { cvFull(); SC = Math.max(2, Math.min(6, Math.floor(Math.m
 function roomCam() { const U = VH - Math.round(160 / SC); const cx = RMW <= VW ? Math.round((RMW - VW) / 2) : Math.max(0, Math.min(RMW - VW, Math.round(RP.x) - Math.round(VW / 2))); return {x: cx, y: Math.round((RMH - U) / 2) - 2}; }
 function roomNearest() { let best = null, bd = 18; RO.forEach(o => { const d = Math.abs(o.stand - RP.x); if (d < bd) { bd = d; best = o; } }); return best; }
 function roomOpen(o) {
+  if (o.kind === 'arcade') { arcadeCard(); return; }
   if (o.kind === 'door') { exitRoom(); return; }
   if (o.kind === 'led') { ledCard(); return; }
   if (o.kind === 'gallery') { galleryCard(o); return; }
@@ -445,7 +442,7 @@ function galleryCard(o) {
   const render = () => {
     card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
       <h2 id="w-card-title">${esc(o.title)}</h2><p class="w-meta">${esc(o.meta)}</p>
-      <img class="w-img" src="${list[i][0]}" alt="${esc(list[i][1])}"><p class="w-cap">${esc(list[i][1])} · ${i + 1} of ${list.length}</p>
+      <img class="w-img" src="${list[i][0]}" alt="${esc(list[i][1])}"><p class="w-cap">${o.gal === 'moe' ? '' : esc(list[i][1]) + ' · '}${i + 1} of ${list.length}</p>
       <div class="w-actions"><button type="button" class="w-alt" id="g-prev">Previous</button><button type="button" class="w-go" id="g-next">Next</button></div></div>`;
     card.querySelector('.w-close').addEventListener('click', closeCard);
     card.querySelector('#g-prev').addEventListener('click', () => { i = (i - 1 + list.length) % list.length; render(); card.querySelector('#g-prev').focus(); });
@@ -556,7 +553,7 @@ function openCard(l) {
   openId = l.id; autoId = l.id; if (l.tour) { visited.add(l.id); labelNodes[L.indexOf(l)].classList.add('w-visited'); }
   if (l.kind === 'nsx' || l.kind === 'c5') { const n = carClicks[l.kind]++ % 3; if (n === 0) pops[l.kind] = 1; else if (n === 1) { pops[l.kind] = 1; window.__engine && window.__engine(l.kind); } else pops[l.kind] = 0; }
   const c = l.card === 'contact' ? {title: 'Say hi', meta: 'Mailbox', body: ["I'm looking for a Summer 2027 role in mechanical or product design."], contact: true} : l.card;
-  const ti = TOUR.indexOf(l); const tourBits = ti >= 0 ? `<p class="w-tourpos">Stop ${ti + 1} of ${TOUR.length}</p>` : '';
+  const tourBits = '';
   card.innerHTML = `<div class="w-card-in" role="dialog" aria-modal="false" aria-labelledby="w-card-title">
     <button type="button" class="w-close" aria-label="Close">✕</button>${tourBits}
     <h2 id="w-card-title">${esc(c.title)}</h2><p class="w-meta">${esc(c.meta)}</p>
@@ -571,7 +568,51 @@ function openCard(l) {
   if (TOUR.includes(l)) { tourIdx = TOUR.indexOf(l); updateTour(); }
   if (!(l.kind === 'nsx' || l.kind === 'c5')) window.__sfx && window.__sfx('open');
 }
-function closeCard() { if (!card.hidden) { card.hidden = true; openId = null; cv.focus({preventScroll: true}); } }
+/* ---------------- arcade: a tiny runner on the TV ---------------- */
+let arc = null;
+function arcadeCard() {
+  openId = 'arcade';
+  let best = 0; try { best = +localStorage.getItem('jy-runner-best') || 0; } catch (e) {}
+  card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
+    <h2 id="w-card-title">Commute</h2><p class="w-meta">${touch ? 'Tap the screen to jump' : 'Space or ↑ to jump · Esc to leave'}</p>
+    <canvas id="rn" width="240" height="84" style="display:block;width:100%;image-rendering:pixelated;background:#cfe9f7;border:3px solid var(--panel-edge);cursor:pointer;touch-action:manipulation"></canvas>
+    <p class="w-cap" id="rn-s" style="margin-top:8px">Score 0 · Best ${best}</p></div>`;
+  card.hidden = false;
+  card.querySelector('.w-close').addEventListener('click', closeCard);
+  const c = card.querySelector('#rn'), x = c.getContext('2d'), out = card.querySelector('#rn-s');
+  const GY = 70;
+  arc = {c, x, out, best, y: 0, vy: 0, obs: [], t: 0, sp: 90, score: 0, over: false, started: false, last: performance.now(), f: 0, spawn: 1};
+  const jump = () => { if (arc.over) { Object.assign(arc, {obs: [], y: 0, vy: 0, sp: 90, score: 0, over: false, spawn: 1}); return; } arc.started = true; if (arc.y === 0) arc.vy = 185; };
+  arc.jump = jump;
+  c.addEventListener('pointerdown', e => { e.preventDefault(); jump(); });
+  const P = (px, py, w, h, k) => { x.fillStyle = k; x.fillRect(Math.round(px), Math.round(py), w, h); };
+  function frame(now) {
+    if (!arc || openId !== 'arcade') return;
+    const dt = Math.min(.04, (now - arc.last) / 1000); arc.last = now;
+    if (arc.started && !arc.over) {
+      arc.vy -= 520 * dt; arc.y = Math.max(0, arc.y + arc.vy * dt); if (arc.y === 0) arc.vy = 0;
+      arc.sp += dt * 3; arc.score += dt * 10; arc.spawn -= dt;
+      if (arc.spawn <= 0) { arc.obs.push({x: 250, k: Math.random() < .6 ? 'cone' : 'box'}); arc.spawn = .9 + Math.random() * 1.1 - Math.min(.4, arc.sp / 600); }
+      arc.obs.forEach(o => o.x -= arc.sp * dt); arc.obs = arc.obs.filter(o => o.x > -20);
+      if (arc.obs.some(o => o.x < 40 && o.x + (o.k === 'cone' ? 8 : 12) > 26 && arc.y < (o.k === 'cone' ? 11 : 9))) {
+        arc.over = true; if (arc.score > arc.best) { arc.best = Math.floor(arc.score); try { localStorage.setItem('jy-runner-best', arc.best); } catch (e) {} }
+      }
+      arc.f += dt * 10;
+    }
+    P(0, 0, 240, 84, '#cfe9f7'); P(170, 10, 18, 4, '#ffffff'); P(174, 7, 10, 3, '#ffffff'); P(40, 16, 14, 3, '#ffffff');
+    P(0, GY, 240, 14, '#8fca7c'); P(0, GY, 240, 2, '#6fae5f');
+    for (let i = 0; i < 240; i += 12) P((i - (arc.t += 0) - (arc.score * 4) % 12 + 240) % 240, GY + 7, 4, 1, '#6fae5f');
+    arc.obs.forEach(o => { if (o.k === 'cone') { P(o.x + 3, GY - 11, 2, 2, '#f08a24'); P(o.x + 2, GY - 9, 4, 3, '#f08a24'); P(o.x + 2, GY - 6, 4, 1, '#ffffff'); P(o.x + 1, GY - 5, 6, 3, '#f08a24'); P(o.x, GY - 2, 8, 2, '#c4651a'); } else { P(o.x, GY - 9, 12, 9, '#a8794e'); P(o.x, GY - 9, 12, 2, '#c4935f'); P(o.x + 5, GY - 9, 2, 9, '#6e4a2c'); } });
+    girl(x, 22, GY - 26 - Math.round(arc.y), 'right', arc.started && !arc.over && arc.y === 0 ? (Math.floor(arc.f) % 2) + 1 : 0);
+    if (!arc.started) { x.fillStyle = 'rgba(31,35,40,.75)'; x.fillRect(58, 30, 124, 18); x.fillStyle = '#fff'; x.font = '9px sans-serif'; x.fillText(touch ? 'Tap to start' : 'Press space to start', 74, 42); }
+    if (arc.over) { x.fillStyle = 'rgba(31,35,40,.75)'; x.fillRect(58, 26, 124, 26); x.fillStyle = '#fff'; x.font = '9px sans-serif'; x.fillText('Bonk. ' + (touch ? 'Tap' : 'Space') + ' to try again', 66, 42); }
+    arc.out.textContent = `Score ${Math.floor(arc.score)} · Best ${arc.best}`;
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  card.querySelector('#rn').focus && c.setAttribute('tabindex', '0');
+}
+function closeCard() { if (openId === 'arcade') arc = null; if (!card.hidden) { card.hidden = true; openId = null; cv.focus({preventScroll: true}); } }
 
 /* ---------------- tour + bar ---------------- */
 const tourPos = document.getElementById('tour-pos');
@@ -601,25 +642,26 @@ setPhase('auto');
 const KEYMAP = {ArrowUp: 'up', w: 'up', W: 'up', ArrowDown: 'down', s: 'down', S: 'down', ArrowLeft: 'left', a: 'left', A: 'left', ArrowRight: 'right', d: 'right', D: 'right'};
 addEventListener('keydown', e => {
   if (!running || !document.getElementById('proj').hidden) return;
+  if (openId === 'arcade' && !card.hidden && arc) { if ([' ', 'ArrowUp', 'w', 'W'].includes(e.key)) { e.preventDefault(); arc.jump(); return; } if (e.key !== 'Escape') { if (KEYMAP[e.key]) e.preventDefault(); return; } }
   if (e.key === 'Escape') { if (!big.hidden) big.hidden = true; else if (!card.hidden) closeCard(); return; }
   // with a card open, E reads the full story (or closes the card if there isn't one)
   if ((e.key === 'e' || e.key === 'E') && !card.hidden && !(e.target.closest && e.target.closest('input'))) { e.preventDefault(); const more = card.querySelector('.w-more'); if (more) more.click(); else closeCard(); return; }
   if (e.target.closest && e.target.closest('input,textarea')) return;
   if (KEYMAP[e.key]) { e.preventDefault(); keys.add(KEYMAP[e.key]); P.target = null; if (!card.hidden) closeCard(); }
-  else if ((e.key === 'e' || e.key === 'E' || e.key === 'Enter' || e.key === ' ') && card.hidden && document.activeElement === cv && scene === 'room') { const o = roomNearest(); if (o) { e.preventDefault(); roomOpen(o); } }
-  else if ((e.key === 'e' || e.key === 'E' || e.key === 'Enter' || e.key === ' ') && card.hidden && document.activeElement === cv) { const n = nearest(); if (n) { e.preventDefault(); openCard(n); } }
+  else if ((e.key === 'e' || e.key === 'E' || e.key === 'Enter' || e.key === ' ') && card.hidden && (document.activeElement === cv || e.key === 'e' || e.key === 'E') && scene === 'room') { const o = roomNearest(); if (o) { e.preventDefault(); roomOpen(o); } }
+  else if ((e.key === 'e' || e.key === 'E' || e.key === 'Enter' || e.key === ' ') && card.hidden && (document.activeElement === cv || e.key === 'e' || e.key === 'E')) { const n = nearest(); if (n) { e.preventDefault(); openCard(n); } }
   else if (e.key === 'm' || e.key === 'M') { if (big.hidden) openBig(); else big.hidden = true; }
 });
 addEventListener('keyup', e => { if (KEYMAP[e.key]) keys.delete(KEYMAP[e.key]); });
 addEventListener('blur', () => keys.clear());
 cv.addEventListener('pointerdown', e => {
   touch = e.pointerType === 'touch'; closeCard();
-  if (scene === 'room') { const o = roomHit(e), cam = roomCam(); if (o && o.id === 'moe' && ++moeClicks % 3 === 1) window.__meow && window.__meow(); RP.tx = o ? o.stand : Math.max(12, Math.min(RMW - 14, e.clientX / SC + cam.x)); RP.after = o; return; }
+  if (scene === 'room') { const o = roomHit(e), cam = roomCam(); if (o && o.id === 'moe' && ++moeClicks % 3 === 1) window.__meow && window.__meow(); if (o && Math.abs(o.stand - RP.x) < 20 && o.id !== 'moe') { roomOpen(o); return; } RP.tx = o ? o.stand : Math.max(12, Math.min(RMW - 14, e.clientX / SC + cam.x)); RP.after = null; return; }
   const cam = camera(); const wx = (e.clientX - offX) / SC + cam.x, wy = (e.clientY - offY) / SC + cam.y;
   const mo = scene === 'room' ? {x: roomMoe.x + 8, y: roomMoe.y + 10} : moe;
   if (Math.hypot(wx - mo.x, wy - (mo.y - 8)) < 15) { if (++moeClicks % 3 === 1) window.__meow && window.__meow(); return; }
   const hit = cur().L.find(l => wx >= l.tx * TS - 4 && wx <= (l.tx + l.w) * TS + 4 && wy >= l.ty * TS - 8 && wy <= (l.ty + l.h) * TS + 4);
-  if (hit) { walkTo(hit, true); return; }
+  if (hit) { if (hit.kind !== 'nsx' && hit.kind !== 'c5' && rectDist(hit) < 26) openCard(hit); else if (hit.kind === 'nsx' || hit.kind === 'c5') walkTo(hit, true); else walkTo(hit, false); return; }
   P.target = {x: wx, y: wy}; P.after = null; P.stuck = 0;
 });
 cv.addEventListener('pointermove', e => { if (scene !== 'world' || !(e.buttons & 1) || e.pointerType === 'touch' && !e.isPrimary) return; const cam = camera(); P.target = {x: (e.clientX - offX) / SC + cam.x, y: (e.clientY - offY) / SC + cam.y}; P.after = null; P.stuck = 0; });
