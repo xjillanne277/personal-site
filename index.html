@@ -562,20 +562,9 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
   .pf-play-go{grid-column:2}
 }
 
-/* write-ups: use the width, keep pictures modest, click to enlarge */
-.proj-sheet{max-width:1180px}
-.proj p{max-width:70ch}
-@media (min-width:1000px){.proj-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)!important;gap:36px!important}}
-.proj-figs{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
-.proj figure img{width:100%;height:auto;max-height:340px;object-fit:contain;background:#fff;cursor:zoom-in}
-.proj-hero img{max-height:300px!important}
-.proj-slide{grid-column:1/-1}
-.proj-slide img{max-height:480px!important;width:100%}
-.proj figure video{max-height:380px}
-.fy-video video{max-height:420px!important}
-.fy-grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
-.lv-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))!important}
-.lv-grid img{max-height:200px}
+/* write-ups: slides full width and readable; photos side by side; click any picture to enlarge */
+.proj-figs{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.proj figure img{cursor:zoom-in}
 .proj-nav{display:flex;gap:8px;margin-left:auto}
 .proj-nav button{font:600 14px "IBM Plex Sans",system-ui,sans-serif;background:#f1f2f4;color:#1f2328;border:1px solid #d9dde2;border-radius:7px;padding:8px 12px;cursor:pointer;white-space:nowrap}
 .proj-nav button:hover{border-color:#8a5a3c}
