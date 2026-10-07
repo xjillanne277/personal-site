@@ -282,20 +282,17 @@ const labelsEl = document.getElementById('world-labels');
 const prompt = document.getElementById('world-prompt');
 const card = document.getElementById('world-card');
 const mini = document.getElementById('minimap'), mg = mini.getContext('2d');
-let SC = 3, VW = 0, VH = 0, offX = 0, offY = 0, FIT = true;
+let SC = 3, VW = 0, VH = 0, offX = 0, offY = 0, FIT = true, PADT = 0, PADB = 0;
 function cvFull() { Object.assign(cv.style, {left: '0px', top: '0px', width: '100%', height: '100%'}); offX = offY = 0; }
 function resize() {
   if (typeof scene !== 'undefined' && scene === 'room') { roomResize(); return; }
-  const bar = document.getElementById('world-bar'), barH = (bar && bar.offsetHeight) || 130, topH = 56;
-  const fit = Math.min(innerWidth / (MW * TS), (innerHeight - barH - topH) / (MH * TS));
-  FIT = fit >= 1.3; root.classList.toggle('fit', FIT);
-  if (FIT) {
-    SC = fit; VW = MW * TS; VH = MH * TS; cv.width = VW; cv.height = VH; g.imageSmoothingEnabled = false;
-    offX = Math.round((innerWidth - VW * SC) / 2); offY = Math.round(topH + (innerHeight - barH - topH - VH * SC) / 2);
-    Object.assign(cv.style, {left: offX + 'px', top: offY + 'px', width: Math.round(VW * SC) + 'px', height: Math.round(VH * SC) + 'px'});
-  } else {
-    SC = 2; VW = Math.ceil(innerWidth / SC); VH = Math.ceil(innerHeight / SC); cv.width = VW; cv.height = VH; g.imageSmoothingEnabled = false; cvFull();
-  }
+  const bar = document.getElementById('world-bar'), barH = (bar && bar.offsetHeight) || 130, topH = 0;
+  const mw = MW * TS, mh = MH * TS;
+  // fill the height above the bottom bar; if that's wider than the screen, pan sideways (always at least 60% of the map in view)
+  SC = Math.min((innerHeight - barH - 6) / mh, innerWidth / (mw * .6)); FIT = SC >= 1.3; if (!FIT) SC = 2;
+  root.classList.toggle('fit', FIT);
+  VW = Math.ceil(innerWidth / SC); VH = Math.ceil(innerHeight / SC); cv.width = VW; cv.height = VH; g.imageSmoothingEnabled = false; cvFull();
+  PADT = topH / SC; PADB = barH / SC;
 }
 addEventListener('resize', resize);
 
@@ -332,7 +329,7 @@ const GAL = {
 const RO = [
   {id: 'door', label: 'Back outside', x: 6, y: 66, w: 28, h: 94, stand: 22, kind: 'door'},
   {id: 'desk', label: 'My setup', x: 40, y: 82, w: 110, h: 46, stand: 92, kind: 'room',
-   card: {title: 'My setup', meta: 'The bunny case is non-negotiable', img: 'img/setup.webp', imgAlt: 'Jillanne’s desk setup with a white bunny-eared PC case and two monitors', body: ['Ironside build in a bunny case: Intel Core i5-12400F, GeForce RTX 4060, 32 GB DDR4-3200, 1 TB PCIe 4.0 NVMe, 650 W Gold PSU and individually sleeved cherry-blossom pink cables.', 'Two MSI 27" 1440p 170 Hz monitors, currently showing the LED controller enclosure and its PCB layout.']}},
+   card: {title: 'My setup', meta: 'The bunny case is non-negotiable', img: 'img/setup.webp', imgAlt: 'Jillanne’s desk setup with a white bunny-eared PC case and two monitors', body: ['Ironside build in a bunny case: Intel Core i5-12400F, GeForce RTX 4060, 32 GB DDR4-3200, 1 TB PCIe 4.0 NVMe, 650 W Gold PSU and individually sleeved cherry-blossom pink cables.', 'Two MSI 27" 1440p 170 Hz monitors.']}},
   {id: 'trophy', label: 'Trophy shelf', x: 42, y: 30, w: 34, h: 26, stand: 60, kind: 'room',
    card: {title: '1st place, Geotab Intern Innovation Challenge', meta: 'Summer 2024 · 1st of 11 teams', body: ['A 7-day company hackathon on AI video telematics. I had never trained a model, so I spent two days learning, then built the in-cabin computer vision model that detects distracted driving.', 'We were the only team with a fully working demo.'], img: 'img/gt-cert.webp', imgAlt: 'Certificate of Achievement, first place, Geotab 10th Intern Innovation Challenge'}},
   {id: 'minimoe', label: 'Mini Moe', x: 80, y: 36, w: 16, h: 20, stand: 88, kind: 'room',
@@ -367,7 +364,7 @@ const RO = [
   P_(44, 92, 3, 10, '#2b2b2f'); P_(42, 98, 4, 8, '#2b2b2f');
   // monitors with CAD and PCB
   P_(76, 88, 34, 22, '#1f2328'); P_(78, 90, 30, 18, '#5d6e80'); P_(78, 90, 30, 2, '#8da0b2'); P_(84, 96, 16, 7, '#cfa45a'); P_(84, 96, 16, 2, '#e2c27f'); P_(82, 103, 20, 3, '#3b82c4'); P_(86, 97, 2, 2, '#7a5a2a'); P_(91, 97, 2, 2, '#7a5a2a'); P_(96, 97, 2, 2, '#7a5a2a'); P_(91, 110, 4, 8, '#2a2e33'); P_(86, 118, 14, 2, '#2a2e33');
-  P_(112, 88, 34, 22, '#1f2328'); P_(114, 90, 30, 18, '#0f2a17'); P_(116, 92, 26, 14, '#1b5e20'); for (let i = 0; i < 6; i++) P_(118, 93 + i * 2, 1, 1, '#c9a227'); P_(121, 95, 12, 1, '#e57373'); P_(132, 95, 1, 7, '#e57373'); P_(126, 101, 7, 1, '#e57373'); P_(136, 94, 4, 3, '#111111'); P_(123, 99, 3, 3, '#c9a227'); P_(127, 110, 4, 8, '#2a2e33'); P_(122, 118, 14, 2, '#2a2e33');
+  P_(112, 88, 34, 22, '#1f2328'); P_(114, 90, 30, 18, '#d9dde2'); P_(114, 90, 30, 2, '#3b6ea8'); P_(114, 92, 5, 16, '#eef1f4'); P_(115, 94, 3, 1, '#9aa4ae'); P_(115, 97, 3, 1, '#9aa4ae'); P_(115, 100, 3, 1, '#9aa4ae'); P_(124, 97, 12, 6, '#9aa7b3'); P_(124, 97, 12, 1, '#c3ccd5'); P_(126, 95, 8, 2, '#b6c0ca'); P_(129, 99, 3, 3, '#6f7c88'); P_(127, 110, 4, 8, '#2a2e33'); P_(122, 118, 14, 2, '#2a2e33');
   // keyboard + mouse + desk mat
   P_(76, 117, 58, 3, '#3a3f47'); P_(86, 116, 30, 2, '#cfd8dc'); for (let x = 87; x < 115; x += 3) P_(x, 116, 2, 1, '#9fb0b8'); P_(122, 116, 4, 2, '#e8eaed');
   // flowers in a vase
@@ -610,7 +607,7 @@ cv.addEventListener('pointerdown', e => {
   if (scene === 'room') { const o = roomHit(e), cam = roomCam(); if (o && o.id === 'moe' && ++moeClicks % 3 === 1) window.__meow && window.__meow(); RP.tx = o ? o.stand : Math.max(12, Math.min(RMW - 14, e.clientX / SC + cam.x)); RP.after = o; return; }
   const cam = camera(); const wx = (e.clientX - offX) / SC + cam.x, wy = (e.clientY - offY) / SC + cam.y;
   const mo = scene === 'room' ? {x: roomMoe.x + 8, y: roomMoe.y + 10} : moe;
-  if (Math.hypot(wx - mo.x, wy - (mo.y - 5)) < 11) { if (++moeClicks % 3 === 1) window.__meow && window.__meow(); return; }
+  if (Math.hypot(wx - mo.x, wy - (mo.y - 8)) < 15) { if (++moeClicks % 3 === 1) window.__meow && window.__meow(); return; }
   const hit = cur().L.find(l => wx >= l.tx * TS - 4 && wx <= (l.tx + l.w) * TS + 4 && wy >= l.ty * TS - 8 && wy <= (l.ty + l.h) * TS + 4);
   if (hit) { walkTo(hit, true); return; }
   P.target = {x: wx, y: wy}; P.after = null; P.stuck = 0;
@@ -622,9 +619,8 @@ function camera() {
   const px = Math.round(P.x), py = Math.round(P.y);
   const c = cur();
   if (scene === 'room') { const U = VH - Math.round(150 / SC), rw = c.W * TS, rh = c.H * TS; const cx = rw <= VW ? Math.round((rw - VW) / 2) : Math.max(0, Math.min(rw - VW, px - Math.round(VW / 2))); const cy = rh <= U ? Math.round((rh - U) / 2) - 4 : Math.max(0, Math.min(rh - U, py - Math.round(U / 2))); return {x: cx, y: cy}; }
-  if (FIT) return {x: 0, y: 0};
-  const ax = c.W * TS - VW, ay = c.H * TS - VH;
-  return {x: ax <= 0 ? Math.round(ax / 2) : Math.max(0, Math.min(ax, px - Math.round(VW / 2))), y: ay <= 0 ? Math.round(ay / 2) : Math.max(0, Math.min(ay, py - Math.round(VH / 2) + 10))};
+  const ax = c.W * TS - VW, y0 = -PADT, y1 = c.H * TS - VH + PADB;
+  return {x: ax <= 0 ? Math.round(ax / 2) : Math.max(0, Math.min(ax, px - Math.round(VW / 2))), y: y1 <= y0 ? Math.round((y0 + y1) / 2) : Math.round(Math.max(y0, Math.min(y1, py - (VH - PADB + PADT) / 2)))};
 }
 function step(now) {
   if (!running) return;
@@ -669,20 +665,21 @@ function step(now) {
   }
   // Moe follows a few steps behind (outside only)
   if (scene === 'world') {
-  const tg = trail.length > 14 ? trail[trail.length - 14] : [P.x - 14, P.y + 6];
+  const tg = trail.length > 12 ? trail[trail.length - 12] : [P.x - 18, P.y + 6];
   const mdx = tg[0] - moe.x, mdy = tg[1] - moe.y, md = Math.hypot(mdx, mdy);
-  moe.moving = md > 10;
-  if (md > 10) { moe.x += mdx / md * Math.min(md - 10, 185 * dt); moe.y += mdy / md * Math.min(md - 10, 185 * dt); }
+  moe.moving = md > 14;
+  if (md > 14) { moe.x += mdx / md * Math.min(md - 14, 185 * dt); moe.y += mdy / md * Math.min(md - 14, 185 * dt); }
   }
   // auto-open when you walk up to something
   if (autoId) { const a = cur().L.find(l => l.id === autoId); if (!a || rectDist(a) > 30) autoId = null; }
   const nn = nearest(8);
   draw(now); requestAnimationFrame(step);
 }
+const sbuf = document.createElement('canvas'); sbuf.width = 24; sbuf.height = 30; const sbc = sbuf.getContext('2d'); const GIRL_K = 1.4, MOE_K = 1.6;
 function draw(now) {
   const cam = camera();
   g.fillStyle = '#2f5e46'; g.fillRect(0, 0, VW, VH);
-  g.drawImage(cur().map, cam.x, cam.y, VW, VH, 0, 0, VW, VH);
+  g.drawImage(cur().map, -cam.x, -cam.y);
   // cars (dynamic so headlights can pop)
   const nsx = L.find(l => l.id === 'nsx'), c5 = L.find(l => l.id === 'c5');
   car(g, nsx.tx * TS + 1 - cam.x, nsx.ty * TS + 2 - cam.y, CARS.nsx, pops.nsx);
@@ -695,7 +692,7 @@ function draw(now) {
     R(g, bx + 2, by + 9, 30, 3, 'rgba(20,50,90,.35)'); R(g, bx + 3, by, 26, 9, '#8a5a36'); R(g, bx, by + 1, 32, 6, '#8a5a36'); R(g, bx + 2, by + 2, 28, 4, '#b07a4a'); R(g, bx, by + 1, 32, 1, '#6b4426'); R(g, bx + 3, by + 8, 26, 1, '#5e3a20');
     const oar = Math.floor(now / 220) % 2; R(g, bx + 14, by - 2 + oar * 2, 2, 12, '#d9b483'); R(g, bx + 13, by + 9 + oar * 2, 4, 3, '#d9b483');
     if (!reduce) { const w = Math.floor(now / 120) % 3; R(g, bx - 3 - w, by + 4, 2, 1, '#cfe6f7'); R(g, bx + 34 + w, by + 4, 2, 1, '#cfe6f7'); } }
-  const sprites = [[moe.y, () => moeSprite(g, Math.round(moe.x) - 7 - cam.x, Math.round(moe.y) - 11 - cam.y, moe.moving ? mf : 0)], [P.y, () => girl(g, Math.round(P.x) - 10 - cam.x, Math.round(P.y) - 25 - cam.y + bob, P.dir, f)]].sort((a, b) => a[0] - b[0]);
+  const sprites = [[moe.y, () => { sbc.clearRect(0, 0, 24, 30); moeSprite(sbc, 2, 3, moe.moving ? mf : 0); g.drawImage(sbuf, 0, 0, 20, 17, Math.round(moe.x - 9 * MOE_K - cam.x), Math.round(moe.y - 14 * MOE_K - cam.y), Math.round(20 * MOE_K), Math.round(17 * MOE_K)); }], [P.y, () => { sbc.clearRect(0, 0, 24, 30); girl(sbc, 2, 2, P.dir, f); g.drawImage(sbuf, 0, 0, 24, 30, Math.round(P.x - 12 * GIRL_K - cam.x), Math.round(P.y - 27 * GIRL_K - cam.y + bob), Math.round(24 * GIRL_K), Math.round(30 * GIRL_K)); }]].sort((a, b) => a[0] - b[0]);
   sprites.forEach(s => s[1]());
   if (TINT) {
     g.fillStyle = TINT; g.fillRect(0, 0, VW, VH);
@@ -720,7 +717,7 @@ function draw(now) {
 
 function drawPrompt(cam) {
   const n = nearest();
-  if (n && card.hidden && !P.target && n.kind !== 'nsx' && n.kind !== 'c5') { const verb = n.kind === 'cabin' ? 'go inside' : n.kind === 'door' ? 'go outside' : `open ${n.label}`; prompt.hidden = false; prompt.textContent = touch ? `Tap to ${verb}` : `Press E to ${verb}`; const pw = prompt.offsetWidth || 160, px = Math.max(pw / 2 + 8, Math.min(innerWidth - pw / 2 - 8, offX + (P.x - cam.x) * SC)); prompt.style.transform = `translate(${Math.round(px)}px,${Math.round(Math.max(60, offY + (P.y - 30 - cam.y) * SC))}px) translate(-50%,-100%)`; }
+  if (n && card.hidden && !P.target && n.kind !== 'nsx' && n.kind !== 'c5') { const verb = n.kind === 'cabin' ? 'go inside' : n.kind === 'door' ? 'go outside' : `open ${n.label}`; prompt.hidden = false; prompt.textContent = touch ? `Tap to ${verb}` : `Press E to ${verb}`; const pw = prompt.offsetWidth || 160, px = Math.max(pw / 2 + 8, Math.min(innerWidth - pw / 2 - 8, offX + (P.x - cam.x) * SC)); prompt.style.transform = `translate(${Math.round(px)}px,${Math.round(Math.max(60, offY + (P.y - 42 - cam.y) * SC))}px) translate(-50%,-100%)`; }
   else prompt.hidden = true;
 }
 /* ---------------- public ---------------- */
