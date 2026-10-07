@@ -1575,14 +1575,14 @@ function show(m) {
   if (m === 'portfolio') { pfEl.scrollTop = 0; document.getElementById('pf-name').focus({preventScroll: true}); }
   if (m === 'play' && window.World) window.World.start();
   document.title = m === 'play' ? 'Jillanne Youssef · Game' : 'Jillanne Youssef | Mechanical & Product Design Engineer';
-  window.track && track('section_view', {section: m});
+  window.track && track('page_mode', {mode: m});
 }
 const ORDER = ['led', 'level', 'google', 'teslacells', 'geotab', 'valbruna', 'evercloak', 'waterloo'];
 const TITLES = {led: 'RGBW LED controller', level: 'Smart lock hardware', google: 'Pixel Watch', teslacells: 'Battery cell equipment', geotab: 'Project Jarvis', valbruna: 'Steel mill CFD', evercloak: 'Dehumidifier enclosure', waterloo: 'FrostBot and a wind-up toy'};
 projEl.addEventListener('click', e => {
   const b = e.target.closest('[data-step]'); if (b && b.dataset.step) { location.replace('#project/' + b.dataset.step); return; }
-  const zb = e.target.closest('[data-zoom]'); if (zb) { const z = document.createElement('div'); z.id = 'zoom'; z.className = 'multi'; z.setAttribute('role', 'dialog'); z.setAttribute('aria-label', 'Full calculations'); z.innerHTML = '<div class="zstack">' + zb.dataset.zoom.split('|').map(u => `<img src="${u}" alt="Calculation slide">`).join('') + '</div>'; z.addEventListener('click', () => z.remove()); document.body.appendChild(z); return; }
-  const im = e.target.closest('figure img'); if (im) { const z = document.createElement('div'); z.id = 'zoom'; z.setAttribute('role', 'dialog'); z.setAttribute('aria-label', 'Enlarged image'); z.innerHTML = `<img src="${im.getAttribute('src')}" alt="${im.alt}">`; z.addEventListener('click', () => z.remove()); document.body.appendChild(z); }
+  const zb = e.target.closest('[data-zoom]'); if (zb) { window.track && track('calculations_open', {project: projOpenId, which: zb.textContent.trim().replace(/\s*→$/, '')}); const z = document.createElement('div'); z.id = 'zoom'; z.className = 'multi'; z.setAttribute('role', 'dialog'); z.setAttribute('aria-label', 'Full calculations'); z.innerHTML = '<div class="zstack">' + zb.dataset.zoom.split('|').map(u => `<img src="${u}" alt="Calculation slide">`).join('') + '</div>'; z.addEventListener('click', () => z.remove()); document.body.appendChild(z); return; }
+  const im = e.target.closest('figure img'); if (im) { window.track && track('image_zoom', {project: projOpenId, image: (im.getAttribute('src') || '').replace('img/', '')}); const z = document.createElement('div'); z.id = 'zoom'; z.setAttribute('role', 'dialog'); z.setAttribute('aria-label', 'Enlarged image'); z.innerHTML = `<img src="${im.getAttribute('src')}" alt="${im.alt}">`; z.addEventListener('click', () => z.remove()); document.body.appendChild(z); }
 });
 addEventListener('keydown', e => { const z = document.getElementById('zoom'); if (z && e.key === 'Escape') { e.stopImmediatePropagation(); z.remove(); } }, true);
 const PF_ORDER = ['led', 'level', 'geotab', 'waterloo'];
@@ -1598,13 +1598,15 @@ function projNav(id) {
   art.appendChild(nav);
 }
 function openProj(id) {
+  reportProjTime();
   projEl.querySelectorAll('[data-proj]').forEach(a => a.hidden = a.dataset.proj !== id);
   const a = projEl.querySelector(`[data-proj="${id}"]`);
   document.getElementById('proj-crumb').textContent = a ? a.dataset.crumb : '';
   document.getElementById('proj-close').textContent = mode === 'play' ? (matchMedia('(pointer: coarse)').matches ? '← Back to the game' : '← Back to the game (Esc)') : '← Back to portfolio';
   projNav(id);
   projEl.hidden = false; projEl.scrollTop = 0; document.getElementById('proj-close').focus({preventScroll: true});
-  window.track && track('project_view', {project: id});
+  window.track && track('case_study_open', {project: id, from: mode});
+  projOpenAt = performance.now(); projOpenId = id;
 }
 function route() {
   const h = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
@@ -1614,9 +1616,12 @@ function route() {
   show(h === 'portfolio' ? 'portfolio' : h === 'play' ? 'play' : 'welcome');
 }
 addEventListener('hashchange', () => { inner++; route(); });
+addEventListener('pagehide', () => reportProjTime());
 addEventListener('DOMContentLoaded', route);
 window.__openProject = id => { location.hash = 'project/' + id; };
-function closeProject() { if (inner > 0) history.back(); else location.hash = mode === 'play' ? 'play' : 'portfolio'; }
+let projOpenAt = 0, projOpenId = null;
+function reportProjTime() { if (projOpenId && projOpenAt) { const s = Math.round((performance.now() - projOpenAt) / 1000); window.track && track('case_study_time', {project: projOpenId, seconds: s, value: s}); } projOpenId = null; projOpenAt = 0; }
+function closeProject() { reportProjTime(); if (inner > 0) history.back(); else location.hash = mode === 'play' ? 'play' : 'portfolio'; }
 document.getElementById('proj-close').addEventListener('click', closeProject);
 addEventListener('keydown', e => { if (projEl.hidden || document.getElementById('zoom')) return; if (e.key === 'Escape' || ((e.key === 'e' || e.key === 'E') && mode === 'play')) { e.preventDefault(); e.stopImmediatePropagation(); closeProject(); } }, true);
 document.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => window.__openProject(b.dataset.open)));
@@ -1626,6 +1631,14 @@ document.querySelectorAll('[data-copy]').forEach(b => { const label = b.textCont
 window.__sfx = () => chime();
 
 
+/* analytics: sections scrolled into view (portfolio and case studies), once each per visit */
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  const seen = new Set();
+  const io = new IntersectionObserver(es => es.forEach(en => { if (!en.isIntersecting) return; const el = en.target; const key = el.dataset.track; if (seen.has(key)) return; seen.add(key); window.track && track('section_reached', {section: key}); }), {threshold: .45});
+  document.querySelectorAll('#pf .pf-sec, #pf .pf-contact, #pf .pf-hero').forEach(el => { const names = {'pf-work': 'selected work', 'pf-exp': 'experience', 'pf-first': 'earlier projects', 'pf-contact': 'contact'}; el.dataset.track = 'portfolio: ' + (names[el.id] || (el.classList.contains('pf-skills') ? 'tools' : el.classList.contains('pf-hero') ? 'top' : 'section')); io.observe(el); });
+  document.querySelectorAll('.proj-sheet[data-proj] .cs-sec, .proj-sheet[data-proj] .proj-ch').forEach(el => { const h = el.querySelector('h2'); el.dataset.track = el.closest('[data-proj]').dataset.proj + ': ' + (h ? h.textContent.replace(/^\s*\d+\s*/, '').trim() : 'section'); io.observe(el); });
+})();
 /* theme: light by default; remembered per visitor */
 (function () {
   const root = document.documentElement;

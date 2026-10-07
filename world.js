@@ -436,6 +436,7 @@ function roomOpen(o) {
   openCard(Object.assign({}, o, {kind: 'room'}));
 }
 function galleryCard(o) {
+  window.track && track('gallery_open', {gallery: o.gal});
   openId = o.id; let i = 0; const list = GAL[o.gal];
   const render = () => {
     card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
@@ -527,6 +528,7 @@ function exitRoom() {
   setTimeout(() => { scene = 'world'; resize(); const s = spotPx(L.find(l => l.id === 'cabin')); P.x = s.x; P.y = s.y + 6; P.dir = 'down'; P.target = null; autoId = 'cabin'; moe.x = P.x - 14; moe.y = P.y + 4; trail.length = 0; fade.classList.remove('on'); }, reduce ? 0 : 260);
 }
 function ledCard() {
+  window.track && track('stop_open', {stop: 'room: led strip'});
   openId = 'led'; autoId = 'led';
   const row = (k, lab, max) => `<label class="w-sl" for="led-${k}"><span>${lab}</span><input type="range" id="led-${k}" min="0" max="${max}" value="${led[k]}"><output id="led-${k}-v">${led[k]}</output></label>`;
   card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
@@ -544,7 +546,7 @@ function ledCard() {
 }
 function openCard(l) {
   window.track && l && track('stop_open', {stop: l.id});
-  if (l.kind === 'nsx' || l.kind === 'c5') { autoId = l.id; window.__engine && window.__engine(l.kind); showDrive(l.kind); return; }
+  if (l.kind === 'nsx' || l.kind === 'c5') { window.track && track('car_rev', {car: l.kind}); autoId = l.id; window.__engine && window.__engine(l.kind); showDrive(l.kind); return; }
   if (l.kind === 'cabin') { enterRoom(); return; }
   if (l.kind === 'door') { exitRoom(); return; }
   if (l.kind === 'led') { ledCard(); return; }
@@ -569,6 +571,7 @@ function openCard(l) {
 /* ---------------- arcade: a tiny runner on the TV ---------------- */
 let arc = null;
 function arcadeCard() {
+  window.track && track('arcade_open');
   openId = 'arcade';
   let best = 0; try { best = +localStorage.getItem('jy-runner-best') || 0; } catch (e) {}
   card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
@@ -610,7 +613,7 @@ function arcadeCard() {
   requestAnimationFrame(frame);
   card.querySelector('#rn').focus && c.setAttribute('tabindex', '0');
 }
-function closeCard() { if (openId === 'arcade') arc = null; if (!card.hidden) { card.hidden = true; openId = null; cv.focus({preventScroll: true}); } }
+function closeCard() { if (openId === 'arcade' && arc) { window.track && track('arcade_score', {score: Math.floor(arc.best || 0), value: Math.floor(arc.best || 0)}); arc = null; } if (!card.hidden) { card.hidden = true; openId = null; cv.focus({preventScroll: true}); } }
 
 /* ---------------- tour + bar ---------------- */
 const tourPos = document.getElementById('tour-pos');
@@ -838,6 +841,7 @@ function enterTrack(kind) {
   }, reduce ? 0 : 260);
 }
 function leaveTrack(now) {
+  if (drv) window.track && track('drive_end', {car: drv.kind, top_speed: drv.top, cones: drv.cones});
   const done = () => { scene = 'world'; drv = null; keys.clear(); tui.hidden = true; document.getElementById('world-bar').hidden = false; document.getElementById('tod').hidden = false; resize(); P.x = worldPos.x; P.y = worldPos.y; trail.length = 0; moe.x = P.x - 14; moe.y = P.y + 6; };
   if (now) { done(); return; }
   const fade = document.getElementById('fade'); fade.classList.add('on'); setTimeout(() => { done(); fade.classList.remove('on'); cv.focus({preventScroll: true}); }, reduce ? 0 : 260);
