@@ -696,7 +696,7 @@ function step(now) {
     P.x = Math.round(boat.x0 + (boat.x1 - boat.x0) * e); P.y = Math.round(boat.y0 + (boat.y1 - boat.y0) * Math.min(1, boat.t * 1.6)); P.dir = boat.x1 > boat.x0 ? 'right' : 'left'; P.moving = false;
     moe.x = P.x + (boat.x1 > boat.x0 ? -12 : 12); moe.y = P.y + 2; trail.length = 0;
     const st = Math.floor(boat.t * 3); if (st > boat.strokes && boat.t < .95) { boat.strokes = st; window.__splash && window.__splash(.55); }
-    if (boat.t >= 1) { boat = null; boatCool = .8; P.target = null; P.after = null; landDir = boat0dir; }
+    if (boat.t >= 1) { const tg = P.target; boat = null; boatCool = .8; const keep = tg && !(scene === 'world' && tiles[idx(Math.floor(tg.x / TS), Math.floor(tg.y / TS))] === T.WATER) && (tg.x - P.x) * boat0dir >= -4; if (!keep) { P.target = null; P.after = null; } P.stuck = 0; }
     draw(now); requestAnimationFrame(step); return;
   }
   const sp = 175 * dt, len = Math.hypot(vx, vy) || 1;
@@ -707,7 +707,8 @@ function step(now) {
     const ox = P.x, oy = P.y;
     const wet = (x, y) => scene === 'world' && tiles[idx(Math.floor(x / TS), Math.floor(y / TS))] === T.WATER;
     boatCool = Math.max(0, boatCool - dt);
-    if (!boatCool && !wet(P.x, P.y) && Math.abs(vx) > Math.abs(vy) * .25 && [8, 16, 24, 30].some(k => wet(P.x + Math.sign(vx) * k, P.y))) {
+    const rxNow = riverX(Math.floor(P.y / TS)) * TS + 8, across = P.target && (P.x - rxNow) * (P.target.x - rxNow) < 0, sx = across ? Math.sign(rxNow - P.x) : Math.sign(vx);
+    if (!boatCool && !wet(P.x, P.y) && (across || Math.abs(vx) > Math.abs(vy) * .25) && [8, 16, 24, 30].some(k => wet(P.x + sx * k, P.y))) {
       const ty = Math.floor(P.y / TS), rx = riverX(ty) * TS + 8, dirR = P.x < rx ? 1 : -1;
       let tx = Math.floor(P.x / TS) + dirR; while (tx > 0 && tx < MW - 1 && tiles[idx(tx, ty)] === T.WATER) tx += dirR;
       const okLand = (x, y) => y > 0 && y < MH - 1 && tiles[idx(x, y)] !== T.WATER && tiles[idx(x, y)] !== T.OCEAN && !block[idx(x, y)] && !block[idx(x + dirR, y)];
@@ -718,7 +719,7 @@ function step(now) {
       if (!feetBlocked(P.x + vx, P.y) && !wet(P.x + vx + Math.sign(vx) * 4, P.y)) P.x += vx;
       if (!feetBlocked(P.x, P.y + vy) && !wet(P.x, P.y + vy + Math.sign(vy) * 3)) P.y += vy;
     }
-    if (P.target && Math.hypot(P.x - ox, P.y - oy) < sp * .2) { P.stuck += dt; if (P.stuck > .35) { const l = P.after; P.target = null; P.after = null; if (l && Math.hypot(spotPx(l).x - P.x, spotPx(l).y - P.y) < 60) openCard(l); } } else P.stuck = 0;
+    if (P.target && !across && Math.hypot(P.x - ox, P.y - oy) < sp * .2) { P.stuck += dt; if (P.stuck > .35) { const l = P.after; P.target = null; P.after = null; if (l && Math.hypot(spotPx(l).x - P.x, spotPx(l).y - P.y) < 60) openCard(l); } } else P.stuck = 0;
     walkT += dt; trail.push([P.x, P.y]); if (trail.length > 60) trail.shift();
   }
   // Moe follows a few steps behind (outside only)
