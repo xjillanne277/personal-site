@@ -188,7 +188,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .proj h2{display:flex;gap:12px;align-items:baseline;margin:0 0 14px;font:700 clamp(22px,3vw,30px)/1.15 var(--f-pixel);color:#2b2119;text-wrap:balance}
 .proj h2 span{font:500 17px/1 "IBM Plex Mono",ui-monospace,monospace;color:#c0603f}
 .proj p{margin:0 0 12px;max-width:62ch}
-.proj-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:28px;align-items:start;margin-top:14px}
+.proj-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;align-items:start;margin-top:14px}
 @media (max-width:760px){.proj-grid{grid-template-columns:minmax(0,1fr)}}
 .proj-figs{display:grid;gap:14px}
 .proj figure{margin:0}
@@ -241,6 +241,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .proj-hero img{border:1px solid #d9dde2}
 .proj-wide{margin:18px 0 6px}
 .proj-wide img{width:100%;height:auto}
+.proj-slide img{max-height:none!important;object-fit:contain}
 .proj-calc{font:400 14px/1.6 "IBM Plex Mono",ui-monospace,monospace;background:#f6f8fa;border:1px solid #d9dde2;border-left:3px solid #8a5a3c}
 .proj-calc b{color:#14181d;font-weight:600}
 .proj-why{margin:12px 0;padding:10px 14px;border:1px solid #d9dde2;border-radius:3px;background:#fbfbfc}
@@ -564,7 +565,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
           <div class="zones" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div>
           <div class="sheet-views" data-open="led" role="button" tabindex="-1" aria-hidden="true">
             <figure class="v main"><img src="img/led-exploded.webp" alt="" loading="lazy"><figcaption><b>A</b>Exploded assembly</figcaption></figure>
-            <figure class="v dark"><img src="img/pcb-route2.webp" alt="" loading="lazy"><figcaption><b>B</b>PCB placement and routing</figcaption></figure>
+            <figure class="v dark"><img src="img/slide-21.webp" alt="" loading="lazy"><figcaption><b>B</b>PCB placement and routing</figcaption></figure>
             <figure class="v"><img src="img/led-render.webp" alt="" loading="lazy"><figcaption><b>C</b>SLA enclosure</figcaption></figure>
           </div>
           <div class="sheet-foot">
@@ -788,7 +789,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
           <figure><img src="img/led-oled.webp" alt="OLED dashboard with strip selection, RGBW values and a brightness bar"><figcaption>Fig. 3 · OLED dashboard.</figcaption></figure>
         </div>
       </div>
-      <figure class="proj-wide"><img src="img/p1-wiring.webp" alt="Wiring simulation of the P1 circuit"><figcaption>Fig. 4 · P1 wiring, simulated before building.</figcaption></figure>
+      <figure class="proj-wide proj-slide"><img src="img/slide-12.webp" alt="P1 wiring simulation" loading="lazy"><figcaption>Fig. 4 · P1 wiring, simulated before building.</figcaption></figure>
     </section>
 
     <section class="proj-ch" id="led-4">
@@ -816,8 +817,8 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
         <div class="proj-why"><p class="q">Why move all sliders onto ADC1 in Rev B?</p><p>On the ESP32, ADC2 can’t be read while Wi-Fi is running. Wireless updates were a core requirement, so every analog input belongs on ADC1 (GPIO32–39).</p></div>
         <div class="proj-why"><p class="q">Why the bulk and decoupling capacitors?</p><p>A 1000 µF electrolytic at the 12 V input absorbs the current steps when strips change brightness quickly, keeping the rail from sagging. A 100 nF ceramic beside every IC (plus 10 µF at the display) handles local high-frequency demand. Pull resistors on the ESP32’s boot-strapping pins make sure it always starts in run mode.</p></div>
       </div>
-      <figure class="proj-wide"><img src="img/sch-reva.webp" alt="Rev A schematic: 12 V input, 74HCT244 buffer, MCP23017 with 16 buttons, six slide potentiometers, ESP32, 3.5 inch display, eight LED outputs"><figcaption>Fig. 5 · Schematic Rev A.</figcaption></figure>
-      <figure class="proj-wide"><img src="img/sch-revb.webp" alt="Rev B schematic: 13.5 A fuse, LM2596, two 74AHCT125 buffers, MCP23017 module, four slide potentiometers, ESP32, display, six LED outputs"><figcaption>Fig. 6 · Schematic Rev B, built for the schedule.</figcaption></figure>
+      <figure class="proj-wide proj-slide"><img src="img/slide-17.webp" alt="Rev A schematic" loading="lazy"><figcaption>Fig. 5 · Schematic Rev A.</figcaption></figure>
+      <figure class="proj-wide proj-slide"><img src="img/slide-18.webp" alt="Rev B schematic" loading="lazy"><figcaption>Fig. 6 · Schematic Rev B, built for the schedule.</figcaption></figure>
     </section>
 
     <section class="proj-ch" id="led-5">
@@ -825,13 +826,11 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
       <p><b>Architecture.</b> A 12 V, 144 W adapter feeds the barrel jack. The 12 V rail goes straight to the LED strips. An LM2596 buck converter supplies 5 V for the display and the level shifters, and the ESP32’s 3.3 V regulator powers the logic (ESP32 and MCP23017). All grounds are common.</p>
       <div class="proj-grid">
         <div>
-          <div class="proj-calc"><b>Fuse at the 12 V input</b><br>Continuous load: I<sub>rated</sub> = 1.5 × I<sub>max</sub> = 1.5 × 9 A = <b>13.5 A</b><br>V<sub>rated</sub> &gt; V<sub>in</sub> = 12 V → <b>32 V</b> (common off-the-shelf rating)<br>Type: <b>slow-blow</b></div>
           <div class="proj-why"><p class="q">Why 1.5× the load?</p><p>Fuses are derated for continuous operation. Running one at its full rating for 10+ hours a day causes nuisance blows and heating, so the rated current sits comfortably above the maximum continuous draw.</p></div>
           <div class="proj-why"><p class="q">Why slow-blow?</p><p>At power-up the uncharged 1000 µF capacitor looks almost like a short, and the inrush spike can trip a fast-blow fuse even though nothing is wrong. A slow-blow fuse rides through that transient (the capacitor charges in about five time constants) while still opening on a sustained fault.</p></div>
         </div>
         <div class="proj-figs">
-          <figure><img src="img/fuse-calc.webp" alt="Handwritten fuse sizing notes"><figcaption>Fig. 7 · Fuse sizing notes.</figcaption></figure>
-          <figure><img src="img/fuse-curves.webp" alt="Capacitor charging voltage and current curves over time constants"><figcaption>Fig. 8 · Capacitor charging: the inrush the fuse has to tolerate.</figcaption></figure>
+          <figure class="proj-wide proj-slide"><img src="img/slide-19.webp" alt="Fuse sizing calculation and capacitor charging curves" loading="lazy"><figcaption>Fig. 7 · Fuse sizing.</figcaption></figure>
         </div>
       </div>
     </section>
@@ -844,9 +843,9 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
         <div class="proj-why"><p class="q">Grounding strategy</p><p>Ground pours on both layers, stitched together, give every return current a short, low-impedance path and shield the analog slider traces from the LED data lines. Ground pads connect with thermal reliefs so they can still be hand-soldered.</p></div>
         <div class="proj-why"><p class="q">Placement</p><p>Connectors sit on the board edges to match the enclosure openings, sliders and buttons line up with the top-cover slots, and decoupling capacitors sit right beside their IC power pins. High-current 12 V paths to the LED terminals are kept short and wide.</p></div>
       </div>
-      <figure class="proj-wide"><img src="img/pcb-route2.webp" alt="PCB placement and routing in KiCad"><figcaption>Fig. 9 · Placement and routing.</figcaption></figure>
-      <figure class="proj-wide"><img src="img/pcb-ground.webp" alt="Ground pour across the board with a close-up of thermal relief pads"><figcaption>Fig. 10 · Ground pour and thermal reliefs.</figcaption></figure>
-      <figure class="proj-wide"><img src="img/pcb-renders.webp" alt="3D renders of the top and bottom of the PCB"><figcaption>Fig. 11 · Board renders, top and bottom.</figcaption></figure>
+      <figure class="proj-wide proj-slide"><img src="img/slide-21.webp" alt="PCB placement and routing in KiCad" loading="lazy"><figcaption>Fig. 8 · Placement and routing.</figcaption></figure>
+      <figure class="proj-wide proj-slide"><img src="img/slide-22.webp" alt="Ground pour and thermal relief pads" loading="lazy"><figcaption>Fig. 9 · Grounding strategy.</figcaption></figure>
+      <figure class="proj-wide proj-slide"><img src="img/slide-23.webp" alt="3D renders of the top and bottom of the PCB" loading="lazy"><figcaption>Fig. 10 · Board renders, top and bottom.</figcaption></figure>
     </section>
 
     <section class="proj-ch" id="led-7">
@@ -854,15 +853,13 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
       <p>The LM2596 module’s manufacturer notes say no heatsink is needed below 2 A. Our load is far below that, but I wanted to verify the claim myself before sealing the module inside a plastic enclosure.</p>
       <div class="proj-grid">
         <div>
-          <div class="proj-calc">Loads on the 5 V output: display 0.12 A + ESP32 DevKit 0.25 A = <b>0.37 A</b><br>P<sub>out</sub> = 5 V × 0.37 A = <b>1.85 W</b><br>Measured efficiency at 0.37 A (load sweep at 12 V): <b>79%</b><br>P<sub>in</sub> = 1.85 / 0.79 = <b>2.34 W</b> → heat Q = <b>0.49 W</b></div>
           <div class="proj-why"><p class="q">The model</p><p>A steady-state thermal resistance network from the IC to ambient, with an upward convective path and a downward path through the PCB. Each interface is a resistance (for example, convection from the top of the IC: R = 1/(hA) with h = 7 W/m²·K for still air), combined into an equivalent R<sub>eq</sub> ≈ 130 °C/W.</p></div>
           <div class="proj-why"><p class="q">Assumptions, all chosen to be conservative</p><p>All heat comes from the one IC (no I²R losses elsewhere), the IC is at a uniform temperature, and radiation is ignored. Each assumption overestimates temperature, so if this passes, the real part passes.</p></div>
-          <div class="proj-calc">ΔT = Q × R<sub>eq</sub> = 0.49 × 130 = <b>63.9 °C</b><br>T<sub>IC</sub> = 20 + 63.9 = <b>83.9 °C</b>, below the 125 °C datasheet maximum<br>→ <b>no heatsink required</b></div>
         </div>
         <div class="proj-figs">
-          <figure><img src="img/buck-test.webp" alt="LM2596 load sweep and power calculations"><figcaption>Fig. 12 · Load sweep and power balance.</figcaption></figure>
-          <figure><img src="img/thermal-model.webp" alt="Simplified thermal model with upward and downward heat paths"><figcaption>Fig. 13 · Thermal model.</figcaption></figure>
-          <figure><img src="img/thermal-calc.webp" alt="Thermal resistance network and final temperature calculation"><figcaption>Fig. 14 · Resistance network and result.</figcaption></figure>
+          <figure class="proj-wide proj-slide"><img src="img/slide-24.webp" alt="LM2596 load sweep and power calculations" loading="lazy"><figcaption>Fig. 11 · Load sweep and power balance.</figcaption></figure>
+          <figure class="proj-wide proj-slide"><img src="img/slide-25.webp" alt="Simplified thermal model with heat paths" loading="lazy"><figcaption>Fig. 12 · Thermal model.</figcaption></figure>
+          <figure class="proj-wide proj-slide"><img src="img/slide-26.webp" alt="Thermal resistance network and result" loading="lazy"><figcaption>Fig. 13 · Thermal resistance calculations.</figcaption></figure>
         </div>
       </div>
     </section>
@@ -885,15 +882,14 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
       </div>
       <div class="proj-grid">
         <div>
-          <div class="proj-calc"><b>Snap-fit check</b> (cantilever with a step in cross-section)<br>Required deflection at the tip: 0.5 mm<br>I<sub>slender</sub> = bh³/12 = 6 × 1.3³ / 12 = 1.0985 mm⁴ (A to B, 4 mm)<br>I<sub>wide</sub> = 18 × 1.3³ / 12 = 3.2955 mm⁴ (B to C, 2 mm)<br>L/I<sub>eq</sub> = 4/1.0985 + 2/3.2955 → I<sub>eq</sub> = 1.412 mm⁴<br>F = 3δEI/L³ = 0.5 × 3 × 1370 × 1.412 / 6³ = <b>13.45 N</b><br>σ<sub>B</sub> = My/I = (13.45 × 4)(0.65)/1.0985 = <b>31.85 MPa</b><br>σ<sub>C</sub> = (13.45 × 6)(0.65)/3.2955 = 15.9 MPa<br>Flexural yield (Tough 1500 V2) = 41 MPa → <b>FoS ≈ 1.29</b></div>
           <div class="proj-why"><p class="q">Why accept a factor of safety of 1.29?</p><p>It’s a prototype, and the method is conservative: it ignores deflection above C, which overestimates stress. The fillet is a stress concentration, so I documented that the geometry gets revised if any yielding appears. Production moves to screws anyway.</p></div>
         </div>
         <div class="proj-figs">
-          <figure><img src="img/led-exploded.webp" alt="Exploded view of the enclosure, PCBA and display"><figcaption>Fig. 15 · Exploded assembly.</figcaption></figure>
-          <figure><img src="img/led-snapfit.webp" alt="Close-up of the snap-fit hook"><figcaption>Fig. 16 · Snap-fit.</figcaption></figure>
+          <figure><img src="img/led-exploded.webp" alt="Exploded view of the enclosure, PCBA and display"><figcaption>Fig. 14 · Exploded assembly.</figcaption></figure>
+          <figure class="proj-wide proj-slide"><img src="img/slide-31.webp" alt="Snap-fit calculation summary" loading="lazy"><figcaption>Fig. 15 · Snap-fit calculations.</figcaption></figure><figure class="proj-wide proj-slide"><img src="img/slide-35.webp" alt="Full snap-fit calculation" loading="lazy"><figcaption>Fig. 16 · Snap-fit calculation, worked.</figcaption></figure>
         </div>
       </div>
-      <figure class="proj-wide"><img src="img/encl-features.webp" alt="Annotated top and bottom covers of the enclosure"><figcaption>Fig. 17 · Enclosure features, annotated.</figcaption></figure>
+      <figure class="proj-wide proj-slide"><img src="img/slide-30.webp" alt="Annotated top and bottom covers" loading="lazy"><figcaption>Fig. 17 · Enclosure features.</figcaption></figure>
     </section>
 
     <section class="proj-ch" id="led-9">
@@ -905,7 +901,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
         <div class="proj-why"><p class="q">Hysteresis before updating the LEDs</p><p>The strips only update when a value changes by more than a threshold. Otherwise the last bit of ADC noise would make colours shimmer and rewrite every pixel for no reason.</p></div>
         <div class="proj-why"><p class="q">Brightness as a scale factor</p><p>Brightness multiplies all four channels (bf = Br/255), so dimming keeps the colour’s hue instead of washing it out. Selected strips are written as GRBW frames with NeoPixelBus.</p></div>
       </div>
-      <figure class="proj-wide"><img src="img/firmware-flow.webp" alt="Firmware flowchart: setup, loop, button debounce, slider filtering, brightness factor, hysteresis check, LED and display updates"><figcaption>Fig. 18 · Firmware flow.</figcaption></figure>
+      <figure class="proj-wide proj-slide"><img src="img/slide-33.webp" alt="Firmware flowchart" loading="lazy"><figcaption>Fig. 18 · Firmware flow.</figcaption></figure>
     </section>
 
     <section class="proj-ch" id="led-10">
