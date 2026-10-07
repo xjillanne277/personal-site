@@ -824,6 +824,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
 .cs-cap{margin:4px 0 8px;font:500 13px "IBM Plex Mono",monospace;color:#59626c}
 @media (max-width:760px){.cs-boxes{grid-template-columns:minmax(0,1fr)}}
 html[data-theme="dark"] .cs-box{background:#26292d;border-color:#3a3e44}html[data-theme="dark"] .cs-box p,html[data-theme="dark"] .cs-box ol{color:#d6d4cf}
+.cs-thumbs{margin:8px 0 4px}.cs-thumbs .cs-fig img{aspect-ratio:4/3;object-fit:contain;background:#f6f7f8;cursor:zoom-in}
 #xp-dlg{border:0;padding:0;border-radius:14px;max-width:720px;width:calc(100% - 32px);max-height:86vh;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 #xp-dlg::backdrop{background:rgba(17,20,24,.55)}
 #xp-dlg .xp-in{padding:28px 32px 30px;overflow:auto;max-height:86vh;box-sizing:border-box}
@@ -1030,7 +1031,12 @@ html[data-theme="dark"] .cs-box{background:#26292d;border-color:#3a3e44}html[dat
         <div><figure class="cs-fig"><img src="img/cs-render.webp" alt="Render of the final controller" loading="lazy"><figcaption></figcaption></figure><b>Final · custom PCB</b><p>My own 2-layer board in an SLA-printed enclosure, handed off to the studio.</p></div>
       </div>
       <div class="cs-box"><span class="cs-box-t">Before ordering P1 parts: simulation</span><p>While waiting for components, I built P1 in an online ESP32 simulator to check the pin mapping, the UI flow and multi-strip control. Debugging the software and wiring early cut bring-up time once the hardware arrived.</p></div>
-      <figure class="cs-fig" style="margin:0 0 6px"><img src="img/led-p1-sim.webp" alt="ESP32 simulation of P1: OLED, five sliders, four buttons and four LED rings on a breadboard" loading="lazy"><figcaption>The P1 simulation: ESP32, OLED, R/G/B/W and brightness sliders, strip-select buttons and four LED strips (shown as rings).</figcaption></figure>
+      <div class="cs-steps cs-thumbs">
+        <figure class="cs-fig"><img src="img/led-p1-sim.webp" alt="ESP32 simulation of P1: OLED, five sliders, four buttons and four LED strips shown as rings" loading="lazy"><figcaption>Simulation: ESP32, OLED, R/G/B/W and brightness sliders, strip-select buttons, four LED strips (shown as rings).</figcaption></figure>
+        <figure class="cs-fig"><img src="img/led-p1-oled.webp" alt="OLED dashboard showing the selected strip, RGBW values and a brightness bar" loading="lazy"><figcaption>OLED dashboard: selected strip, RGBW values (0–255) and brightness (0–100%).</figcaption></figure>
+        <figure class="cs-fig"><img src="img/led-p1-bringup.webp" alt="P1 hardware bring-up on a breadboard driving LED strips" loading="lazy"><figcaption>P1 bring-up on the bench.</figcaption></figure>
+      </div>
+      <p class="cs-cap">Click any image to enlarge.</p>
       <figure class="cs-fig fy-video" style="margin-top:22px"><video style="max-height:none;height:auto;background:none" src="vid/led-p1.mp4" poster="img/led-p1-poster.webp" autoplay muted loop playsinline preload="metadata" aria-label="P1 prototype driving 3 LED strips"></video><figcaption>P1 driving 3 LED strips.</figcaption></figure>
     </section>
 
