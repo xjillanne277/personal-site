@@ -798,6 +798,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
 #xp-dlg .pf-btn{display:inline-flex;align-items:center;padding:10px 18px;border-radius:999px;background:var(--ink);color:var(--bg);border:0;font:600 15px var(--f-head);cursor:pointer}
 #xp-dlg .xp-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 10px}#xp-dlg .xp-h h3{margin:0}#xp-dlg .tag{font:500 11px/1.3 var(--f-mono);border:1px solid var(--line);border-radius:4px;padding:3px 7px;color:var(--mute);white-space:nowrap}#xp-dlg .tag.ok{color:var(--green,#2f7a5f);border-color:#bfe0cf;background:#eef7f2}html[data-theme="dark"] #xp-dlg .tag.ok{background:#1f3329;border-color:#2f5240;color:#6fcf9f}html[data-theme="dark"] #xp-dlg .tag{border-color:#44484e}
 #xp-dlg .xp-fig{margin:4px 0 8px}#xp-dlg .xp-fig img,#xp-dlg .xp-fig video{display:block;width:100%;max-height:420px;object-fit:contain;background:#0001;border-radius:8px}#xp-dlg .xp-fig figcaption{font-size:13px;color:var(--mute);margin-top:6px;line-height:1.45}#xp-dlg .xp-media{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media (max-width:640px){#xp-dlg .xp-media{grid-template-columns:1fr}}
+.gt-limits{margin:18px 0 8px;padding:14px 18px;border-left:3px solid var(--acc,#c0472c);background:rgba(192,71,44,.06);border-radius:0 8px 8px 0}.gt-limits b{display:block;font:600 12px var(--f-mono,monospace);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}.gt-limits p{margin:0;line-height:1.55}
 #xp-dlg{border:0;padding:0;border-radius:14px;max-width:720px;width:calc(100% - 32px);max-height:86vh;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 #xp-dlg::backdrop{background:rgba(17,20,24,.55)}
 #xp-dlg .xp-in{padding:28px 32px 30px;overflow:auto;max-height:86vh;box-sizing:border-box}
@@ -1205,13 +1206,13 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
       </dl>
     </header>
     <figure class="proj-wide fy-video" style="margin-top:28px"><video src="vid/jarvis-road.mp4" poster="img/jarvis-road-poster.webp" autoplay muted loop playsinline preload="metadata" aria-label="Front camera object detection on a highway, boxing cars and a bus"></video><figcaption>Fig. 1 · Object detection from the front camera.</figcaption></figure>
+    <aside class="gt-limits"><b>Limitations</b><p>The output is noisy: boxes flicker between frames and some labels are wrong. Time and compute were the limits. We had a week, and not enough compute to train a better model.</p></aside>
     <section class="proj-ch">
       <h2><span>01</span> Learning computer vision in a week</h2>
       <p class="proj-did">Geotab’s 10th Intern Innovation Challenge asked teams to build a video telematics product using AI. I’m a mechanical engineer and had never trained a model.</p>
       <p class="proj-learn">So I spent two days learning how to train computer vision models, five days building one that worked, and the last three polishing it with my team.</p>
       <p class="proj-did">I owned the code and the video pipeline. We built two models, one watching the driver and one doing object detection out the front. I trained the in-cabin one to tell attentive driving from distracted driving (adjusting the radio, drinking, talking), with PII blurred out of the video. My teammates built a driver score on top of it.</p>
       <p class="proj-res">Ours was the only model in the competition that fully worked, and we placed <b>1st out of 11 teams</b>.</p>
-      <p class="proj-did">The clip at the top is noisy: boxes flicker and some labels are wrong. Time and compute were the limits. We had a week, and not enough compute to train a better model.</p>
     </section>
     <figure class="proj-wide proj-slide"><img src="img/gt-app.webp" alt="Five screens of the driver app: login, score summary, score report, AI score improver and profile" loading="lazy"><figcaption>Fig. 2 · The driver app, designed in Figma.</figcaption></figure>
       <figure class="proj-wide proj-slide"><img src="img/gt-cv.webp" alt="Computer vision on dashcam footage: tailgating and object detection, street sign detection, and PII blurring with attentive and distracted driving indicators" loading="lazy"><figcaption>Fig. 3 · The models running on real footage.</figcaption></figure>
