@@ -112,7 +112,6 @@ function bake() {
   for (let y = MH; y < MH + SKIRT; y++) for (let x = 0; x < MW; x++) {
     const t = tiles[idx(x, MH - 1)], X = x * TS, Y = y * TS, s = x * 31 + y * 17;
     R(m, X, Y, TS, TS, {0: '#8fbf7f', 1: '#d7c98c', 2: '#5b9bd5', 5: '#ead9a6', 6: '#3f7fb8'}[t] || '#8fbf7f');
-    if (t === T.GRASS && rnd(s + 3) > .55) R(m, X + 2, Y + 3, 10, 8, '#e8eef2');
     if (t === T.WATER && rnd(s) > .6) R(m, X + rnd(s + 1) * 10, Y + rnd(s + 2) * 14, 4, 1, '#8fc1ea');
   }
   // river banks: one long timber board each side, posts every few metres, and a small dock where the path meets the water
@@ -297,6 +296,7 @@ function resize() {
   const bar = document.getElementById('world-bar'), barH = ((bar && bar.offsetHeight) || 56) + 14;
   const mw = MW * TS, mh = MH * TS;
   SC = Math.max(innerWidth / mw, (innerHeight - barH * .5) / mh, 1.6);
+  SC = Math.min(SC, Math.max(innerWidth / (mw * .6), 1.6)); // tall screens: keep at least 60% of the map's width in view
   FIT = innerWidth / SC >= mw * .72;
   root.classList.toggle('fit', FIT);
   VW = Math.ceil(innerWidth / SC); VH = Math.ceil(innerHeight / SC); cv.width = VW; cv.height = VH; g.imageSmoothingEnabled = false; cvFull();
@@ -686,10 +686,16 @@ function step(now) {
   const nn = nearest(8);
   draw(now); requestAnimationFrame(step);
 }
+// forest tile that fills any space beyond the map (tall or very wide screens)
+const ftile = document.createElement('canvas'); ftile.width = 48; ftile.height = 40;
+{ const fc = ftile.getContext('2d'); fc.fillStyle = '#6f9f63'; fc.fillRect(0, 0, 48, 40); const P = (x, y, w, h, c) => { fc.fillStyle = c; fc.fillRect(x, y, w, h); };
+  [[4, 6], [28, 22]].forEach(([x, y]) => { P(x + 3, y + 14, 10, 3, 'rgba(0,0,0,.12)'); P(x + 7, y + 11, 2, 5, '#6b4a35'); for (let i = 0; i < 3; i++) { const ww = 4 + i * 3, y0 = y - 2 + i * 4; P(x + 8 - ww, y0 + 3, ww * 2, 3, '#2f5e46'); P(x + 8 - ww + 1, y0 + 2, ww * 2 - 2, 1, '#3b7155'); } });
+  P(22, 4, 1, 1, '#88b87a'); P(40, 12, 1, 1, '#88b87a'); P(14, 32, 1, 1, '#88b87a'); }
+const forest = g.createPattern(ftile, 'repeat');
 const sbuf = document.createElement('canvas'); sbuf.width = 24; sbuf.height = 30; const sbc = sbuf.getContext('2d'); const GIRL_K = 1.4, MOE_K = 1.6;
 function draw(now) {
   const cam = camera();
-  g.fillStyle = '#2f5e46'; g.fillRect(0, 0, VW, VH);
+  g.fillStyle = forest; forest.setTransform && forest.setTransform(new DOMMatrix().translate(-cam.x, -cam.y)); g.fillRect(0, 0, VW, VH);
   g.drawImage(cur().map, -cam.x, -cam.y);
   // cars (dynamic so headlights can pop)
   const nsx = L.find(l => l.id === 'nsx'), c5 = L.find(l => l.id === 'c5');

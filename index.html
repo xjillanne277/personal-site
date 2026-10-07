@@ -562,6 +562,28 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
   .pf-play-go{grid-column:2}
 }
 
+/* write-ups: use the width, keep pictures modest, click to enlarge */
+.proj-sheet{max-width:1180px}
+.proj p{max-width:70ch}
+@media (min-width:1000px){.proj-grid{grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr)!important;gap:36px!important}}
+.proj-figs{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.proj figure img{width:100%;height:auto;max-height:340px;object-fit:contain;background:#fff;cursor:zoom-in}
+.proj-hero img{max-height:300px!important}
+.proj-slide{grid-column:1/-1}
+.proj-slide img{max-height:480px!important;width:100%}
+.proj figure video{max-height:380px}
+.fy-video video{max-height:420px!important}
+.fy-grid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.lv-grid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))!important}
+.lv-grid img{max-height:200px}
+.proj-nav{display:flex;gap:8px;margin-left:auto}
+.proj-nav button{font:600 14px "IBM Plex Sans",system-ui,sans-serif;background:#f1f2f4;color:#1f2328;border:1px solid #d9dde2;border-radius:7px;padding:8px 12px;cursor:pointer;white-space:nowrap}
+.proj-nav button:hover{border-color:#8a5a3c}
+.proj-nav button:disabled{opacity:.4;cursor:default}
+.proj-bar .proj-resume{margin-left:14px}
+@media (max-width:760px){.proj-crumb{display:none}.proj-nav .nx-label{display:none}.proj-bar .proj-resume{display:none}}
+#zoom{position:fixed;inset:0;z-index:40;background:rgba(15,18,22,.88);display:grid;place-items:center;padding:24px;cursor:zoom-out}
+#zoom img{max-width:100%;max-height:100%;object-fit:contain;background:#fff;border-radius:6px}
 /* ---------- welcome doors ---------- */
 .doors{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:26px 0 0;padding:0;list-style:none}
 .doors li{display:flex}
@@ -757,6 +779,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
   <div class="proj-bar">
     <button type="button" class="proj-back" id="proj-close">← Back to the world</button>
     <span class="proj-crumb" id="proj-crumb"></span>
+    <span class="proj-nav"><button type="button" id="proj-prev">← Previous</button><button type="button" id="proj-next"><span class="nx-label">Next: </span><span id="proj-next-t"></span> →</button></span>
     <a class="proj-resume" href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
   </div>
   <article class="proj-sheet" data-proj="led" data-crumb="Tesla · Lighting, Switches &amp; Sensors · Fall 2025">
@@ -1022,8 +1045,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
         </div>
         <div class="proj-figs">
           <figure><img src="img/cycle-fail.webp" alt="Photos of a subassembly failure found during cycle testing"><figcaption>A failure caught at 3.7M cycles.</figcaption></figure>
-          </div><h3 class="fy-h">DFM parts</h3><div class="proj-figs fy-grid2 lv-grid"><figure><img src="img/lv-dfm1.webp" alt="Injection-moulded eyelet" loading="lazy"><figcaption>Eyelet</figcaption></figure><figure><img src="img/lv-dfm4.webp" alt="The same eyelet from another angle" loading="lazy"><figcaption>Eyelet, second view</figcaption></figure><figure><img src="img/lv-dfm2.webp" alt="Injection-moulded plastic holder" loading="lazy"><figcaption>Plastic holder</figcaption></figure><figure><img src="img/lv-dfm3.webp" alt="The same plastic holder from another angle" loading="lazy"><figcaption>Plastic holder, second view</figcaption></figure>
-        </div>
+          </div><h3 class="fy-h">DFM: before and after</h3><div class="proj-figs fy-grid2 lv-grid"><figure><img src="img/lv-dfm4.webp" alt="Eyelet before DFM" loading="lazy"><figcaption>Eyelet, pre-DFM</figcaption></figure><figure><img src="img/lv-dfm1.webp" alt="Eyelet after DFM" loading="lazy"><figcaption>Eyelet, post-DFM</figcaption></figure><figure><img src="img/lv-dfm3.webp" alt="Plastic holder before DFM" loading="lazy"><figcaption>Plastic holder, pre-DFM</figcaption></figure><figure><img src="img/lv-dfm2.webp" alt="Plastic holder after DFM" loading="lazy"><figcaption>Plastic holder, post-DFM</figcaption></figure></div>
       </div>
     </section>
     <footer class="proj-skills"><p>Skills from this term</p><ul><li>Design of experiments</li><li>Sensor validation</li><li>Test fixture design</li><li>GD&amp;T</li><li>Tolerance stack-ups</li><li>DFM for moulding and die-casting</li><li>Reliability testing</li><li>Production drawings</li></ul></footer>
@@ -1444,20 +1466,30 @@ function show(m) {
   window.track && track('section_view', {section: m});
 }
 const ORDER = ['led', 'level', 'google', 'teslacells', 'geotab', 'valbruna', 'evercloak', 'waterloo'];
-const TITLES = {led: 'RGBW LED controller', level: 'Smart lock hardware', google: 'Pixel Watch', teslacells: 'Battery cell equipment', geotab: 'Dashcams at Geotab', valbruna: 'Steel mill CFD', evercloak: 'Dehumidifier enclosure', waterloo: 'FrostBot and a wind-up toy'};
-projEl.querySelectorAll('[data-proj]').forEach(a => {
-  const i = ORDER.indexOf(a.dataset.proj); if (i < 0) return;
-  const nav = document.createElement('nav'); nav.className = 'proj-pn'; nav.setAttribute('aria-label', 'More write-ups');
-  const p = ORDER[i - 1], n = ORDER[i + 1];
-  nav.innerHTML = (p ? `<button type="button" data-step="${p}"><small>← Previous</small><b>${TITLES[p]}</b></button>` : '') + (n ? `<button type="button" class="nx" data-step="${n}"><small>Next →</small><b>${TITLES[n]}</b></button>` : '');
-  a.appendChild(nav);
+const TITLES = {led: 'RGBW LED controller', level: 'Smart lock hardware', google: 'Pixel Watch', teslacells: 'Battery cell equipment', geotab: 'Project Jarvis', valbruna: 'Steel mill CFD', evercloak: 'Dehumidifier enclosure', waterloo: 'FrostBot and a wind-up toy'};
+projEl.addEventListener('click', e => {
+  const b = e.target.closest('[data-step]'); if (b && b.dataset.step) { location.replace('#project/' + b.dataset.step); return; }
+  const im = e.target.closest('figure img'); if (im) { const z = document.createElement('div'); z.id = 'zoom'; z.setAttribute('role', 'dialog'); z.setAttribute('aria-label', 'Enlarged image'); z.innerHTML = `<img src="${im.getAttribute('src')}" alt="${im.alt}">`; z.addEventListener('click', () => z.remove()); document.body.appendChild(z); }
 });
-projEl.addEventListener('click', e => { const b = e.target.closest('[data-step]'); if (b) location.replace('#project/' + b.dataset.step); });
+addEventListener('keydown', e => { const z = document.getElementById('zoom'); if (z && e.key === 'Escape') { e.stopImmediatePropagation(); z.remove(); } }, true);
+const PF_ORDER = ['led', 'level', 'geotab', 'waterloo'];
+function projList() { return mode === 'play' ? ORDER : PF_ORDER; }
+function projNav(id) {
+  const L = projList(), i = L.indexOf(id), p = L[i - 1], n = L[i + 1];
+  const pb = document.getElementById('proj-prev'), nb = document.getElementById('proj-next');
+  pb.disabled = !p; pb.dataset.step = p || ''; nb.disabled = !n; nb.dataset.step = n || '';
+  document.getElementById('proj-next-t').textContent = n ? TITLES[n] : 'none';
+  const art = projEl.querySelector(`[data-proj="${id}"]`); art.querySelectorAll('.proj-pn').forEach(x => x.remove());
+  const nav = document.createElement('nav'); nav.className = 'proj-pn'; nav.setAttribute('aria-label', 'More write-ups');
+  nav.innerHTML = (p ? `<button type="button" data-step="${p}"><small>← Previous</small><b>${TITLES[p]}</b></button>` : '') + (n ? `<button type="button" class="nx" data-step="${n}"><small>Next →</small><b>${TITLES[n]}</b></button>` : '');
+  art.appendChild(nav);
+}
 function openProj(id) {
   projEl.querySelectorAll('[data-proj]').forEach(a => a.hidden = a.dataset.proj !== id);
   const a = projEl.querySelector(`[data-proj="${id}"]`);
   document.getElementById('proj-crumb').textContent = a ? a.dataset.crumb : '';
   document.getElementById('proj-close').textContent = mode === 'play' ? (matchMedia('(pointer: coarse)').matches ? '← Back to the game' : '← Back to the game (Esc)') : '← Back to portfolio';
+  projNav(id);
   projEl.hidden = false; projEl.scrollTop = 0; document.getElementById('proj-close').focus({preventScroll: true});
   window.track && track('project_view', {project: id});
 }
@@ -1473,7 +1505,7 @@ addEventListener('DOMContentLoaded', route);
 window.__openProject = id => { location.hash = 'project/' + id; };
 function closeProject() { if (inner > 0) history.back(); else location.hash = mode === 'play' ? 'play' : 'portfolio'; }
 document.getElementById('proj-close').addEventListener('click', closeProject);
-addEventListener('keydown', e => { if (projEl.hidden) return; if (e.key === 'Escape' || ((e.key === 'e' || e.key === 'E') && mode === 'play')) { e.preventDefault(); e.stopImmediatePropagation(); closeProject(); } }, true);
+addEventListener('keydown', e => { if (projEl.hidden || document.getElementById('zoom')) return; if (e.key === 'Escape' || ((e.key === 'e' || e.key === 'E') && mode === 'play')) { e.preventDefault(); e.stopImmediatePropagation(); closeProject(); } }, true);
 document.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => window.__openProject(b.dataset.open)));
 document.getElementById('go-portfolio').addEventListener('click', () => go('portfolio'));
 pfEl.querySelectorAll('[data-to]').forEach(b => b.addEventListener('click', () => document.getElementById(b.dataset.to).scrollIntoView({behavior: reduce ? 'auto' : 'smooth'})));
