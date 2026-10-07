@@ -720,22 +720,18 @@ function draw(now) {
 
 function drawPrompt(cam) {
   const n = nearest();
-  if (n && card.hidden && !P.target && n.kind !== 'nsx' && n.kind !== 'c5') { const verb = n.kind === 'cabin' ? 'go inside' : n.kind === 'door' ? 'go outside' : `open ${n.label}`; prompt.hidden = false; prompt.textContent = touch ? `Tap to ${verb}` : `Press E to ${verb}`; prompt.style.transform = `translate(${Math.round(offX + (P.x - cam.x) * SC)}px,${Math.round(offY + (P.y - 30 - cam.y) * SC)}px) translate(-50%,-100%)`; }
+  if (n && card.hidden && !P.target && n.kind !== 'nsx' && n.kind !== 'c5') { const verb = n.kind === 'cabin' ? 'go inside' : n.kind === 'door' ? 'go outside' : `open ${n.label}`; prompt.hidden = false; prompt.textContent = touch ? `Tap to ${verb}` : `Press E to ${verb}`; const pw = prompt.offsetWidth || 160, px = Math.max(pw / 2 + 8, Math.min(innerWidth - pw / 2 - 8, offX + (P.x - cam.x) * SC)); prompt.style.transform = `translate(${Math.round(px)}px,${Math.round(Math.max(60, offY + (P.y - 30 - cam.y) * SC))}px) translate(-50%,-100%)`; }
   else prompt.hidden = true;
 }
 /* ---------------- public ---------------- */
 let welcomed = false; let moeClicks = 0;
 function welcome() {
-  welcomed = true; openId = 'welcome';
-  card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
-    <h2 id="w-card-title">Follow the path</h2><p class="w-meta">Arrow keys or WASD to walk · E to open · or just click a building</p>
-    <p>Nine stops, from my first day at Waterloo in 2022 to my next team in 2027. My home is at the end of the road.</p>
-    <div class="w-actions"><button type="button" class="w-go" id="w-latest">Take me to stop 1</button><button type="button" class="w-alt" id="w-look">I’ll walk</button></div></div>`;
-  card.hidden = false;
-  card.querySelector('.w-close').addEventListener('click', closeCard);
-  card.querySelector('#w-look').addEventListener('click', closeCard);
-  card.querySelector('#w-latest').addEventListener('click', () => { tourIdx = 0; updateTour(); closeCard(); walkTo(TOUR[0], true); });
-  card.querySelector('#w-latest').focus({preventScroll: true});
+  welcomed = true;
+  const h = document.createElement('div'); h.id = 'w-hint'; h.setAttribute('role', 'status');
+  h.textContent = touch ? 'Follow the numbered path · tap a building to visit' : 'Follow the numbered path · arrow keys to walk, or click a building';
+  root.appendChild(h);
+  const hide = () => { h.classList.add('off'); setTimeout(() => h.remove(), 700); removeEventListener('keydown', hide); cv.removeEventListener('pointerdown', hide); };
+  addEventListener('keydown', hide); cv.addEventListener('pointerdown', hide); setTimeout(hide, 7000);
 }
 window.World = {
   start() { resize(); root.hidden = false; running = true; last = performance.now(); cv.setAttribute('tabindex', '0'); cv.focus({preventScroll: true}); requestAnimationFrame(step); if (!welcomed) welcome(); },
