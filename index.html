@@ -11,9 +11,12 @@ var VERSION='2026-10';
 var me=false;try{var q=location.search;if(/[?&]me=1\b/.test(q))localStorage.setItem('jy-me','1');if(/[?&]me=0\b/.test(q))localStorage.removeItem('jy-me');me=localStorage.getItem('jy-me')==='1';}catch(e){}
 var h=decodeURIComponent(location.hash.replace(/^#\/?/,''));
 var entry=!h?'welcome':h==='portfolio'?'portfolio':h==='play'?'game':/^project\//.test(h)?'case study':'other';
-var r=document.referrer||'',src=!r?'direct':/linkedin\./.test(r)?'linkedin':/google\./.test(r)?'google':/github\./.test(r)?'github':/jillanneyoussef\.com/.test(r)?'own site':'other';
+var via=null;try{via=JSON.parse(sessionStorage.getItem('jy-via')||'null');sessionStorage.removeItem('jy-via');}catch(e){}
+/* the exact link they opened: "/", "/#portfolio", "/#play", "/#project/led", "/portfolio" (the short link), or "other path: /x" */
+var link=via?(/^\/portfolio\/?$/i.test(via.link.replace(/#.*$/,''))?'/portfolio':'other path: '+via.link):'/'+(h?'#'+h:'');
+var r=(via?via.ref:document.referrer)||'',src=!r?'direct':/linkedin\./.test(r)?'linkedin':/google\./.test(r)?'google':/github\./.test(r)?'github':/jillanneyoussef\.com/.test(r)?'own site':'other';
 gtag('js',new Date());
-gtag('set',{site_version:VERSION,entry_point:entry});
+gtag('set',{site_version:VERSION,entry_point:entry,entry_link:link});
 if(me)gtag('set',{traffic_type:'internal'});
 gtag('config','G-1EQKKFH75R',{send_page_view:false});
 var page='',pageAt=0,acc=0,depth={},S={pages:new Set(),cs:new Set(),stops:new Set(),clicks:0,t0:Date.now()};
@@ -41,7 +44,7 @@ document.addEventListener('click',function(e){var t=e.target.closest&&e.target.c
   else if(t.id==='go-portfolio')track('choose_path',{path:'portfolio',from:'game'});
   else if(t.id==='go-contact')track('contact_open');
 },true);
-track('site_entry',{entry_point:entry,entry_hash:h||'(none)',referrer_source:src});
+track('site_entry',{entry_point:entry,entry_hash:h||'(none)',entry_link:link,referrer_source:src});
 addEventListener('pagehide',function(){flush();track('visit_summary',{pages_seen:S.pages.size,case_studies_opened:S.cs.size,game_stops_opened:S.stops.size,clicks:S.clicks,seconds:Math.round((Date.now()-S.t0)/1000),transport_type:'beacon'});});
 })();
 </script>
