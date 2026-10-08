@@ -435,7 +435,7 @@ function roomOpen(o) {
 }
 function galleryCard(o) {
   window.track && track('gallery_open', {gallery: o.gal});
-  openId = o.id; let i = 0; const list = GAL[o.gal];
+  openId = o.id; cardAt = performance.now(); let i = 0; const list = GAL[o.gal];
   const render = () => {
     card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
       <h2 id="w-card-title">${esc(o.title)}</h2><p class="w-meta">${esc(o.meta)}</p>
@@ -527,7 +527,7 @@ function exitRoom() {
 }
 function ledCard() {
   window.track && track('stop_open', {stop: 'room: led strip'});
-  openId = 'led'; autoId = 'led';
+  openId = 'led'; cardAt = performance.now(); autoId = 'led';
   const row = (k, lab, max) => `<label class="w-sl" for="led-${k}"><span>${lab}</span><input type="range" id="led-${k}" min="0" max="${max}" value="${led[k]}"><output id="led-${k}-v">${led[k]}</output></label>`;
   card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
     <h2 id="w-card-title">The LED controller</h2><p class="w-meta">Same controls the lighting studio uses</p>
@@ -548,7 +548,7 @@ function openCard(l) {
   if (l.kind === 'cabin') { enterRoom(); return; }
   if (l.kind === 'door') { exitRoom(); return; }
   if (l.kind === 'led') { ledCard(); return; }
-  openId = l.id; autoId = l.id; if (l.tour) { visited.add(l.id); labelNodes[L.indexOf(l)].classList.add('w-visited'); }
+  openId = l.id; autoId = l.id; cardAt = performance.now(); if (l.tour) { visited.add(l.id); labelNodes[L.indexOf(l)].classList.add('w-visited'); if (visited.size === TOUR.length && !allSent) { allSent = true; window.track && track('game_all_stops_visited'); } }
   if (l.kind === 'nsx' || l.kind === 'c5') { const n = carClicks[l.kind]++ % 3; if (n === 0) pops[l.kind] = 1; else if (n === 1) { pops[l.kind] = 1; window.__engine && window.__engine(l.kind); } else pops[l.kind] = 0; }
   const c = l.card === 'contact' ? {title: 'Say hi', meta: 'Mailbox', body: ["I'm looking for a Summer 2027 internship in mechanical or product design."], contact: true} : l.card;
   const tourBits = '';
@@ -570,7 +570,7 @@ function openCard(l) {
 let arc = null;
 function arcadeCard() {
   window.track && track('arcade_open');
-  openId = 'arcade';
+  openId = 'arcade'; cardAt = performance.now();
   let best = 0; try { best = +localStorage.getItem('jy-runner-best') || 0; } catch (e) {}
   card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
     <h2 id="w-card-title">Commute</h2><p class="w-meta">${touch ? 'Tap the screen to jump' : 'Space or ↑ to jump · Esc to leave'}</p>
@@ -611,12 +611,13 @@ function arcadeCard() {
   requestAnimationFrame(frame);
   card.querySelector('#rn').focus && c.setAttribute('tabindex', '0');
 }
-function closeCard() { if (openId === 'arcade' && arc) { window.track && track('arcade_score', {score: Math.floor(arc.best || 0), value: Math.floor(arc.best || 0)}); arc = null; } if (!card.hidden) { card.hidden = true; openId = null; cv.focus({preventScroll: true}); } }
+let cardAt = 0, allSent = false;
+function closeCard() { if (openId && cardAt) { const s = Math.round((performance.now() - cardAt) / 1000); window.track && s > 0 && track('stop_time', {stop: openId, seconds: s, value: s}); cardAt = 0; } if (openId === 'arcade' && arc) { window.track && track('arcade_score', {score: Math.floor(arc.best || 0), value: Math.floor(arc.best || 0)}); arc = null; } if (!card.hidden) { card.hidden = true; openId = null; cv.focus({preventScroll: true}); } }
 
 /* ---------------- tour + bar ---------------- */
 const tourPos = document.getElementById('tour-pos');
 function updateTour() { tourPos.textContent = tourIdx < 0 ? 'Follow the path · 2022 → 2027' : `Stop ${tourIdx + 1} of ${TOUR.length}: ${TOUR[tourIdx].label}`; document.getElementById('tour-prev').disabled = tourIdx <= 0; document.getElementById('tour-next').textContent = tourIdx < 0 ? 'Start tour' : tourIdx >= TOUR.length - 1 ? 'Restart' : 'Next stop'; }
-document.getElementById('tour-next').addEventListener('click', () => { tourIdx = tourIdx >= TOUR.length - 1 ? 0 : tourIdx + 1; updateTour(); teleport(TOUR[tourIdx], true); });
+document.getElementById('tour-next').addEventListener('click', () => { tourIdx = tourIdx >= TOUR.length - 1 ? 0 : tourIdx + 1; updateTour(); window.track && track('tour_step', {stop: TOUR[tourIdx].id, step: tourIdx + 1}); teleport(TOUR[tourIdx], true); });
 document.getElementById('tour-prev').addEventListener('click', () => { if (tourIdx > 0) { tourIdx--; updateTour(); teleport(TOUR[tourIdx], true); } });
 document.getElementById('go-contact').addEventListener('click', () => { if (scene === 'room') closeCard(); openCard(L.find(l => l.id === 'mail')); });
 mini.parentElement.addEventListener('click', () => openBig());

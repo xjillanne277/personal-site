@@ -4,19 +4,46 @@
 <meta charset="utf-8">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1EQKKFH75R"></script>
 <script>
+/* Analytics (GA4). Every event carries: site_version, entry_point, page_name. See ANALYTICS notes in the repo history. */
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
-gtag('js',new Date());gtag('config','G-1EQKKFH75R');
-window.track=(n,p)=>{try{gtag('event',n,p||{})}catch(e){}};
-document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('[data-go],a,#go-portfolio,#go-contact,[data-copy],.w-copy');if(!t)return;const h=t.getAttribute('href')||'';
-if(t.dataset.go)track('choose_path',{path:t.dataset.go});
-else if(h.endsWith('resume.pdf'))track('resume_download');
-else if(h.includes('linkedin.com'))track('linkedin_click');
-else if(h.startsWith('mailto:'))track('email_click');
-else if(h==='#play')track('choose_path',{path:'play',from:'portfolio'});
-else if(t.hasAttribute('data-copy')||t.classList.contains('w-copy'))track('copy_email');
-else if(t.id==='go-portfolio')track('choose_path',{path:'portfolio',from:'game'});
-else if(t.id==='go-contact')track('contact_open');
+(function(){
+var VERSION='2026-10';
+var me=false;try{var q=location.search;if(/[?&]me=1\b/.test(q))localStorage.setItem('jy-me','1');if(/[?&]me=0\b/.test(q))localStorage.removeItem('jy-me');me=localStorage.getItem('jy-me')==='1';}catch(e){}
+var h=decodeURIComponent(location.hash.replace(/^#\/?/,''));
+var entry=!h?'welcome':h==='portfolio'?'portfolio':h==='play'?'game':/^project\//.test(h)?'case study':'other';
+var r=document.referrer||'',src=!r?'direct':/linkedin\./.test(r)?'linkedin':/google\./.test(r)?'google':/github\./.test(r)?'github':/jillanneyoussef\.com/.test(r)?'own site':'other';
+gtag('js',new Date());
+gtag('set',{site_version:VERSION,entry_point:entry});
+if(me)gtag('set',{traffic_type:'internal'});
+gtag('config','G-1EQKKFH75R',{send_page_view:false});
+var page='',pageAt=0,acc=0,depth={},S={pages:new Set(),cs:new Set(),stops:new Set(),clicks:0,t0:Date.now()};
+window.track=function(n,p){try{p=Object.assign({page_name:page||'loading'},p||{});if(n==='case_study_open')S.cs.add(p.project);if(n==='stop_open')S.stops.add(p.stop);gtag('event',n,p);}catch(e){}};
+function flush(){if(!page||!pageAt)return;var s=Math.round((acc+Date.now()-pageAt)/1000);acc=0;pageAt=Date.now();if(s>0)track('page_time',{seconds:s,value:s});}
+/* page_name examples: welcome, portfolio, game, case study: led */
+window.pv=function(name){if(name===page)return;flush();page=name;pageAt=Date.now();acc=0;depth={};S.pages.add(name);
+  var slug=name.replace('case study: ','case-study/').replace(/ /g,'-');
+  gtag('event','page_view',{page_title:name,page_location:location.origin+'/'+slug,page_name:name});};
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='hidden')flush();else if(page)pageAt=Date.now();});
+/* scroll depth inside the portfolio and case-study panels (they scroll, not the window) */
+document.addEventListener('scroll',function(e){var el=e.target;if(!el||!el.id||(el.id!=='pf'&&el.id!=='proj'))return;
+  var pct=(el.scrollTop+el.clientHeight)/el.scrollHeight*100;[25,50,75,100].forEach(function(m){if(pct>=m-1&&!depth[m]){depth[m]=1;track('scroll_depth',{percent:m,value:m});}});},true);
+/* every click on something clickable */
+document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('a,button,[role="button"],[role="menuitem"],summary,.w-label,.bm-pin,figure img');if(!t)return;S.clicks++;
+  var label=(t.getAttribute('aria-label')||t.innerText||t.alt||t.id||t.className||'').replace(/\s+/g,' ').trim().slice(0,90);
+  var href=t.getAttribute&&t.getAttribute('href')||'';
+  track('ui_click',{click_label:label,click_target:href||t.id||(t.dataset&&(t.dataset.open||t.dataset.xp||t.dataset.go||t.dataset.proj||t.dataset.to))||t.tagName.toLowerCase()});
+  if(t.dataset&&t.dataset.go)track('choose_path',{path:t.dataset.go,from:'welcome'});
+  else if(href.indexOf('resume.pdf')>-1)track('resume_download');
+  else if(href.indexOf('linkedin.com')>-1)track('linkedin_click');
+  else if(href.indexOf('mailto:')===0)track('email_click');
+  else if(href==='#play')track('choose_path',{path:'play',from:page});
+  else if(t.hasAttribute('data-copy')||t.classList.contains('w-copy'))track('copy_email');
+  else if(t.id==='go-portfolio')track('choose_path',{path:'portfolio',from:'game'});
+  else if(t.id==='go-contact')track('contact_open');
 },true);
+track('site_entry',{entry_point:entry,entry_hash:h||'(none)',referrer_source:src});
+addEventListener('pagehide',function(){flush();track('visit_summary',{pages_seen:S.pages.size,case_studies_opened:S.cs.size,game_stops_opened:S.stops.size,clicks:S.clicks,seconds:Math.round((Date.now()-S.t0)/1000),transport_type:'beacon'});});
+})();
 </script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#2f5e46">
@@ -1655,7 +1682,7 @@ function show(m) {
   if (m === 'portfolio') { pfEl.scrollTop = 0; document.getElementById('pf-name').focus({preventScroll: true}); }
   if (m === 'play' && window.World) window.World.start();
   document.title = m === 'play' ? 'Jillanne Youssef · Game' : 'Jillanne Youssef | Mechanical & Product Design Engineer';
-  window.track && track('page_mode', {mode: m});
+  if (projEl.hidden) window.pv && pv(m === 'play' ? 'game' : m);
 }
 const ORDER = ['led', 'level', 'google', 'teslacells', 'geotab', 'valbruna', 'evercloak', 'waterloo'];
 const TITLES = {led: 'RGBW LED controller', level: 'Smart lock hardware', google: 'Pixel Watch', teslacells: 'Battery cell equipment', geotab: 'Project Jarvis', valbruna: 'Steel mill CFD', evercloak: 'Dehumidifier enclosure', waterloo: 'FrostBot and a wind-up toy'};
@@ -1685,14 +1712,18 @@ function openProj(id) {
   document.getElementById('proj-close').textContent = mode === 'play' ? (matchMedia('(pointer: coarse)').matches ? '← Back to the game' : '← Back to the game (Esc)') : '← Back to portfolio';
   projNav(id);
   projEl.hidden = false; projEl.scrollTop = 0; document.getElementById('proj-close').focus({preventScroll: true});
-  window.track && track('case_study_open', {project: id, from: mode});
+  window.pv && pv('case study: ' + id);
+  window.track && track('case_study_open', {project: id, from: mode === 'play' ? 'game' : mode});
   projOpenAt = performance.now(); projOpenId = id;
 }
 function route() {
   const h = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
   const pm = h.match(/^project\/(\w+)/);
-  if (pm && projEl.querySelector(`[data-proj="${pm[1]}"]`)) { if (!mode || mode === 'welcome') show('portfolio'); openProj(pm[1]); return; }
-  projEl.hidden = true;
+  if (pm && projEl.querySelector(`[data-proj="${pm[1]}"]`)) { if (!mode || mode === 'welcome') { projEl.hidden = false; show('portfolio'); } openProj(pm[1]); return; }
+  const wasProj = !projEl.hidden; projEl.hidden = true;
+  if (wasProj) reportProjTime();
+  const nm = h === 'portfolio' ? 'portfolio' : h === 'play' ? 'play' : 'welcome';
+  if (wasProj && nm === mode) window.pv && pv(nm === 'play' ? 'game' : nm);
   show(h === 'portfolio' ? 'portfolio' : h === 'play' ? 'play' : 'welcome');
 }
 addEventListener('hashchange', () => { inner++; route(); });
