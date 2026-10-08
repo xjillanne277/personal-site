@@ -847,6 +847,10 @@ html[data-theme="dark"] .cs-box ul{color:#d6d4cf}
 @media (max-width:480px){.pf-now{padding:18px 18px 16px}.pf-now-facts{grid-template-columns:minmax(0,1fr)}}
 html[data-theme="dark"] .pf-now{background:#26292d}
 .ring-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+/* clearer section breaks */
+.pf-sec{padding-top:72px!important;margin-top:56px;border-top:1px solid var(--line)}
+#pf .pf-label{display:flex;align-items:baseline;gap:14px;margin:0 0 14px!important;font:700 clamp(30px,3.6vw,42px)/1.1 var(--f-head)!important;letter-spacing:-.025em!important;text-transform:none!important;color:var(--ink)!important}
+#pf .pf-label::before{content:attr(data-n);font:600 14px var(--f-mono);letter-spacing:.06em;color:var(--acc)}
 #xp-dlg{border:0;padding:0;border-radius:14px;max-width:720px;width:calc(100% - 32px);max-height:86vh;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 #xp-dlg::backdrop{background:rgba(17,20,24,.55)}
 #xp-dlg .xp-in{padding:28px 32px 30px;overflow:auto;max-height:86vh;box-sizing:border-box}
@@ -937,7 +941,7 @@ html[data-theme="dark"] .pf-now{background:#26292d}
     <p class="pf-logos"><span>Work terms at</span> Google <b>·</b> Level Home <b>·</b> Tesla (2×) <b>·</b> Geotab <b>·</b> Valbruna <b>·</b> Evercloak</p>
 
     <section class="pf-sec" id="pf-work" aria-labelledby="pf-work-h">
-      <div class="pf-sec-row"><h2 id="pf-work-h" class="pf-label">Selected work</h2><p class="pf-aside">Two projects I can show in depth. Click one for the full write-up.</p></div>
+      <div class="pf-sec-row"><h2 id="pf-work-h" class="pf-label" data-n="01">Selected work</h2><p class="pf-aside">Two projects I can show in depth. Click one for the full write-up.</p></div>
       <button type="button" class="case" data-open="led">
         <span class="case-img"><img src="img/led-exploded.webp" alt="" loading="lazy"></span>
         <span class="case-body">
@@ -976,7 +980,7 @@ html[data-theme="dark"] .pf-now{background:#26292d}
     </section>
 
     <section class="pf-sec" id="pf-exp" aria-labelledby="pf-exp-h">
-      <div class="pf-sec-row"><h2 id="pf-exp-h" class="pf-label">Experience</h2><div class="pf-clear"><b>✓ Cleared to share</b><p>Everything written here is cleared to share. For some roles I can’t show photos or media of the actual work, but I can talk about it to the extent written here.</p></div><p class="pf-aside">Click “Details” on any role for more.</p></div>
+      <div class="pf-sec-row"><h2 id="pf-exp-h" class="pf-label" data-n="02">Experience</h2><div class="pf-clear"><b>✓ Cleared to share</b><p>Everything written here is cleared to share. For some roles I can’t show photos or media of the actual work, but I can talk about it to the extent written here.</p></div><p class="pf-aside">Click “Details” on any role for more.</p></div>
       <ol class="pf-exp">
         <li><span class="when">2026 · Summer</span><span class="who"><b>Google</b>Product Design Engineering Intern, Pixel Hardware</span><span class="what">Pixel Watch display glass, plus new test methods that saved $20K+ in prototypes and $15K in vendor testing.</span><span class="xp-side"><span class="tag no">No photos or media</span><button type="button" class="pf-go sm" data-xp="google">Details →</button></span></li>
         <li><span class="when">2026 · Winter</span><span class="who"><b>Level Home</b>Product Design Engineering Intern</span><span class="what">Magnet-based lock sensing ($12M projected), a 2M-cycle test fixture, a fix for bolt binding, and DFM on 20+ parts.</span><span class="xp-side"><span class="tag ok">Photos and media shown</span><button type="button" class="pf-go sm" data-xp="level">Details →</button></span></li>
@@ -990,7 +994,7 @@ html[data-theme="dark"] .pf-now{background:#26292d}
     </section>
 
     <section class="pf-sec" id="pf-first" aria-labelledby="pf-first-h">
-      <div class="pf-sec-row"><h2 id="pf-first-h" class="pf-label">Earlier projects</h2><p class="pf-aside">From my first and second year.</p></div>
+      <div class="pf-sec-row"><h2 id="pf-first-h" class="pf-label" data-n="03">Earlier projects</h2><p class="pf-aside">From my first and second year.</p></div>
       <div class="pf-first three">
         <button type="button" class="pf-fy" data-open="geotab"><span class="pf-fy-img"><img src="img/gt-cert.webp" alt="" loading="lazy"></span><span class="pf-fy-body"><span class="pf-kicker">Geotab hackathon · 2024</span><b>Project Jarvis</b><span>Distracted-driving detection with computer vision. 1st of 11 teams.</span><span class="pf-tags"><i>Model training</i><i>Computer vision</i><i>Python</i></span></span></button>
         <button type="button" class="pf-fy" data-open="waterloo"><span class="pf-fy-img"><img src="img/fb-v2-render.webp" alt="" loading="lazy"></span><span class="pf-fy-body"><span class="pf-kicker">ME101 · 2023</span><b>FrostBot</b><span>A LEGO cake-icing robot, redesigned in CAD with an 80/20 frame and a pneumatic piston.</span><span class="pf-tags"><i>Mechanisms</i><i>Pneumatics</i><i>C++</i></span></span></button>
@@ -999,7 +1003,7 @@ html[data-theme="dark"] .pf-now{background:#26292d}
     </section>
 
     <section class="pf-sec pf-skills" aria-labelledby="pf-skills-h">
-      <h2 id="pf-skills-h" class="pf-label">Tools</h2>
+      <h2 id="pf-skills-h" class="pf-label" data-n="04">Tools</h2>
       <dl>
         <div><dt>CAD</dt><dd>NX, CATIA V6 (Class A), SolidWorks</dd></div>
         <div><dt>Analysis</dt><dd>Ansys Mechanical and Fluent, tolerance stack-ups, GD&amp;T, FMEA</dd></div>
