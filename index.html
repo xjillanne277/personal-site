@@ -9,7 +9,7 @@ window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);
 (function(){
 var VERSION='2026-10';
 var me=false;try{var q=location.search;if(/[?&]me=1\b/.test(q))localStorage.setItem('jy-me','1');if(/[?&]me=0\b/.test(q))localStorage.removeItem('jy-me');me=localStorage.getItem('jy-me')==='1';}catch(e){}
-var h=decodeURIComponent(location.hash.replace(/^#\/?/,''));
+var h=location.hash.replace(/^#\/?/,'');try{h=decodeURIComponent(h);}catch(e){}
 var entry=!h?'welcome':h==='portfolio'?'portfolio':h==='play'?'game':/^project\//.test(h)?'case study':'other';
 var via=null;try{via=JSON.parse(sessionStorage.getItem('jy-via')||'null');sessionStorage.removeItem('jy-via');}catch(e){}
 /* the exact link they opened: "/", "/#portfolio", "/#play", "/#project/led", "/portfolio" (the short link), or "other path: /x" */
@@ -81,8 +81,8 @@ html,body{height:100%;margin:0;background:#9fc8e8;overflow:hidden}
 body{font-family:var(--f-pixel);color:var(--ink)}
 #world{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 
-.screen{position:fixed;inset:0;display:grid;justify-items:center;align-content:start;padding-inline:16px;padding-top:calc(clamp(72px,13vh,150px) + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
-.panel{position:relative;background:var(--panel);padding:30px 40px 28px;max-width:min(560px,100%);width:100%;text-align:center;
+.screen{position:fixed;inset:0;overflow-y:auto;display:grid;justify-items:center;align-content:start;padding-inline:16px;padding-top:calc(clamp(72px,13vh,150px) + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+.panel{position:relative;box-sizing:border-box;background:var(--panel);padding:30px 40px 28px;max-width:min(640px,100%);width:100%;text-align:center;
   box-shadow:0 0 0 4px var(--panel-edge),0 0 0 8px var(--panel-shadow),0 12px 0 8px rgba(0,0,0,.25);border-radius:2px}
 .panel::before{content:"";position:absolute;inset:6px;border:2px solid #ead8b8;pointer-events:none}
 h1{margin:0;font-weight:700;font-size:clamp(34px,7.4vw,58px);line-height:1;letter-spacing:.02em;color:var(--ink);text-wrap:balance}
@@ -109,7 +109,7 @@ h1{margin:0;font-weight:700;font-size:clamp(34px,7.4vw,58px);line-height:1;lette
 .sound .wave{display:none}.sound[aria-pressed="true"] .wave{display:inline}
 .sound[aria-pressed="true"] .x{display:none}
 
-.fade{position:fixed;inset:0;background:#120c08;opacity:0;pointer-events:none;transition:opacity .45s steps(6)}
+.fade{position:fixed;inset:0;z-index:30;background:#120c08;opacity:0;pointer-events:none;transition:opacity .45s steps(6)}
 .fade.on{opacity:1}
 .next .panel h2{margin:0;font-size:clamp(26px,5vw,36px)}
 .next .panel p{margin:12px auto 0;max-width:34ch;color:var(--muted);font-size:17px;line-height:1.4}
@@ -808,7 +808,7 @@ html[data-theme="dark"] .proj-calc{background:#26292d;color:#d6d4cf;border-color
 @media (prefers-reduced-motion:reduce){.door{transition:none}}
 
 /* bigger welcome */
-#title .panel{max-width:min(720px,100%);padding:38px 46px 36px}
+#title .panel{max-width:min(812px,100%);padding:38px 46px 36px}
 #title .sub{font-size:clamp(17px,2.4vw,21px);max-width:34ch}
 #title .title-ask{font-size:clamp(17px,2.2vw,20px)!important}
 .menu .door{padding:22px 22px 20px!important;gap:10px!important}
@@ -1143,7 +1143,7 @@ html[data-theme="dark"] .pf-now{background:#26292d}
         </div>
       </div>
       <div class="cs-eqs">
-        <div class="cs-eq"><span>Fuse current</span><b>9 A / 0.75 = 12 A → 15 A</b><p>9 A max load is 60% of the selected 15 A fuse rating, below the 75% derating guideline. The 12 A adapter current-limits on overload; the fuse provides additional fault protection if a higher-current source is connected.</p></div>
+        <div class="cs-eq"><span>Fuse current</span><b>9 A / 0.75 = 12 A → 15 A</b><p>9 A max load is 60% of the selected 15 A fuse rating, below the 75% derating guideline. The 12 A adapter provides overload limiting, so the fuse serves as supplementary protection rather than the primary overload protection with this supply.</p></div>
         <div class="cs-eq"><span>Fuse voltage</span><b>12 V system → 32 VDC rated</b><p>Fuse voltage rating exceeds the maximum system voltage.</p></div>
         <div class="cs-eq"><span>Fuse type</span><b>Time-delay</b><p>Selected to tolerate the expected startup inrush from the 1000 µF bulk capacitor without nuisance opening.</p></div>
       </div>
@@ -1720,7 +1720,8 @@ function openProj(id) {
   projOpenAt = performance.now(); projOpenId = id;
 }
 function route() {
-  const h = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
+  let h = location.hash.replace(/^#\/?/, '');
+  try { h = decodeURIComponent(h); } catch (e) {}
   const pm = h.match(/^project\/(\w+)/);
   if (pm && projEl.querySelector(`[data-proj="${pm[1]}"]`)) { if (!mode || mode === 'welcome') { projEl.hidden = false; show('portfolio'); } openProj(pm[1]); return; }
   const wasProj = !projEl.hidden; projEl.hidden = true;
@@ -1750,8 +1751,10 @@ window.__sfx = () => chime();
   if (!('IntersectionObserver' in window)) return;
   const seen = new Set();
   const io = new IntersectionObserver(es => es.forEach(en => { if (!en.isIntersecting) return; const el = en.target; const key = el.dataset.track; if (seen.has(key)) return; seen.add(key); window.track && track('section_reached', {section: key}); }), {threshold: .45});
-  document.querySelectorAll('#pf .pf-sec, #pf .pf-contact, #pf .pf-hero').forEach(el => { const names = {'pf-work': 'selected work', 'pf-exp': 'experience', 'pf-first': 'earlier projects', 'pf-contact': 'contact'}; el.dataset.track = 'portfolio: ' + (names[el.id] || (el.classList.contains('pf-skills') ? 'tools' : el.classList.contains('pf-hero') ? 'top' : 'section')); io.observe(el); });
-  document.querySelectorAll('.proj-sheet[data-proj] .cs-sec, .proj-sheet[data-proj] .proj-ch').forEach(el => { const h = el.querySelector('h2'); el.dataset.track = el.closest('[data-proj]').dataset.proj + ': ' + (h ? h.textContent.replace(/^\s*\d+\s*/, '').trim() : 'section'); io.observe(el); });
+  /* watch the section's heading, not the whole section: tall sections on phones never get 45% on screen */
+  const watch = (el, key) => { const t = el.querySelector('h1, h2, h3, .pf-label') || el; t.dataset.track = key; io.observe(t); };
+  document.querySelectorAll('#pf .pf-sec, #pf .pf-contact, #pf .pf-hero').forEach(el => { const names = {'pf-work': 'selected work', 'pf-exp': 'experience', 'pf-first': 'earlier projects', 'pf-contact': 'contact'}; const key = 'portfolio: ' + (names[el.id] || (el.classList.contains('pf-skills') ? 'tools' : el.classList.contains('pf-hero') ? 'top' : 'section')); watch(el, key); });
+  document.querySelectorAll('.proj-sheet[data-proj] .cs-sec, .proj-sheet[data-proj] .proj-ch').forEach(el => { const h = el.querySelector('h2'); watch(el, el.closest('[data-proj]').dataset.proj + ': ' + (h ? h.textContent.replace(/^\s*\d+\s*/, '').trim() : 'section')); });
 })();
 /* theme: light by default; remembered per visitor */
 (function () {
@@ -1762,7 +1765,7 @@ window.__sfx = () => chime();
   document.querySelectorAll('.theme-btn').forEach(b => b.addEventListener('click', () => { const t = root.dataset.theme === 'dark' ? 'light' : 'dark'; set(t); try { localStorage.setItem('jy-theme', t); } catch (e) {} window.track && track('theme', {theme: t}); }));
 })();
 /* ============ music: original, generated live ============ */
-let AC = null, master = null, musicOn = false, timer = null, nextBar = 0, bar = 0;
+let AC = null, master = null, musicOn = false, timer = null, stopT = 0, nextBar = 0, bar = 0;
 const snd = document.getElementById('sound');
 const N = n => 440 * Math.pow(2, (n - 69) / 12);
 // gentle progression in F: Fmaj9 - Am7 - Dm9 - Bbmaj7(#11) - C6sus
@@ -1822,7 +1825,10 @@ function setMusic(on) {
   musicOn = on; snd.setAttribute('aria-pressed', on); snd.setAttribute('aria-label', on ? 'Music on. Turn music off.' : 'Music off. Turn music on.');
   const now = AC.currentTime; master.gain.cancelScheduledValues(now); master.gain.setValueAtTime(master.gain.value, now);
   master.gain.linearRampToValueAtTime(on ? .22 : 0, now + .6);
-  if (on) AC.resume();
+  /* stop making notes once the fade-out is done; start again when music comes back on */
+  clearTimeout(stopT);
+  if (on) { AC.resume(); if (!timer) { nextBar = Math.max(nextBar, AC.currentTime + .2); timer = setInterval(schedule, 120); } }
+  else stopT = setTimeout(() => { if (!musicOn) { clearInterval(timer); timer = null; } }, 700);
 }
 snd.addEventListener('click', e => { e.stopPropagation(); const on = !(AC && musicOn); setMusic(on); if (mode === 'play') gameMuted = !on; });
 // direct visits to #play: browsers need a click or key before sound can start
