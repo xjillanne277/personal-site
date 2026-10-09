@@ -11,8 +11,8 @@ function text(c, s, x, y, col, sc = 1, align) {
   for (let i = 0; i < s.length; i++) { const g = G[s[i]]; if (!g) continue; for (let k = 0; k < 15; k++) if (g[k] === '1') c.fillRect(Math.round(x + i * 4 * sc + (k % 3) * sc), Math.round(y + Math.floor(k / 3) * sc), sc, sc); }
   return w;
 }
-function make(host, W, H, bg) {
-  const cv = document.createElement('canvas'); cv.width = W; cv.height = H; cv.className = 'w-mini-cv'; cv.style.background = bg; host.appendChild(cv);
+function make(host, W, H, bg, snap) {
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H; cv.className = 'w-mini-cv'; cv.style.background = bg; if (snap) cv.dataset.snap = '1'; host.appendChild(cv);
   const c = cv.getContext('2d'); c.imageSmoothingEnabled = false;
   const P = (x, y, w, h, k) => { c.fillStyle = k; c.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
   const pt = e => { const r = cv.getBoundingClientRect(); return {x: (e.clientX - r.left) / r.width * W, y: (e.clientY - r.top) / r.height * H}; };
@@ -182,7 +182,7 @@ M.cell = (host, ctl, X) => {
 
 /* ---------- Google: the propeller hat ---------- */
 M.hat = (host, ctl, X) => {
-  const W = 200, H = 110, {cv, c, P} = make(host, W, H, '#dff0fa');
+  const W = 150, H = 84, {cv, c, P} = make(host, W, H, '#cfe9f7', true);
   ctl.innerHTML = `<div class="w-actions"><button type="button" class="w-go" data-spin>Spin it</button></div><p class="w-hint" aria-live="polite"></p>`;
   const say = hint(ctl);
   const base = 'Tap the hat to spin the propeller. Keep tapping.';
@@ -190,42 +190,67 @@ M.hat = (host, ctl, X) => {
   let om = 0, ang = 0, lift = 0, fly = null, flights = 0, t = 0;
   const spin = () => { if (fly && fly.phase !== 'down') return; om = Math.min(64, om + 7.5); if (om > 14) X.state.hat = true; X.tone(240 + om * 9, .05, 'triangle', .035); };
   cv.addEventListener('pointerdown', spin); ctl.querySelector('[data-spin]').addEventListener('click', spin);
-  function hat(cx, by) {
-    P(cx - 26, by + 1, 52, 3, 'rgba(0,0,0,.1)');
-    const panel = x => x < -13 ? '#4285f4' : x < 0 ? '#ea4335' : x < 13 ? '#fbbc05' : '#34a853';
-    for (let r = 0; r < 18; r++) { const w = Math.round(26 * Math.sqrt(1 - Math.pow(r / 18, 2))); for (let x = -w; x < w; x++) P(cx + x, by - 6 - r, 1, 1, panel(x)); }
-    for (let r = 2; r < 15; r++) { P(cx - 13, by - 6 - r, 1, 1, 'rgba(0,0,0,.12)'); P(cx, by - 6 - r, 1, 1, 'rgba(0,0,0,.12)'); P(cx + 13, by - 6 - r, 1, 1, 'rgba(0,0,0,.12)'); }
-    P(cx - 18, by - 22, 6, 2, 'rgba(255,255,255,.35)');
-    P(cx - 27, by - 6, 54, 7, '#f8f9fa'); P(cx - 27, by, 54, 1, '#dadce0'); text(c, 'INTERN', cx, by - 5, '#5f6368', 1, 'c');
-    P(cx - 3, by - 25, 6, 2, '#fbbc05'); P(cx - 1, by - 30, 2, 6, '#9aa0a6');
-    const k = Math.cos(ang), s = Math.sin(ang), Lb = 20;
-    if (om > 30) { c.globalAlpha = Math.min(.45, (om - 30) / 40); P(cx - Lb, by - 32, Lb * 2, 3, '#9aa0a6'); c.globalAlpha = 1; }
-    const y1 = by - 32 + Math.round(s), y2 = by - 32 - Math.round(s);
-    if (k >= 0) { P(cx, y1, Math.max(1, Math.round(k * Lb)), 3, '#ea4335'); P(cx - Math.round(k * Lb), y2, Math.max(1, Math.round(k * Lb)), 3, '#4285f4'); }
-    else { P(cx + Math.round(k * Lb), y1, Math.max(1, Math.round(-k * Lb)), 3, '#ea4335'); P(cx, y2, Math.max(1, Math.round(-k * Lb)), 3, '#4285f4'); }
-    P(cx - 2, by - 33, 4, 4, '#fbbc05');
+  // "Intern", embroidered like the real hat
+  const GL = {I: ['111', '010', '010', '010', '010', '010', '111'], n: ['0000', '0000', '1110', '1001', '1001', '1001', '1001'], t: ['010', '010', '111', '010', '010', '010', '011'], e: ['0000', '0000', '0110', '1001', '1111', '1000', '0111'], r: ['0000', '0000', '1011', '1100', '1000', '1000', '1000']};
+  const WORD = [['I', '#3f7be0'], ['n', '#e0453a'], ['t', '#ffffff'], ['e', '#3f7be0'], ['r', '#2f9e4f'], ['n', '#e0453a']];
+  function word(x, y) { let cx = x; WORD.forEach(([ch, col]) => { const g = GL[ch]; g.forEach((row, ry) => { for (let rx = 0; rx < row.length; rx++) if (row[rx] === '1') { P(cx + rx + 1, y + ry + 1, 1, 1, 'rgba(120,80,0,.35)'); P(cx + rx, y + ry, 1, 1, col); } }); cx += g[0].length + 1; }); }
+  const YEL = ['#f8d22a', '#f2c414', '#dcae0c'], BLU = ['#4a6ee8', '#3557d4', '#2943a8'], RED = ['#e9483c', '#d23a2f', '#a92b22'], GRN = ['#38b35a', '#2c9a4b', '#1f7a39'];
+  function hat(cx, by, now) {
+    // crown: six panels, front yellow, wearer's right blue, wearer's left red
+    const cw = 36, ch = 28, top = by - ch;
+    for (let r = 0; r < ch; r++) {
+      const tt = (r + 1) / ch, half = Math.round(cw * Math.pow(1 - Math.pow(1 - tt, 2.2), 1 / 2.2));
+      for (let x = -half; x < half; x++) {
+        const fx = x / half, front = Math.abs(fx) < .5, shadeI = Math.abs(fx) > .82 ? 2 : (fx < -.6 || fx > .66 || r > ch - 4) ? 1 : 0;
+        let col = front ? YEL[shadeI] : x < 0 ? BLU[shadeI] : RED[shadeI];
+        if (Math.abs(Math.abs(fx) - .5) < .035) col = front ? YEL[2] : x < 0 ? BLU[2] : RED[2];
+        P(cx + x, top + r, 1, 1, col);
+      }
+      const sx = Math.round(half * .5); if (r % 2 === 0 && r > 3) { P(cx - sx - 2, top + r, 1, 1, 'rgba(255,255,255,.45)'); P(cx + sx + 1, top + r, 1, 1, 'rgba(255,255,255,.45)'); }
+    }
+    for (let r = 4; r < 14; r++) P(cx - 13 + Math.round(r * .3), top + r, 3, 1, 'rgba(255,255,255,.28)');
+    P(cx - cw, by - 1, cw * 2, 1, 'rgba(0,0,0,.12)');
+    // bill: sticks out in front only, seen from a little above, with the colored stitching
+    const brx = 39, bry = 17, bcy = by - 3;
+    const bf = y => .62 + .38 * Math.min(1, y / (bry * .4));
+    for (let y = 0; y <= bry; y++) { const w = Math.round(brx * bf(y) * Math.sqrt(1 - (y / bry) ** 2)); P(cx - w, bcy + y, w * 2, 1, y > bry - 2 ? GRN[2] : y > bry - 5 ? GRN[1] : GRN[0]); }
+    [[35, 14, '#f08a24'], [31, 11.6, '#f6d36b'], [27, 9.4, '#5b8ee6']].forEach(([rx, ry, col]) => { for (let a = .1; a < Math.PI - .1; a += .03) { if (Math.floor(a / .03) % 3 === 2) continue; const yy = Math.sin(a) * ry; P(cx + Math.cos(a) * rx * bf(yy * bry / ry), bcy + yy, 1, 1, col); } });
+    word(cx - 13, top + 13);
+    P(cx - 2, top - 1, 4, 2, YEL[2]);
+    // propeller: bead stem and two blue blades spinning flat
+    const beads = [BLU[0], '#f6d36b', RED[0], GRN[0]];
+    beads.forEach((col, i) => { const y = top - 4 - i * 3; P(cx - 1, y, 3, 3, col); P(cx - 1, y, 1, 1, 'rgba(255,255,255,.7)'); });
+    P(cx, top - 15, 1, 3, '#b9c0c6');
+    const py = top - 16, L = 30, k = Math.cos(ang), s = Math.sin(ang);
+    if (om > 30) { c.globalAlpha = Math.min(.5, (om - 30) / 40); for (let x = -L; x <= L; x++) P(cx + x, py + (Math.abs(x) < L * .9 ? 0 : 1), 1, 2, '#6f8ff0'); c.globalAlpha = 1; }
+    const blade = (dir, col, edge) => { const len = Math.round(L * Math.abs(k)), sgn = Math.sign(k * dir) || 1, w = 4; for (let i = 1; i <= len; i++) { const yy = py - 1 + Math.round(s * dir * i / L * 2); P(cx + sgn * i - (sgn < 0 ? 0 : 0), yy, 1, i > len - 3 ? w - 1 : w, i % 5 === 0 ? edge : col); } };
+    if (s * 1 >= 0) { blade(-1, '#3d5fd8', '#5a7cf0'); blade(1, '#4f71ea', '#7d98f5'); } else { blade(1, '#4f71ea', '#7d98f5'); blade(-1, '#3d5fd8', '#5a7cf0'); }
+    P(cx - 1, py - 1, 3, 3, '#f6d36b'); P(cx - 1, py - 1, 1, 1, '#fff');
   }
+  function pill(x, y, s, align) { const w = s.length * 4 + 5; const X0 = align === 'r' ? x - w : x; P(X0, y, w, 10, 'rgba(255,255,255,.78)'); text(c, s, X0 + 3, y + 3, '#202124'); }
   const stop = loop((dt, now) => {
     t += dt; om = Math.max(0, om - (.6 + om * .33) * dt); ang += om * dt;
     if (!fly) { if (om > 52) lift += dt; else lift = Math.max(0, lift - dt); if (lift > .9 && !X.reduce) { fly = {y: 0, vy: -10, phase: 'up', t: 0}; flights++; X.tone(300, .4, 'triangle', .04, 900); say(flights === 1 ? 'Liftoff! That’s enough RPM to fly.' : `Liftoff number ${flights}.`, base); } }
     let hy = 0, hx = 0;
-    if (fly) { if (fly.phase !== 'down') om = Math.max(om, 54);
+    if (fly) {
+      if (fly.phase !== 'down') om = Math.max(om, 54);
       fly.t += dt;
-      if (fly.phase === 'up') { fly.vy -= 90 * dt; fly.y = Math.max(-40, fly.y + fly.vy * dt); hx = Math.round(Math.sin(fly.t * 3) * 6); if (fly.y <= -40) { fly.phase = 'wait'; fly.t = 0; } }
-      else if (fly.phase === 'wait') { hx = Math.round(Math.sin(fly.t * 3) * 6); fly.y = -40 + Math.sin(fly.t * 4) * 2; if (fly.t > 1.4) { fly.phase = 'down'; fly.t = 0; } }
-      else { fly.y += 18 * dt; om = Math.max(om, 22); hx = Math.round(Math.sin(fly.t * 2.6) * 10); if (fly.y >= 0) { fly = null; lift = 0; om = 12; X.tone(160, .08, 'square', .04); } }
-      if (fly) { P(100 + hx - 14, 86, 28, 2, 'rgba(0,0,0,.12)'); }
+      if (fly.phase === 'up') { fly.vy -= 70 * dt; fly.y = Math.max(-16, fly.y + fly.vy * dt); hx = Math.round(Math.sin(fly.t * 3) * 5); if (fly.y <= -16) { fly.phase = 'wait'; fly.t = 0; } }
+      else if (fly.phase === 'wait') { hx = Math.round(Math.sin(fly.t * 3) * 5); fly.y = -16 + Math.sin(fly.t * 4) * 1.5; if (fly.t > 1.4) { fly.phase = 'down'; fly.t = 0; } }
+      else { fly.y += 14 * dt; om = Math.max(om, 22); hx = Math.round(Math.sin(fly.t * 2.6) * 5); if (fly.y >= 0) { fly = null; lift = 0; om = 12; X.tone(160, .08, 'square', .04); } }
       hy = fly ? Math.round(fly.y) : 0;
     }
-    const jit = om > 34 && !X.reduce ? Math.round(Math.sin(t * 40) * (om - 34) / 16) : 0;
-    P(0, 0, W, 50, '#cfe9f7'); P(0, 50, W, 40, '#e3f2fb');
-    [[30, 18], [150, 12], [110, 30]].forEach(([x, y], i) => { const cx = (x + t * (3 + i) ) % 230 - 20; P(cx, y, 18, 4, '#ffffff'); P(cx + 4, y - 3, 9, 3, '#ffffff'); });
-    P(0, 90, W, 20, '#e8dccb'); P(0, 90, W, 1, '#d4c4ad');
-    P(60, 84, 80, 22, '#c79a62'); P(60, 84, 80, 2, '#d9b07a'); P(97, 84, 6, 22, '#e3c494'); P(64, 98, 14, 1, '#a87d48');
-    ['#4285f4', '#ea4335', '#fbbc05', '#34a853'].forEach((col, i) => P(112 + i * 5, 96, 3, 3, col));
-    hat(100 + hx + jit, 84 + hy);
-    text(c, 'RPM ' + Math.round(om * 60 / (Math.PI * 2)), 5, 5, '#3c4043');
-    if (flights) text(c, 'LIFTOFFS ' + flights, 195, 5, '#3c4043', 1, 'r');
+    const jit = om > 34 && !X.reduce && !fly ? Math.round(Math.sin(t * 40) * (om - 34) / 16) : 0;
+    // sky, clouds, desk, box
+    P(0, 0, W, 50, '#cfe9f7'); P(0, 50, W, 20, '#e3f2fb');
+    [[20, 12, 0], [104, 8, 1], [70, 24, 2]].forEach(([x, y, i]) => { const cx = (x + t * (2 + i)) % 180 - 15; P(cx, y, 16, 4, '#ffffff'); P(cx + 3, y - 3, 9, 3, '#ffffff'); });
+    P(0, 70, W, 14, '#e8dccb'); P(0, 70, W, 1, '#d4c4ad');
+    P(28, 68, 94, 16, '#c79a62'); P(28, 68, 94, 2, '#d9b07a'); P(72, 68, 6, 16, '#e3c494'); P(32, 78, 14, 1, '#a87d48');
+    ['#4285f4', '#ea4335', '#fbbc05', '#34a853'].forEach((col, i) => P(96 + i * 5, 77, 3, 3, col));
+    const shw = Math.max(20, 80 + hy * 2); P(75 - shw / 2, 72, shw, 2, `rgba(90,60,30,${fly ? .18 : .28})`);
+    hat(75 + hx + jit, 58 + hy, now);
+    pill(3, 3, 'RPM ' + Math.round(om * 60 / (Math.PI * 2)));
+    if (flights) pill(W - 3, 3, 'LIFTOFFS ' + flights, 'r');
   });
   return {stop};
 };

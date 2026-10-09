@@ -423,7 +423,7 @@ function girlSide(c, ox, oy, f, flip) {
   P_(9, 26, 6, 3, '#4f6d8f');
   if (f === 0) { P_(9, 29, 2, 2, '#eceff1'); P_(13, 29, 2, 2, '#eceff1'); } else if (f === 1) { P_(9, 29, 2, 1, '#4f6d8f'); P_(8, 30, 3, 1, '#eceff1'); P_(13, 29, 2, 2, '#eceff1'); } else { P_(9, 29, 2, 2, '#eceff1'); P_(13, 29, 2, 1, '#4f6d8f'); P_(13, 30, 3, 1, '#eceff1'); }
   if (WSTATE.shades) { P_(8, 9, 4, 3, '#111111'); P_(12, 10, 1, 1, '#111111'); P_(13, 9, 4, 3, '#111111'); P_(9, 9, 1, 1, '#555555'); P_(14, 9, 1, 1, '#555555'); }
-  if (WSTATE.hat) { ['#4285f4', '#ea4335', '#fbbc05', '#34a853'].forEach((col, i) => P_(6 + i * 3, 1, 3, 3, col)); P_(11, 0, 2, 1, '#9aa0a6'); const w = Math.round(Math.abs(Math.cos(performance.now() / (reduce ? 1e9 : 60))) * 6) + 1; P_(12 - w, -1, w * 2, 1, '#ea4335'); }
+  if (WSTATE.hat) { const C_ = (x, y, w, h, k) => R(c, ox + x * S2, oy + y * S2, w * S2, h * S2, k); cap(C_, 12, 6, 8, 'front', performance.now()); }
 }
 function moeNap(c, ox, oy, now) {
   const P_ = (x, y, w, h, k) => R(c, ox + x, oy + y, w, h, k), b = reduce ? 0 : Math.floor(now / 900) % 2;
@@ -543,7 +543,7 @@ function ledCard() {
 }
 /* mini experiences live in minis.js, loaded once the game opens */
 let minisP = null, miniInst = null;
-function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=1'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
+function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=2'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
 const MCTX = {reduce, get touch() { return touch; }, led, ledColor, state: WSTATE, girl, moeSprite,
   tone: (...a) => window.__tone && window.__tone(...a), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
 function stopMini() { if (miniInst) { try { miniInst.stop(); } catch (e) {} miniInst = null; } }
@@ -553,11 +553,14 @@ function fitCard() {
   const el = inn.querySelector('.w-mini:not([hidden]) canvas') || inn.querySelector('.w-img:not([hidden])'); if (!el) return;
   el.style.width = ''; el.style.maxHeight = '';
   for (let k = 0; k < 3; k++) {
-    const over = inn.scrollHeight - inn.clientHeight; if (over <= 0) return;
+    const over = inn.scrollHeight - inn.clientHeight; if (over <= 0) break;
     const h = el.getBoundingClientRect().height, nh = Math.max(96, Math.floor(h - over - 4));
     if (el.tagName === 'CANVAS') el.style.width = Math.floor(nh * el.width / el.height) + 'px'; else el.style.maxHeight = (nh - (el.offsetHeight - el.clientHeight)) + 'px';
   }
+  snapCv(el);
 }
+/* pixel canvases look crisp at whole-number scales; snap down to one when it's at least 2x */
+function snapCv(el) { if (el.tagName !== 'CANVAS' || !el.dataset.snap) return; const bw = el.offsetWidth - el.clientWidth, k = Math.floor((el.getBoundingClientRect().width - bw) / el.width); if (k >= 2) el.style.width = (k * el.width + bw) + 'px'; }
 addEventListener('resize', () => requestAnimationFrame(fitCard));
 function miniCard(id, c) {
   stopMini(); openId = id; cardAt = performance.now();
@@ -777,12 +780,36 @@ const ftile = document.createElement('canvas'); ftile.width = 48; ftile.height =
   [[4, 6], [28, 22]].forEach(([x, y]) => { P(x + 3, y + 14, 10, 3, 'rgba(0,0,0,.12)'); P(x + 7, y + 11, 2, 5, '#6b4a35'); for (let i = 0; i < 3; i++) { const ww = 4 + i * 3, y0 = y - 2 + i * 4; P(x + 8 - ww, y0 + 3, ww * 2, 3, '#2f5e46'); P(x + 8 - ww + 1, y0 + 2, ww * 2 - 2, 1, '#3b7155'); } });
   P(22, 4, 1, 1, '#88b87a'); P(40, 12, 1, 1, '#88b87a'); P(14, 32, 1, 1, '#88b87a'); }
 const forest = g.createPattern(ftile, 'repeat');
-const sbuf = document.createElement('canvas'); sbuf.width = 24; sbuf.height = 30; const sbc = sbuf.getContext('2d'); const GIRL_K = 1.4, MOE_K = 1.6;
+const sbuf = document.createElement('canvas'); sbuf.width = 24; sbuf.height = 38; const sbc = sbuf.getContext('2d'); const GIRL_K = 1.4, MOE_K = 1.6;
+/* the Google intern cap: yellow front with "Intern", blue on the wearer's right, red on the left, green bill, bead stem, blue propeller */
+const CAP = {Y: ['#f8d22a', '#e2b40e'], B: ['#4a6ee8', '#2f4bb8'], R: ['#e9483c', '#b8322a'], G: ['#38b35a', '#1f7a39'], P: ['#4f71ea', '#7d98f5']};
+function cap(P, cx, y0, hw, view, now) {
+  // hw = half the crown width; the crown is a dome on rows y0-4 .. y0-1, the bill sits on y0
+  const rows = [hw - 4, hw - 2, hw - 1, hw];
+  rows.forEach((h, i) => { const y = y0 - 4 + i;
+    for (let x = -h; x < h; x++) {
+      const edge = x === -h || x === h - 1;
+      let k;
+      if (view === 'front') k = Math.abs(x + .5) < hw * .45 ? 'Y' : x < 0 ? 'B' : 'R';
+      else if (view === 'back') k = x < 0 ? 'R' : 'B';
+      else if (view === 'right') k = x >= h - Math.max(2, Math.round(h * .45)) ? 'Y' : 'R';
+      else k = x < -h + Math.max(2, Math.round(h * .45)) ? 'Y' : 'B';
+      P(cx + x, y, 1, 1, CAP[k][edge ? 1 : 0]);
+    } });
+  if (view === 'front') { P(cx - Math.round(hw * .3), y0 - 3, 2, 1, 'rgba(255,255,255,.55)'); P(cx - hw - 1, y0, hw * 2 + 2, 1, CAP.G[0]); P(cx - hw, y0 + 1, hw * 2, 1, CAP.G[1]); }
+  else if (view === 'right') { P(cx - hw, y0, hw * 2 + 3, 1, CAP.G[0]); P(cx + hw - 1, y0 + 1, 4, 1, CAP.G[1]); }
+  else if (view === 'left') { P(cx - hw - 3, y0, hw * 2 + 3, 1, CAP.G[0]); P(cx - hw - 3, y0 + 1, 4, 1, CAP.G[1]); }
+  else { P(cx - 1, y0 - 2, 2, 2, '#2a1a14'); P(cx - hw, y0, hw * 2, 1, CAP.R[1]); }
+  // stem with beads, then the propeller
+  P(cx, y0 - 5, 1, 1, '#f6d36b'); P(cx, y0 - 6, 1, 1, CAP.R[0]); P(cx, y0 - 7, 1, 1, CAP.G[0]);
+  const w = reduce ? 4 : Math.round(Math.abs(Math.cos(now / 55)) * 5) + 1;
+  P(cx - w, y0 - 8, w, 1, CAP.P[0]); P(cx + 1, y0 - 8, w, 1, CAP.P[1]); P(cx, y0 - 8, 1, 1, '#f6d36b');
+}
 /* easter eggs from the houses, worn on the map: sunglasses (LEDs at full white) and the propeller hat */
 function gear(c, dir, now) {
-  const Q = (x, y, w, h, k) => R(c, 2 + x, 2 + y, w, h, k);
+  const Q = (x, y, w, h, k) => R(c, 2 + x, 10 + y, w, h, k);
   if (WSTATE.shades && dir !== 'up') { if (dir === 'down') { Q(6, 7, 4, 3, '#111'); Q(10, 8, 1, 1, '#111'); Q(11, 7, 4, 3, '#111'); Q(7, 7, 1, 1, '#555'); Q(12, 7, 1, 1, '#555'); } else { const x = dir === 'left' ? 4 : 12; Q(x, 7, 4, 3, '#111'); Q(x + (dir === 'left' ? 3 : 0), 7, 1, 1, '#555'); } }
-  if (WSTATE.hat) { ['#4285f4', '#ea4335', '#fbbc05', '#34a853'].forEach((col, i) => Q(5 + i * 3, -1, 3, 2, col)); Q(9, -2, 2, 1, '#9aa0a6'); const w = Math.round(Math.abs(Math.cos(now / (reduce ? 1e9 : 55))) * 5) + 1; Q(10 - w, -3, w * 2, 1, '#ea4335'); }
+  if (WSTATE.hat) { if (dir === 'down') cap(Q, 10, 3, 7, 'front', now); else if (dir === 'up') cap(Q, 10, 3, 7, 'back', now); else if (dir === 'right') cap(Q, 9, 3, 6, 'right', now); else cap(Q, 11, 3, 6, 'left', now); }
 }
 /* lights you set in the houses stay on around the map */
 function houseLights(cam, now) {
@@ -822,7 +849,7 @@ function draw(now) {
     R(g, bx + 2, by + 9, 30, 3, 'rgba(20,50,90,.35)'); R(g, bx + 3, by, 26, 9, '#8a5a36'); R(g, bx, by + 1, 32, 6, '#8a5a36'); R(g, bx + 2, by + 2, 28, 4, '#b07a4a'); R(g, bx, by + 1, 32, 1, '#6b4426'); R(g, bx + 3, by + 8, 26, 1, '#5e3a20');
     const oar = Math.floor(now / 220) % 2; R(g, bx + 14, by - 2 + oar * 2, 2, 12, '#d9b483'); R(g, bx + 13, by + 9 + oar * 2, 4, 3, '#d9b483');
     if (!reduce) { const w = Math.floor(now / 120) % 3; R(g, bx - 3 - w, by + 4, 2, 1, '#cfe6f7'); R(g, bx + 34 + w, by + 4, 2, 1, '#cfe6f7'); } }
-  const sprites = [[moe.y, () => { sbc.clearRect(0, 0, 24, 30); moeSprite(sbc, 2, 3, moe.moving ? mf : 0); g.drawImage(sbuf, 0, 0, 20, 17, Math.round(moe.x - 9 * MOE_K - cam.x), Math.round(moe.y - 14 * MOE_K - cam.y), Math.round(20 * MOE_K), Math.round(17 * MOE_K)); }], [P.y, () => { sbc.clearRect(0, 0, 24, 30); girl(sbc, 2, 2, P.dir, f); gear(sbc, P.dir, now); g.drawImage(sbuf, 0, 0, 24, 30, Math.round(P.x - 12 * GIRL_K - cam.x), Math.round(P.y - 27 * GIRL_K - cam.y + bob), Math.round(24 * GIRL_K), Math.round(30 * GIRL_K)); }]].sort((a, b) => a[0] - b[0]);
+  const sprites = [[moe.y, () => { sbc.clearRect(0, 0, 24, 38); moeSprite(sbc, 2, 3, moe.moving ? mf : 0); g.drawImage(sbuf, 0, 0, 20, 17, Math.round(moe.x - 9 * MOE_K - cam.x), Math.round(moe.y - 14 * MOE_K - cam.y), Math.round(20 * MOE_K), Math.round(17 * MOE_K)); }], [P.y, () => { sbc.clearRect(0, 0, 24, 38); girl(sbc, 2, 10, P.dir, f); gear(sbc, P.dir, now); g.drawImage(sbuf, 0, 0, 24, 38, Math.round(P.x - 12 * GIRL_K - cam.x), Math.round(P.y - 35 * GIRL_K - cam.y + bob), Math.round(24 * GIRL_K), Math.round(38 * GIRL_K)); }]].sort((a, b) => a[0] - b[0]);
   sprites.forEach(s => s[1]());
   if (TINT) {
     g.fillStyle = TINT; g.fillRect(0, 0, VW, VH);
