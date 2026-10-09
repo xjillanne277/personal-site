@@ -330,9 +330,10 @@ const RMW = 360, RMH = 180, FLOOR = 172;
 const room = document.createElement('canvas'); room.width = RMW; room.height = RMH;
 const rc = room.getContext('2d');
 /* the LED controller: six strips, shared by the room, the Tesla Lighting house and the map; kept until a refresh */
-const led = {strips: Array.from({length: 6}, () => ({r: 255, g: 150, b: 70, w: 80})), mode: 'static', pre: 1, touched: false};
+const led = {strips: Array.from({length: 6}, () => ({r: 255, g: 150, b: 70, w: 80})), mode: 'static', pre: 1, touched: false, br: 100};
 const hsl = (h, s, l) => { const f = n => { const k = (n + h * 12) % 12, a = s * Math.min(l, 1 - l); return Math.round(255 * (l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)))); }; return [f(0), f(8), f(4)]; };
-function ledColor(i, now) {
+function ledColor(i, now) { const k = (led.br == null ? 100 : led.br) / 100; return ledRaw(i, now).map(v => Math.round(v * k)); }
+function ledRaw(i, now) {
   if (led.mode === 'rainbow') return hsl(((i / 6) + (reduce ? 0 : now / 5000)) % 1, 1, .6);
   if (led.mode === 'chase') { const k = reduce ? 1 : .2 + .8 * Math.max(0, Math.sin(now / 170 - i * 1.05)); return hsl(((i / 6) + (reduce ? 0 : now / 2600)) % 1, 1, .55).map(v => Math.round(v * k)); }
   const s = led.strips[i]; return [s.r, s.g, s.b].map(v => Math.round(Math.min(255, v + s.w * .8)));
@@ -581,7 +582,7 @@ function ledCard() {
 }
 /* mini experiences live in minis.js, loaded once the game opens */
 let minisP = null, miniInst = null;
-function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=12'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
+function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=13'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
 const MCTX = {reduce, get touch() { return touch; }, led, ledColor, state: WSTATE, girl, moeSprite,
   tone: (...a) => window.__tone && window.__tone(...a), motor: om => window.__motor && window.__motor.set(om), thock: (v, p) => window.__thock && window.__thock(v, p), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
 function stopMini() { window.__motor && window.__motor.stop(); if (miniInst) { try { miniInst.stop(); } catch (e) {} miniInst = null; } }
@@ -743,8 +744,17 @@ addEventListener('keydown', e => {
 });
 addEventListener('keyup', e => { if (KEYMAP[e.key]) keys.delete(KEYMAP[e.key]); });
 addEventListener('blur', () => keys.clear());
+/* touch: a quick tap walks there (with pathfinding); press and drag is a thumbstick */
+const joyEl = document.createElement('div'); joyEl.id = 'joy'; joyEl.hidden = true; joyEl.innerHTML = '<i></i>'; cv.parentElement.appendChild(joyEl);
+let joy = null;
 cv.addEventListener('pointerdown', e => {
   touch = e.pointerType === 'touch'; closeCard();
+  if (touch && scene === 'world') { if (!e.isPrimary) return; joy = {id: e.pointerId, x0: e.clientX, y0: e.clientY, t0: performance.now(), on: false, vx: 0, vy: 0, e}; try { cv.setPointerCapture(e.pointerId); } catch (er) {} return; }
+  tapAt(e);
+});
+const joyEnd = e => { if (!joy || e.pointerId !== joy.id) return; const j = joy; joy = null; joyEl.hidden = true; if (!j.on && e.type === 'pointerup' && performance.now() - j.t0 < 600) tapAt(j.e); };
+cv.addEventListener('pointerup', joyEnd); cv.addEventListener('pointercancel', joyEnd);
+function tapAt(e) {
   if (scene === 'room') { const o = roomHit(e), cam = roomCam(); if (o && o.id === 'moe') { window.__meow && window.__meow(); moeHeart = performance.now(); } if (o && Math.abs(o.stand - RP.x) < 20) { roomOpen(o); return; } RP.tx = o ? o.stand : Math.max(12, Math.min(RMW - 14, e.clientX / SC + cam.x)); RP.after = o && o.id === 'moe' ? o : null; return; }
   const cam = camera(); const wx = (e.clientX - offX) / SC + cam.x, wy = (e.clientY - offY) / SC + cam.y;
   const mo = scene === 'room' ? {x: roomMoe.x + 8, y: roomMoe.y + 10} : moe;
@@ -752,8 +762,15 @@ cv.addEventListener('pointerdown', e => {
   const hit = cur().L.find(l => wx >= l.tx * TS - 4 && wx <= (l.tx + l.w) * TS + 4 && wy >= l.ty * TS - 8 && wy <= (l.ty + l.h) * TS + 4);
   if (hit) { if (hit.kind !== 'nsx' && hit.kind !== 'c5' && rectDist(hit) < 26) openCard(hit); else walkTo(hit, true); return; }
   goTo(wx, wy);
-});
-cv.addEventListener('pointermove', e => { if (scene !== 'world' || !(e.buttons & 1) || e.pointerType === 'touch' && !e.isPrimary) return; const cam = camera(); P.target = {x: (e.clientX - offX) / SC + cam.x, y: (e.clientY - offY) / SC + cam.y}; P.path = null; P.after = null; P.stuck = 0; });
+}
+cv.addEventListener('pointermove', e => {
+  if (joy && e.pointerId === joy.id) {
+    const dx = e.clientX - joy.x0, dy = e.clientY - joy.y0, d = Math.hypot(dx, dy), R = 44;
+    if (!joy.on && d > 16) { joy.on = true; P.target = null; P.path = null; P.after = null; joyEl.hidden = false; joyEl.style.transform = `translate(${joy.x0}px,${joy.y0}px)`; }
+    if (joy.on) { const k = Math.min(1, d / R); joy.vx = d ? dx / d * k : 0; joy.vy = d ? dy / d * k : 0; joyEl.firstChild.style.transform = `translate(${joy.vx * R}px,${joy.vy * R}px)`; }
+    return;
+  }
+  if (scene !== 'world' || !(e.buttons & 1) || e.pointerType === 'touch') return; const cam = camera(); P.target = {x: (e.clientX - offX) / SC + cam.x, y: (e.clientY - offY) / SC + cam.y}; P.path = null; P.after = null; P.stuck = 0; });
 prompt.addEventListener('click', () => { if (scene === 'room') { const o = roomNearest(); if (o) roomOpen(o); return; } const n = nearest(); if (n) openCard(n); });
 
 /* ---------------- loop ---------------- */
@@ -774,6 +791,7 @@ function step(now) {
   if (driveFor && Math.hypot(spotPx(L.find(o => o.id === driveFor)).x - P.x, spotPx(L.find(o => o.id === driveFor)).y - P.y) > 90) hideDrive();
   let vx = 0, vy = 0;
   if (keys.has('left')) vx -= 1; if (keys.has('right')) vx += 1; if (keys.has('up')) vy -= 1; if (keys.has('down')) vy += 1;
+  let joyK = 1; if (joy && joy.on && Math.hypot(joy.vx, joy.vy) > .25) { vx = joy.vx; vy = joy.vy; joyK = Math.min(1, Math.hypot(vx, vy) * 1.15); }
   if (!vx && !vy && P.target) {
     const dx = P.target.x - P.x, dy = P.target.y - P.y, d = Math.hypot(dx, dy);
     if (d < 3) { if (P.path && P.path.length) P.target = P.path.shift(); else { P.target = null; P.path = null; if (P.after) { const l = P.after; P.after = null; openCard(l); } } }
@@ -788,7 +806,7 @@ function step(now) {
     if (boat.t >= 1) { const tg = P.target; boat = null; boatCool = .8; const keep = tg && !(scene === 'world' && tiles[idx(Math.floor(tg.x / TS), Math.floor(tg.y / TS))] === T.WATER) && (tg.x - P.x) * boat0dir >= -4; if (!keep) { if (P.path && P.path.length) { while (P.path.length > 1 && (P.path[0].x - P.x) * boat0dir < 0) P.path.shift(); P.target = P.path.shift(); } else { P.target = null; P.after = null; } } P.stuck = 0; }
     draw(now); requestAnimationFrame(step); return;
   }
-  const sp = 175 * dt, len = Math.hypot(vx, vy) || 1;
+  const sp = 175 * dt * joyK, len = Math.hypot(vx, vy) || 1;
   P.moving = !!(vx || vy);
   if (P.moving) {
     vx = vx / len * sp; vy = vy / len * sp;
@@ -812,7 +830,7 @@ function step(now) {
       if (!okY && vy && Math.abs(vy) > Math.abs(vx) && feetBlocked(P.x, P.y + vy)) { for (let k = 1; k <= 8; k++) { if (!feetBlocked(P.x - k, P.y + vy)) { P.x -= Math.min(k, sp); break; } if (!feetBlocked(P.x + k, P.y + vy)) { P.x += Math.min(k, sp); break; } } }
     }
     if (P.target && !across && Math.hypot(P.x - ox, P.y - oy) < sp * .2) { P.stuck += dt; if (P.stuck > .35 && P.final && !P.retried) { const f = P.final, a = P.after; goTo(f.x, f.y, a); P.retried = true; } else if (P.stuck > .35) { const l = P.after; P.target = null; P.after = null; if (l && Math.hypot(spotPx(l).x - P.x, spotPx(l).y - P.y) < 60) openCard(l); } } else P.stuck = 0;
-    walkT += dt; trail.push([P.x, P.y]); if (trail.length > 60) trail.shift();
+    if (Math.hypot(P.x - ox, P.y - oy) < sp * .15) P.moving = false; else { walkT += dt; trail.push([P.x, P.y]); if (trail.length > 60) trail.shift(); }
   }
   // Moe follows a few steps behind (outside only)
   if (scene === 'world') {

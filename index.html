@@ -929,7 +929,7 @@ html[data-theme="dark"] .cs-stats.cs-hl.cs-num dt{color:#ecebe7}html[data-theme=
 .w-foot .w-more{margin-top:0}
 .w-go:disabled{opacity:.55;cursor:default}
 @media (max-width:560px){.w-card-in{padding:16px 14px 12px}.w-card-in h2{font-size:21px;padding-right:34px}.w-card-in .w-meta{margin-bottom:8px;font-size:13.5px}.w-sl2{column-gap:10px}.w-sl2 .w-sl{grid-template-columns:2.9em 1fr 1.9em;gap:5px;font-size:13px}.w-keys{gap:5px}.w-keycap{min-width:31px;height:32px;padding:0 6px}.w-ctl .w-hint{font-size:13.5px}}
-@media (max-width:560px) and (min-height:561px){.w-card-in{--cardH:calc(100dvh - 176px - env(safe-area-inset-bottom,0px))}}
+@media (max-width:560px) and (min-height:561px){.w-card-in{--cardH:calc(100dvh - 206px - env(safe-area-inset-bottom,0px) - env(safe-area-inset-top,0px))}}
 @media (max-height:560px){
   #world-card{bottom:calc(8px + env(safe-area-inset-bottom,0px));left:calc(12px + env(safe-area-inset-left,0px));transform:none;width:min(900px,calc(100% - 214px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px)))}
   .w-card-in{--cardH:calc(100dvh - 16px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));padding:14px 18px 12px}
@@ -1036,6 +1036,14 @@ html[data-theme="dark"] .pf-play-go{background:#2a6e50}
 @media (max-width:760px){.bm-body{grid-template-columns:minmax(0,1fr)}.bm-list{grid-template-columns:1fr 1fr}.bm-list .bm-pin{font-size:12.5px}}
 @media (max-height:560px){.bm-body{grid-template-columns:auto minmax(180px,1fr)}.bm-frame canvas{width:auto;max-width:100%;max-height:calc(100dvh - 120px)}.bm-frame{width:fit-content}.bm-list{grid-template-columns:1fr;max-height:calc(100dvh - 120px);overflow:auto;padding:2px}.bm-title{margin-bottom:6px}}
 body:has(#bigmap:not([hidden])) .exit-game,body:has(#bigmap:not([hidden])) .sound{visibility:hidden}
+.w-sl2 .w-sl.w-br{grid-column:1 / -1;grid-template-columns:6.2em 1fr 2.6em}
+/* drive scene: Back home is the way out, so the Exit button doesn't cover the hint */
+body:has(#track-ui:not([hidden])) .exit-game{display:none}
+/* touch thumbstick */
+#joy{position:absolute;left:0;top:0;z-index:6;width:0;height:0;pointer-events:none}
+#joy::before{content:"";position:absolute;left:-46px;top:-46px;width:92px;height:92px;border-radius:50%;background:rgba(251,243,228,.28);box-shadow:0 0 0 3px rgba(58,42,32,.45),inset 0 0 0 2px rgba(251,243,228,.6)}
+#joy i{position:absolute;left:-20px;top:-20px;width:40px;height:40px;border-radius:50%;background:rgba(251,243,228,.92);box-shadow:0 0 0 3px #6b4a32,0 3px 0 3px rgba(0,0,0,.2)}
+#joy[hidden]{display:none}
 /* game: 44px controls on touch screens, time-of-day clear of Exit */
 @media (pointer:coarse),(max-width:760px){
   #world-bar button.b{min-height:44px}

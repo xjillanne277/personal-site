@@ -39,14 +39,14 @@ M.led = (host, ctl, X) => {
   const L = X.led, NAMES = ['Off', 'Warm', 'Cool', 'Pink', 'Sunset', 'Ocean', 'Rainbow', 'Chase'];
   let sel = -1, seq = [];
   const SY = i => 25 + i * 13;
-  ctl.innerHTML = `<div class="w-sl2">${['r', 'g', 'b', 'w'].map(k => `<label class="w-sl"><span>${{r: 'Red', g: 'Green', b: 'Blue', w: 'White'}[k]}</span><input type="range" min="0" max="255" data-k="${k}"><output></output></label>`).join('')}</div>
+  ctl.innerHTML = `<div class="w-sl2">${['r', 'g', 'b', 'w'].map(k => `<label class="w-sl"><span>${{r: 'Red', g: 'Green', b: 'Blue', w: 'White'}[k]}</span><input type="range" min="0" max="255" data-k="${k}"><output></output></label>`).join('')}<label class="w-sl w-br"><span>Brightness</span><input type="range" min="0" max="100" data-br><output></output></label></div>
     <div class="w-keys" role="group" aria-label="Presets">${[1, 2, 3, 4, 5, 6, 7].map(n => `<button type="button" class="w-keycap" data-pre="${n}" aria-label="Preset ${n}, ${NAMES[n]}" title="${NAMES[n]}">${n}</button>`).join('')}<button type="button" class="w-keycap w-off" data-pre="0" aria-label="Lights off">Off</button></div>
     <p class="w-hint" aria-live="polite"></p>`;
-  const sls = [...ctl.querySelectorAll('input')];
+  const sls = [...ctl.querySelectorAll('input[data-k]')], brs = ctl.querySelector('[data-br]');
   const base = () => sel < 0 ? 'Pick a preset or drag the sliders. Tap a strip to set just that one.' : `Setting strip ${sel + 1} only. Tap it again for all six.`;
   const say = hint(ctl);
   const cur = () => L.strips[sel < 0 ? 0 : sel];
-  const sync = () => { sls.forEach(i => { i.value = cur()[i.dataset.k]; i.nextElementSibling.textContent = i.value; }); ctl.querySelectorAll('[data-pre]').forEach(b => b.setAttribute('aria-pressed', String(L.pre === +b.dataset.pre))); };
+  const sync = () => { sls.forEach(i => { i.value = cur()[i.dataset.k]; i.nextElementSibling.textContent = i.value; }); brs.value = L.br == null ? 100 : L.br; brs.nextElementSibling.textContent = brs.value + '%'; ctl.querySelectorAll('[data-pre]').forEach(b => b.setAttribute('aria-pressed', String(L.pre === +b.dataset.pre))); };
   const set = (s, v) => Object.assign(s, {r: v[0], g: v[1], b: v[2], w: v[3]});
   const fill = v => { L.strips.forEach(s => set(s, v)); L.mode = 'static'; };
   const grad = a => { a.forEach((v, i) => set(L.strips[i], v)); L.mode = 'static'; };
@@ -67,6 +67,7 @@ M.led = (host, ctl, X) => {
     shades(); sync();
   }
   sls.forEach(i => i.addEventListener('input', () => { const k = i.dataset.k, v = +i.value; (sel < 0 ? L.strips : [L.strips[sel]]).forEach(s => { s[k] = v; }); i.nextElementSibling.textContent = v; L.mode = 'static'; L.pre = 'custom'; L.touched = true; shades(); ctl.querySelectorAll('[data-pre]').forEach(b => b.setAttribute('aria-pressed', 'false')); }));
+  brs.addEventListener('input', () => { L.br = +brs.value; L.touched = true; brs.nextElementSibling.textContent = brs.value + '%'; });
   ctl.querySelectorAll('[data-pre]').forEach(b => b.addEventListener('click', () => preset(+b.dataset.pre)));
   cv.addEventListener('pointerdown', e => {
     const p = pt(e);
