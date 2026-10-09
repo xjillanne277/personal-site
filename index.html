@@ -888,6 +888,11 @@ html[data-theme="dark"] .pf-now{background:#26292d}
 html[data-theme="dark"] .cs-stats.cs-hl dt{color:#959aa1}html[data-theme="dark"] .cs-stats.cs-hl dd{color:#ecebe7}
 @media (max-width:860px){.cs-stats.cs-hl{grid-template-columns:minmax(0,1fr)}.cs-stats.cs-hl div,.cs-stats.cs-hl div+div{padding:12px 0;border-left:0}.cs-stats.cs-hl div+div{border-top:1px solid #e3e6ea}html[data-theme="dark"] .cs-stats.cs-hl div+div{border-color:#33373c}}
 html[data-theme="dark"] .case-sum{color:#c3c6cb}
+/* Level hero: portrait CAD gets more height on desktop; number strip uses the LED highlight strip layout */
+@media (min-width:861px){.proj-sheet[data-proj="level"] .cs-hero-img{max-height:420px}}
+.cs-stats.cs-hl.cs-num dt{font:600 22px/1.15 "IBM Plex Sans",sans-serif;letter-spacing:-.01em;text-transform:none;color:#14181d}
+.cs-stats.cs-hl.cs-num dd{margin-top:4px;font-size:14px;line-height:1.4;color:#59626c}
+html[data-theme="dark"] .cs-stats.cs-hl.cs-num dt{color:#ecebe7}html[data-theme="dark"] .cs-stats.cs-hl.cs-num dd{color:#959aa1}
 #xp-dlg{border:0;padding:0;border-radius:14px;max-width:720px;width:calc(100% - 32px);max-height:86vh;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 #xp-dlg::backdrop{background:rgba(17,20,24,.55)}
 #xp-dlg .xp-in{padding:28px 32px 30px;overflow:auto;max-height:86vh;box-sizing:border-box}
@@ -1212,6 +1217,11 @@ html[data-theme="dark"] .case-sum{color:#c3c6cb}
       </div>
       <img class="cs-hero-img" src="img/lc-v2.webp" alt="CAD of the keypad test fixture mounted on the lock">
     </header>
+    <dl class="cs-stats cs-hl cs-num">
+      <div><dt>$12M</dt><dd>projected cost savings</dd></div>
+      <div><dt>2M+</dt><dd>test cycles completed</dd></div>
+      <div><dt>25%</dt><dd>reduction in actuation-force variability</dd></div>
+    </dl>
 
     <section class="cs-sec">
       <h2><span>01</span>Lifetime testing: capacitive-touch keypad</h2>
