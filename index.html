@@ -1703,7 +1703,7 @@ function show(m) {
   if (prev === 'play' && window.World) window.World.stop();
   if (m === 'play') { if (!gameMuted) setMusic(true); }
   else if (AC && musicOn && (m === 'portfolio' || prev === 'play')) setMusic(false);
-  if (m === 'portfolio') { pfEl.scrollTop = 0; document.getElementById('pf-name').focus({preventScroll: true}); pfEl.querySelectorAll('img[loading="lazy"]').forEach(im => { im.loading = 'eager'; }); }
+  if (m === 'portfolio') { pfEl.scrollTop = 0; document.getElementById('pf-name').focus({preventScroll: true}); eagerImgs(pfEl); preloadWriteups(); }
   if (m === 'play' && window.World) window.World.start();
   document.title = m === 'play' ? 'Jillanne Youssef · Game' : 'Jillanne Youssef | Mechanical & Product Design Engineer';
   if (projEl.hidden) window.pv && pv(m === 'play' ? 'game' : m);
@@ -1732,12 +1732,21 @@ function projNav(id) {
   nav.innerHTML = (p ? `<button type="button" data-step="${p}"><small>← Previous</small><b>${navTitle(p)}</b></button>` : '') + (n ? `<button type="button" class="nx" data-step="${n}"><small>Next →</small><b>${navTitle(n)}</b></button>` : '');
   art.appendChild(nav);
 }
+/* load images up front instead of as they scroll into view, so they don't pop in */
+function eagerImgs(root) { if (root) root.querySelectorAll('img[loading="lazy"]').forEach(im => { im.loading = 'eager'; }); }
+var preloaded = false;
+function preloadWriteups() {
+  if (preloaded) return; preloaded = true;
+  const go = () => eagerImgs(projEl);
+  'requestIdleCallback' in window ? requestIdleCallback(go, {timeout: 2500}) : setTimeout(go, 1200);
+}
 function openProj(id, sub) {
   const stop = sub ? id + '/' + sub : id;
   if (!projEl.hidden && projOpenId === id) { projNav(stop); scrollToStop(id, sub); return; }
   reportProjTime();
   projEl.querySelectorAll('[data-proj]').forEach(a => a.hidden = a.dataset.proj !== id);
   const a = projEl.querySelector(`[data-proj="${id}"]`);
+  eagerImgs(a); preloadWriteups();
   document.getElementById('proj-crumb').textContent = a ? a.dataset.crumb : '';
   document.getElementById('proj-close').textContent = mode === 'play' ? (matchMedia('(pointer: coarse)').matches ? '← Back to the game' : '← Back to the game (Esc)') : '← Back to portfolio';
   projNav(stop);
