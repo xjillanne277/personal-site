@@ -935,6 +935,7 @@ html[data-theme="dark"] .cs-stats.cs-hl.cs-num dt{color:#ecebe7}html[data-theme=
   .w-ctl .w-hint{min-height:0;font-size:12.5px;margin:4px 0 0}.w-foot{margin-top:6px}.w-card-in .w-more,.w-card-in .w-go,.w-card-in .w-alt{font-size:14px;padding:7px 12px 6px}
 }
 
+.exit-note{display:block;margin-top:3px;font:italic 400 13.5px/1.3 "IBM Plex Sans",system-ui,sans-serif!important;letter-spacing:0;color:inherit!important;opacity:.85}
 /* accessibility helpers */
 .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .skip{position:absolute;left:12px;top:-60px;z-index:50;font:600 15px "IBM Plex Sans",system-ui,sans-serif;background:#111418;color:#fff;border:0;border-radius:8px;padding:12px 16px;cursor:pointer}
@@ -1081,7 +1082,7 @@ body:has(#bigmap:not([hidden])) .exit-game,body:has(#bigmap:not([hidden])) .soun
     <p class="title-ask">Where do you want to start?</p>
     <ul class="menu doors" role="menu" aria-label="Choose a version">
       <li role="none"><button role="menuitem" class="door pf" id="opt-pf" aria-current="true" data-go="portfolio"><b>Portfolio</b><span>My engineering work, quick to read. Projects, experience and résumé.</span><em>Estimated time: 3 minutes</em></button></li>
-      <li role="none"><button role="menuitem" class="door" id="opt-play" aria-current="false" data-go="play"><b>Game</b><span>Get to know me in a small pixel world: my story, my room, my cat.</span><em>Estimated time: 7 minutes<br>Exit anytime</em></button></li>
+      <li role="none"><button role="menuitem" class="door" id="opt-play" aria-current="false" data-go="play"><b>Game</b><span>Get to know me in a small pixel world: my story, my room, my cat.</span><em>Estimated time: 7 minutes<small class="exit-note">(you can exit at any time)</small></em></button></li>
     </ul>
   </div>
 </main>
@@ -1204,7 +1205,7 @@ body:has(#bigmap:not([hidden])) .exit-game,body:has(#bigmap:not([hidden])) .soun
       </div>
       <a class="pf-play" href="#play">
         <span class="pf-sprite big" aria-hidden="true"></span>
-        <span><b>Off the clock</b>My story, my room and my cat, in a small game.<em>Estimated time: 7 minutes<br>Exit anytime</em></span>
+        <span><b>Off the clock</b>My story, my room and my cat, in a small game.<em>Estimated time: 7 minutes<small class="exit-note">(you can exit at any time)</small></em></span>
         <span class="pf-play-go">Play →</span>
       </a>
     </footer>
