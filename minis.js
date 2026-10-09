@@ -286,72 +286,66 @@ M.lock = (host, ctl, X) => {
   const W = 160, H = 96, {cv, c, P, pt} = make(host, W, H, '#dfe6ea');
   ctl.innerHTML = `<div class="w-actions"><button type="button" class="w-alt" data-act>Unlock</button><span class="w-stat"></span></div><p class="w-hint" aria-live="polite"></p>`;
   const say = hint(ctl), btn = ctl.querySelector('[data-act]'), stat = ctl.querySelector('.w-stat');
-  const base = 'Tap the keypad on the door.';
-  say(base);
-  let st = 'locked', bolt = 1, door = 0, beepT = 0, taps = [], opens = 0, touched = false, lastS = '';
-  const mo = X.state.moeOut ? {ph: 'play', x: 134, t: 0, dir: 1, hop: 0} : {ph: 'in', x: 0, t: 0, dir: -1, hop: 0};
-  const ob = document.createElement('canvas'); ob.width = 24; ob.height = 20; const oc = ob.getContext('2d');
+  const DX = 44, DY = 8, DW = 72, DH = 84, KY = DY + 34, FLOOR = DY + DH + 2, IN_FLOOR = DY + DH - 5;
+  // story: wait (Moe outside) → unlock → open → enter → nap → autolock → home (the end)
+  let st, bolt, door, beepT = 0, tt = 0, touched = false, lastS = '', mx = 0, meowT = 1.2, bub = 0;
+  const reset = () => { st = 'wait'; bolt = 1; door = 0; tt = 0; mx = 120; btn.disabled = false; btn.textContent = 'Unlock'; say('Moe’s stuck outside. Tap the keypad to let him in.'); };
+  reset();
   const buf = document.createElement('canvas'); buf.width = 24; buf.height = 20; const bc = buf.getContext('2d');
-  // door geometry: big, centered
-  const DX = 44, DY = 8, DW = 72, DH = 84, KX = DX + DW - 20, KY = DY + 34;
-  function unlock() { if (st !== 'locked') return; st = 'unlocking'; beepT = .5; [880, 1047, 1319].forEach((f, i) => setTimeout(() => X.tone(f, .06, 'square', .03), i * 70)); btn.disabled = true; }
-  function lockUp() { if (st !== 'open') return; st = 'closing'; btn.disabled = true; }
-  const act = () => { touched = true; st === 'locked' ? unlock() : lockUp(); };
-  btn.addEventListener('click', act);
-  cv.addEventListener('pointerdown', e => {
-    const p = pt(e), now = performance.now();
-    if (p.x > DX - 4 && p.x < DX + DW + 6 && p.y > DY) {
-      taps.push(now); taps = taps.filter(x => x > now - 1600);
-      if (taps.length >= 8) { taps = []; say('Mash it all you want. No dropped presses on this keypad.', st === 'open' ? 'Tap the door to close and lock it.' : base); }
-      if (st === 'locked' || st === 'open') act(); else X.tone(990, .03, 'square', .02);
-    }
-  });
+  const moeAt = (x, floorY, h, f) => { bc.clearRect(0, 0, 24, 20); X.moeSprite(bc, 4, 3, f); const w = h * 1.2; P(x + w * .15, floorY - 1, w * .6, 2, 'rgba(0,0,0,.14)'); c.drawImage(buf, 0, 0, 24, 20, x, floorY - h * .75, w, h); };
+  function go() {
+    touched = true;
+    if (st === 'wait') { st = 'unlock'; tt = 0; beepT = .5; btn.disabled = true; [880, 1047, 1319].forEach((f, i) => setTimeout(() => X.tone(f, .06, 'square', .03), i * 70)); say('Unlocked.'); }
+    else if (st === 'home') reset();
+  }
+  btn.addEventListener('click', go);
+  cv.addEventListener('pointerdown', e => { const p = pt(e); if (p.x > DX - 4 && p.x < DX + DW + 6 && p.y > DY) go(); });
   const stop = loop((dt, now) => {
-    beepT = Math.max(0, beepT - dt);
-    if (st === 'unlocking') { if (bolt > 0) bolt = Math.max(0, bolt - dt / .3); else { door = Math.min(1, door + dt / (X.reduce ? .2 : .8)); if (door >= 1) { st = 'open'; opens++; btn.disabled = false; btn.textContent = 'Close and lock'; if (mo.ph === 'in') { mo.ph = 'heart'; mo.t = 0; X.meow(); say('Unlocked. Moe says hi… and he’s off to play.'); } else say('Unlocked. Tap the door to close and lock it.'); } } }
-    if (st === 'closing') { if (door > 0) door = Math.max(0, door - dt / (X.reduce ? .2 : .6)); else { bolt = Math.min(1, bolt + dt / .25); if (bolt >= 1) { st = 'locked'; btn.disabled = false; btn.textContent = 'Unlock'; X.tone(130, .08, 'square', .05); say('Locked. The bolt is thrown.', base); } } }
-    mo.t += dt;
-    if (mo.ph === 'heart' && mo.t > .9) { mo.ph = 'walk'; mo.t = 0; }
-    if (mo.ph === 'walk' && mo.t > 1.2) { mo.ph = 'play'; mo.t = 0; X.state.moeOut = true; mo.x = 134; }
-    const yarnX = 132 + Math.sin(mo.t * 1.7) * 13, yarnY = DY + DH - 3;
-    if (mo.ph === 'play') { const nx = mo.x + (yarnX - 8 - mo.x) * Math.min(1, dt * 3); mo.dir = nx > mo.x + .05 ? 1 : nx < mo.x - .05 ? -1 : mo.dir; mo.x = nx; mo.hop = Math.max(0, Math.sin(mo.t * 3.4)) * 4; }
-    // wall, frame, step
+    tt += dt; beepT = Math.max(0, beepT - dt); bub = Math.max(0, bub - dt); const R = X.reduce ? 4 : 1;
+    if (st === 'wait') { meowT -= dt; if (meowT <= 0) { meowT = 2.6; bub = 1.1; X.meow(); } }
+    if (st === 'unlock') { bolt = Math.max(0, bolt - dt * R / .3); if (bolt <= 0) { st = 'open'; tt = 0; } }
+    if (st === 'open') { door = Math.min(1, door + dt * R / .8); if (door >= 1) { st = 'enter'; tt = 0; say('In he goes.'); } }
+    if (st === 'enter') { const u = Math.min(1, tt * R / 1.8); mx = 120 - (120 - (DX + 18)) * u; if (u >= 1) { st = 'nap'; tt = 0; } }
+    if (st === 'nap') { if (tt * R > 1) { st = 'close'; tt = 0; } }
+    if (st === 'close') { door = Math.max(0, door - dt * R / .7); if (door <= 0) { bolt = Math.min(1, bolt + dt * R / .3); if (bolt >= 1) { st = 'home'; tt = 0; X.tone(130, .08, 'square', .05); X.chime(); btn.disabled = false; btn.textContent = 'Play again'; say('Welcome home, Moe. The lock locked itself behind him. All done.'); } } }
+    // wall, frame, step, ground
     P(0, 0, W, H, '#dfe6ea'); for (let y = 5; y < H; y += 6) P(0, y, W, 1, '#ccd5db');
-    P(DX - 6, DY - 6, DW + 12, DH + 6, '#2c3035'); P(DX - 10, DY + DH, DW + 20, 4, '#b9c3c9'); P(0, DY + DH + 4, W, H, '#a8b3ba');
-    // inside: warm room, lamp, Moe
-    P(DX, DY, DW, DH, '#f3d9a8'); P(DX, DY + DH - 16, DW, 16, '#c99a6b'); for (let x = DX; x < DX + DW; x += 9) P(x, DY + DH - 16, 1, 16, '#b48654');
-    P(DX + 8, DY + DH - 10, 52, 5, '#7f9cb3'); P(DX + DW - 18, DY + 14, 2, 30, '#7a5232'); P(DX + DW - 23, DY + 10, 12, 6, '#fff3c4');
-    if (mo.ph === 'in' || mo.ph === 'heart') { bc.clearRect(0, 0, 24, 20); X.moeSprite(bc, 4, 3, Math.floor(now / 500) % 2); c.drawImage(buf, 0, 0, 24, 20, DX + 6, DY + DH - 50, 48, 40); }
-    if (mo.ph === 'heart') { const hy = DY + DH - 56 - mo.t * 10; P(DX + 26, hy, 3, 3, '#e9483c'); P(DX + 31, hy, 3, 3, '#e9483c'); P(DX + 26, hy + 2, 8, 3, '#e9483c'); P(DX + 28, hy + 5, 4, 2, '#e9483c'); }
-    if (door > 0) { c.globalCompositeOperation = 'lighter'; glow(c, DX + DW / 2, DY + 40, 60, '255,196,120', .3 * door); c.globalCompositeOperation = 'source-over'; }
-    // the door swings on its left hinge
+    P(DX - 6, DY - 6, DW + 12, DH + 6, '#2c3035'); P(0, DY + DH, W, H, '#a8b3ba'); P(DX - 10, DY + DH, DW + 20, 3, '#c3ccd2');
+    // window: the room, with Moe's bed
+    const home = st === 'nap' || st === 'close' || st === 'home';
+    P(4, 24, 34, 42, '#2c3035'); c.save(); c.translate(21, 45); c.scale(1.2, 1.2); c.translate(-22, -47);
+    P(10, 32, 24, 30, home || st === 'enter' ? '#f6dca8' : '#e9cf9c');
+    P(10, 32, 24, 2, '#fff1cf'); P(10, 54, 24, 8, '#c99a6b');
+    c.fillStyle = '#5f7c93'; c.beginPath(); c.ellipse(22, 57, 9, 3.6, 0, 0, Math.PI * 2); c.fill(); c.fillStyle = '#7f9cb3'; c.beginPath(); c.ellipse(22, 56.2, 7.4, 2.6, 0, 0, Math.PI * 2); c.fill();
+    if (home) { // Moe curled up asleep
+      c.fillStyle = '#f6e7d4'; c.beginPath(); c.ellipse(23, 53.6, 6.4, 3.2, 0, 0, Math.PI * 2); c.fill();
+      c.beginPath(); c.arc(17.6, 53.2, 2.8, 0, Math.PI * 2); c.fill(); P(15.6, 49.6, 1.4, 1.6, '#e9b98a'); P(18.6, 49.6, 1.4, 1.6, '#e9b98a');
+      P(16.4, 53, 1.4, .6, '#7a5a48'); P(18.8, 53, 1.4, .6, '#7a5a48'); c.strokeStyle = '#e9b98a'; c.lineWidth = 1.4; c.beginPath(); c.arc(24, 55, 5, .2, 2.2); c.stroke();
+      const z = (now / 900) % 1; c.globalAlpha = 1 - z; text(c, 'z', 27 + z * 3, 46 - z * 8, '#5f7a95', 1.1); c.globalAlpha = 1;
+    }
+    P(10, 32, 3, 30, '#d9c7e8'); P(31, 32, 3, 30, '#d9c7e8'); c.restore(); P(4, 44, 34, 1.5, '#2c3035'); P(20.3, 24, 1.5, 42, '#2c3035');
+    if (home) { c.globalCompositeOperation = 'lighter'; glow(c, 21, 45, 28, '255,190,110', .25); c.globalCompositeOperation = 'source-over'; }
+    // inside the door: warm hallway
+    P(DX, DY, DW, DH, '#f3d9a8'); P(DX, DY + DH - 14, DW, 14, '#c99a6b'); for (let x = DX; x < DX + DW; x += 9) P(x, DY + DH - 14, 1, 14, '#b48654');
+    P(DX + 8, DY + DH - 8, 56, 4, '#7f9cb3'); P(DX + DW - 18, DY + 14, 2, 30, '#7a5232'); P(DX + DW - 23, DY + 10, 12, 6, '#fff3c4');
+    if (st === 'enter' && mx < DX + DW) moeAt(mx, IN_FLOOR, 24, Math.floor(now / 140) % 2);
+    // the door, swinging on its left hinge
     const dw = Math.max(5, Math.round(DW * Math.cos(door * 1.42)));
     P(DX, DY, dw, DH, '#3b3f45'); P(DX, DY, dw, 2, '#4a4f56'); P(DX, DY + 22, dw, 3, '#b88a5a');
     if (dw > 30) { P(DX + 6, DY + 30, dw - 12, 22, 'rgba(0,0,0,.14)'); P(DX + 6, DY + 58, dw - 12, 20, 'rgba(0,0,0,.14)'); }
     if (door > 0) P(DX + dw, DY, Math.max(1, Math.round(5 * Math.sin(door * 1.42))), DH, '#262a2f');
     if (dw > 26) {
-      const kx = DX + dw - 20;
-      // keypad: 2x3 keys that light up blue when it beeps
-      P(kx, KY, 12, 22, '#1b1d21'); P(kx, KY, 12, 1, '#3a3d44');
+      const kx = DX + dw - 20; P(kx, KY, 12, 22, '#1b1d21'); P(kx, KY, 12, 1, '#3a3d44');
       for (let r = 0; r < 3; r++) for (let k = 0; k < 2; k++) P(kx + 2 + k * 5, KY + 3 + r * 5, 3, 3, beepT > 0 ? '#9fd9ff' : '#4a4e57');
-      P(kx + 3, KY + 18, 6, 1, st === 'locked' || st === 'closing' ? '#e9483c' : '#47c26a');
-      P(kx - 1, KY + 30, 14, 3, '#b88a5a');
+      P(kx + 3, KY + 18, 6, 1, bolt > .5 ? '#e9483c' : '#47c26a'); P(kx - 1, KY + 30, 14, 3, '#b88a5a');
     }
-    // the bolt, crossing the gap into the frame when locked
     if (door === 0) { const bl = Math.round(9 * bolt); P(DX + DW - 2, KY + 26, 2 + bl, 4, '#c9d1d8'); P(DX + DW - 2, KY + 26, 2 + bl, 1, '#eef2f5'); }
-    // Moe outside: trots out the door, then chases his yarn
-    if (mo.ph === 'walk' || mo.ph === 'play') {
-      let x, y, sz;
-      if (mo.ph === 'walk') { const u = ease(Math.min(1, mo.t / 1.2)); x = DX + 6 + (134 - DX - 6) * u; y = DY + DH - 50 + 22 * u; sz = 48 - 18 * u; mo.dir = 1; }
-      else { x = mo.x; y = DY + DH - 28 - mo.hop; sz = 30; }
-      oc.clearRect(0, 0, 24, 20); X.moeSprite(oc, 4, 3, Math.floor(now / 160) % 2);
-      P(x + 4, DY + DH - 2, sz * .6, 2, 'rgba(0,0,0,.12)');
-      c.save(); if (mo.dir > 0) { c.translate(x + sz, 0); c.scale(-1, 1); c.drawImage(ob, 0, 0, 24, 20, 0, y, sz, sz * .83); } else c.drawImage(ob, 0, 0, 24, 20, x, y, sz, sz * .83); c.restore();
-      if (mo.ph === 'play') { c.fillStyle = '#e98aa6'; c.beginPath(); c.arc(yarnX, yarnY, 3.2, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#c96a88'; c.lineWidth = .6; c.beginPath(); c.arc(yarnX, yarnY, 2, mo.t * 4, mo.t * 4 + 2.5); c.stroke(); c.beginPath(); c.moveTo(yarnX - 3, yarnY + 2); c.quadraticCurveTo(yarnX - 9, yarnY + 3, yarnX - 14, yarnY + 1); c.stroke(); }
-    }
-    if (st === 'locked' && !touched && !X.reduce) cue(c, P, DX + DW - 14, KY + 11, 'Tap', now, X.reduce);
-    const ss = st === 'locked' ? 'Locked' : st === 'open' ? 'Unlocked' : st === 'unlocking' ? 'Unlocking…' : 'Locking…';
-    if (ss !== lastS) { stat.textContent = ss; stat.dataset.state = st; lastS = ss; }
+    // Moe outside on the step, then walking in (in front of the frame until he's through)
+    if (st === 'wait' || st === 'unlock' || st === 'open') { moeAt(mx, FLOOR, 27, 0); if (bub > 0) { c.fillStyle = 'rgba(255,255,255,.95)'; c.beginPath(); c.roundRect ? c.roundRect(mx + 4, FLOOR - 36, 26, 10, 4) : c.rect(mx + 4, FLOOR - 36, 26, 10); c.fill(); P(mx + 10, FLOOR - 26, 3, 2, 'rgba(255,255,255,.95)'); text(c, 'meow', mx + 17, FLOOR - 34, '#3a3f46', 1, 'c'); } }
+    if (st === 'enter' && mx >= DX + DW) moeAt(mx, FLOOR - (120 - mx) / (120 - DX - DW) * 7, 27 - 3 * (120 - mx) / (120 - DX - DW), Math.floor(now / 140) % 2);
+    if (st === 'wait' && !touched) cue(c, P, DX + DW - 14, KY + 11, 'Tap', now, X.reduce);
+    const ss = st === 'home' ? 'Locked · Moe is home' : bolt > .5 ? 'Locked' : st === 'close' ? 'Locking…' : 'Unlocked';
+    if (ss !== lastS) { stat.textContent = ss; lastS = ss; }
   });
   return {stop};
 };

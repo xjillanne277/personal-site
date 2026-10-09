@@ -572,7 +572,7 @@ function ledCard() {
 }
 /* mini experiences live in minis.js, loaded once the game opens */
 let minisP = null, miniInst = null;
-function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=6'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
+function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=7'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
 const MCTX = {reduce, get touch() { return touch; }, led, ledColor, state: WSTATE, girl, moeSprite,
   tone: (...a) => window.__tone && window.__tone(...a), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
 function stopMini() { if (miniInst) { try { miniInst.stop(); } catch (e) {} miniInst = null; } }
