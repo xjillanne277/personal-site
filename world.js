@@ -515,12 +515,40 @@ const visited = new Set(); let autoId = null;
 let running = false, last = 0, tourIdx = -1, openId = null, walkT = 0, touch = matchMedia('(pointer: coarse)').matches;
 
 function blockedAt(px, py) { const c = cur(), tx = Math.floor(px / TS), ty = Math.floor(py / TS); if (tx < 0 || ty < 0 || tx >= c.W || ty >= c.H) return true; return c.block[ty * c.W + tx] === 1; }
-function feetBlocked(x, y) { return blockedAt(x - 4, y - 3) || blockedAt(x + 4, y - 3) || blockedAt(x - 4, y) || blockedAt(x + 4, y); }
+function feetBlocked(x, y) { return blockedAt(x - 3, y - 2) || blockedAt(x + 3, y - 2) || blockedAt(x - 3, y) || blockedAt(x + 3, y); }
 function spotPx(l) { return {x: l.spot[0] * TS + 8, y: l.spot[1] * TS + 10}; }
 function rectDist(l) { const x0 = l.tx * TS, y0 = l.ty * TS, x1 = (l.tx + l.w) * TS, y1 = (l.ty + l.h) * TS; const dx = Math.max(x0 - P.x, 0, P.x - x1), dy = Math.max(y0 - (P.y - 4), 0, (P.y - 4) - y1); return Math.hypot(dx, dy); }
 function nearest(max = 18) { let best = null, bd = max; cur().L.forEach(l => { const d = Math.min(rectDist(l), Math.hypot(spotPx(l).x - P.x, spotPx(l).y - P.y)); if (d < bd) { bd = d; best = l; } }); return best; }
 
-function walkTo(l, open) { closeCard(); const s = spotPx(l); P.target = s; P.after = open ? l : null; P.stuck = 0; }
+/* click-to-walk finds a route around buildings and trees instead of walking into them */
+function passTile(x, y) { return x >= 0 && y >= 0 && x < MW && y < MH && !block[idx(x, y)] && tiles[idx(x, y)] !== T.OCEAN; }
+function nearPass(x, y) { if (passTile(x, y)) return [x, y]; for (let r = 1; r < 6; r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) if ((Math.abs(dx) === r || Math.abs(dy) === r) && passTile(x + dx, y + dy)) return [x + dx, y + dy]; return null; }
+function findPath(x0, y0, x1, y1) {
+  const s = nearPass(Math.floor(x0 / TS), Math.floor(y0 / TS)), e = nearPass(Math.floor(x1 / TS), Math.floor(y1 / TS)); if (!s || !e) return null;
+  const N = MW * MH, g = new Float32Array(N).fill(1e9), from = new Int32Array(N).fill(-1), done = new Uint8Array(N), open = [];
+  const si = idx(s[0], s[1]), ei = idx(e[0], e[1]); g[si] = 0; open.push([Math.hypot(e[0] - s[0], e[1] - s[1]), si]);
+  while (open.length) {
+    let bi = 0; for (let i = 1; i < open.length; i++) if (open[i][0] < open[bi][0]) bi = i; const [, cur] = open.splice(bi, 1)[0];
+    if (done[cur]) continue; done[cur] = 1; if (cur === ei) break;
+    const cx = cur % MW, cy = (cur / MW) | 0;
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) { if (!dx && !dy) continue; const nx = cx + dx, ny = cy + dy; if (!passTile(nx, ny)) continue; if (dx && dy && (!passTile(cx + dx, cy) || !passTile(cx, cy + dy))) continue;
+      const ni = idx(nx, ny), w = tiles[ni] === T.WATER ? 3 : 1, ng = g[cur] + (dx && dy ? 1.414 : 1) * w; if (ng < g[ni]) { g[ni] = ng; from[ni] = cur; open.push([ng + Math.hypot(e[0] - nx, e[1] - ny), ni]); } }
+  }
+  if (from[ei] < 0 && ei !== si) return null;
+  const tilesPath = []; for (let c = ei; c !== -1; c = from[c]) tilesPath.unshift(c);
+  // drop water tiles (the boat crosses them) and keep only the corners of the route
+  const pts = tilesPath.filter(i => tiles[i] !== T.WATER).map(i => ({x: (i % MW) * TS + 8, y: ((i / MW) | 0) * TS + 10}));
+  const clear = (a, b) => { const n = Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 4); for (let k = 0; k <= n; k++) { const x = a.x + (b.x - a.x) * k / n, y = a.y + (b.y - a.y) * k / n; if (feetBlocked(x, y) || tiles[idx(Math.floor(x / TS), Math.floor(y / TS))] === T.WATER) return false; } return true; };
+  const out = []; let a = {x: x0, y: y0}, i = 0;
+  while (i < pts.length) { let j = pts.length - 1; while (j > i && !clear(a, pts[j])) j--; out.push(pts[j]); a = pts[j]; i = j + 1; }
+  return out;
+}
+function goTo(x, y, after) {
+  const path = findPath(P.x, P.y, x, y); P.stuck = 0; P.after = after || null; P.final = {x, y}; P.retried = false;
+  if (path && path.length) { path[path.length - 1] = blockedAt(x, y) ? path[path.length - 1] : {x, y}; P.path = path; P.target = P.path.shift(); }
+  else { P.path = null; P.target = {x, y}; }
+}
+function walkTo(l, open) { closeCard(); const s = spotPx(l); goTo(s.x, s.y, open ? l : null); }
 function teleport(l, open) {
   closeCard(); const fade = document.getElementById('fade'); fade.classList.add('on');
   setTimeout(() => { if (scene === 'room') { scene = 'world'; resize(); } const s = spotPx(l); P.x = s.x; P.y = s.y; P.dir = 'up'; P.target = null; moe.x = P.x - 14; moe.y = P.y + 8; trail.length = 0; fade.classList.remove('on'); if (open) openCard(l); }, reduce ? 0 : 260);
@@ -544,7 +572,7 @@ function ledCard() {
 }
 /* mini experiences live in minis.js, loaded once the game opens */
 let minisP = null, miniInst = null;
-function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=3'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
+function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=4'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
 const MCTX = {reduce, get touch() { return touch; }, led, ledColor, state: WSTATE, girl, moeSprite,
   tone: (...a) => window.__tone && window.__tone(...a), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
 function stopMini() { if (miniInst) { try { miniInst.stop(); } catch (e) {} miniInst = null; } }
@@ -561,7 +589,7 @@ function fitCard() {
   snapCv(el);
 }
 /* pixel canvases look crisp at whole-number scales; snap down to one when it's at least 2x */
-function snapCv(el) { if (el.tagName !== 'CANVAS' || !el.dataset.snap) return; const bw = el.offsetWidth - el.clientWidth, k = Math.floor((el.getBoundingClientRect().width - bw) / el.width); if (k >= 2) el.style.width = (k * el.width + bw) + 'px'; }
+function snapCv(el) { if (el.tagName !== 'CANVAS' || !el.dataset.snap) return; const lw = +el.dataset.snap, bw = el.offsetWidth - el.clientWidth, k = Math.floor((el.getBoundingClientRect().width - bw) / lw); if (k >= 2) el.style.width = (k * lw + bw) + 'px'; }
 addEventListener('resize', () => requestAnimationFrame(fitCard));
 function miniCard(id, c) {
   stopMini(); openId = id; cardAt = performance.now();
@@ -688,7 +716,7 @@ addEventListener('keydown', e => {
   // with a card open, E reads the full story (or closes the card if there isn't one)
   if ((e.key === 'e' || e.key === 'E') && !card.hidden && !(e.target.closest && e.target.closest('input'))) { e.preventDefault(); const more = card.querySelector('.w-more'); if (more) more.click(); else closeCard(); return; }
   if (e.target.closest && e.target.closest('input,textarea')) return;
-  if (KEYMAP[e.key]) { e.preventDefault(); keys.add(KEYMAP[e.key]); P.target = null; if (!card.hidden) closeCard(); }
+  if (KEYMAP[e.key]) { e.preventDefault(); keys.add(KEYMAP[e.key]); P.target = null; P.path = null; if (!card.hidden) closeCard(); }
   else if ((e.key === 'e' || e.key === 'E' || e.key === 'Enter' || e.key === ' ') && card.hidden && (document.activeElement === cv || e.key === 'e' || e.key === 'E') && scene === 'room') { const o = roomNearest(); if (o) { e.preventDefault(); roomOpen(o); } }
   else if ((e.key === 'e' || e.key === 'E' || e.key === 'Enter' || e.key === ' ') && card.hidden && (document.activeElement === cv || e.key === 'e' || e.key === 'E')) { const n = nearest(); if (n) { e.preventDefault(); openCard(n); } }
   else if (e.key === 'm' || e.key === 'M') { if (big.hidden) openBig(); else big.hidden = true; }
@@ -702,10 +730,10 @@ cv.addEventListener('pointerdown', e => {
   const mo = scene === 'room' ? {x: roomMoe.x + 8, y: roomMoe.y + 10} : moe;
   if (Math.hypot(wx - mo.x, wy - (mo.y - 10)) < 17) { if (++moeClicks % 3 === 1) window.__meow && window.__meow(); galleryCard(RO.find(o => o.id === 'moe')); return; }
   const hit = cur().L.find(l => wx >= l.tx * TS - 4 && wx <= (l.tx + l.w) * TS + 4 && wy >= l.ty * TS - 8 && wy <= (l.ty + l.h) * TS + 4);
-  if (hit) { if (hit.kind !== 'nsx' && hit.kind !== 'c5' && rectDist(hit) < 26) openCard(hit); else if (hit.kind === 'nsx' || hit.kind === 'c5') walkTo(hit, true); else walkTo(hit, false); return; }
-  P.target = {x: wx, y: wy}; P.after = null; P.stuck = 0;
+  if (hit) { if (hit.kind !== 'nsx' && hit.kind !== 'c5' && rectDist(hit) < 26) openCard(hit); else walkTo(hit, true); return; }
+  goTo(wx, wy);
 });
-cv.addEventListener('pointermove', e => { if (scene !== 'world' || !(e.buttons & 1) || e.pointerType === 'touch' && !e.isPrimary) return; const cam = camera(); P.target = {x: (e.clientX - offX) / SC + cam.x, y: (e.clientY - offY) / SC + cam.y}; P.after = null; P.stuck = 0; });
+cv.addEventListener('pointermove', e => { if (scene !== 'world' || !(e.buttons & 1) || e.pointerType === 'touch' && !e.isPrimary) return; const cam = camera(); P.target = {x: (e.clientX - offX) / SC + cam.x, y: (e.clientY - offY) / SC + cam.y}; P.path = null; P.after = null; P.stuck = 0; });
 prompt.addEventListener('click', () => { if (scene === 'room') { const o = roomNearest(); if (o) roomOpen(o); return; } const n = nearest(); if (n) openCard(n); });
 
 /* ---------------- loop ---------------- */
@@ -728,7 +756,7 @@ function step(now) {
   if (keys.has('left')) vx -= 1; if (keys.has('right')) vx += 1; if (keys.has('up')) vy -= 1; if (keys.has('down')) vy += 1;
   if (!vx && !vy && P.target) {
     const dx = P.target.x - P.x, dy = P.target.y - P.y, d = Math.hypot(dx, dy);
-    if (d < 3) { P.target = null; if (P.after) { const l = P.after; P.after = null; openCard(l); } }
+    if (d < 3) { if (P.path && P.path.length) P.target = P.path.shift(); else { P.target = null; P.path = null; if (P.after) { const l = P.after; P.after = null; openCard(l); } } }
     else { vx = dx / d; vy = dy / d; }
   }
   if (boat) {
@@ -737,7 +765,7 @@ function step(now) {
     P.x = Math.round(boat.x0 + (boat.x1 - boat.x0) * e); P.y = Math.round(boat.y0 + (boat.y1 - boat.y0) * Math.min(1, boat.t * 1.6)); P.dir = boat.x1 > boat.x0 ? 'right' : 'left'; P.moving = false;
     moe.x = P.x + (boat.x1 > boat.x0 ? -12 : 12); moe.y = P.y + 2; trail.length = 0;
     const st = Math.floor(boat.t * 3); if (st > boat.strokes && boat.t < .95) { boat.strokes = st; window.__splash && window.__splash(.55); }
-    if (boat.t >= 1) { const tg = P.target; boat = null; boatCool = .8; const keep = tg && !(scene === 'world' && tiles[idx(Math.floor(tg.x / TS), Math.floor(tg.y / TS))] === T.WATER) && (tg.x - P.x) * boat0dir >= -4; if (!keep) { P.target = null; P.after = null; } P.stuck = 0; }
+    if (boat.t >= 1) { const tg = P.target; boat = null; boatCool = .8; const keep = tg && !(scene === 'world' && tiles[idx(Math.floor(tg.x / TS), Math.floor(tg.y / TS))] === T.WATER) && (tg.x - P.x) * boat0dir >= -4; if (!keep) { if (P.path && P.path.length) { while (P.path.length > 1 && (P.path[0].x - P.x) * boat0dir < 0) P.path.shift(); P.target = P.path.shift(); } else { P.target = null; P.after = null; } } P.stuck = 0; }
     draw(now); requestAnimationFrame(step); return;
   }
   const sp = 175 * dt, len = Math.hypot(vx, vy) || 1;
@@ -749,7 +777,7 @@ function step(now) {
     const wet = (x, y) => scene === 'world' && tiles[idx(Math.floor(x / TS), Math.floor(y / TS))] === T.WATER;
     boatCool = Math.max(0, boatCool - dt);
     const rxNow = riverX(Math.floor(P.y / TS)) * TS + 8, across = P.target && (P.x - rxNow) * (P.target.x - rxNow) < 0, sx = across ? Math.sign(rxNow - P.x) : Math.sign(vx);
-    if (!boatCool && !wet(P.x, P.y) && (across || Math.abs(vx) > Math.abs(vy) * .25) && [8, 16, 24, 30].some(k => wet(P.x + sx * k, P.y))) {
+    if (!boatCool && !wet(P.x, P.y) && (P.target ? across : Math.abs(vx) > Math.abs(vy) * .25) && [8, 16, 24, 30].some(k => wet(P.x + sx * k, P.y))) {
       const ty = Math.floor(P.y / TS), rx = riverX(ty) * TS + 8, dirR = P.x < rx ? 1 : -1;
       let tx = Math.floor(P.x / TS) + dirR; while (tx > 0 && tx < MW - 1 && tiles[idx(tx, ty)] === T.WATER) tx += dirR;
       const okLand = (x, y) => y > 0 && y < MH - 1 && tiles[idx(x, y)] !== T.WATER && tiles[idx(x, y)] !== T.OCEAN && !block[idx(x, y)] && !block[idx(x + dirR, y)];
@@ -757,10 +785,13 @@ function step(now) {
       if (ly != null && tx > 0 && tx < MW - 1 && (tx - x0) * dirR > 0) { boat = {x0: P.x, x1: tx * TS + 8 + dirR * 2, y0: P.y, y1: ly * TS + 10, t: 0, dur: Math.max(.7, Math.abs(tx * TS - P.x) / 150), strokes: 0}; P.stuck = 0; boat0dir = dirR; window.__splash && window.__splash(1); window.__water && window.__water(boat.dur); }
     }
     if (!boat) {
-      if (!feetBlocked(P.x + vx, P.y) && !wet(P.x + vx + Math.sign(vx) * 4, P.y)) P.x += vx;
-      if (!feetBlocked(P.x, P.y + vy) && !wet(P.x, P.y + vy + Math.sign(vy) * 3)) P.y += vy;
+      const okX = !feetBlocked(P.x + vx, P.y) && !wet(P.x + vx + Math.sign(vx) * 4, P.y), okY = !feetBlocked(P.x, P.y + vy) && !wet(P.x, P.y + vy + Math.sign(vy) * 3);
+      if (okX) P.x += vx; if (okY) P.y += vy;
+      // blocked head-on: nudge sideways toward the nearer open side so corners don't snag
+      if (!okX && vx && Math.abs(vx) >= Math.abs(vy)) { for (let k = 1; k <= 8; k++) { if (!feetBlocked(P.x + vx, P.y - k)) { P.y -= Math.min(k, sp); break; } if (!feetBlocked(P.x + vx, P.y + k)) { P.y += Math.min(k, sp); break; } } }
+      if (!okY && vy && Math.abs(vy) > Math.abs(vx)) { for (let k = 1; k <= 8; k++) { if (!feetBlocked(P.x - k, P.y + vy)) { P.x -= Math.min(k, sp); break; } if (!feetBlocked(P.x + k, P.y + vy)) { P.x += Math.min(k, sp); break; } } }
     }
-    if (P.target && !across && Math.hypot(P.x - ox, P.y - oy) < sp * .2) { P.stuck += dt; if (P.stuck > .35) { const l = P.after; P.target = null; P.after = null; if (l && Math.hypot(spotPx(l).x - P.x, spotPx(l).y - P.y) < 60) openCard(l); } } else P.stuck = 0;
+    if (P.target && !across && Math.hypot(P.x - ox, P.y - oy) < sp * .2) { P.stuck += dt; if (P.stuck > .35 && P.final && !P.retried) { const f = P.final, a = P.after; goTo(f.x, f.y, a); P.retried = true; } else if (P.stuck > .35) { const l = P.after; P.target = null; P.after = null; if (l && Math.hypot(spotPx(l).x - P.x, spotPx(l).y - P.y) < 60) openCard(l); } } else P.stuck = 0;
     walkT += dt; trail.push([P.x, P.y]); if (trail.length > 60) trail.shift();
   }
   // Moe follows a few steps behind (outside only)
@@ -1001,7 +1032,7 @@ function welcome() {
   const t0 = performance.now(); const early = () => { setTimeout(hide, Math.max(0, 6000 - (performance.now() - t0))); };
   addEventListener('keydown', early); cv.addEventListener('pointerdown', early); setTimeout(hide, 10000);
 }
-window.__w = {get P() { return P; }, get moe() { return moe; }, get RP() { return RP; }, get scene() { return scene; }, camera: () => scene === 'room' ? roomCam() : camera(), get SC() { return SC; }, RO, roomOpen, led, WSTATE};
+window.__w = {goTo, blocked: (x, y) => feetBlocked(x, y), get P() { return P; }, get moe() { return moe; }, get RP() { return RP; }, get scene() { return scene; }, camera: () => scene === 'room' ? roomCam() : camera(), get SC() { return SC; }, RO, roomOpen, led, WSTATE};
 window.World = {
   start() { loadMinis().catch(() => {}); if (!welcomed) { const c = L.find(l => l.id === 'cabin'); P.x = (c.tx + c.w + .7) * TS; P.y = (c.ty - .2) * TS; P.dir = 'down'; P.target = null; moe.x = P.x - 14; moe.y = P.y + 4; trail.length = 0; } resize(); root.hidden = false; running = true; last = performance.now(); cv.setAttribute('tabindex', '0'); cv.focus({preventScroll: true}); requestAnimationFrame(step); if (!welcomed) welcome(); },
   stop() { if (scene === 'track') leaveTrack(true); hideDrive(); running = false; root.hidden = true; keys.clear(); closeCard(); }
