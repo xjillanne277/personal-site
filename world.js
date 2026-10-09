@@ -29,21 +29,21 @@ for (let i = 0; i < MW * MH; i++) if (tiles[i] === T.OCEAN) block[i] = 1;
 const RES = 'resume.pdf';
 const L = [
   {id: 'waterloo', label: 'Waterloo', yr: '2022', tx: 2, ty: 16, w: 5, h: 4, spot: [4, 20], kind: 'school', tour: 1,
-   card: {title: 'University of Waterloo', meta: 'Mechanical Engineering · started Fall 2022', body: ['Two first-year design courses, two builds:', 'ME100 · Wind-up soccer toy: a cam-and-follower kicker in a laser-cut enclosure, built on a $50 budget.', 'ME101 · FrostBot (Summer 2023): a cake-frosting robot with a worm-drive piston, spinning plate and EV3 brick. 98% icing accuracy over 100 trials.', 'In 2025 I redesigned FrostBot from scratch: 80/20 frame, pneumatic piston, ESP32.']}},
+   card: {title: 'University of Waterloo', meta: 'Mechanical Engineering · started Fall 2022', mini: 'toy', proj: 'waterloo/toy', blurb: ['Where it started. My first build was a wind-up soccer toy for ME100: a cam and follower that kicks a ping-pong ball.']}},
   {id: 'evercloak', label: 'Evercloak', yr: '2023', tx: 8, ty: 13, w: 4, h: 3, spot: [10, 16], kind: 'office', tour: 2,
-   card: {title: 'Evercloak Inc.', meta: 'Mechanical Engineering Co-op · Kitchener · Winter 2023', body: ['Designed a prototype dehumidifier enclosure, applying DFMA and GD&T so it could be sealed and manufactured off-site.', 'Improved dehumidification performance 40% through membrane material selection, designing custom tests for absorption, evaporation rate and elongation.']}},
+   card: {title: 'Evercloak Inc.', meta: 'Mechanical Engineering Co-op · Kitchener · Winter 2023', mini: 'mem', blurb: ['My first co-op. I designed a prototype dehumidifier enclosure and tested membrane materials for it.']}},
   {id: 'valbruna', label: 'Valbruna', yr: '2023', tx: 13, ty: 8, w: 5, h: 4, spot: [15, 12], kind: 'factory', tour: 3,
-   card: {title: 'Valbruna ASW', meta: 'Mechanical Engineering Co-op · Welland · Fall 2023', body: ['Saved $900K CAD in potential scrap losses by modelling scrap melting in an electric arc furnace in ANSYS Fluent and finding thermal inefficiencies.', 'Reverse-engineered arc furnace parts in SolidWorks with GD&T to capture the original design intent.', 'Redesigned a 100,000 CFM fan enclosure to meet the Ontario Building Code, saving $45K CAD per unit.']}},
+   card: {title: 'Valbruna ASW', meta: 'Mechanical Engineering Co-op · Welland · Fall 2023', mini: 'steel', blurb: ['A steel mill in Welland. I modeled how scrap melts inside the electric arc furnace.']}},
   {id: 'geotab', label: 'Geotab', yr: '2024', tx: 18, ty: 4, w: 4, h: 3, spot: [20, 7], kind: 'office', tour: 4,
-   card: {title: 'Geotab', meta: 'System Verification Intern · Oakville · Summer 2024', body: ['Designed a closed-loop, air-cooled test rack for dashcams, with 3D-printed mounts and low-cost PC fans in a modular enclosure, holding them at 26 °C.', 'Built an ML model for an AI dashcam: 72% obstacle detection with 6% false positives. 1st of 11 teams in a 7-day company hackathon.', 'Moved AI dashcam testing to historical feed data, cutting 32.4 t of CO₂ a year.']}},
+   card: {title: 'Geotab', meta: 'System Verification Intern · Oakville · Summer 2024', mini: 'dash', blurb: ['A summer of dashcams: I built a rack that kept them cool during testing, and my hackathon team placed 1st of 11.']}},
   {id: 'teslacells', label: 'Tesla Cells', yr: '2025', tx: 27, ty: 3, w: 5, h: 4, spot: [29, 7], kind: 'modern', tour: 5,
-   card: {title: 'Tesla, Cell Equipment', meta: 'Mechanical Design Engineering Intern · Palo Alto · Winter 2025', body: ['Designed a high-temp magnetic clamping assembly for cell lamination: 0.1 mm clearance through tolerance stack-ups and vibration-resistant design, yield up 15%, setup cut from 30 to 5 seconds.', 'Led the mechanical, electrical and controls design of a modular foil-stretching machine with load-cell tension control, halving wrinkling and creasing failures.', 'Built the control box: Arduino, load cell, amplifier and signal conditioner for closed-loop pneumatic nip rollers, holding force within ±2%.']}},
+   card: {title: 'Tesla, Cell Equipment', meta: 'Mechanical Design Engineering Intern · Palo Alto · Winter 2025', mini: 'cell', blurb: ['Battery cell equipment in Palo Alto: a magnetic clamp for lamination and a foil-stretching machine.']}},
   {id: 'teslalight', label: 'Tesla Lighting', yr: '2025', tx: 35, ty: 3, w: 5, h: 4, spot: [37, 7], kind: 'modern', tour: 6,
-   card: {title: 'Tesla, Lighting, Switches & Sensors', meta: 'Mechanical Design Engineering Intern · Fremont · Fall 2025', body: ['Led the design of a new-program interior cabin light in CATIA V6, with Class A surfaces for injection molding.', 'Designed a 2-layer mixed-signal PCB from scratch in KiCad, then hand-soldered and assembled it.', 'Proposed and built an RGBW LED controller for the design studio: custom PCB, SLA-printed enclosure and ESP32, driving 6× more LEDs per controller.']}},
+   card: {title: 'Tesla, Lighting, Switches & Sensors', meta: 'Mechanical Design Engineering Intern · Fremont · Fall 2025', mini: 'led', proj: 'led', more: 'Read the LED controller story', blurb: ['I designed an interior cabin light, and built an RGBW LED controller for the lighting design studio. Try it.']}},
   {id: 'level', label: 'Level Home', yr: '2026', tx: 40, ty: 11, w: 4, h: 3, spot: [41, 14], kind: 'office', tour: 7,
-   card: {title: 'Level Home', meta: 'Product Design Engineering Intern · Redwood City · Winter 2026', img: 'img/level-welcome.webp', imgAlt: 'Level welcome box with a hoodie, jacket and water bottle', imgCap: 'My intern welcome box.', body: ['Cut $12 per unit by replacing two accelerometers and their flex circuits with magnetometers and insert-molded magnets for lock position: $12M projected savings.', 'Designed an automated solenoid test fixture and PCBA for capacitive touch, resolving 14 issues across 2M+ validation cycles for 100% functional success.', 'Fixed bolt binding by defining datums to the bolt travel path and tightening critical tolerances: actuation-force variability down 25%, pass rate up 15%.', 'Led DFM on 20+ molded and die-cast parts, moving parting lines and gates off cosmetic surfaces and cutting tooling cost 8%.']}},
+   card: {title: 'Level Home', meta: 'Product Design Engineering Intern · Redwood City · Winter 2026', mini: 'lock', img: 'img/level-welcome.webp', imgAlt: 'Level welcome box with a hoodie, jacket and water bottle', photo: 'See my welcome box', blurb: ['Four months on smart locks, from a keypad test fixture to the sensor that knows whether the bolt is thrown.']}},
   {id: 'google', label: 'Google', yr: '2026', tx: 31, ty: 10, w: 5, h: 4, spot: [33, 14], kind: 'modern2', tour: 8,
-   card: {title: 'Google, Pixel Hardware', meta: 'Product Design Engineering Intern · Mountain View · Summer 2026', img: 'img/google-welcome.webp', imgAlt: 'Google intern welcome box with a propeller hat that says Intern, a backpack and a water bottle', imgCap: 'My intern welcome box.', body: ['Owned the design and validation of the Pixel Watch screen geometry for precision-molded glass, eliminating optical distortion within wall-thickness and draft limits.', 'Saved $15K in vendor testing with a production-representative test coupon and fixture recreating a titanium-to-resin interface.', 'Developed an installed-condition drop test for dynamic FEA of a watch baffle, avoiding the loss of 15 prototypes per cycle and saving $20K+.', 'Engineered a universal strain-test jig used across 4 global suppliers.']}},
+   card: {title: 'Google, Pixel Hardware', meta: 'Product Design Engineering Intern · Mountain View · Summer 2026', mini: 'hat', img: 'img/google-welcome.webp', imgAlt: 'Google intern welcome box with a propeller hat that says Intern, a backpack and a water bottle', photo: 'See my welcome box', blurb: ['Pixel Watch hardware in Mountain View. My welcome box came with a propeller hat, so it has to spin.']}},
   {id: 'next', label: 'Your team?', yr: '2027', tx: 27, ty: 18, w: 4, h: 3, spot: [29, 21], kind: 'plot', tour: 9,
    card: {title: 'Reserved: Summer 2027', meta: 'The next stop on the road', body: ["I'm looking for a Summer 2027 mechanical or product design internship, ideally consumer electronics or robotics."], contact: true}},
   {id: 'cabin', label: 'Home', tx: 33, ty: 17, w: 5, h: 4, spot: [35, 21], kind: 'cabin',
@@ -328,8 +328,16 @@ const miniBase = document.createElement('canvas'); miniBase.width = mini.width; 
 const RMW = 360, RMH = 180, FLOOR = 172;
 const room = document.createElement('canvas'); room.width = RMW; room.height = RMH;
 const rc = room.getContext('2d');
-const led = {r: 255, g: 190, b: 140, w: 60, br: 80};
-function ledRGB() { const k = led.br / 100, mx = c => Math.round(Math.min(255, c + led.w * .8) * k); return [mx(led.r), mx(led.g), mx(led.b)]; }
+/* the LED controller: six strips, shared by the room, the Tesla Lighting house and the map; kept until a refresh */
+const led = {strips: Array.from({length: 6}, () => ({r: 255, g: 150, b: 70, w: 80})), mode: 'static', pre: 1, touched: false};
+const hsl = (h, s, l) => { const f = n => { const k = (n + h * 12) % 12, a = s * Math.min(l, 1 - l); return Math.round(255 * (l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1)))); }; return [f(0), f(8), f(4)]; };
+function ledColor(i, now) {
+  if (led.mode === 'rainbow') return hsl(((i / 6) + (reduce ? 0 : now / 5000)) % 1, 1, .6);
+  if (led.mode === 'chase') { const k = reduce ? 1 : .2 + .8 * Math.max(0, Math.sin(now / 170 - i * 1.05)); return hsl(((i / 6) + (reduce ? 0 : now / 2600)) % 1, 1, .55).map(v => Math.round(v * k)); }
+  const s = led.strips[i]; return [s.r, s.g, s.b].map(v => Math.round(Math.min(255, v + s.w * .8)));
+}
+/* things you change inside the houses that show up out on the map */
+const WSTATE = {cells: false, hat: false, shades: false, coat: false, goals: 0, bars: 0};
 const GAL = {
   photos: [['img/ca-sunset-gull.webp', 'Ventura Pier, Santa Barbara, after a long road trip'], ['img/ca-redwoods.webp', 'Muir Woods'], ['img/ca-palms.webp', 'The Pacifica Taco Bell'], ['img/ca-pier.webp', 'Santa Monica Pier'], ['img/ca-coast-night.webp', 'Half Moon Bay, by the Ritz golf course']],
   moe: [["img/moe-1.webp", "My cat"], ["img/moe-2.webp", "My cat"], ["img/moe-3.webp", "My cat"], ["img/moe-4.webp", "My cat"], ["img/moe-5.webp", "My cat"], ["img/moe-6.webp", "My cat"], ["img/moe-7.webp", "My cat"]]
@@ -414,6 +422,8 @@ function girlSide(c, ox, oy, f, flip) {
   P_(7, 17, 10, 9, '#1f2126'); P_(8, 17, 8, 1, '#2c2f36'); P_(10, 17, 4, 1, '#d6a886'); P_(5, 18, 3, 3, '#1f2126'); P_(16, 18, 3, 3, '#1f2126'); P_(6, 21, 2, 5, SK); P_(16, 21, 2, 5, SK);
   P_(9, 26, 6, 3, '#4f6d8f');
   if (f === 0) { P_(9, 29, 2, 2, '#eceff1'); P_(13, 29, 2, 2, '#eceff1'); } else if (f === 1) { P_(9, 29, 2, 1, '#4f6d8f'); P_(8, 30, 3, 1, '#eceff1'); P_(13, 29, 2, 2, '#eceff1'); } else { P_(9, 29, 2, 2, '#eceff1'); P_(13, 29, 2, 1, '#4f6d8f'); P_(13, 30, 3, 1, '#eceff1'); }
+  if (WSTATE.shades) { P_(8, 9, 4, 3, '#111111'); P_(12, 10, 1, 1, '#111111'); P_(13, 9, 4, 3, '#111111'); P_(9, 9, 1, 1, '#555555'); P_(14, 9, 1, 1, '#555555'); }
+  if (WSTATE.hat) { ['#4285f4', '#ea4335', '#fbbc05', '#34a853'].forEach((col, i) => P_(6 + i * 3, 1, 3, 3, col)); P_(11, 0, 2, 1, '#9aa0a6'); const w = Math.round(Math.abs(Math.cos(performance.now() / (reduce ? 1e9 : 60))) * 6) + 1; P_(12 - w, -1, w * 2, 1, '#ea4335'); }
 }
 function moeNap(c, ox, oy, now) {
   const P_ = (x, y, w, h, k) => R(c, ox + x, oy + y, w, h, k), b = reduce ? 0 : Math.floor(now / 900) % 2;
@@ -434,7 +444,7 @@ function roomOpen(o) {
   openCard(Object.assign({}, o, {kind: 'room'}));
 }
 function galleryCard(o) {
-  window.track && track('gallery_open', {gallery: o.gal});
+  stopMini(); window.track && track('gallery_open', {gallery: o.gal});
   openId = o.id; cardAt = performance.now(); let i = 0; const list = GAL[o.gal];
   const render = () => {
     card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
@@ -444,6 +454,7 @@ function galleryCard(o) {
     card.querySelector('.w-close').addEventListener('click', closeCard);
     card.querySelector('#g-prev').addEventListener('click', () => { i = (i - 1 + list.length) % list.length; render(); card.querySelector('#g-prev').focus(); });
     card.querySelector('#g-next').addEventListener('click', () => { i = (i + 1) % list.length; render(); card.querySelector('#g-next').focus(); });
+    const im = card.querySelector('.w-img'); if (im.complete) requestAnimationFrame(fitCard); else im.onload = fitCard;
   };
   render(); card.hidden = false; card.querySelector('#g-next').focus({preventScroll: true});
 }
@@ -460,13 +471,13 @@ function drawRoomFront(now) {
   const cam = roomCam();
   g.fillStyle = '#2f2219'; g.fillRect(0, 0, VW, VH);
   g.drawImage(room, -cam.x, -cam.y);
-  const [lr, lg, lb] = ledRGB();
   // window sky by time of day
   const sky = {day: ['#9fd0f0', '#cfe9f7'], dawn: ['#f2b8a0', '#f9dcb8'], dusk: ['#8a6aa8', '#f2a98a'], night: ['#1b2550', '#2d3b6a']}[PHASE];
   R(g, 307 - cam.x, 23 - cam.y, 19, 31, sky[0]); R(g, 328 - cam.x, 23 - cam.y, 19, 31, sky[0]); R(g, 307 - cam.x, 56 - cam.y, 19, 31, sky[1]); R(g, 328 - cam.x, 56 - cam.y, 19, 31, sky[1]);
   if (PHASE === 'night') { [[312, 30], [320, 40], [334, 28], [341, 44], [316, 62]].forEach(([x, y]) => R(g, x - cam.x, y - cam.y, 1, 1, '#ffffff')); R(g, 336 - cam.x, 34 - cam.y, 4, 4, '#f2f0dc'); }
   // LED strip under the shelf
-  for (let x = 42; x < 148; x += 3) R(g, x - cam.x, 58 - cam.y, 2, 1, `rgb(${lr},${lg},${lb})`);
+  const seg = x => Math.min(5, Math.floor((x - 42) / 17.7)), lc = [0, 1, 2, 3, 4, 5].map(i => ledColor(i, now));
+  for (let x = 42; x < 148; x += 3) R(g, x - cam.x, 58 - cam.y, 2, 1, `rgb(${lc[seg(x)]})`);
   // Moe + Jillanne
   moeNap(g, 116 - cam.x, 158 - cam.y, now);
   const f = P.moving && !reduce ? (Math.floor(walkT * 8) % 2) + 1 : 0, bob = !P.moving && !reduce && Math.floor(now / 500) % 2 ? 1 : 0;
@@ -476,8 +487,8 @@ function drawRoomFront(now) {
   // lighting
   if (TINT) { g.globalAlpha = .7; g.fillStyle = TINT; g.fillRect(0, 0, VW, VH); g.globalAlpha = 1; }
   g.globalCompositeOperation = 'lighter';
-  const k = (PHASE === 'night' ? .26 : PHASE === 'day' ? .12 : .2) * led.br / 100;
-  for (let x = 46; x < 148; x += 16) { const gx = x - cam.x, gy = 59 - cam.y, gr = g.createRadialGradient(gx, gy, 0, gx, gy + 8, 24); gr.addColorStop(0, `rgba(${lr},${lg},${lb},${k})`); gr.addColorStop(1, `rgba(${lr},${lg},${lb},0)`); g.fillStyle = gr; g.fillRect(gx - 30, gy - 4, 60, 44); }
+  const k = (PHASE === 'night' ? .26 : PHASE === 'day' ? .12 : .2) * .85;
+  for (let x = 46; x < 148; x += 16) { const [lr, lg, lb] = lc[seg(x)], gx = x - cam.x, gy = 59 - cam.y, gr = g.createRadialGradient(gx, gy, 0, gx, gy + 8, 24); gr.addColorStop(0, `rgba(${lr},${lg},${lb},${k})`); gr.addColorStop(1, `rgba(${lr},${lg},${lb},0)`); g.fillStyle = gr; g.fillRect(gx - 30, gy - 4, 60, 44); }
   [[93, 99, 26], [129, 99, 26], [328, 125, 30]].forEach(([x, y, r]) => { const gx = x - cam.x, gy = y - cam.y, gr = g.createRadialGradient(gx, gy, 0, gx, gy, r); gr.addColorStop(0, PHASE === 'night' ? 'rgba(150,200,255,.25)' : 'rgba(150,200,255,.1)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(gx - r, gy - r, r * 2, r * 2); });
   if (PHASE !== 'night') { const gx = 327 - cam.x, gy = 55 - cam.y, gr = g.createRadialGradient(gx, gy, 0, gx, gy, 60); gr.addColorStop(0, 'rgba(255,240,200,.18)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(gx - 60, gy - 60, 120, 120); }
   g.globalCompositeOperation = 'source-over';
@@ -527,20 +538,43 @@ function exitRoom() {
 }
 function ledCard() {
   window.track && track('stop_open', {stop: 'room: led strip'});
-  openId = 'led'; cardAt = performance.now(); autoId = 'led';
-  const row = (k, lab, max) => `<label class="w-sl" for="led-${k}"><span>${lab}</span><input type="range" id="led-${k}" min="0" max="${max}" value="${led[k]}"><output id="led-${k}-v">${led[k]}</output></label>`;
-  card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
-    <h2 id="w-card-title">The LED controller</h2><p class="w-meta">Same controls the lighting studio uses</p>
-    <p>I built this for Tesla's interior lighting design studio so designers could set RGBW values without a firmware engineer. Drag the sliders and the room's light strip follows.</p>
-    <p><button type="button" class="w-more" data-proj="led">Read how I built it${touch ? '' : ' <span class="w-key">E</span>'}</button></p>
-    ${row('r', 'R', 255)}${row('g', 'G', 255)}${row('b', 'B', 255)}${row('w', 'W', 255)}${row('br', 'Brightness', 100)}
-    <div class="w-actions"><button type="button" class="w-alt" data-p="255,190,140,60,80">Warm</button><button type="button" class="w-alt" data-p="120,200,255,40,100">Cool</button><button type="button" class="w-alt" data-p="255,70,150,0,60">Pink</button><button type="button" class="w-alt" data-p="60,255,140,0,70">Green</button><button type="button" class="w-alt" data-p="0,0,0,0,0">Off</button></div></div>`;
+  autoId = 'led';
+  miniCard('led', {title: 'The LED controller', meta: 'A tiny copy of the one I built at Tesla', mini: 'led', proj: 'led', more: 'Read how I built it', blurb: ['Same presets as the lighting studio. Whatever you pick stays on around the map until you refresh.']});
+}
+/* mini experiences live in minis.js, loaded once the game opens */
+let minisP = null, miniInst = null;
+function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=1'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
+const MCTX = {reduce, get touch() { return touch; }, led, ledColor, state: WSTATE, girl, moeSprite,
+  tone: (...a) => window.__tone && window.__tone(...a), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
+function stopMini() { if (miniInst) { try { miniInst.stop(); } catch (e) {} miniInst = null; } }
+/* shrink the picture or toy so the whole card fits on screen without scrolling */
+function fitCard() {
+  const inn = card.querySelector('.w-card-in'); if (!inn || card.hidden) return;
+  const el = inn.querySelector('.w-mini:not([hidden]) canvas') || inn.querySelector('.w-img:not([hidden])'); if (!el) return;
+  el.style.width = ''; el.style.maxHeight = '';
+  for (let k = 0; k < 3; k++) {
+    const over = inn.scrollHeight - inn.clientHeight; if (over <= 0) return;
+    const h = el.getBoundingClientRect().height, nh = Math.max(96, Math.floor(h - over - 4));
+    if (el.tagName === 'CANVAS') el.style.width = Math.floor(nh * el.width / el.height) + 'px'; else el.style.maxHeight = (nh - (el.offsetHeight - el.clientHeight)) + 'px';
+  }
+}
+addEventListener('resize', () => requestAnimationFrame(fitCard));
+function miniCard(id, c) {
+  stopMini(); openId = id; cardAt = performance.now();
+  const more = c.proj ? `<button type="button" class="w-more" data-proj="${c.proj}">${esc(c.more || 'Read the full story')}${touch ? '' : ' <span class="w-key">E</span>'}</button>` : '';
+  card.innerHTML = `<div class="w-card-in has-mini" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
+    <h2 id="w-card-title">${esc(c.title)}</h2><p class="w-meta">${esc(c.meta)}</p>${(c.blurb || []).map(b => `<p class="w-blurb">${esc(b)}</p>`).join('')}
+    <div class="w-mini" data-mini="${c.mini}"></div>${c.img ? `<img class="w-img w-photo" hidden src="${c.img}" alt="${esc(c.imgAlt || '')}">` : ''}
+    <div class="w-ctl"></div>
+    ${c.img || more ? `<div class="w-actions w-foot">${c.img ? `<button type="button" class="w-alt" data-photo>${esc(c.photo)}</button>` : ''}${more}</div>` : ''}</div>`;
   card.hidden = false;
   card.querySelector('.w-close').addEventListener('click', closeCard);
   card.querySelectorAll('[data-proj]').forEach(b => b.addEventListener('click', () => { closeCard(); window.__openProject && window.__openProject(b.dataset.proj); }));
-  ['r', 'g', 'b', 'w', 'br'].forEach(k => { const i = card.querySelector('#led-' + k); i.addEventListener('input', () => { led[k] = +i.value; card.querySelector('#led-' + k + '-v').textContent = i.value; }); });
-  card.querySelectorAll('[data-p]').forEach(b => b.addEventListener('click', () => { const [r, g2, b2, w, br] = b.dataset.p.split(',').map(Number); Object.assign(led, {r, g: g2, b: b2, w, br}); ['r', 'g', 'b', 'w', 'br'].forEach(k => { card.querySelector('#led-' + k).value = led[k]; card.querySelector('#led-' + k + '-v').textContent = led[k]; }); }));
-  card.querySelector('#led-r').focus({preventScroll: true});
+  const ph = card.querySelector('[data-photo]');
+  if (ph) ph.addEventListener('click', () => { const im = card.querySelector('.w-photo'), mi = card.querySelector('.w-mini'), ct = card.querySelector('.w-ctl'), show = im.hidden; im.hidden = !show; mi.hidden = ct.hidden = show; ph.textContent = show ? 'Back to the toy' : c.photo; if (show && !im.complete) im.onload = fitCard; fitCard(); });
+  card.querySelector('.w-close').focus({preventScroll: true});
+  const host = card.querySelector('.w-mini'), ctl = card.querySelector('.w-ctl');
+  loadMinis().then(M => { if (openId !== id || !host.isConnected || !M[c.mini]) return; miniInst = M[c.mini](host, ctl, MCTX); fitCard(); requestAnimationFrame(fitCard); }).catch(() => { ctl.innerHTML = '<p class="w-hint">This one didn’t load. Try closing and opening it again.</p>'; });
 }
 function openCard(l) {
   window.track && l && track('stop_open', {stop: l.id});
@@ -551,6 +585,8 @@ function openCard(l) {
   openId = l.id; autoId = l.id; cardAt = performance.now(); if (l.tour) { visited.add(l.id); labelNodes[L.indexOf(l)].classList.add('w-visited'); if (visited.size === TOUR.length && !allSent) { allSent = true; window.track && track('game_all_stops_visited'); } }
   if (l.kind === 'nsx' || l.kind === 'c5') { const n = carClicks[l.kind]++ % 3; if (n === 0) pops[l.kind] = 1; else if (n === 1) { pops[l.kind] = 1; window.__engine && window.__engine(l.kind); } else pops[l.kind] = 0; }
   const c = l.card === 'contact' ? {title: 'Say hi', meta: 'Mailbox', body: ["I'm looking for a Summer 2027 internship in mechanical or product design."], contact: true} : l.card;
+  if (c.mini) { miniCard(l.id, Object.assign({proj: l.id}, c)); if (TOUR.includes(l)) { tourIdx = TOUR.indexOf(l); updateTour(); } window.__sfx && window.__sfx('open'); return; }
+  stopMini();
   const tourBits = '';
   card.innerHTML = `<div class="w-card-in" role="dialog" aria-modal="false" aria-labelledby="w-card-title">
     <button type="button" class="w-close" aria-label="Close">✕</button>${tourBits}
@@ -569,7 +605,7 @@ function openCard(l) {
 /* ---------------- arcade: a tiny runner on the TV ---------------- */
 let arc = null;
 function arcadeCard() {
-  window.track && track('arcade_open');
+  stopMini(); window.track && track('arcade_open');
   openId = 'arcade'; cardAt = performance.now();
   let best = 0; try { best = +localStorage.getItem('jy-runner-best') || 0; } catch (e) {}
   card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
@@ -612,7 +648,7 @@ function arcadeCard() {
   card.querySelector('#rn').focus && c.setAttribute('tabindex', '0');
 }
 let cardAt = 0, allSent = false;
-function closeCard() { if (openId && cardAt) { const s = Math.round((performance.now() - cardAt) / 1000); window.track && s > 0 && track('stop_time', {stop: openId, seconds: s, value: s}); cardAt = 0; } if (openId === 'arcade' && arc) { window.track && track('arcade_score', {score: Math.floor(arc.best || 0), value: Math.floor(arc.best || 0)}); arc = null; } if (!card.hidden) { card.hidden = true; openId = null; cv.focus({preventScroll: true}); } }
+function closeCard() { stopMini(); if (openId && cardAt) { const s = Math.round((performance.now() - cardAt) / 1000); window.track && s > 0 && track('stop_time', {stop: openId, seconds: s, value: s}); cardAt = 0; } if (openId === 'arcade' && arc) { window.track && track('arcade_score', {score: Math.floor(arc.best || 0), value: Math.floor(arc.best || 0)}); arc = null; } if (!card.hidden) { card.hidden = true; openId = null; cv.focus({preventScroll: true}); } }
 
 /* ---------------- tour + bar ---------------- */
 const tourPos = document.getElementById('tour-pos');
@@ -657,10 +693,10 @@ addEventListener('keyup', e => { if (KEYMAP[e.key]) keys.delete(KEYMAP[e.key]); 
 addEventListener('blur', () => keys.clear());
 cv.addEventListener('pointerdown', e => {
   touch = e.pointerType === 'touch'; closeCard();
-  if (scene === 'room') { const o = roomHit(e), cam = roomCam(); if (o && o.id === 'moe' && ++moeClicks % 3 === 1) window.__meow && window.__meow(); if (o && Math.abs(o.stand - RP.x) < 20 && o.id !== 'moe') { roomOpen(o); return; } RP.tx = o ? o.stand : Math.max(12, Math.min(RMW - 14, e.clientX / SC + cam.x)); RP.after = null; return; }
+  if (scene === 'room') { const o = roomHit(e), cam = roomCam(); if (o && o.id === 'moe') { if (++moeClicks % 3 === 1) window.__meow && window.__meow(); roomOpen(o); return; } if (o && Math.abs(o.stand - RP.x) < 20) { roomOpen(o); return; } RP.tx = o ? o.stand : Math.max(12, Math.min(RMW - 14, e.clientX / SC + cam.x)); RP.after = null; return; }
   const cam = camera(); const wx = (e.clientX - offX) / SC + cam.x, wy = (e.clientY - offY) / SC + cam.y;
   const mo = scene === 'room' ? {x: roomMoe.x + 8, y: roomMoe.y + 10} : moe;
-  if (Math.hypot(wx - mo.x, wy - (mo.y - 8)) < 15) { if (++moeClicks % 3 === 1) window.__meow && window.__meow(); return; }
+  if (Math.hypot(wx - mo.x, wy - (mo.y - 10)) < 17) { if (++moeClicks % 3 === 1) window.__meow && window.__meow(); galleryCard(RO.find(o => o.id === 'moe')); return; }
   const hit = cur().L.find(l => wx >= l.tx * TS - 4 && wx <= (l.tx + l.w) * TS + 4 && wy >= l.ty * TS - 8 && wy <= (l.ty + l.h) * TS + 4);
   if (hit) { if (hit.kind !== 'nsx' && hit.kind !== 'c5' && rectDist(hit) < 26) openCard(hit); else if (hit.kind === 'nsx' || hit.kind === 'c5') walkTo(hit, true); else walkTo(hit, false); return; }
   P.target = {x: wx, y: wy}; P.after = null; P.stuck = 0;
@@ -742,6 +778,30 @@ const ftile = document.createElement('canvas'); ftile.width = 48; ftile.height =
   P(22, 4, 1, 1, '#88b87a'); P(40, 12, 1, 1, '#88b87a'); P(14, 32, 1, 1, '#88b87a'); }
 const forest = g.createPattern(ftile, 'repeat');
 const sbuf = document.createElement('canvas'); sbuf.width = 24; sbuf.height = 30; const sbc = sbuf.getContext('2d'); const GIRL_K = 1.4, MOE_K = 1.6;
+/* easter eggs from the houses, worn on the map: sunglasses (LEDs at full white) and the propeller hat */
+function gear(c, dir, now) {
+  const Q = (x, y, w, h, k) => R(c, 2 + x, 2 + y, w, h, k);
+  if (WSTATE.shades && dir !== 'up') { if (dir === 'down') { Q(6, 7, 4, 3, '#111'); Q(10, 8, 1, 1, '#111'); Q(11, 7, 4, 3, '#111'); Q(7, 7, 1, 1, '#555'); Q(12, 7, 1, 1, '#555'); } else { const x = dir === 'left' ? 4 : 12; Q(x, 7, 4, 3, '#111'); Q(x + (dir === 'left' ? 3 : 0), 7, 1, 1, '#555'); } }
+  if (WSTATE.hat) { ['#4285f4', '#ea4335', '#fbbc05', '#34a853'].forEach((col, i) => Q(5 + i * 3, -1, 3, 2, col)); Q(9, -2, 2, 1, '#9aa0a6'); const w = Math.round(Math.abs(Math.cos(now / (reduce ? 1e9 : 55))) * 5) + 1; Q(10 - w, -3, w * 2, 1, '#ea4335'); }
+}
+/* lights you set in the houses stay on around the map */
+function houseLights(cam, now) {
+  if (led.touched) {
+    const tl = L.find(l => l.id === 'teslalight'), X = tl.tx * TS, Y = tl.ty * TS, cb = L.find(l => l.id === 'cabin'), CX = cb.tx * TS + 4, CY = cb.ty * TS + 4 + Math.round((cb.h * TS - 4) - Math.round((cb.h * TS - 4) * .42)) + 2;
+    const cols = [0, 1, 2, 3, 4, 5].map(i => ledColor(i, now));
+    cols.forEach((col, i) => { R(g, X - 4 + i * 16 - cam.x, Y + 28 - cam.y, 10, 8, `rgb(${col})`); R(g, X - 4 + i * 16 - cam.x, Y + 28 - cam.y, 10, 1, 'rgba(255,255,255,.5)'); });
+    for (let x = 0; x < 72; x += 2) R(g, CX + x - cam.x, CY - cam.y, 1, 1, `rgb(${cols[Math.min(5, Math.floor(x / 12))]})`);
+    g.globalCompositeOperation = 'lighter'; const a = PHASE === 'night' ? .55 : PHASE === 'day' ? .22 : .38;
+    cols.forEach((col, i) => { const x = X + 1 + i * 16 - cam.x, y = Y + 32 - cam.y, gr = g.createRadialGradient(x, y, 0, x, y, 16); gr.addColorStop(0, `rgba(${col},${a})`); gr.addColorStop(1, `rgba(${col},0)`); g.fillStyle = gr; g.fillRect(x - 16, y - 16, 32, 32); });
+    for (let i = 0; i < 6; i++) { const x = CX + 6 + i * 12 - cam.x, y = CY + 4 - cam.y, col = cols[i], gr = g.createRadialGradient(x, y, 0, x, y, 10); gr.addColorStop(0, `rgba(${col},${a * .8})`); gr.addColorStop(1, `rgba(${col},0)`); g.fillStyle = gr; g.fillRect(x - 10, y - 10, 20, 20); }
+    g.globalCompositeOperation = 'source-over';
+  }
+  if (WSTATE.cells) {
+    const tc = L.find(l => l.id === 'teslacells'), X = tc.tx * TS - cam.x, Y = tc.ty * TS - cam.y, k = reduce ? 1 : .85 + .15 * Math.sin(now / 300);
+    g.fillStyle = `rgba(255,120,170,${.45 * k})`; g.fillRect(X, Y + 26, tc.w * TS, 20);
+    g.globalCompositeOperation = 'lighter'; const gr = g.createRadialGradient(X + 40, Y + 36, 0, X + 40, Y + 36, 52); gr.addColorStop(0, `rgba(255,110,170,${(PHASE === 'day' ? .25 : .45) * k})`); gr.addColorStop(1, 'rgba(255,110,170,0)'); g.fillStyle = gr; g.fillRect(X - 12, Y - 16, 104, 104); g.globalCompositeOperation = 'source-over';
+  }
+}
 function draw(now) {
   const cam = camera();
   g.fillStyle = forest; forest.setTransform && forest.setTransform(new DOMMatrix().translate(-cam.x, -cam.y)); g.fillRect(0, 0, VW, VH);
@@ -762,7 +822,7 @@ function draw(now) {
     R(g, bx + 2, by + 9, 30, 3, 'rgba(20,50,90,.35)'); R(g, bx + 3, by, 26, 9, '#8a5a36'); R(g, bx, by + 1, 32, 6, '#8a5a36'); R(g, bx + 2, by + 2, 28, 4, '#b07a4a'); R(g, bx, by + 1, 32, 1, '#6b4426'); R(g, bx + 3, by + 8, 26, 1, '#5e3a20');
     const oar = Math.floor(now / 220) % 2; R(g, bx + 14, by - 2 + oar * 2, 2, 12, '#d9b483'); R(g, bx + 13, by + 9 + oar * 2, 4, 3, '#d9b483');
     if (!reduce) { const w = Math.floor(now / 120) % 3; R(g, bx - 3 - w, by + 4, 2, 1, '#cfe6f7'); R(g, bx + 34 + w, by + 4, 2, 1, '#cfe6f7'); } }
-  const sprites = [[moe.y, () => { sbc.clearRect(0, 0, 24, 30); moeSprite(sbc, 2, 3, moe.moving ? mf : 0); g.drawImage(sbuf, 0, 0, 20, 17, Math.round(moe.x - 9 * MOE_K - cam.x), Math.round(moe.y - 14 * MOE_K - cam.y), Math.round(20 * MOE_K), Math.round(17 * MOE_K)); }], [P.y, () => { sbc.clearRect(0, 0, 24, 30); girl(sbc, 2, 2, P.dir, f); g.drawImage(sbuf, 0, 0, 24, 30, Math.round(P.x - 12 * GIRL_K - cam.x), Math.round(P.y - 27 * GIRL_K - cam.y + bob), Math.round(24 * GIRL_K), Math.round(30 * GIRL_K)); }]].sort((a, b) => a[0] - b[0]);
+  const sprites = [[moe.y, () => { sbc.clearRect(0, 0, 24, 30); moeSprite(sbc, 2, 3, moe.moving ? mf : 0); g.drawImage(sbuf, 0, 0, 20, 17, Math.round(moe.x - 9 * MOE_K - cam.x), Math.round(moe.y - 14 * MOE_K - cam.y), Math.round(20 * MOE_K), Math.round(17 * MOE_K)); }], [P.y, () => { sbc.clearRect(0, 0, 24, 30); girl(sbc, 2, 2, P.dir, f); gear(sbc, P.dir, now); g.drawImage(sbuf, 0, 0, 24, 30, Math.round(P.x - 12 * GIRL_K - cam.x), Math.round(P.y - 27 * GIRL_K - cam.y + bob), Math.round(24 * GIRL_K), Math.round(30 * GIRL_K)); }]].sort((a, b) => a[0] - b[0]);
   sprites.forEach(s => s[1]());
   if (TINT) {
     g.fillStyle = TINT; g.fillRect(0, 0, VW, VH);
@@ -770,6 +830,7 @@ function draw(now) {
       ['nsx', 'c5'].forEach(k => { if (!pops[k]) return; const l = L.find(o => o.id === k); const x = l.tx * TS + 18 - cam.x, y = l.ty * TS + 38 - cam.y; const gr = g.createRadialGradient(x, y, 0, x, y + 16, 34); gr.addColorStop(0, 'rgba(255,245,200,.55)'); gr.addColorStop(1, 'rgba(255,245,200,0)'); g.fillStyle = gr; g.fillRect(x - 34, y - 6, 68, 56); });
       g.globalCompositeOperation = 'source-over'; }
   }
+  houseLights(cam, now);
   roomLabel.hidden = true; cv.style.cursor = 'default';
   // labels
   L.forEach((l, i) => {
@@ -906,8 +967,9 @@ function welcome() {
   const t0 = performance.now(); const early = () => { setTimeout(hide, Math.max(0, 6000 - (performance.now() - t0))); };
   addEventListener('keydown', early); cv.addEventListener('pointerdown', early); setTimeout(hide, 10000);
 }
+window.__w = {get P() { return P; }, get moe() { return moe; }, get RP() { return RP; }, get scene() { return scene; }, camera: () => scene === 'room' ? roomCam() : camera(), get SC() { return SC; }, RO, roomOpen, led, WSTATE};
 window.World = {
-  start() { if (!welcomed) { const c = L.find(l => l.id === 'cabin'); P.x = (c.tx + c.w + .7) * TS; P.y = (c.ty - .2) * TS; P.dir = 'down'; P.target = null; moe.x = P.x - 14; moe.y = P.y + 4; trail.length = 0; } resize(); root.hidden = false; running = true; last = performance.now(); cv.setAttribute('tabindex', '0'); cv.focus({preventScroll: true}); requestAnimationFrame(step); if (!welcomed) welcome(); },
+  start() { loadMinis().catch(() => {}); if (!welcomed) { const c = L.find(l => l.id === 'cabin'); P.x = (c.tx + c.w + .7) * TS; P.y = (c.ty - .2) * TS; P.dir = 'down'; P.target = null; moe.x = P.x - 14; moe.y = P.y + 4; trail.length = 0; } resize(); root.hidden = false; running = true; last = performance.now(); cv.setAttribute('tabindex', '0'); cv.focus({preventScroll: true}); requestAnimationFrame(step); if (!welcomed) welcome(); },
   stop() { if (scene === 'track') leaveTrack(true); hideDrive(); running = false; root.hidden = true; keys.clear(); closeCard(); }
 };
 })();

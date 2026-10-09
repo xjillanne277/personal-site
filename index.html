@@ -896,6 +896,40 @@ html[data-theme="dark"] .cs-stats.cs-hl.cs-num dt{color:#ecebe7}html[data-theme=
 .cs-split2.top{align-items:start}.cs-pair.even .cs-fig img{aspect-ratio:3/4;object-fit:contain;background:#fff}
 .proj-nav .pv-s{display:none}@media (max-width:999px){.proj-nav .pv-t{display:none}.proj-nav .pv-s{display:inline}}
 @media (min-width:1000px){.proj-bar{flex-wrap:nowrap}.proj-crumb{flex:1 1 auto;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.proj-nav,.proj-bar>button,.proj-bar>a{flex:none}}
+/* game cards: sized to the screen, with room for a mini experience */
+#world-card{z-index:10}
+.w-card-in{--cardH:min(66vh,600px);max-height:var(--cardH);box-sizing:border-box}
+.w-img{max-height:calc(var(--cardH) - 190px)}
+.w-card-in .w-blurb{margin:0 0 10px;font-size:15.5px;line-height:1.45}
+.w-mini{margin:2px 0 8px}
+.w-mini-cv{display:block;width:100%;height:auto;margin:0 auto;image-rendering:pixelated;border:3px solid var(--panel-edge);box-sizing:border-box;touch-action:none;cursor:pointer;-webkit-user-select:none;user-select:none}
+.w-mini-cv:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.w-ctl .w-hint{margin:6px 0 2px;font-size:14px;line-height:1.4;color:var(--muted);min-height:2.8em}
+.w-ctl .w-actions{margin-top:0}
+.w-sl2{display:grid;grid-template-columns:1fr 1fr;column-gap:16px}
+.w-sl2 .w-sl{grid-template-columns:3.4em 1fr 2.2em;gap:8px;margin:3px 0;font-size:14px}
+.w-keys{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 2px}
+.w-keycap{min-width:34px;height:34px;padding:0 8px;border:0;background:#2b2d31;color:#f3f1ec;font:700 15px var(--f-pixel);cursor:pointer;box-shadow:inset 0 -3px 0 rgba(0,0,0,.45)}
+.w-keycap[aria-pressed="true"]{background:#454952;box-shadow:inset 0 -1px 0 rgba(0,0,0,.45),0 0 0 2px #7fd1ff}
+.w-keycap.w-off{background:#ead8b8;color:var(--ink);box-shadow:inset 0 -3px 0 rgba(0,0,0,.15)}
+.w-keycap:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.w-foot{margin-top:4px;align-items:center}
+.w-foot .w-more{margin-top:0}
+.w-go:disabled{opacity:.55;cursor:default}
+@media (max-width:560px){.w-card-in{padding:16px 14px 12px}.w-card-in h2{font-size:21px;padding-right:34px}.w-card-in .w-meta{margin-bottom:8px;font-size:13.5px}.w-sl2{column-gap:10px}.w-sl2 .w-sl{grid-template-columns:2.9em 1fr 1.9em;gap:5px;font-size:13px}.w-keys{gap:5px}.w-keycap{min-width:31px;height:32px;padding:0 6px}.w-ctl .w-hint{font-size:13.5px}}
+@media (max-width:560px) and (min-height:561px){.w-card-in{--cardH:calc(100dvh - 176px - env(safe-area-inset-bottom,0px))}}
+@media (max-height:560px){
+  #world-card{bottom:calc(8px + env(safe-area-inset-bottom,0px));left:calc(12px + env(safe-area-inset-left,0px));transform:none;width:min(900px,calc(100% - 214px - env(safe-area-inset-left,0px) - env(safe-area-inset-right,0px)))}
+  .w-card-in{--cardH:calc(100dvh - 16px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));padding:14px 18px 12px}
+  .w-card-in h2{font-size:20px}.w-card-in .w-meta{margin-bottom:6px;font-size:13px}.w-card-in .w-blurb{font-size:14px;margin-bottom:6px}
+  .w-card-in.has-mini{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);column-gap:18px;align-items:start}
+  .w-card-in.has-mini>.w-mini,.w-card-in.has-mini>.w-photo{grid-column:1;grid-row:1 / span 8;margin:0}
+  .w-card-in.has-mini>:not(.w-mini):not(.w-photo):not(.w-close){grid-column:2}
+  .w-card-in.has-mini .w-photo{max-height:calc(var(--cardH) - 40px);width:auto;max-width:100%}
+  .w-sl2{grid-template-columns:1fr 1fr;column-gap:10px}.w-sl2 .w-sl{grid-template-columns:2.9em 1fr 1.9em;gap:5px;margin:0;font-size:12.5px}
+  .w-keys{gap:4px;margin:4px 0 0}.w-keycap{min-width:28px;height:28px;padding:0 5px;font-size:13px}
+  .w-ctl .w-hint{min-height:0;font-size:12.5px;margin:4px 0 0}.w-foot{margin-top:6px}.w-card-in .w-more,.w-card-in .w-go,.w-card-in .w-alt{font-size:14px;padding:7px 12px 6px}
+}
 #xp-dlg{border:0;padding:0;border-radius:14px;max-width:720px;width:calc(100% - 32px);max-height:86vh;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 #xp-dlg::backdrop{background:rgba(17,20,24,.55)}
 #xp-dlg .xp-in{padding:28px 32px 30px;overflow:auto;max-height:86vh;box-sizing:border-box}
@@ -1967,6 +2001,7 @@ function water(d) {
   for (let k = 0; k < d * 6; k++) bubble(t + .2 + Math.random() * d, 500 + Math.random() * 700, .008 + Math.random() * .012);
 }
 window.__splash = v => { if (SFX.paddle) playSfx('paddle', .55 * v); else splash(v); }; window.__water = () => {};
+window.__tone = (f, d = .08, type = 'square', v = .04, f2) => { if (!AC || !musicOn) return; const t = AC.currentTime, o = AC.createOscillator(), gn = AC.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d); gn.gain.setValueAtTime(0, t); gn.gain.linearRampToValueAtTime(v, t + .005); gn.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(gn); gn.connect(AC.destination); o.start(t); o.stop(t + d + .02); };
 function chime() { if (!AC || !musicOn) return; const t = AC.currentTime + .05; [72, 76, 79, 84].forEach((m, i) => note(m, t + i * .07, .9, .06)); }
 
 setSel(0, true);
