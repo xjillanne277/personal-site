@@ -914,6 +914,7 @@ html[data-theme="dark"] .cs-stats.cs-hl.cs-num dt{color:#ecebe7}html[data-theme=
 .w-keycap.w-off{background:#ead8b8;color:var(--ink);box-shadow:inset 0 -3px 0 rgba(0,0,0,.15)}
 .w-keycap:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .w-foot{margin-top:4px;align-items:center}
+.w-img.w-gal{width:100%;object-fit:contain;background:#f3ead9}
 .w-tabs{display:flex;gap:6px;margin:0 0 8px;flex-wrap:wrap}.w-tab{font:600 14px var(--f-pixel);border:0;padding:7px 12px 6px;background:#ead8b8;color:var(--ink);cursor:pointer;opacity:.75}.w-tab[aria-selected="true"]{background:var(--ink);color:#fff8ef;opacity:1}.w-tab:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 @media (max-height:560px){.w-card-in.has-mini>.w-tabs{grid-column:2}}
 .w-ctl .w-actions{align-items:center}.w-stat{font:600 15px 'IBM Plex Mono',monospace;color:var(--ink);font-variant-numeric:tabular-nums}
@@ -2007,23 +2008,29 @@ window.__splash = v => { if (SFX.paddle) playSfx('paddle', .55 * v); else splash
 window.__tone = (f, d = .08, type = 'square', v = .04, f2) => { if (!AC || !musicOn) return; const t = AC.currentTime, o = AC.createOscillator(), gn = AC.createGain(); o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d); gn.gain.setValueAtTime(0, t); gn.gain.linearRampToValueAtTime(v, t + .005); gn.gain.exponentialRampToValueAtTime(.0001, t + d); o.connect(gn); gn.connect(AC.destination); o.start(t); o.stop(t + d + .02); };
 /* game toys: a little electric motor (propeller) and a light "thock" for landings */
 let motorN = null;
+/* propeller: no tone, just soft air chopped by the blades, like a tiny helicopter */
 window.__motor = {
   set(om) {
     if (!AC || !musicOn) { if (motorN) this.stop(); return; }
     if (!motorN && om > 1) {
-      const o = AC.createOscillator(), o2 = AC.createOscillator(), lp = AC.createBiquadFilter(), g = AC.createGain(), chop = AC.createGain(), lfo = AC.createOscillator(), lg = AC.createGain();
-      o.type = 'sawtooth'; o2.type = 'square'; lp.type = 'lowpass'; lp.Q.value = 3; g.gain.value = 0; chop.gain.value = .6; lfo.type = 'sine'; lg.gain.value = .4;
-      o.connect(lp); o2.connect(lp); lp.connect(chop); chop.connect(g); g.connect(AC.destination); lfo.connect(lg); lg.connect(chop.gain);
-      o.start(); o2.start(); lfo.start(); motorN = {o, o2, lp, g, lfo};
+      const len = AC.sampleRate * 2, buf = AC.createBuffer(1, len, AC.sampleRate), d = buf.getChannelData(0); let last = 0;
+      for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; last = (last + .04 * w) / 1.04; d[i] = last * 3; }
+      const src = AC.createBufferSource(); src.buffer = buf; src.loop = true;
+      const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 600; lp.Q.value = .4;
+      const chop = AC.createGain(); chop.gain.value = 0; const g = AC.createGain(); g.gain.value = 0;
+      const lfo = AC.createOscillator(); lfo.type = 'square'; const lg = AC.createGain(); lg.gain.value = .5; const off = AC.createConstantSource ? AC.createConstantSource() : null;
+      lfo.connect(lg); lg.connect(chop.gain); if (off) { off.offset.value = .5; off.connect(chop.gain); off.start(); }
+      src.connect(lp); lp.connect(chop); chop.connect(g); g.connect(AC.destination); src.start(); lfo.start();
+      motorN = {src, lp, g, lfo, off};
     }
     if (!motorN) return;
     const t = AC.currentTime, k = Math.min(1, om / 64);
-    motorN.o.frequency.setTargetAtTime(55 + om * 3.2, t, .05); motorN.o2.frequency.setTargetAtTime(110 + om * 6.4, t, .05);
-    motorN.lp.frequency.setTargetAtTime(300 + om * 28, t, .05); motorN.lfo.frequency.setTargetAtTime(Math.max(.5, om / Math.PI), t, .05);
-    motorN.g.gain.setTargetAtTime(om < 1 ? 0 : .012 + k * .035, t, .06);
-    if (om < 1) { clearTimeout(motorN.off); motorN.off = setTimeout(() => window.__motor.stop(), 400); } else clearTimeout(motorN.off);
+    motorN.lfo.frequency.setTargetAtTime(Math.max(1, om / Math.PI), t, .04);
+    motorN.lp.frequency.setTargetAtTime(380 + om * 9, t, .08);
+    motorN.g.gain.setTargetAtTime(om < 1 ? 0 : .02 + k * .05, t, .08);
+    if (om < 1) { clearTimeout(motorN.offT); motorN.offT = setTimeout(() => window.__motor.stop(), 400); } else clearTimeout(motorN.offT);
   },
-  stop() { if (!motorN) return; const n = motorN; motorN = null; try { n.g.gain.setTargetAtTime(0, AC.currentTime, .03); setTimeout(() => { n.o.stop(); n.o2.stop(); n.lfo.stop(); }, 200); } catch (e) {} }
+  stop() { if (!motorN) return; const n = motorN; motorN = null; try { n.g.gain.setTargetAtTime(0, AC.currentTime, .03); setTimeout(() => { n.src.stop(); n.lfo.stop(); n.off && n.off.stop(); }, 200); } catch (e) {} }
 };
 window.__thock = (v = 1, p = 1) => {
   if (!AC || !musicOn) return;

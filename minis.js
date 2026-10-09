@@ -37,15 +37,16 @@ const M = {};
 M.led = (host, ctl, X) => {
   const W = 200, H = 110, {cv, c, P, pt} = make(host, W, H, '#1c1e23');
   const L = X.led, NAMES = ['Off', 'Warm', 'Cool', 'Pink', 'Sunset', 'Ocean', 'Rainbow', 'Chase'];
-  const sel = -1; let seq = [];
+  let sel = -1, seq = [];
   const SY = i => 25 + i * 13;
-  const SW = [[255, 60, 60, 0], [255, 150, 40, 0], [255, 230, 60, 0], [70, 230, 110, 0], [60, 220, 255, 0], [70, 110, 255, 0], [170, 80, 255, 0], [255, 70, 170, 0], [255, 255, 255, 255]];
-  ctl.innerHTML = `<div class="w-keys" role="group" aria-label="Presets">${[1, 2, 3, 4, 5, 6, 7].map(n => `<button type="button" class="w-keycap" data-pre="${n}" aria-label="Preset ${n}, ${NAMES[n]}" title="${NAMES[n]}">${n}</button>`).join('')}<button type="button" class="w-keycap w-off" data-pre="0" aria-label="Lights off">Off</button></div>
+  ctl.innerHTML = `<div class="w-sl2">${['r', 'g', 'b', 'w'].map(k => `<label class="w-sl"><span>${{r: 'Red', g: 'Green', b: 'Blue', w: 'White'}[k]}</span><input type="range" min="0" max="255" data-k="${k}"><output></output></label>`).join('')}</div>
+    <div class="w-keys" role="group" aria-label="Presets">${[1, 2, 3, 4, 5, 6, 7].map(n => `<button type="button" class="w-keycap" data-pre="${n}" aria-label="Preset ${n}, ${NAMES[n]}" title="${NAMES[n]}">${n}</button>`).join('')}<button type="button" class="w-keycap w-off" data-pre="0" aria-label="Lights off">Off</button></div>
     <p class="w-hint" aria-live="polite"></p>`;
-  const base = () => 'Pick a preset, or tap a strip to change its color. Your lighting stays on around the map.';
+  const sls = [...ctl.querySelectorAll('input')];
+  const base = () => sel < 0 ? 'Pick a preset or drag the sliders. Tap a strip to set just that one.' : `Setting strip ${sel + 1} only. Tap it again for all six.`;
   const say = hint(ctl);
-  const cur = () => L.strips[0];
-  const sync = () => { ctl.querySelectorAll('[data-pre]').forEach(b => b.setAttribute('aria-pressed', String(L.pre === +b.dataset.pre))); };
+  const cur = () => L.strips[sel < 0 ? 0 : sel];
+  const sync = () => { sls.forEach(i => { i.value = cur()[i.dataset.k]; i.nextElementSibling.textContent = i.value; }); ctl.querySelectorAll('[data-pre]').forEach(b => b.setAttribute('aria-pressed', String(L.pre === +b.dataset.pre))); };
   const set = (s, v) => Object.assign(s, {r: v[0], g: v[1], b: v[2], w: v[3]});
   const fill = v => { L.strips.forEach(s => set(s, v)); L.mode = 'static'; };
   const grad = a => { a.forEach((v, i) => set(L.strips[i], v)); L.mode = 'static'; };
@@ -55,25 +56,21 @@ M.led = (host, ctl, X) => {
     6: () => { fill([255, 255, 255, 0]); L.mode = 'rainbow'; }, 7: () => { fill([255, 255, 255, 0]); L.mode = 'chase'; }};
   function shades() {
     const max = L.mode === 'static' && L.strips.every(s => s.r === 255 && s.g === 255 && s.b === 255 && s.w === 255);
-    if (max && !X.state.shades) { X.state.shades = true; say('All six at full white. Sunglasses on.', base()); }
+    if (max && !X.state.shades) { X.state.shades = true; say('Everything at 255. Sunglasses on.', base()); }
     else if (!max) X.state.shades = false;
   }
   function preset(n) {
     PRE[n](); L.pre = n; L.touched = true; X.tone(300 + n * 60, .07, 'square', .03);
     seq.push(n); seq = seq.slice(-7);
     if (seq.join('') === '1234567') { L.strips.forEach((s, i) => set(s, i % 2 ? [233, 160, 110, 0] : [255, 236, 214, 40])); L.mode = 'static'; L.pre = 'moe'; X.meow(); say('Secret preset unlocked: Moe.', base()); seq = []; }
-    else say(n ? `Preset ${n}: ${NAMES[n]}.` : 'Lights off.', base());
+    else say(n ? `Preset ${n}: ${NAMES[n]}. It stays on around the map.` : 'Lights off.', base());
     shades(); sync();
   }
-  function strip(i) {
-    const s = L.strips[i]; if (L.mode !== 'static') fill([255, 255, 255, 0]);
-    const at = SW.findIndex(v => v[0] === s.r && v[1] === s.g && v[2] === s.b && v[3] === s.w); set(s, SW[(at + 1) % SW.length]);
-    L.pre = 'custom'; L.touched = true; X.tone(500 + i * 70, .04, 'triangle', .03); shades(); sync();
-  }
+  sls.forEach(i => i.addEventListener('input', () => { const k = i.dataset.k, v = +i.value; (sel < 0 ? L.strips : [L.strips[sel]]).forEach(s => { s[k] = v; }); i.nextElementSibling.textContent = v; L.mode = 'static'; L.pre = 'custom'; L.touched = true; shades(); ctl.querySelectorAll('[data-pre]').forEach(b => b.setAttribute('aria-pressed', 'false')); }));
   ctl.querySelectorAll('[data-pre]').forEach(b => b.addEventListener('click', () => preset(+b.dataset.pre)));
   cv.addEventListener('pointerdown', e => {
     const p = pt(e);
-    if (p.x > 80) { const i = [0, 1, 2, 3, 4, 5].find(k => Math.abs(p.y - SY(k)) < 6.5); if (i != null) strip(i); return; }
+    if (p.x > 80) { const i = [0, 1, 2, 3, 4, 5].find(k => Math.abs(p.y - SY(k)) < 6.5); if (i != null) { sel = sel === i ? -1 : i; X.tone(560, .04, 'triangle', .03); sync(); say(base()); } return; }
     if (p.x >= 27 && p.x <= 37 && p.y >= 21 && p.y < 21 + 7 * 10) { preset(Math.min(7, Math.floor((p.y - 21) / 10) + 1)); return; }
     if (p.x > 38 && p.x < 70 && p.y > 22 && p.y < 66) preset(typeof L.pre === 'number' && L.pre >= 1 && L.pre < 7 ? L.pre + 1 : 1);
   });
@@ -472,28 +469,41 @@ M.dash = (host, ctl, X) => {
 
 /* ---------- Valbruna: scrap to steel bar ---------- */
 M.steel = (host, ctl, X) => {
-  const W = 240, H = 110, {cv, c, P} = make(host, W, H, '#2f2a28');
+  const W = 288, H = 110, {cv, c, P} = make(host, W, H, '#2f2a28');
   ctl.innerHTML = `<div class="w-actions"><button type="button" class="w-alt" data-act></button></div><p class="w-hint" aria-live="polite"></p>`;
   const say = hint(ctl), btn = ctl.querySelector('[data-act]');
-  const LABEL = {ready: 'SCRAP BUCKET', charge: 'CHARGING THE FURNACE', melt: 'ELECTRIC ARC FURNACE', tap: 'TAPPING INTO THE LADLE', move: 'LADLE TO THE CASTER', cast: 'CONTINUOUS CASTER', roll: 'ROLLING MILL', done: 'COOLING BED'};
-  let st = 'ready', tt = 0, temp = 25, holding = false, pool = 0, fill = 0, tilt = 0, lx = 86, ly = 80, strand = 0, bx = 0, bars = X.state.bars || 0, sparks = [], shine = 0;
+  const LABEL = {ready: 'SCRAP BUCKET', charge: 'CHARGING THE FURNACE', melt: 'ELECTRIC ARC FURNACE', tap: 'TAPPING INTO THE LADLE', move: 'LADLE TO THE CASTER', cast: 'CONTINUOUS CASTER', cut: 'TORCH CUT · ROLLING MILL', drain: 'ROLLING MILL', ship: 'SHIPPING'};
+  const ORDER = 3, TORCH = 136, SPEC = 18, TOL = 3, RY = 88, STANDS = [172, 190, 208], BED = 236;
+  let st = 'ready', tt = 0, temp = 25, holding = false, pool = 0, fill = 0, tilt = 0, lx = 86, ly = 80, strand = 0, hx = TORCH, bars = X.state.bars || 0, orders = X.state.orders || 0, sparks = [], shine = 0;
+  let billets = [], bed = [], good = 0, cutT = 9, stampT = [], truck = W + 4, shipped = 0;
   const scrap = Array.from({length: 9}, (_, i) => ({ox: (i % 5) * 5 - 10, oy: Math.floor(i / 5) * 4, w: 3 + (i * 7) % 4, h: 2 + (i * 5) % 3, col: ['#7d838b', '#9aa0a6', '#6b6f75'][i % 3], y: 0, in: false}));
   function sync() {
-    btn.disabled = !(st === 'ready' || st === 'melt');
-    btn.textContent = st === 'ready' ? 'Charge the furnace' : st === 'melt' ? (holding ? 'Arcing…' : 'Hold for the arc') : 'Working…';
+    btn.disabled = !(st === 'ready' || st === 'melt' || st === 'cut');
+    btn.textContent = st === 'ready' ? 'Charge the furnace' : st === 'melt' ? (holding ? 'Arcing…' : 'Hold for the arc') : st === 'cut' ? 'Cut' : 'Working…';
   }
-  function go() { if (st !== 'ready') return; st = 'charge'; tt = 0; scrap.forEach(s => { s.y = 0; s.in = false; }); temp = 25; pool = 0; fill = 0; tilt = 0; lx = 86; ly = 80; strand = 0; bx = 0; say('Charging the furnace with scrap.'); sync(); }
-  const hold = on => { if (st !== 'melt') { if (on && st === 'ready') go(); return; } holding = on; sync(); };
+  function go() { if (st !== 'ready') return; st = 'charge'; tt = 0; scrap.forEach(s => { s.y = 0; s.in = false; }); temp = 25; pool = 0; fill = 0; tilt = 0; lx = 86; ly = 80; strand = 0; hx = TORCH; billets = []; bed = []; good = 0; stampT = []; truck = W + 4; shipped = 0; say('Charging the furnace with scrap.'); sync(); }
+  // the torch cuts at TORCH; the billet is whatever has come out past it
+  function cut(len, auto) {
+    if (st !== 'cut') return;
+    const L = len == null ? hx - TORCH : len, ok = !auto && Math.abs(L - SPEC) <= TOL && good + billets.filter(b => b.ok).length < ORDER;
+    billets.push({x: hx, len: L, ok, y: RY, vy: 0, a: 1}); hx = TORCH; cutT = 0;
+    for (let n = 0; n < 10; n++) sparks.push({x: TORCH + (Math.random() - .5) * 2, y: RY, vx: (Math.random() - .3) * 70, vy: -20 - Math.random() * 50, l: .45});
+    X.tone(900 + Math.random() * 200, .09, 'sawtooth', .015);
+    if (ok && good + billets.filter(b => b.ok).length >= ORDER) { st = 'drain'; sync(); say('On spec. That’s the last one for this order.'); }
+    else if (ok) say('On spec. Off to the rolling mill.');
+    else say(L < SPEC ? 'Too short, that one’s scrap. Wait for the yellow mark.' : 'Too long, that one’s scrap. Cut a little sooner.');
+  }
+  const hold = on => { if (st === 'cut') { if (on) cut(); return; } if (st !== 'melt') { if (on && st === 'ready') go(); return; } holding = on; sync(); };
   btn.addEventListener('click', () => { if (st === 'ready') go(); });
-  btn.addEventListener('pointerdown', e => { if (st === 'melt') { e.preventDefault(); hold(true); } });
-  ['pointerup', 'pointerleave', 'pointercancel'].forEach(k => btn.addEventListener(k, () => hold(false)));
-  btn.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && st === 'melt') { e.preventDefault(); if (!e.repeat) hold(true); } });
-  btn.addEventListener('keyup', e => { if (e.key === ' ' || e.key === 'Enter') hold(false); });
+  btn.addEventListener('pointerdown', e => { if (st === 'melt' || st === 'cut') { e.preventDefault(); hold(true); } });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(k => btn.addEventListener(k, () => { if (st === 'melt') hold(false); }));
+  btn.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && (st === 'melt' || st === 'cut')) { e.preventDefault(); if (!e.repeat) hold(true); } });
+  btn.addEventListener('keyup', e => { if ((e.key === ' ' || e.key === 'Enter') && st === 'melt') hold(false); });
   cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); hold(true); });
-  ['pointerup', 'pointercancel'].forEach(k => cv.addEventListener(k, () => hold(false)));
-  sync(); say(bars ? `${bars} bar${bars > 1 ? 's' : ''} so far. Tap the scrap bucket for another.` : 'Turn scrap into steel bar. Tap the scrap bucket to charge the furnace.');
+  ['pointerup', 'pointercancel'].forEach(k => cv.addEventListener(k, () => { if (st === 'melt') hold(false); }));
+  sync(); say(orders ? `${orders} order${orders > 1 ? 's' : ''} shipped. Tap the scrap bucket for the next one.` : `New order: ${ORDER} bars. Tap the scrap bucket to charge the furnace.`);
   const stop = loop((dt, now) => {
-    tt += dt; const R = X.reduce ? 3 : 1.6;
+    tt += dt; cutT += dt; const R = X.reduce ? 3 : 1.6;
     if (st === 'charge') { const k = Math.min(1, tt * R / 1.2); if (k >= .7) scrap.forEach((s, i) => { s.y = Math.min(1, s.y + dt * R * (2 + i * .15)); }); if (tt * R > 1.9) { st = 'melt'; tt = 0; sync(); say('Press and hold the furnace to strike the arc. Get it to 1600 °C.'); } }
     if (st === 'melt') {
       if (holding) { temp = Math.min(1600, temp + dt * 900); if (Math.random() < dt * 30) for (let n = 0; n < 2; n++) sparks.push({x: 58 + (Math.random() - .5) * 20, y: 78, vx: (Math.random() - .5) * 80, vy: -40 - Math.random() * 60, l: .5}); if (Math.random() < dt * 8) X.tone(55 + Math.random() * 20, .12, 'sawtooth', .025); }
@@ -502,10 +512,29 @@ M.steel = (host, ctl, X) => {
       if (temp >= 1600) { st = 'tap'; tt = 0; holding = false; sync(); say('Tapping: the furnace tilts and pours into the ladle.'); }
     }
     if (st === 'tap') { tilt = Math.min(1, tt * R / .4); if (tt * R > .4) { fill = Math.min(1, fill + dt * R / 1.1); pool = Math.max(0, 1 - fill); } if (tt * R > 1.6) { st = 'move'; tt = 0; say('The crane takes the ladle to the caster.'); } }
-    if (st === 'move') { tilt = Math.max(0, tilt - dt * 3); const k = ease(Math.min(1, tt * R / 1.2)); lx = 86 + k * 28; ly = 80 - Math.sin(k * Math.PI) * 26; if (tt * R > 1.2) { st = 'cast'; tt = 0; say('Continuous casting: the steel freezes into a strand, then gets cut into a billet.'); } }
-    if (st === 'cast') { strand = Math.min(1, tt * R / 2); fill = Math.max(0, 1 - strand); if (tt * R > 2.3) { st = 'roll'; tt = 0; bx = 0; say('The rolling mill squeezes the billet longer and thinner, pass by pass.'); } }
-    if (st === 'roll') { bx = Math.min(1, tt * R / 1.9); if (bx >= 1) { st = 'done'; tt = 0; bars++; X.state.bars = bars; X.chime(); shine = bars % 5 === 0 ? 2.5 : 0; say(bars % 5 === 0 ? `Bar ${bars}. This one came out stainless.` : `Bar ${bars} is on the cooling bed.`); } }
-    if (st === 'done' && tt * R > 1) { st = 'ready'; tt = 0; sync(); }
+    if (st === 'move') { tilt = Math.max(0, tilt - dt * 3); const k = ease(Math.min(1, tt * R / 1.2)); lx = 86 + k * 31; ly = 80 - k * 46 - Math.sin(k * Math.PI) * 10; if (tt * R > 1.2) { st = 'cast'; tt = 0; say('The steel freezes into a strand. Tap to torch-cut it when it reaches the yellow mark.'); } }
+    if (st === 'cast') { strand = Math.min(1, tt * R / .8); if (strand >= 1) { st = 'cut'; tt = 0; sync(); } }
+    if (st === 'cut') {
+      hx += dt * (X.reduce ? 8 : 12);
+      if (hx - TORCH > SPEC + 12) cut(hx - TORCH, true);
+      fill = Math.max(.08, 1 - (good + billets.filter(b => b.ok).length) / ORDER);
+    }
+    if (st === 'drain' && !billets.some(b => b.ok)) { st = 'ship'; tt = 0; sync(); say('Order filled. The crane’s loading the truck…'); }
+    // billets: good ones run through the mill to the cooling bed, scrap drops into the bin
+    billets = billets.filter(b => {
+      if (!b.ok) { b.vy += 160 * dt; b.y += b.vy * dt; b.x += dt * 10; if (b.y > 100) b.a -= dt * 6; return b.a > 0; }
+      b.x += dt * 46;
+      if (b.x - 6 > BED) { good++; bars++; X.state.bars = bars; bed.push(bars % 5 === 0); stampT.push(0); X.thock(.8, 1.25); if (bars % 5 === 0) shine = 2.5; if (good < ORDER) say(bars % 5 === 0 ? `Bar ${good} of ${ORDER} is stamped. This one came out stainless.` : `Bar ${good} of ${ORDER} is stamped and cooling.`); return false; }
+      return true;
+    });
+    stampT = stampT.map(t => t + dt);
+    if (st === 'ship') {
+      const s = tt * (X.reduce ? 1.6 : 1);
+      truck = s < .7 ? W + 4 - (W + 4 - 248) * ease(s / .7) : s < 2.4 ? 248 : 248 + (s - 2.4) * 70 * (s - 2.4 + .4);
+      const k2 = ease(Math.min(1, s / 1.2)); lx = 117 - 31 * k2; ly = 34 + 46 * k2 - Math.sin(k2 * Math.PI) * 10; fill = 0;
+      if (s > 2.4 && !shipped) { shipped = 1; orders++; X.state.orders = orders; X.chime(); }
+      if (s > 3.4) { st = 'ready'; tt = 0; bed = []; stampT = []; sync(); say(`Order #${orders} shipped. Tap the scrap bucket for the next one.`); }
+    }
     shine = Math.max(0, shine - dt);
     // the mill
     P(0, 0, W, H, '#2f2a28'); for (let x = 0; x < W; x += 20) P(x, 14, 2, 84, '#38322f'); P(0, 12, W, 3, '#4a4440');
@@ -530,26 +559,65 @@ M.steel = (host, ctl, X) => {
     if (pool > .3) { c.globalCompositeOperation = 'lighter'; glow(c, 58, 84, 26, '255,140,40', .3 * pool); c.globalCompositeOperation = 'source-over'; }
     if (st === 'tap' && tt * R > .4) { for (let y = 78; y < 86; y++) P(82 + (y - 78) * .4, y, 2, 1, '#ffb347'); }
     // ladle on the crane
-    if (st === 'move' || st === 'cast') P(lx + 9, 15, 1, ly - 15, '#9aa0a6');
+    if (st === 'move' || st === 'cast' || st === 'cut' || st === 'drain' || st === 'ship') P(lx + 9, 15, 1, ly - 15, '#9aa0a6');
     P(lx, ly, 20, 16, '#4a4f57'); P(lx + 2, ly + 2, 16, 12, '#2a2220'); if (fill > 0) { P(lx + 2, ly + 14 - fill * 11, 16, fill * 11, '#ff8a2a'); P(lx + 2, ly + 14 - fill * 11, 16, 1, '#ffd36b'); } P(lx - 1, ly, 22, 2, '#7d838b');
-    // continuous caster: tundish, mold, bending strand
+    // continuous caster: tundish, mold, strand bending onto the runout
     P(116, 52, 22, 6, '#4a4f57'); P(124, 58, 6, 14, '#7d838b');
-    if (st === 'cast' || st === 'roll' || st === 'done') {
-      const n = Math.round((st === 'cast' ? strand : 1) * 40);
-      for (let i = 0; i < n; i++) { const a = Math.min(1, i / 22), x = i < 14 ? 126 : 126 + (i - 14) * 1.2, y = i < 14 ? 60 + i * 2 : 88 + Math.min(4, (i - 14) * .25); const age = (n - i) / 40; P(x - 2, y, 4, 4, age < .2 ? '#ffd36b' : age < .45 ? '#ff8a2a' : age < .7 ? '#c9452a' : '#6b6f75'); if (a < 0) break; }
+    for (let x = 130; x < 230; x += 7) disc(P, x, RY + 6, 1, '#4a4f57');
+    P(TORCH + SPEC - TOL, RY + 7, TOL * 2 + 1, 1, 'rgba(242,193,78,.45)'); P(TORCH + SPEC, RY + 5, 1, 4, '#f2c14e');
+    if (st === 'cast' || st === 'cut' || st === 'drain') {
+      const vy = st === 'cast' ? 60 + strand * 30 : RY + 2;
+      for (let y = 60; y < Math.min(vy, RY + 2); y += 2) P(125, y, 4, 2, y < 70 ? '#ffd36b' : '#ff8a2a');
+      if (st !== 'cast') { P(125, RY - 2, 4, 6, '#ff8a2a'); P(127, RY, hx - 127, 5, '#e8742c'); P(127, RY, hx - 127, 1, '#ffb347'); P(hx - 2, RY, 2, 5, '#c9452a'); }
     }
-    if ((st === 'cast' && strand > .85) || st === 'roll' && bx < .05) { P(150, 88, 16, 6, '#d9682c'); P(150, 88, 16, 1, '#ffb347'); }
-    if (st === 'cast' && strand > .9 && !X.reduce) for (let k = 0; k < 3; k++) P(156 + Math.random() * 4, 90 + Math.random() * 4, 1, 1, '#fff3a0');
-    // rolling mill: three stands
-    const stands = [168, 186, 204];
-    stands.forEach((x, i) => { const spin = (st === 'roll' ? now / 60 : 0) + i; disc(P, x, 84, 5, '#5a5f66'); disc(P, x, 100, 5, '#5a5f66'); P(x + Math.round(Math.cos(spin) * 3), 84 + Math.round(Math.sin(spin) * 3), 1, 1, '#9aa0a6'); P(x + Math.round(Math.cos(-spin) * 3), 100 + Math.round(Math.sin(-spin) * 3), 1, 1, '#9aa0a6'); P(x - 7, 76, 2, 30, '#4a4440'); P(x + 6, 76, 2, 30, '#4a4440'); });
-    if (st === 'roll') { const x = 150 + bx * 70, passed = stands.filter(s => x > s).length, len = 14 + passed * 9, th = 6 - passed; P(x - len, 92 - th / 2, len, th, passed < 2 ? '#e06b2c' : '#b0503a'); }
-    // cooling bed with finished bars
-    P(212, 96, 26, 2, '#5a524d');
-    for (let i = 0; i < Math.min(bars, 12); i++) { const r = Math.floor(i / 4), k = i % 4, isS = (i + 1) % 5 === 0; P(213 + k * 6, 94 - r * 3, 5, 2, isS ? '#dfe7ee' : '#8a9097'); }
-    if (shine > 0 && !X.reduce) { c.globalCompositeOperation = 'lighter'; glow(c, 225, 88, 14, '220,235,255', .5 * Math.min(1, shine)); c.globalCompositeOperation = 'source-over'; }
+    // the torch
+    P(TORCH - 3, 15, 6, 4, '#5a5f66'); P(TORCH - .5, 19, 1, 58, '#7d838b'); P(TORCH - 2, 77, 4, 6, '#9aa0a6'); P(TORCH - 1, 83, 2, 2, '#5a5f66');
+    if (cutT < .22) { c.globalCompositeOperation = 'lighter'; glow(c, TORCH, RY + 1, 10, '255,220,140', .8); c.globalCompositeOperation = 'source-over'; P(TORCH - .5, 85, 1, 6, '#fff3a0'); }
+    else if (st === 'cut') P(TORCH - .5, 85, 1, 2, '#7fb2ff');
+    // rolling mill: three stands squeeze each billet longer and thinner
+    const rolling = billets.some(b => b.ok && b.x > STANDS[0] - 4 && b.x - b.len < STANDS[2] + 4);
+    STANDS.forEach((x, i) => { const spin = (rolling ? now / 60 : 0) + i; disc(P, x, 84, 5, '#5a5f66'); disc(P, x, 101, 5, '#5a5f66'); P(x + Math.round(Math.cos(spin) * 3), 84 + Math.round(Math.sin(spin) * 3), 1, 1, '#9aa0a6'); P(x + Math.round(Math.cos(-spin) * 3), 101 + Math.round(Math.sin(-spin) * 3), 1, 1, '#9aa0a6'); P(x - 7, 76, 2, 30, '#4a4440'); P(x + 6, 76, 2, 30, '#4a4440'); });
+    billets.forEach(b => {
+      if (!b.ok) { c.globalAlpha = Math.max(0, b.a); P(b.x - b.len, b.y, b.len, 5, '#a8442c'); c.globalAlpha = 1; return; }
+      const passed = STANDS.filter(s => b.x > s).length, len = b.len + passed * 7, th = 5 - passed;
+      P(b.x - len, RY + (5 - th) / 2, len, th, passed < 2 ? '#e06b2c' : passed < 3 ? '#c9552f' : '#a8483a');
+    });
+    // scrap bin under the runout
+    P(140, 100, 24, 9, '#4a4f57'); P(140, 100, 24, 1, '#7d838b'); text(c, 'SCRAP', 152, 102, '#9aa0a6', .7, 'c');
+    // cooling bed + the bundle (rides the crane when shipping)
+    P(BED - 22, 96, 30, 2, '#5a524d');
+    const s = st === 'ship' ? tt * (X.reduce ? 1.6 : 1) : 0;
+    let cx = 226, hook = 22, bdx = 0, bdy = 0, onTruck = false;
+    if (st === 'ship') {
+      const k = (a, b) => ease(Math.max(0, Math.min(1, (s - a) / (b - a))));
+      hook = 22 + 64 * k(.5, .8) - 30 * k(.85, 1.1) + 26 * k(1.5, 1.75) - 30 * k(1.85, 2.1);
+      cx = 226 + 35 * k(1.1, 1.5);
+      if (s > .8 && s < 1.8) { bdx = cx - 226; bdy = hook - 86; }
+      if (s >= 1.8) onTruck = true;
+    }
+    P(cx - 5, 12, 10, 4, '#d9a441'); P(cx, 16, 1, hook - 16, '#9aa0a6'); P(cx - 2, hook, 5, 2, '#c9c1bb');
+    const tx = st === 'ship' ? truck : W + 4;
+    const drawBundle = (x, y) => bed.forEach((stn, i) => { P(x, y - i * 2, 22, 2, stn ? '#dfe7ee' : i % 2 ? '#8a9097' : '#7a8087'); });
+    if (!onTruck) { drawBundle(BED - 20 + bdx, 94 + bdy); if (bdy) { P(BED - 15 + bdx, 90 + bdy, 1, 4, '#c9c1bb'); P(BED - 6 + bdx, 90 + bdy, 1, 4, '#c9c1bb'); } }
+    // the truck backs in, gets loaded, drives off
+    if (tx < W + 2) {
+      P(tx, 92, 28, 3, '#6b6f75'); P(tx, 92, 28, 1, '#8a9097'); [0, 9, 18, 27].forEach(o => P(tx + o, 86, 1, 6, '#6b6f75')); P(tx, 95, 40, 2, '#3a3d42');
+      P(tx + 29, 79, 11, 16, '#e0a33a'); P(tx + 29, 79, 11, 1, '#f2c14e'); P(tx + 33, 81, 6, 5, '#9fc2ff'); P(tx + 33, 81, 6, 1, '#d6e6ff'); P(tx + 30, 89, 2, 1, '#b07a22');
+      disc(P, tx + 6, 97, 3, '#1f2125'); disc(P, tx + 33, 97, 3, '#1f2125'); P(tx + 6, 97, 1, 1, '#7d838b'); P(tx + 33, 97, 1, 1, '#7d838b');
+      if (onTruck) drawBundle(tx + 3, 90);
+    }
+    if (shine > 0 && !X.reduce) { c.globalCompositeOperation = 'lighter'; glow(c, BED - 9, 90, 14, '220,235,255', .5 * Math.min(1, shine)); c.globalCompositeOperation = 'source-over'; }
+    // order ticket: each bar gets a stamp
+    P(152, 20, 50, 26, '#efe6d2'); P(152, 20, 50, 1, '#fff8e8'); P(152, 45, 50, 1, '#cbbf9f');
+    text(c, `ORDER #${orders + 1 - (st === 'ship' && shipped ? 1 : 0)}`, 156, 22, '#3a332c', .85);
+    for (let i = 0; i < ORDER; i++) {
+      const bx = 156 + i * 15, done = i < bed.length; P(bx, 32, 11, 10, '#e2d7bd'); P(bx, 32, 11, 1, '#cbbf9f');
+      if (done) { const t = stampT[i] || 1, k = t < .18 ? 1.8 - t / .18 * .8 : 1; c.save(); c.translate(bx + 5.5, 37); c.scale(k, k); c.rotate(-.2); c.strokeStyle = '#c4423a'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(-3, 0); c.lineTo(-1, 2.4); c.lineTo(3.2, -2.6); c.stroke(); c.restore(); }
+    }
+    if (st === 'ship' && shipped) { c.save(); c.translate(177, 33); c.rotate(-.18); const k = Math.min(1, (s - 2.4) / .15); c.globalAlpha = k; c.strokeStyle = '#c4423a'; c.lineWidth = 1; c.strokeRect(-21, -6, 42, 12); text(c, 'SHIPPED', 0, -3.5, '#c4423a', 1, 'c'); c.restore(); }
     if (st === 'ready') cue(c, P, 21, 30, 'Tap', now, X.reduce); else if (st === 'melt' && !holding) cue(c, P, 58, 78, 'Hold', now, X.reduce);
-    sparks = sparks.filter(s => (s.l -= dt) > 0); sparks.forEach(s => { s.vy += 220 * dt; s.x += s.vx * dt; s.y += s.vy * dt; P(s.x, s.y, 1, 1, s.l > .25 ? '#fff3a0' : '#ff8a2a'); });
+    else if (st === 'cut' && hx - TORCH > SPEC - 8 && cutT > .4) cue(c, P, TORCH, RY + 2, 'Cut', now, X.reduce);
+    sparks = sparks.filter(q => (q.l -= dt) > 0); sparks.forEach(q => { q.vy += 220 * dt; q.x += q.vx * dt; q.y += q.vy * dt; P(q.x, q.y, 1, 1, q.l > .25 ? '#fff3a0' : '#ff8a2a'); });
     if (st === 'melt' || st === 'tap') { text(c, Math.round(temp) + '°C', 4, 104 - 8, temp > 1400 ? '#ffb347' : '#c9c1bb'); P(4, 92, 30, 2, '#4a4440'); P(4, 92, 30 * (temp / 1600), 2, temp > 1400 ? '#ff8a2a' : '#c9452a'); }
     else text(c, 'BARS ' + bars, 4, 101 - 4, '#c9c1bb');
   });
@@ -731,13 +799,13 @@ M.cake = (host, ctl, X) => {
   const stop = loop((dt, now) => {
     const sp = Math.PI * 2 / REV; if (!eat) rot = (rot + sp * dt) % (Math.PI * 2); swap = Math.max(0, swap - dt * 4);
     // Moe eats it: walk up, sniff, four bites, lick, heart
-    const BITES = [[CX + 24, TY + 2, 11], [CX + 12, TY + 6, 12], [CX, TY + 4, 14], [CX - 14, TY + 8, 16]];
+    const EDGE0 = CX + RX + 4, EDGE1 = CX - RX - 4, NB = 7, edgeAt = b => EDGE0 - (EDGE0 - EDGE1) * b / NB;
     if (eat) { eat.t += dt;
       if (eat.ph === 'walk' && eat.t > .9) { eat.ph = 'sniff'; eat.t = 0; }
       else if (eat.ph === 'sniff' && eat.t > .5) { eat.ph = 'bite'; eat.t = 0; }
-      else if (eat.ph === 'bite' && eat.t > .42) { eat.t = 0; const [bx, by] = BITES[eat.bites]; eat.bites++; X.thock(.8, .7 + eat.bites * .05); X.tone(180 + Math.random() * 60, .05, 'square', .02);
-        for (let n = 0; n < 10; n++) crumbs.push({x: bx - 6 + Math.random() * 6, y: by - 4, vx: (Math.random() - .5) * 50, vy: -20 - Math.random() * 30, col: n % 3 ? '#c98a5a' : '#fff6ee'});
-        if (eat.bites >= BITES.length) { eat.ph = 'lick'; eat.t = 0; X.meow(); } }
+      else if (eat.ph === 'bite' && eat.t > .34) { eat.t = 0; eat.bites++; const bx = edgeAt(eat.bites); X.thock(.7, .75 + eat.bites * .04);
+        for (let n = 0; n < 8; n++) crumbs.push({x: bx + Math.random() * 3, y: TY - 4 + Math.random() * 16, vx: 10 + Math.random() * 30, vy: -10 - Math.random() * 25, col: n % 3 ? '#c98a5a' : n % 2 ? '#fff6ee' : '#f2a7bd'});
+        if (eat.bites >= NB) { eat.ph = 'lick'; eat.t = 0; X.meow(); } }
       else if (eat.ph === 'lick' && eat.t > .7) { eat.ph = 'happy'; eat.t = 0; say(`${eat.acc}%. Moe ate the whole cupcake. Tap for another.`); } }
     // the nozzle sits over the front of the cupcake; the bin under it gets icing, spread to its neighbours
     if (holding && !done) {
@@ -753,10 +821,10 @@ M.cake = (host, ctl, X) => {
     // spilled icing on the plate
     drips.forEach(d => { const a = d.i / N * Math.PI * 2 + rot; d.v += 60 * dt; d.y = Math.min(20, d.y + d.v * dt); if (Math.sin(a) > -.2) { const x = CX + Math.cos(a) * (RX + 2), y = TY + Math.sin(a) * RY + d.y; c.fillStyle = '#fff4ea'; c.beginPath(); c.ellipse(x, Math.min(y, 82 + Math.sin(a) * 3), 2.4, d.y >= 20 ? 1.4 : 2, 0, 0, Math.PI * 2); c.fill(); } });
     // the cupcake slides in fresh after each try
-    const gone = eat && eat.bites >= BITES.length;
-    if (gone) { c.fillStyle = '#f2a7bd'; c.beginPath(); c.ellipse(CX + 2, 81, 16, 3, 0, 0, Math.PI * 2); c.fill(); c.fillStyle = '#e58ea8'; for (let k = 0; k < 6; k++) F(CX - 12 + k * 5, 79 + (k % 2), 3, 2, '#e58ea8'); }
+    const gone = eat && eat.bites >= NB;
+    const edge = eat && eat.ph === 'bite' ? edgeAt(eat.bites) - (edgeAt(eat.bites) - edgeAt(eat.bites + 1)) * ease(Math.min(1, eat.t / .14)) : eat && eat.bites ? edgeAt(eat.bites) : EDGE0;
     c.save(); c.globalAlpha = 1 - swap;
-    if (eat && eat.bites) { c.beginPath(); c.rect(0, 0, W, H); for (let k = 0; k < eat.bites; k++) { const [bx, by, br] = BITES[k]; c.moveTo(bx + br, by); c.arc(bx, by, br, 0, Math.PI * 2, true); } c.clip('evenodd'); }
+    if (eat && edge < EDGE0) { c.beginPath(); c.moveTo(0, 0); c.lineTo(edge, 0); for (let y = TY - 26; y < 90; y += 7) c.quadraticCurveTo(edge - 4.5, y + 3.5, edge, y + 7); c.lineTo(0, H); c.closePath(); c.clip(); }
     if (!gone) {
     // paper liner with pleats that turn with it
     c.fillStyle = '#f2a7bd'; c.beginPath(); c.moveTo(CX - 22, 81); c.lineTo(CX - RX - 1, TY); c.lineTo(CX + RX + 1, TY); c.lineTo(CX + 22, 81); c.closePath(); c.fill();
@@ -789,13 +857,14 @@ M.cake = (host, ctl, X) => {
     crumbs = crumbs.filter(q => q.y < 86); crumbs.forEach(q => { q.vy += 160 * dt; q.x += q.vx * dt; q.y += q.vy * dt; F(q.x, q.y, 1.2, 1.2, q.col); });
     if (eat) {
       const h = 33, w = 40, fl = 86; let x = 101, y = fl - h * .75, f = 0;
-      if (eat.ph === 'walk') { x = 170 - 69 * ease(Math.min(1, eat.t / .9)); f = Math.floor(now / 130) % 2; }
-      if (eat.ph === 'sniff') x = 101 - Math.sin(eat.t * 18) * .8;
-      if (eat.ph === 'bite') { const k = Math.sin(Math.min(1, eat.t / .25) * Math.PI); x = 101 - k * 6 - eat.bites * 3; y -= k * 1.5; }
-      if (eat.ph === 'lick' || eat.ph === 'happy') x = 101 - BITES.length * 3;
+      const mouth = 7; // Moe's mouth sits ~7px in from the left of his sprite
+      if (eat.ph === 'walk') { x = 170 - (170 - (EDGE0 - mouth + 2)) * ease(Math.min(1, eat.t / .9)); f = Math.floor(now / 130) % 2; }
+      if (eat.ph === 'sniff') x = EDGE0 - mouth + 2 - Math.sin(eat.t * 18) * .8;
+      if (eat.ph === 'bite') { const k = Math.sin(Math.min(1, eat.t / .2) * Math.PI); x = edge - mouth + 2 - k * 3; y -= k * 1.2; f = eat.t < .2 ? 1 : 0; }
+      if (eat.ph === 'lick' || eat.ph === 'happy') x = Math.min(101, edge - mouth + 6);
       mbc.clearRect(0, 0, 24, 20); X.moeSprite(mbc, 4, 3, f);
       F(x + 6, fl - 1, w * .6, 2, 'rgba(0,0,0,.14)'); c.drawImage(mb, 0, 0, 24, 20, x, y, w, h);
-      if (eat.ph === 'bite' && eat.t < .25) { F(x + 9, y + 9, 4, 2, '#7a3a3a'); }
+      if (eat.ph === 'bite' && eat.t < .2) F(x + 8, y + 9, 4, 2, '#7a3a3a');
       if (eat.ph === 'lick' && Math.floor(eat.t * 8) % 2) F(x + 11, y + 11, 3, 2, '#f08a9a');
       if (eat.ph === 'happy') { const hy = y - 4 - (eat.t % 1.2) * 8; F(x + 10, hy, 3, 3, '#e9483c'); F(x + 15, hy, 3, 3, '#e9483c'); F(x + 10, hy + 2, 8, 3, '#e9483c'); F(x + 12, hy + 5, 4, 2, '#e9483c'); }
     }

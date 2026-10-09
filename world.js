@@ -447,17 +447,22 @@ function roomOpen(o) {
 function galleryCard(o) {
   stopMini(); window.track && track('gallery_open', {gallery: o.gal});
   openId = o.id; cardAt = performance.now(); let i = 0; const list = GAL[o.gal];
-  const render = () => {
-    card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
-      <h2 id="w-card-title">${esc(o.title)}</h2><p class="w-meta">${esc(o.meta)}</p>
-      <img class="w-img" src="${list[i][0]}" alt="${esc(list[i][1])}"><p class="w-cap">${o.gal === 'moe' ? '' : esc(list[i][1]) + ' · '}${i + 1} of ${list.length}</p>
-      <div class="w-actions"><button type="button" class="w-alt" id="g-prev">Previous</button><button type="button" class="w-go" id="g-next">Next</button></div></div>`;
-    card.querySelector('.w-close').addEventListener('click', closeCard);
-    card.querySelector('#g-prev').addEventListener('click', () => { i = (i - 1 + list.length) % list.length; render(); card.querySelector('#g-prev').focus(); });
-    card.querySelector('#g-next').addEventListener('click', () => { i = (i + 1) % list.length; render(); card.querySelector('#g-next').focus(); });
-    const im = card.querySelector('.w-img'); if (im.complete) requestAnimationFrame(fitCard); else im.onload = fitCard;
-  };
-  render(); card.hidden = false; card.querySelector('#g-next').focus({preventScroll: true});
+  list.forEach(([src]) => { const im = new Image(); im.src = src; });
+  card.innerHTML = `<div class="w-card-in" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
+    <h2 id="w-card-title">${esc(o.title)}</h2><p class="w-meta">${esc(o.meta)}</p>
+    <img class="w-img w-gal" src="${list[0][0]}" alt="${esc(list[0][1])}"><p class="w-cap"></p>
+    <div class="w-actions"><button type="button" class="w-alt" id="g-prev">Previous</button><button type="button" class="w-go" id="g-next">Next</button></div></div>`;
+  const im = card.querySelector('.w-img'), cap = card.querySelector('.w-cap');
+  const show = () => { im.src = list[i][0]; im.alt = list[i][1]; cap.textContent = (o.gal === 'moe' ? '' : list[i][1] + ' · ') + (i + 1) + ' of ' + list.length; };
+  show();
+  card.querySelector('.w-close').addEventListener('click', closeCard);
+  card.querySelector('#g-prev').addEventListener('click', () => { i = (i - 1 + list.length) % list.length; show(); });
+  card.querySelector('#g-next').addEventListener('click', () => { i = (i + 1) % list.length; show(); });
+  card.hidden = false; card.querySelector('#g-next').focus({preventScroll: true});
+  // size the frame once, then keep it: every photo is fitted inside the same box
+  const capOf = j => (o.gal === 'moe' ? '' : list[j][1] + ' · ') + (j + 1) + ' of ' + list.length;
+  const lock = () => { im.style.height = ''; cap.style.minHeight = ''; let mh = 0; list.forEach((_, j) => { cap.textContent = capOf(j); mh = Math.max(mh, cap.offsetHeight); }); cap.textContent = capOf(i); cap.style.minHeight = mh + 'px'; fitCard(); const h = Math.round(im.getBoundingClientRect().height); im.style.height = h + 'px'; im.style.maxHeight = 'none'; };
+  if (im.complete) requestAnimationFrame(lock); else im.addEventListener('load', lock, {once: true});
 }
 function roomStep(dt) {
   let v = 0; if (keys.has('left')) v -= 1; if (keys.has('right')) v += 1;
@@ -480,7 +485,7 @@ function drawRoomFront(now) {
   const seg = x => Math.min(5, Math.floor((x - 42) / 17.7)), lc = [0, 1, 2, 3, 4, 5].map(i => ledColor(i, now));
   for (let x = 42; x < 148; x += 3) R(g, x - cam.x, 58 - cam.y, 2, 1, `rgb(${lc[seg(x)]})`);
   // Moe + Jillanne
-  moeNap(g, 116 - cam.x, 158 - cam.y, now);
+  moeNap(g, 116 - cam.x, 158 - cam.y, now); heartAt(142 - cam.x, 148 - cam.y, now);
   const f = P.moving && !reduce ? (Math.floor(walkT * 8) % 2) + 1 : 0, bob = !P.moving && !reduce && Math.floor(now / 500) % 2 ? 1 : 0;
   girlSide(g, Math.round(RP.x) - 24 - cam.x, FLOOR - 62 - cam.y + bob, f, RP.dir < 0);
   // hover outline
@@ -575,7 +580,7 @@ function ledCard() {
 }
 /* mini experiences live in minis.js, loaded once the game opens */
 let minisP = null, miniInst = null;
-function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=10'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
+function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=12'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
 const MCTX = {reduce, get touch() { return touch; }, led, ledColor, state: WSTATE, girl, moeSprite,
   tone: (...a) => window.__tone && window.__tone(...a), motor: om => window.__motor && window.__motor.set(om), thock: (v, p) => window.__thock && window.__thock(v, p), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
 function stopMini() { window.__motor && window.__motor.stop(); if (miniInst) { try { miniInst.stop(); } catch (e) {} miniInst = null; } }
@@ -730,10 +735,10 @@ addEventListener('keyup', e => { if (KEYMAP[e.key]) keys.delete(KEYMAP[e.key]); 
 addEventListener('blur', () => keys.clear());
 cv.addEventListener('pointerdown', e => {
   touch = e.pointerType === 'touch'; closeCard();
-  if (scene === 'room') { const o = roomHit(e), cam = roomCam(); if (o && o.id === 'moe') { if (++moeClicks % 3 === 1) window.__meow && window.__meow(); roomOpen(o); return; } if (o && Math.abs(o.stand - RP.x) < 20) { roomOpen(o); return; } RP.tx = o ? o.stand : Math.max(12, Math.min(RMW - 14, e.clientX / SC + cam.x)); RP.after = null; return; }
+  if (scene === 'room') { const o = roomHit(e), cam = roomCam(); if (o && o.id === 'moe') { window.__meow && window.__meow(); moeHeart = performance.now(); return; } if (o && Math.abs(o.stand - RP.x) < 20) { roomOpen(o); return; } RP.tx = o ? o.stand : Math.max(12, Math.min(RMW - 14, e.clientX / SC + cam.x)); RP.after = null; return; }
   const cam = camera(); const wx = (e.clientX - offX) / SC + cam.x, wy = (e.clientY - offY) / SC + cam.y;
   const mo = scene === 'room' ? {x: roomMoe.x + 8, y: roomMoe.y + 10} : moe;
-  if (!WSTATE.moeHome && Math.hypot(wx - mo.x, wy - (mo.y - 10)) < 17) { if (++moeClicks % 3 === 1) window.__meow && window.__meow(); galleryCard(RO.find(o => o.id === 'moe')); return; }
+  if (!WSTATE.moeHome && Math.hypot(wx - mo.x, wy - (mo.y - 10)) < 17) { window.__meow && window.__meow(); moeHeart = performance.now(); return; }
   const hit = cur().L.find(l => wx >= l.tx * TS - 4 && wx <= (l.tx + l.w) * TS + 4 && wy >= l.ty * TS - 8 && wy <= (l.ty + l.h) * TS + 4);
   if (hit) { if (hit.kind !== 'nsx' && hit.kind !== 'c5' && rectDist(hit) < 26) openCard(hit); else walkTo(hit, true); return; }
   goTo(wx, wy);
@@ -872,6 +877,7 @@ function houseLights(cam, now) {
     g.globalCompositeOperation = 'lighter'; const gr = g.createRadialGradient(X + 40, Y + 36, 0, X + 40, Y + 36, 52); gr.addColorStop(0, `rgba(255,110,170,${(PHASE === 'day' ? .25 : .45) * k})`); gr.addColorStop(1, 'rgba(255,110,170,0)'); g.fillStyle = gr; g.fillRect(X - 12, Y - 16, 104, 104); g.globalCompositeOperation = 'source-over';
   }
 }
+function heartAt(x, y, now) { const u = (now - moeHeart) / 1000; if (u < 0 || u > 1) return; const hy = Math.round(y - u * 10); g.globalAlpha = 1 - u * u; R(g, x - 3, hy, 2, 2, '#e9483c'); R(g, x + 1, hy, 2, 2, '#e9483c'); R(g, x - 3, hy + 1, 6, 2, '#e9483c'); R(g, x - 2, hy + 3, 4, 1, '#e9483c'); R(g, x - 1, hy + 4, 2, 1, '#e9483c'); g.globalAlpha = 1; }
 function draw(now) {
   const cam = camera();
   g.fillStyle = forest; forest.setTransform && forest.setTransform(new DOMMatrix().translate(-cam.x, -cam.y)); g.fillRect(0, 0, VW, VH);
@@ -901,6 +907,7 @@ function draw(now) {
       g.globalCompositeOperation = 'source-over'; }
   }
   houseLights(cam, now);
+  if (!WSTATE.moeHome) heartAt(Math.round(moe.x - cam.x), Math.round(moe.y - 30 - cam.y), now);
   roomLabel.hidden = true; cv.style.cursor = 'default';
   // labels
   L.forEach((l, i) => {
@@ -1024,7 +1031,7 @@ addEventListener('keydown', e => {
 });
 
 /* ---------------- public ---------------- */
-let welcomed = false; let moeClicks = 0;
+let welcomed = false; let moeClicks = 0; var moeHeart = 0;
 function welcome() {
   welcomed = true;
   const h = document.createElement('div'); h.id = 'w-hint'; h.setAttribute('role', 'status');
