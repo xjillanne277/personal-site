@@ -607,6 +607,9 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .pf-skills ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
 .pf-skills li{position:relative;padding-left:14px}
 .pf-skills li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--acc)}
+.pf-skills li ul{gap:2px;margin-top:4px}
+.pf-skills li li{padding-left:14px;font-size:14px;color:var(--mute)}
+.pf-skills li li::before{width:6px;height:1.5px;border-radius:0;top:.7em;background:var(--mute)}
 .pf-skills dt{padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:10px!important}
 
 /* contact: two light cards, side by side */
@@ -1219,10 +1222,10 @@ body:has(#track-ui:not([hidden])) .exit-game{display:none}
     <section class="pf-sec pf-skills" aria-labelledby="pf-skills-h">
       <h2 id="pf-skills-h" class="pf-label" data-n="04">Tools</h2>
       <dl>
-        <div><dt>Mechanical Design</dt><dd><ul><li>CAD (NX, CATIA V6, SolidWorks)</li><li>DFMA (Injection Molding, <span style="white-space:nowrap">Die-Casting</span>, <span style="white-space:nowrap">CNC-Machining</span>)</li></ul></dd></div>
-        <div><dt>Analysis</dt><dd><ul><li>Tolerance Analysis</li><li>FEA (Ansys Mechanical)</li><li>CFD (Ansys Fluent)</li><li>RCFA/FMEA</li><li>Mold Flow Simulation</li></ul></dd></div>
-        <div><dt>Manufacturing &amp; Prototyping</dt><dd><ul><li>Machining (Lathe, Mill)</li><li>3D Printing (SLA, SLS, FDM)</li><li>Waterjet &amp; Laser Cutting</li></ul></dd></div>
-        <div><dt>Electrical &amp; Software</dt><dd><ul><li>PCB Design (KiCad, Altium)</li><li>Embedded (ESP32, Arduino, Raspberry Pi)</li><li>C++, Python, MATLAB</li></ul></dd></div>
+        <div><dt>Mechanical Design</dt><dd><ul><li>CAD<ul><li>Siemens NX</li><li>CATIA V6</li><li>SolidWorks</li><li>Onshape</li></ul></li><li>DFMA<ul><li>Injection molding</li><li>Precision glass molding</li><li>Die casting</li><li>Die cutting</li><li>CNC machining</li></ul></li></ul></dd></div>
+        <div><dt>Analysis</dt><dd><ul><li>Tolerance analysis</li><li>FEA (Ansys Mechanical)</li><li>CFD (Ansys Fluent)</li><li>Root cause failure analysis (RCFA)</li><li>Failure modes and effects analysis (FMEA)</li><li>Mold flow simulation</li></ul></dd></div>
+        <div><dt>Manufacturing &amp; Prototyping</dt><dd><ul><li>Machining<ul><li>Lathe</li><li>Mill</li><li>3-axis CNC</li></ul></li><li>3D printing<ul><li>FDM</li><li>SLA</li><li>SLS</li></ul></li><li>Waterjet &amp; laser cutting</li></ul></dd></div>
+        <div><dt>Electrical &amp; Software</dt><dd><ul><li>PCB design<ul><li>KiCad</li><li>Altium</li></ul></li><li>Embedded<ul><li>ESP32</li><li>Arduino</li><li>Raspberry Pi</li><li>STM32</li></ul></li><li>Programming<ul><li>C++</li><li>Python</li><li>MATLAB</li></ul></li><li>Data acquisition</li></ul></dd></div>
       </dl>
     </section>
 
