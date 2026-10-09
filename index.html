@@ -888,9 +888,6 @@ html[data-theme="dark"] .pf-now{background:#26292d}
 html[data-theme="dark"] .cs-stats.cs-hl dt{color:#959aa1}html[data-theme="dark"] .cs-stats.cs-hl dd{color:#ecebe7}
 @media (max-width:860px){.cs-stats.cs-hl{grid-template-columns:minmax(0,1fr)}.cs-stats.cs-hl div,.cs-stats.cs-hl div+div{padding:12px 0;border-left:0}.cs-stats.cs-hl div+div{border-top:1px solid #e3e6ea}html[data-theme="dark"] .cs-stats.cs-hl div+div{border-color:#33373c}}
 html[data-theme="dark"] .case-sum{color:#c3c6cb}
-@media (max-width:560px){.case-metrics.case-hl{grid-template-columns:minmax(0,1fr);gap:10px}}
-.case-metrics.case-hl span{font-size:14px;line-height:1.4;color:var(--ink)}
-.case-metrics.case-hl i{display:block;font:500 11px/1.2 "IBM Plex Mono",monospace;font-style:normal;letter-spacing:.06em;text-transform:uppercase;color:var(--mute);margin-bottom:5px}
 #xp-dlg{border:0;padding:0;border-radius:14px;max-width:720px;width:calc(100% - 32px);max-height:86vh;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 #xp-dlg::backdrop{background:rgba(17,20,24,.55)}
 #xp-dlg .xp-in{padding:28px 32px 30px;overflow:auto;max-height:86vh;box-sizing:border-box}
@@ -988,7 +985,7 @@ html[data-theme="dark"] .case-sum{color:#c3c6cb}
           <span class="case-kicker"><i>01</i>Tesla · Fall 2025</span>
           <span class="case-title">Universal RGBW LED controller</span>
           <span class="case-sum">A standalone controller so lighting designers can test colour on production LED strips without a firmware engineer. I proposed it, designed my first PCB, and handed it off in seven weeks.</span>
-          <span class="case-metrics case-hl"><span><i>Electronics</i>Custom 2-layer PCB, from schematic to hand assembly</span><span><i>Mechanical</i>Enclosure design, thermal analysis, material selection</span><span><i>Impact</i>6× LED capacity vs. off-the-shelf controller</span></span>
+          <span class="case-metrics"><span><b>6×</b>LED capacity vs. <span style="white-space:nowrap">off-the-shelf</span> controller</span><span><b>7 weeks</b>concept to handoff</span><span><b>2-layer</b>custom PCB designed and assembled</span></span>
           <span class="case-tags"><span>KiCad</span><span>ESP32</span><span>C++</span><span>SLA enclosure</span><span>Thermal analysis</span></span>
           <span class="case-cta">Read the case study <span aria-hidden="true">→</span></span>
         </span>
