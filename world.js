@@ -308,7 +308,8 @@ addEventListener('resize', resize);
 const ICON = {evercloak: 4, valbruna: 18, geotab: 1, teslacells: 0, teslalight: 1, level: 2, google: 16};
 const iconNodes = Object.keys(ICON).map(id => { const im = document.createElement('img'); im.className = 'w-logo'; im.alt = ''; im.src = 'img/icon-' + (id.startsWith('tesla') ? 'tesla' : id) + '.png'; labelsEl.appendChild(im); return [L.find(l => l.id === id), im]; });
 /* labels */
-const labelNodes = L.map(l => { const d = document.createElement('button'); d.type = 'button'; d.className = 'w-label' + (l.tour ? ' w-stop' : ''); d.textContent = l.tour ? `${l.tour} · ${l.label} · ${l.yr}` : l.label; if (l.nolabel) d.hidden = true; d.addEventListener('click', () => walkTo(l, true)); labelsEl.appendChild(d); return d; });
+addEventListener('resize', () => { labelNodes.forEach(n => { n._w = n._h = 0; }); });
+const labelNodes = L.map(l => { const d = document.createElement('button'); d.type = 'button'; d.className = 'w-label' + (l.tour ? ' w-stop' : ''); d.innerHTML = l.tour ? `<span class="wl-n">${l.tour}</span><span class="wl-d"> · </span>${l.label}<span class="wl-y"> · ${l.yr}</span>` : l.label; d.setAttribute('aria-label', l.tour ? `Stop ${l.tour}: ${l.label}, ${l.yr}. Walk there.` : `${l.label}. Walk there.`); if (l.nolabel) d.hidden = true; d.addEventListener('click', () => walkTo(l, true)); labelsEl.appendChild(d); return d; });
 
 /* minimap */
 const MS = 5; mini.width = MW * MS; mini.height = MH * MS;
