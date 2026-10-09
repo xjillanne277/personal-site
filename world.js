@@ -735,7 +735,7 @@ addEventListener('keyup', e => { if (KEYMAP[e.key]) keys.delete(KEYMAP[e.key]); 
 addEventListener('blur', () => keys.clear());
 cv.addEventListener('pointerdown', e => {
   touch = e.pointerType === 'touch'; closeCard();
-  if (scene === 'room') { const o = roomHit(e), cam = roomCam(); if (o && o.id === 'moe') { window.__meow && window.__meow(); moeHeart = performance.now(); return; } if (o && Math.abs(o.stand - RP.x) < 20) { roomOpen(o); return; } RP.tx = o ? o.stand : Math.max(12, Math.min(RMW - 14, e.clientX / SC + cam.x)); RP.after = null; return; }
+  if (scene === 'room') { const o = roomHit(e), cam = roomCam(); if (o && o.id === 'moe') { window.__meow && window.__meow(); moeHeart = performance.now(); } if (o && Math.abs(o.stand - RP.x) < 20) { roomOpen(o); return; } RP.tx = o ? o.stand : Math.max(12, Math.min(RMW - 14, e.clientX / SC + cam.x)); RP.after = o && o.id === 'moe' ? o : null; return; }
   const cam = camera(); const wx = (e.clientX - offX) / SC + cam.x, wy = (e.clientY - offY) / SC + cam.y;
   const mo = scene === 'room' ? {x: roomMoe.x + 8, y: roomMoe.y + 10} : moe;
   if (!WSTATE.moeHome && Math.hypot(wx - mo.x, wy - (mo.y - 10)) < 17) { window.__meow && window.__meow(); moeHeart = performance.now(); return; }
