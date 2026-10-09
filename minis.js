@@ -774,7 +774,7 @@ M.cake = (host, ctl, X) => {
   const say = hint(ctl), btn = ctl.querySelector('[data-ice]'), stat = ctl.querySelector('.w-stat');
   const base = 'Press and hold the piston to pipe icing. Let go once the cupcake is iced all the way around.';
   const N = 48, REV = 2.6, CX = 80, TY = 62, RX = 27, RY = 7;
-  let rot = 0, holding = false, used = false, done = false, cov, spills, drips, best = X.state.cakeBest || 0, tries = X.state.cakeTries || 0, swap = 0, eat = null, crumbs = [], candle = false;
+  let squishT = 0, rot = 0, holding = false, used = false, done = false, cov, spills, drips, best = X.state.cakeBest || 0, tries = X.state.cakeTries || 0, swap = 0, eat = null, crumbs = [], candle = false;
   const reset = () => { cov = new Float32Array(N); spills = 0; drips = []; done = false; used = false; eat = null; crumbs = []; candle = false; };
   reset(); say(base);
   const mb = document.createElement('canvas'); mb.width = 24; mb.height = 20; const mbc = mb.getContext('2d');
@@ -804,14 +804,15 @@ M.cake = (host, ctl, X) => {
     if (eat) { eat.t += dt;
       if (eat.ph === 'walk' && eat.t > .9) { eat.ph = 'sniff'; eat.t = 0; }
       else if (eat.ph === 'sniff' && eat.t > .5) { eat.ph = 'bite'; eat.t = 0; }
-      else if (eat.ph === 'bite' && eat.t > .34) { eat.t = 0; eat.bites++; const bx = edgeAt(eat.bites); X.thock(.7, .75 + eat.bites * .04);
+      else if (eat.ph === 'bite' && eat.t > .34) { eat.t = 0; eat.bites++; const bx = edgeAt(eat.bites); X.crunch ? X.crunch(1 - eat.bites * .05) : X.thock(.7, .75 + eat.bites * .04);
         for (let n = 0; n < 8; n++) crumbs.push({x: bx + Math.random() * 3, y: TY - 4 + Math.random() * 16, vx: 10 + Math.random() * 30, vy: -10 - Math.random() * 25, col: n % 3 ? '#c98a5a' : n % 2 ? '#fff6ee' : '#f2a7bd'});
         if (eat.bites >= NB) { eat.ph = 'lick'; eat.t = 0; X.meow(); } }
       else if (eat.ph === 'lick' && eat.t > .7) { eat.ph = 'happy'; eat.t = 0; say(`${eat.acc}%. Moe ate the whole cupcake. Tap for another.`); } }
     // the nozzle sits over the front of the cupcake; the bin under it gets icing, spread to its neighbours
     if (holding && !done) {
       const a = ((Math.PI / 2 - rot) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2), i = Math.floor(a / (Math.PI * 2) * N) % N, r = N / REV;
-      cov[i] += r * dt; if (cov[i] > 1.6 && !(cov[i] - r * dt > 1.6)) { spills++; drips.push({i, y: 0, v: 0}); X.tone(140, .08, 'sine', .03); }
+      cov[i] += r * dt; if (cov[i] > 1.6 && !(cov[i] - r * dt > 1.6)) { spills++; drips.push({i, y: 0, v: 0}); X.plop ? X.plop() : X.tone(140, .08, 'sine', .03); }
+      squishT -= dt; if (squishT <= 0 && X.squish) { squishT = .11; const done = cov.filter(v => v >= .55).length / N; X.squish(Math.min(7, Math.floor(done * 8))); }
     }
     F(0, 0, W, H, '#f3ebe0'); F(0, 0, W, 4, '#ebe1d3');
     // table, turntable

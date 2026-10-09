@@ -1039,6 +1039,15 @@ body:has(#bigmap:not([hidden])) .exit-game,body:has(#bigmap:not([hidden])) .soun
 .w-sl2 .w-sl.w-br{grid-column:1 / -1;grid-template-columns:6.2em 1fr 2.6em}
 /* drive scene: Back home is the way out, so the Exit button doesn't cover the hint */
 body:has(#track-ui:not([hidden])) .exit-game{display:none}
+/* résumé viewer on phones: stays on the site, with a clear way back */
+#cv-view{position:fixed;inset:0;z-index:60;background:#2b2e33;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#cv-view[hidden]{display:none}
+.cv-bar{position:sticky;top:0;z-index:1;display:flex;justify-content:space-between;gap:10px;padding:calc(10px + env(safe-area-inset-top,0px)) 12px 10px;background:rgba(29,31,34,.94)}
+.cv-bar button,.cv-bar a{min-height:44px;display:inline-flex;align-items:center;padding:0 16px;border-radius:999px;font:600 15px "IBM Plex Sans",system-ui,sans-serif;text-decoration:none;cursor:pointer}
+.cv-back{background:#fff;color:#111418;border:0}
+.cv-dl{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5)}
+.cv-page{padding:12px 12px calc(24px + env(safe-area-inset-bottom,0px))}
+.cv-page img{display:block;width:100%;height:auto;max-width:900px;margin:0 auto;background:#fff;border-radius:4px;box-shadow:0 8px 30px rgba(0,0,0,.35)}
 /* touch thumbstick */
 #joy{position:absolute;left:0;top:0;z-index:6;width:0;height:0;pointer-events:none}
 #joy::before{content:"";position:absolute;left:-46px;top:-46px;width:92px;height:92px;border-radius:50%;background:rgba(251,243,228,.28);box-shadow:0 0 0 3px rgba(58,42,32,.45),inset 0 0 0 2px rgba(251,243,228,.6)}
@@ -1654,6 +1663,7 @@ body:has(#track-ui:not([hidden])) .exit-game{display:none}
   </nav>
 </div>
 <div class="fade" id="fade"></div>
+<div id="cv-view" role="dialog" aria-modal="true" aria-label="Résumé" hidden><div class="cv-bar"><button type="button" class="cv-back">← Back to site</button><a class="cv-dl" href="resume.pdf" download data-direct>Download PDF</a></div><div class="cv-page"><img alt="Jillanne Youssef’s résumé" width="1700" height="2200"></div></div>
 
 <dialog id="xp-dlg" aria-label="Role details"><div class="xp-in"><button type="button" class="xp-x" aria-label="Close" data-xp-close>×</button><div id="xp-body"></div></div></dialog>
 <script>
@@ -1995,6 +2005,17 @@ document.getElementById('go-portfolio').addEventListener('click', () => go('port
 pfEl.querySelectorAll('[data-to]').forEach(b => b.addEventListener('click', () => document.getElementById(b.dataset.to).scrollIntoView({behavior: reduce ? 'auto' : 'smooth'})));
 document.querySelectorAll('[data-copy]').forEach(b => { const label = b.textContent, live = document.querySelector('[data-copy-status]'); b.addEventListener('click', async () => { let ok = true; try { await navigator.clipboard.writeText('j4yousse@uwaterloo.ca'); b.textContent = 'Copied ✓'; } catch { ok = false; b.textContent = 'j4yousse@uwaterloo.ca'; } if (live) { live.textContent = ''; setTimeout(() => { live.textContent = ok ? 'Email address copied.' : 'Couldn’t copy. The address is j4yousse@uwaterloo.ca'; }, 50); } setTimeout(() => b.textContent = label, ok ? 1800 : 6000); }); });
 window.__sfx = () => chime();
+/* phones and in-app browsers: the résumé opens in an on-site viewer instead of a new tab you can't get back from */
+(() => {
+  const v = document.getElementById('cv-view'), img = v.querySelector('img'), mq = matchMedia('(max-width: 760px), (pointer: coarse)');
+  let opener = null, pushed = false;
+  const close = fromPop => { if (v.hidden) return; v.hidden = true; document.documentElement.style.overflow = ''; if (pushed && !fromPop) { pushed = false; history.back(); } pushed = false; if (opener && opener.isConnected) opener.focus({preventScroll: true}); };
+  const open = a => { opener = a; if (!img.getAttribute('src')) img.src = 'img/resume-page.webp?v=1'; v.hidden = false; v.scrollTop = 0; try { history.pushState({cv: 1}, ''); pushed = true; } catch (e) {} v.querySelector('.cv-back').focus({preventScroll: true}); };
+  document.addEventListener('click', e => { const a = e.target.closest && e.target.closest('a[href*="resume.pdf"]'); if (!a || a.hasAttribute('data-direct') || !mq.matches || e.metaKey || e.ctrlKey) return; e.preventDefault(); open(a); });
+  v.querySelector('.cv-back').addEventListener('click', () => close());
+  addEventListener('popstate', () => close(true));
+  addEventListener('keydown', e => { if (!v.hidden && e.key === 'Escape') { e.preventDefault(); e.stopImmediatePropagation(); close(); } if (!v.hidden && e.key === 'Tab') { const f = [...v.querySelectorAll('button, a')]; const k = f.indexOf(document.activeElement); e.preventDefault(); f[(k + (e.shiftKey ? -1 : 1) + f.length) % f.length].focus(); } }, true);
+})();
 document.querySelectorAll('[data-skip]').forEach(b => b.addEventListener('click', () => { const t = document.querySelector(b.dataset.skip); if (t) { t.focus({preventScroll: true}); t.scrollIntoView({block: 'start'}); } }));
 document.querySelectorAll('.pf-exp [data-xp]').forEach(b => { const li = b.closest('li'), who = li && li.querySelector('.who b'), role = who && who.nextSibling; if (who) b.setAttribute('aria-label', 'Details: ' + who.textContent + (role ? ', ' + role.textContent.trim() : '')); });
 
@@ -2207,6 +2228,29 @@ window.__thock = (v = 1, p = 1) => {
   for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 5);
   const src = AC.createBufferSource(), bp = AC.createBiquadFilter(), ng = AC.createGain(); src.buffer = buf; bp.type = 'bandpass'; bp.frequency.value = 1400 * p; bp.Q.value = 1.2; ng.gain.value = .07 * v;
   src.connect(bp); bp.connect(ng); ng.connect(AC.destination); src.start(t);
+};
+/* apple-crunch bite: a burst of crisp noise grains, a soft thump, then a little munch */
+window.__crunch = (v = 1) => {
+  if (!AC || !musicOn) return;
+  const t0 = AC.currentTime, sr = AC.sampleRate;
+  const grain = (t, dur, f, q, g, type) => { const len = Math.floor(sr * dur), buf = AC.createBuffer(1, len, sr), d = buf.getChannelData(0); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.2); const s = AC.createBufferSource(), fl = AC.createBiquadFilter(), gn = AC.createGain(); s.buffer = buf; fl.type = type || 'bandpass'; fl.frequency.value = f; fl.Q.value = q; gn.gain.value = g * v; s.connect(fl); fl.connect(gn); gn.connect(AC.destination); s.start(t); };
+  for (let k = 0; k < 7; k++) grain(t0 + k * .018 + Math.random() * .008, .02 + Math.random() * .02, 2600 + Math.random() * 2200, .9, .16 * (1 - k * .09));
+  const o = AC.createOscillator(), og = AC.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(150, t0); o.frequency.exponentialRampToValueAtTime(80, t0 + .07); og.gain.setValueAtTime(.09 * v, t0); og.gain.exponentialRampToValueAtTime(.0001, t0 + .09); o.connect(og); og.connect(AC.destination); o.start(t0); o.stop(t0 + .1);
+  grain(t0 + .17, .07, 700, .7, .07, 'lowpass'); grain(t0 + .26, .06, 650, .7, .05, 'lowpass');
+};
+/* frosting: soft, round "bloop" notes on a pentatonic scale, like a cute game */
+window.__squish = (n = 0) => {
+  if (!AC || !musicOn) return;
+  const SC = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66, 1318.5], f = SC[Math.max(0, Math.min(SC.length - 1, n))], t = AC.currentTime;
+  const o = AC.createOscillator(), g = AC.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(f * .82, t); o.frequency.exponentialRampToValueAtTime(f, t + .04);
+  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.07, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + .16); o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + .18);
+  const o2 = AC.createOscillator(), g2 = AC.createGain(); o2.type = 'triangle'; o2.frequency.value = f * 2; g2.gain.setValueAtTime(.015, t); g2.gain.exponentialRampToValueAtTime(.0001, t + .08); o2.connect(g2); g2.connect(AC.destination); o2.start(t); o2.stop(t + .1);
+};
+/* icing spilling over the edge: a little wet plop */
+window.__plop = () => {
+  if (!AC || !musicOn) return;
+  const t = AC.currentTime, o = AC.createOscillator(), g = AC.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(420, t); o.frequency.exponentialRampToValueAtTime(110, t + .12);
+  g.gain.setValueAtTime(.11, t); g.gain.exponentialRampToValueAtTime(.0001, t + .15); o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + .16);
 };
 function chime() { if (!AC || !musicOn) return; const t = AC.currentTime + .05; [72, 76, 79, 84].forEach((m, i) => note(m, t + i * .07, .9, .06)); }
 
