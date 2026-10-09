@@ -109,7 +109,7 @@ h1{margin:0;font-weight:700;font-size:clamp(34px,7.4vw,58px);line-height:1;lette
 .sound .wave{display:none}.sound[aria-pressed="true"] .wave{display:inline}
 .sound[aria-pressed="true"] .x{display:none}
 
-.fade{position:fixed;inset:0;z-index:30;background:#120c08;opacity:0;pointer-events:none;transition:opacity .45s steps(6)}
+.fade{position:fixed;inset:0;z-index:30;background:#120c08;opacity:0;pointer-events:none;transition:opacity .28s ease;will-change:opacity}
 .fade.on{opacity:1}
 .next .panel h2{margin:0;font-size:clamp(26px,5vw,36px)}
 .next .panel p{margin:12px auto 0;max-width:34ch;color:var(--muted);font-size:17px;line-height:1.4}
@@ -880,6 +880,7 @@ html[data-theme="dark"] .pf-now{background:#26292d}
 .pf-sec{padding-top:72px!important;margin-top:56px;border-top:1px solid var(--line)}
 #pf .pf-label{display:flex;align-items:baseline;gap:14px;margin:0 0 14px!important;font:700 clamp(30px,3.6vw,42px)/1.1 var(--f-head)!important;letter-spacing:-.025em!important;text-transform:none!important;color:var(--ink)!important}
 #pf .pf-label::before{content:attr(data-n);font:600 14px var(--f-mono);letter-spacing:.06em;color:var(--acc)}
+.cs-fig:has(.cs-tiny){position:relative}.cs-fig figcaption.cs-tiny{position:absolute;right:10px;bottom:7px;margin:0;font-size:9.5px;letter-spacing:.02em;color:#8a9097;pointer-events:none}
 #xp-dlg{border:0;padding:0;border-radius:14px;max-width:720px;width:calc(100% - 32px);max-height:86vh;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 #xp-dlg::backdrop{background:rgba(17,20,24,.55)}
 #xp-dlg .xp-in{padding:28px 32px 30px;overflow:auto;max-height:86vh;box-sizing:border-box}
@@ -1095,7 +1096,7 @@ html[data-theme="dark"] .pf-now{background:#26292d}
       <div class="cs-steps">
         <div><figure class="cs-fig"><img src="img/cs-p0.webp" alt="Prototype 0 on the bench: Arduino, keypad, knob, LCD and a blue LED strip" loading="lazy"><figcaption></figcaption></figure><div class="cs-box"><span class="cs-box-t">P0 · proof of concept</span><p>Arduino, keypad, knob and LCD from parts on hand. One strip, one colour channel at a time.</p></div></div>
         <div><figure class="cs-fig"><img src="img/cs-p1-hands.webp" alt="Prototype 1 being wired on the bench" loading="lazy"><figcaption></figcaption></figure><div class="cs-box"><span class="cs-box-t">P1 · functional prototype</span><p>ESP32, five sliders, programmable buttons and an OLED. Several strips at once.</p></div></div>
-        <div><figure class="cs-fig"><img src="img/cs-render.webp" alt="Render of the final controller" loading="lazy"><figcaption></figcaption></figure><div class="cs-box"><span class="cs-box-t">Final · custom PCB</span><p>My own 2-layer board in an SLA-printed enclosure, handed off to the studio.</p></div></div>
+        <div><figure class="cs-fig"><img src="img/cs-final-render.webp" alt="Render of the final controller with six LED strips and the power cable connected" loading="lazy"><figcaption class="cs-tiny">Render</figcaption></figure><div class="cs-box"><span class="cs-box-t">Pilot · custom PCB</span><p>My own 2-layer board in an SLA-printed enclosure. First build handed off to the design team for testing and feedback.</p></div></div>
       </div>
       <div class="cs-box cs-box-lead"><span class="cs-box-t">Before ordering P1 parts: simulation</span><p>While waiting for components, I built P1 in an online ESP32 simulator to check the pin mapping, the UI flow and multi-strip control. Debugging the software and wiring early cut bring-up time once the hardware arrived.</p></div>
       <div class="cs-steps cs-thumbs">
@@ -1666,8 +1667,9 @@ const titleEl = document.getElementById('title'), pfEl = document.getElementById
 function go(where) {
   if (where === 'play' && !gameMuted) { setMusic(true); setTimeout(chime, 60); }
   if (reduce) { location.hash = where; return; }
+  /* switch pages only once the screen is fully dark, then fade back in after the new page has drawn */
   fade.classList.add('on');
-  setTimeout(() => { location.hash = where; fade.classList.remove('on'); }, 380);
+  setTimeout(() => { location.hash = where; requestAnimationFrame(() => requestAnimationFrame(() => fade.classList.remove('on'))); }, 300);
 }
 
 /* ============ routing: #/ welcome · #portfolio · #play · #project/<id> ============ */
@@ -1780,7 +1782,9 @@ const PROG = [
 const MEL = [[72, 0, 2], [69, 2, 1], [67, 3, 1], [69, 4, 3], [76, 0, 2], [74, 2, 2], [72, 4, 2], [69, 0, 3], [67, 3, 3], [65, 0, 2], [67, 2, 1], [69, 3, 3], [72, 0, 4], [74, 4, 2]];
 function makeVerb(ctx) {
   const len = ctx.sampleRate * 3.2, buf = ctx.createBuffer(2, len, ctx.sampleRate);
-  for (let ch = 0; ch < 2; ch++) { const d = buf.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
+  /* decay curve from a small lookup table: same sound, much less work on the click that starts the music */
+  const T = 2048, env = new Float32Array(T + 1); for (let k = 0; k <= T; k++) env[k] = Math.pow(1 - k / T, 2.6);
+  for (let ch = 0; ch < 2; ch++) { const d = buf.getChannelData(ch); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * env[(i * T / len) | 0]; }
   const cv = ctx.createConvolver(); cv.buffer = buf; return cv;
 }
 let bus = null;
@@ -1790,8 +1794,9 @@ function startAudio() {
     AC = new (window.AudioContext || window.webkitAudioContext)();
     master = AC.createGain(); master.gain.value = 0;
     const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2600;
-    const verb = makeVerb(AC), wet = AC.createGain(); wet.gain.value = .45;
-    bus = AC.createGain(); bus.connect(lp); lp.connect(master); lp.connect(verb); verb.connect(wet); wet.connect(master); master.connect(AC.destination);
+    bus = AC.createGain(); bus.connect(lp); lp.connect(master); master.connect(AC.destination);
+    /* reverb is built just after the page transition so the click itself stays light; the music is still fading in then */
+    setTimeout(() => { try { const verb = makeVerb(AC), wet = AC.createGain(); wet.gain.value = .45; lp.connect(verb); verb.connect(wet); wet.connect(master); } catch (e) {} }, 900);
     loadSfx();
     musicOn = true; snd.setAttribute('aria-pressed', 'true'); snd.setAttribute('aria-label', 'Music on. Turn music off.');
     master.gain.linearRampToValueAtTime(.22, AC.currentTime + 2.5);
