@@ -1216,7 +1216,7 @@ html[data-theme="dark"] .cs-stats.cs-hl.cs-num dt{color:#ecebe7}html[data-theme=
       <div>
         <p class="cs-kicker">Level Home · Product Design Engineering · Winter 2026</p>
         <h1>Smart lock hardware: four projects</h1>
-        <p class="cs-lede">Over four months, I worked on four smart lock hardware projects: designing a keypad lifetime-test fixture, proposing magnetometers to replace the accelerometers, resolving bolt binding through tolerance analysis, and improving molded-part manufacturability.</p>
+        <p class="cs-lede">During my four months at Level Home, I designed a keypad lifetime-test fixture, proposed magnetometers to replace the accelerometers, resolved bolt binding through tolerance analysis, and improved molded-part manufacturability.</p>
       </div>
       <img class="cs-hero-img" src="img/lc-v2.webp" alt="CAD of the keypad test fixture mounted on the lock">
     </header>
@@ -1229,7 +1229,7 @@ html[data-theme="dark"] .cs-stats.cs-hl.cs-num dt{color:#ecebe7}html[data-theme=
     <section class="cs-sec">
       <h2><span>01</span>Lifetime testing: capacitive-touch keypad</h2>
       <div class="cs-split2 top">
-        <div class="cs-pair even"><figure class="cs-fig"><img src="img/lc-fixture-real.webp" alt="The built test fixture on the lock, with solenoids over the keypad" loading="lazy"><figcaption>Built keypad test fixture, FDM-printed in PETG for temperature stability</figcaption></figure><figure class="cs-fig"><img src="img/lc-v2-solenoids.webp" alt="Solenoids held by their own mounting holes" loading="lazy"><figcaption>Solenoid mounting design</figcaption></figure></div>
+        <div class="cs-pair even"><figure class="cs-fig"><img src="img/lc-fixture-real.webp" alt="The built test fixture on the lock, with solenoids over the keypad" loading="lazy"><figcaption>Keypad lifetime-test fixture, FDM-printed in PETG</figcaption></figure><figure class="cs-fig"><img src="img/lc-v2-solenoids.webp" alt="Solenoids held by their own mounting holes" loading="lazy"><figcaption>Solenoid mounting design</figcaption></figure></div>
         <div>
 <div class="cs-box"><span class="cs-box-t">What it does</span><p>Automated lifetime testing of the capacitive-touch keypad. Solenoids press the keys while the fixture and lock sit in the temperature chamber: −22 °C to 66 °C, 10,000 cycles at each temperature.</p></div><div class="cs-box"><span class="cs-box-t">Design</span><p>Each solenoid is held by its own mounting holes, so there’s no lid and the wires can’t catch in the solenoid springs. I worked with EE and firmware to configure the board and drive the solenoids. I FDM-printed the fixture in PETG, which stays rigid across the −22 °C to 66 °C test range.</p></div>
           <div class="cs-eq wide"><span>Result</span><b>14 issues found across 2M+ cycles</b><p>For example, pressing a key several times very quickly dropped some presses. All 14 were fixed with EE and firmware, and the keypad reached 100% functional success in EVT.</p></div>
