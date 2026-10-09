@@ -881,6 +881,12 @@ html[data-theme="dark"] .pf-now{background:#26292d}
 #pf .pf-label{display:flex;align-items:baseline;gap:14px;margin:0 0 14px!important;font:700 clamp(30px,3.6vw,42px)/1.1 var(--f-head)!important;letter-spacing:-.025em!important;text-transform:none!important;color:var(--ink)!important}
 #pf .pf-label::before{content:attr(data-n);font:600 14px var(--f-mono);letter-spacing:.06em;color:var(--acc)}
 .cs-fig:has(.cs-tiny){position:relative}.cs-fig figcaption.cs-tiny{position:absolute;right:10px;bottom:7px;margin:0;font-size:9.5px;letter-spacing:.02em;color:#8a9097;pointer-events:none}
+.cs-stats.cs-hl{grid-template-columns:repeat(3,minmax(0,1fr));border-top-width:1px}
+.cs-stats.cs-hl div{padding-top:14px}
+.cs-stats.cs-hl dt{font:500 11.5px/1.2 "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:#7a8089}
+.cs-stats.cs-hl dd{margin:6px 0 0;font-size:15.5px;line-height:1.45;color:#14181d}
+html[data-theme="dark"] .cs-stats.cs-hl dt{color:#959aa1}html[data-theme="dark"] .cs-stats.cs-hl dd{color:#ecebe7}
+@media (max-width:860px){.cs-stats.cs-hl{grid-template-columns:minmax(0,1fr)}.cs-stats.cs-hl div,.cs-stats.cs-hl div+div{padding:12px 0;border-left:0}.cs-stats.cs-hl div+div{border-top:1px solid #e3e6ea}html[data-theme="dark"] .cs-stats.cs-hl div+div{border-color:#33373c}}
 #xp-dlg{border:0;padding:0;border-radius:14px;max-width:720px;width:calc(100% - 32px);max-height:86vh;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 #xp-dlg::backdrop{background:rgba(17,20,24,.55)}
 #xp-dlg .xp-in{padding:28px 32px 30px;overflow:auto;max-height:86vh;box-sizing:border-box}
@@ -1074,11 +1080,10 @@ html[data-theme="dark"] .pf-now{background:#26292d}
       </div>
       <img class="cs-hero-img" src="img/cs-render.webp" alt="Render of the finished controller: enclosure with slide potentiometers, programmable buttons and a touchscreen">
     </header>
-    <dl class="cs-stats">
-      <div><dt>7 weeks</dt><dd>concept to handoff</dd></div>
-      <div><dt>6×</dt><dd>more LEDs per controller</dd></div>
-      <div><dt>2 revs</dt><dd>schematic, A → B</dd></div>
-      <div><dt>10+ h</dt><dd>a day, continuous duty</dd></div>
+    <dl class="cs-stats cs-hl">
+      <div><dt>Electronics</dt><dd>Custom 2-layer PCB, from schematic to hand assembly</dd></div>
+      <div><dt>Mechanical</dt><dd>Enclosure design, thermal analysis, material selection</dd></div>
+      <div><dt>Impact</dt><dd>6× LED capacity vs. off-the-shelf controller</dd></div>
     </dl>
 
     <section class="cs-sec">
