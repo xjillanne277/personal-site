@@ -2229,29 +2229,6 @@ window.__thock = (v = 1, p = 1) => {
   const src = AC.createBufferSource(), bp = AC.createBiquadFilter(), ng = AC.createGain(); src.buffer = buf; bp.type = 'bandpass'; bp.frequency.value = 1400 * p; bp.Q.value = 1.2; ng.gain.value = .07 * v;
   src.connect(bp); bp.connect(ng); ng.connect(AC.destination); src.start(t);
 };
-/* apple-crunch bite: a burst of crisp noise grains, a soft thump, then a little munch */
-window.__crunch = (v = 1) => {
-  if (!AC || !musicOn) return;
-  const t0 = AC.currentTime, sr = AC.sampleRate;
-  const grain = (t, dur, f, q, g, type) => { const len = Math.floor(sr * dur), buf = AC.createBuffer(1, len, sr), d = buf.getChannelData(0); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.2); const s = AC.createBufferSource(), fl = AC.createBiquadFilter(), gn = AC.createGain(); s.buffer = buf; fl.type = type || 'bandpass'; fl.frequency.value = f; fl.Q.value = q; gn.gain.value = g * v; s.connect(fl); fl.connect(gn); gn.connect(AC.destination); s.start(t); };
-  for (let k = 0; k < 7; k++) grain(t0 + k * .018 + Math.random() * .008, .02 + Math.random() * .02, 2600 + Math.random() * 2200, .9, .16 * (1 - k * .09));
-  const o = AC.createOscillator(), og = AC.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(150, t0); o.frequency.exponentialRampToValueAtTime(80, t0 + .07); og.gain.setValueAtTime(.09 * v, t0); og.gain.exponentialRampToValueAtTime(.0001, t0 + .09); o.connect(og); og.connect(AC.destination); o.start(t0); o.stop(t0 + .1);
-  grain(t0 + .17, .07, 700, .7, .07, 'lowpass'); grain(t0 + .26, .06, 650, .7, .05, 'lowpass');
-};
-/* frosting: soft, round "bloop" notes on a pentatonic scale, like a cute game */
-window.__squish = (n = 0) => {
-  if (!AC || !musicOn) return;
-  const SC = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66, 1318.5], f = SC[Math.max(0, Math.min(SC.length - 1, n))], t = AC.currentTime;
-  const o = AC.createOscillator(), g = AC.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(f * .82, t); o.frequency.exponentialRampToValueAtTime(f, t + .04);
-  g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.07, t + .01); g.gain.exponentialRampToValueAtTime(.0001, t + .16); o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + .18);
-  const o2 = AC.createOscillator(), g2 = AC.createGain(); o2.type = 'triangle'; o2.frequency.value = f * 2; g2.gain.setValueAtTime(.015, t); g2.gain.exponentialRampToValueAtTime(.0001, t + .08); o2.connect(g2); g2.connect(AC.destination); o2.start(t); o2.stop(t + .1);
-};
-/* icing spilling over the edge: a little wet plop */
-window.__plop = () => {
-  if (!AC || !musicOn) return;
-  const t = AC.currentTime, o = AC.createOscillator(), g = AC.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(420, t); o.frequency.exponentialRampToValueAtTime(110, t + .12);
-  g.gain.setValueAtTime(.11, t); g.gain.exponentialRampToValueAtTime(.0001, t + .15); o.connect(g); g.connect(AC.destination); o.start(t); o.stop(t + .16);
-};
 function chime() { if (!AC || !musicOn) return; const t = AC.currentTime + .05; [72, 76, 79, 84].forEach((m, i) => note(m, t + i * .07, .9, .06)); }
 
 setSel(0, true);
