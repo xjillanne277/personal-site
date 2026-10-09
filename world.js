@@ -500,9 +500,9 @@ function drawRoomFront(now) {
   g.globalCompositeOperation = 'source-over';
   // DOM: hide world labels, show hover label + prompt
   labelNodes.forEach(n => n.hidden = true); iconNodes.forEach(([, im]) => im.hidden = true);
-  if (hoverObj) { roomLabel.hidden = false; roomLabel.textContent = hoverObj.label; roomLabel.style.transform = `translate(${Math.round((hoverObj.x + hoverObj.w / 2 - cam.x) * SC)}px,${Math.round((hoverObj.y - 3 - cam.y) * SC)}px) translate(-50%,-100%)`; } else roomLabel.hidden = true;
+  if (hoverObj) { roomLabel.hidden = false; roomLabel.textContent = hoverObj.label; const lw = roomLabel.offsetWidth || 80; roomLabel.style.transform = `translate(${Math.round(Math.max(lw / 2 + 6, Math.min(innerWidth - lw / 2 - 6, (hoverObj.x + hoverObj.w / 2 - cam.x) * SC)))}px,${Math.round((hoverObj.y - 3 - cam.y) * SC)}px) translate(-50%,-100%)`; } else roomLabel.hidden = true;
   const n = roomNearest();
-  if (n && card.hidden && RP.tx == null) { prompt.hidden = false; prompt.textContent = (touch ? 'Tap to ' : 'Press E to ') + (n.kind === 'door' ? 'go outside' : 'look at ' + n.label.toLowerCase()); prompt.style.transform = `translate(${Math.round((RP.x - cam.x) * SC)}px,${Math.round((FLOOR - 70 - cam.y) * SC)}px) translate(-50%,-100%)`; }
+  if (n && card.hidden && RP.tx == null) { prompt.hidden = false; prompt.textContent = (touch ? 'Tap to ' : 'Press E to ') + (n.kind === 'door' ? 'go outside' : 'look at ' + n.label.toLowerCase()); const pw = prompt.offsetWidth || 160, rx = (RP.x - cam.x) * SC; prompt.style.transform = `translate(${Math.round(Math.max(pw / 2 + 8, Math.min(innerWidth - pw / 2 - 8, rx)))}px,${Math.round((FLOOR - 70 - cam.y) * SC)}px) translate(-50%,-100%)`; }
   else prompt.hidden = true;
   const mc = mini.getContext('2d'); mc.drawImage(miniBase, 0, 0); mc.fillStyle = '#d9644a'; mc.fillRect(worldPos.x / TS * MS - 3, worldPos.y / TS * MS - 4, 6, 6);
 }
@@ -563,7 +563,7 @@ function teleport(l, open) {
 
 /* ---------------- cards ---------------- */
 const esc = s => s.replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
-const CONTACT = `<div class="w-contact"><code id="w-email">j4yousse@uwaterloo.ca</code><button type="button" class="w-copy">Copy</button></div><p class="w-links"><a href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn</a> <a href="${RES}" target="_blank" rel="noopener">Résumé (PDF)</a></p>`;
+const CONTACT = `<div class="w-contact"><code id="w-email">j4yousse@uwaterloo.ca</code><a class="w-mailto" href="mailto:j4yousse@uwaterloo.ca">Email me</a><button type="button" class="w-copy" aria-label="Copy email address">Copy</button><span class="sr-only" role="status" id="w-copy-live"></span></div><p class="w-links"><a href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn</a> <a href="${RES}" target="_blank" rel="noopener">Résumé (PDF)</a></p>`;
 function enterRoom() {
   hideDrive(); closeCard(); const fade = document.getElementById('fade'); fade.classList.add('on');
   setTimeout(() => { worldPos.x = P.x; worldPos.y = P.y; scene = 'room'; window.track && track('enter_room'); resize(); RP.x = 22; RP.dir = 1; RP.tx = null; P.target = null; autoId = 'door'; trail.length = 0; fade.classList.remove('on'); }, reduce ? 0 : 260);
@@ -639,7 +639,7 @@ function openCard(l) {
   card.hidden = false;
   card.querySelector('.w-close').addEventListener('click', closeCard);
   card.querySelectorAll('[data-proj]').forEach(b => b.addEventListener('click', () => { closeCard(); window.__openProject && window.__openProject(b.dataset.proj); }));
-  const cp = card.querySelector('.w-copy'); if (cp) cp.addEventListener('click', async () => { try { await navigator.clipboard.writeText('j4yousse@uwaterloo.ca'); cp.textContent = 'Copied'; } catch { const r = document.createRange(); r.selectNodeContents(card.querySelector('#w-email')); getSelection().removeAllRanges(); getSelection().addRange(r); cp.textContent = 'Selected'; } });
+  const cp = card.querySelector('.w-copy'); if (cp) cp.addEventListener('click', async () => { try { await navigator.clipboard.writeText('j4yousse@uwaterloo.ca'); cp.textContent = 'Copied'; say('Email address copied.'); } catch { const r = document.createRange(); r.selectNodeContents(card.querySelector('#w-email')); getSelection().removeAllRanges(); getSelection().addRange(r); cp.textContent = 'Selected'; say('Couldn’t copy. The address is selected: j4yousse@uwaterloo.ca'); } function say(t) { const lv = card.querySelector('#w-copy-live'); if (lv) { lv.textContent = ''; setTimeout(() => { lv.textContent = t; }, 50); } } });
   card.querySelector('.w-close').focus({preventScroll: true});
   if (TOUR.includes(l)) { tourIdx = TOUR.indexOf(l); updateTour(); }
   if (!(l.kind === 'nsx' || l.kind === 'c5')) window.__sfx && window.__sfx('open');
@@ -706,7 +706,16 @@ function openBig() {
   window.track && track('big_map');
   bigImg.width = map.width / 2; bigImg.height = map.height / 2; const x = bigImg.getContext('2d'); x.imageSmoothingEnabled = false; x.drawImage(map, 0, 0, bigImg.width, bigImg.height);
   big.hidden = false; big.querySelector('.bm-pins').innerHTML = '';
-  L.forEach(l => { if (['mail'].includes(l.id)) return; const b = document.createElement('button'); b.type = 'button'; b.className = 'bm-pin' + (l.tour ? ' stop' : ''); b.textContent = l.yr ? `${l.label} · ${l.yr}` : l.label; b.style.left = ((l.tx + l.w / 2) / MW * 100) + '%'; b.style.top = (l.ty / MH * 100) + '%'; b.addEventListener('click', () => { big.hidden = true; if (TOUR.includes(l)) { tourIdx = TOUR.indexOf(l); updateTour(); } teleport(l, true); }); big.querySelector('.bm-pins').appendChild(b); });
+  // numbered markers on the map + a list of destinations (no overlapping labels, easy to tap)
+  const list = big.querySelector('.bm-list'); list.innerHTML = '';
+  L.forEach(l => { if (['mail'].includes(l.id)) return;
+    const key = l.tour ? String(l.tour) : l.id === 'cabin' ? 'H' : l.label.charAt(0), name = l.yr ? `${l.label} · ${l.yr}` : l.label;
+    const go = () => { big.hidden = true; if (TOUR.includes(l)) { tourIdx = TOUR.indexOf(l); updateTour(); } teleport(l, true); };
+    const d = document.createElement('button'); d.type = 'button'; d.className = 'bm-dot' + (l.tour ? ' stop' : ''); d.textContent = key; d.title = name; d.setAttribute('aria-label', name); d.tabIndex = -1;
+    d.style.left = ((l.tx + l.w / 2) / MW * 100) + '%'; d.style.top = (l.ty / MH * 100) + '%'; d.addEventListener('click', go); big.querySelector('.bm-pins').appendChild(d);
+    const li = document.createElement('li'), b = document.createElement('button'); b.type = 'button'; b.className = 'bm-pin' + (l.tour ? ' stop' : ''); b.innerHTML = `<i aria-hidden="true">${key}</i><span>${l.label}${l.yr ? `<small>${l.yr}</small>` : ''}</span>`; b.addEventListener('click', go);
+    ['mouseenter', 'focus'].forEach(k => b.addEventListener(k, () => d.classList.add('on'))); ['mouseleave', 'blur'].forEach(k => b.addEventListener(k, () => d.classList.remove('on')));
+    li.appendChild(b); list.appendChild(li); });
   const you = document.createElement('i'); you.className = 'bm-you'; you.style.left = (P.x / TS / MW * 100) + '%'; you.style.top = (P.y / TS / MH * 100) + '%'; big.querySelector('.bm-pins').appendChild(you);
   big.querySelector('.bm-close').focus();
 }
@@ -910,10 +919,17 @@ function draw(now) {
   if (!WSTATE.moeHome) heartAt(Math.round(moe.x - cam.x), Math.round(moe.y - 30 - cam.y), now);
   roomLabel.hidden = true; cv.style.cursor = 'default';
   // labels
+  // labels stay inside the screen edges and never sit on top of each other
+  const placed = [];
   L.forEach((l, i) => {
-    const x = offX + (l.tx * TS + l.w * TS / 2 - cam.x) * SC, y = offY + (l.ty * TS - cam.y - (l.kind === 'factory' ? 18 : 6)) * SC;
-    const n = labelNodes[i]; const vis = !l.nolabel && x > -80 && x < innerWidth + 80 && y > -30 && y < innerHeight;
-    n.hidden = !vis; if (vis) n.style.transform = `translate(${Math.round(x)}px,${Math.round(y)}px) translate(-50%,-100%)`;
+    let x = offX + (l.tx * TS + l.w * TS / 2 - cam.x) * SC, y = offY + (l.ty * TS - cam.y - (l.kind === 'factory' ? 18 : 6)) * SC;
+    const n = labelNodes[i]; const vis = !l.nolabel && x > -40 && x < innerWidth + 40 && y > 8 && y < innerHeight;
+    n.hidden = !vis; if (!vis) return;
+    const w = n._w || (n._w = n.offsetWidth) || 120, h = n._h || (n._h = n.offsetHeight) || 20;
+    x = Math.max(w / 2 + 6, Math.min(innerWidth - w / 2 - 6, x));
+    for (let k = 0; k < 4; k++) { const hit = placed.find(r => Math.abs(r.x - x) < (r.w + w) / 2 + 4 && Math.abs(r.y - y) < (r.h + h) / 2 + 2); if (!hit) break; y = hit.y - hit.h - 4; }
+    placed.push({x, y, w, h});
+    n.style.transform = `translate(${Math.round(x)}px,${Math.round(y)}px) translate(-50%,-100%)`;
   });
   iconNodes.forEach(([l, im]) => { const sz = 15 * SC, x = offX + (l.tx * TS + l.w * TS / 2 - cam.x) * SC, y = offY + (l.ty * TS + ICON[l.id] - cam.y) * SC; const vis = x > -40 && x < innerWidth + 40 && y > -40 && y < innerHeight; im.hidden = !vis; if (vis) { im.style.width = im.style.height = sz + 'px'; im.style.transform = `translate(${Math.round(x - sz / 2)}px,${Math.round(y)}px)`; } });
   drawPrompt(cam);
