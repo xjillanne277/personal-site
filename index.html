@@ -2205,9 +2205,17 @@ function chime() { if (!AC || !musicOn) return; const t = AC.currentTime + .05; 
 setSel(0, true);
 })();
 
+/* muted looping clips: play when on screen (phones don't autoplay clips that start out hidden), pause when off screen;
+   if the phone still blocks playback (Low Power Mode), show the controls so a tap starts it */
+(() => {
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(en => { const v = en.target; if (en.isIntersecting) start(v); else if (!v.paused) v.pause(); }), {threshold: .25}) : null;
+  function start(v) { v.muted = true; v.defaultMuted = true; v.playsInline = true; const p = v.play(); if (p && p.catch) p.catch(() => { v.controls = true; }); }
+  window.__wireVideos = root => (root || document).querySelectorAll('video[autoplay]').forEach(v => { if (v._wired) return; v._wired = 1; v.setAttribute('muted', ''); v.muted = true; if (io) io.observe(v); else start(v); });
+  window.__wireVideos(document);
+})();
 (() => { const d = document.getElementById('xp-dlg'), body = document.getElementById('xp-body');
   document.addEventListener('click', e => {
-    const b = e.target.closest('[data-xp]'); if (b) { const t = document.getElementById('xp-' + b.dataset.xp); body.replaceChildren(t.content.cloneNode(true)); d.showModal(); d.querySelector('.xp-in').scrollTop = 0; window.track && track('experience_open', {project: b.dataset.xp}); return; }
+    const b = e.target.closest('[data-xp]'); if (b) { const t = document.getElementById('xp-' + b.dataset.xp); body.replaceChildren(t.content.cloneNode(true)); d.showModal(); window.__wireVideos && window.__wireVideos(body); d.querySelector('.xp-in').scrollTop = 0; window.track && track('experience_open', {project: b.dataset.xp}); return; }
     const o = e.target.closest('#xp-dlg [data-open]'); if (o) { d.close(); window.__openProject(o.dataset.open); return; }
     if (e.target === d || e.target.closest('[data-xp-close]')) d.close();
   });
