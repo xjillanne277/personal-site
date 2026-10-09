@@ -603,7 +603,11 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 /* tools */
 .pf-skills dl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin:0}
 .pf-skills dt{font:600 16px var(--f-head);margin-bottom:6px}
-.pf-skills dd{margin:0;font-size:15px;line-height:1.55;color:var(--sub)}
+.pf-skills dd{margin:0;font-size:15px;line-height:1.45;color:var(--sub)}
+.pf-skills ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.pf-skills li{position:relative;padding-left:14px}
+.pf-skills li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--acc)}
+.pf-skills dt{padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:10px!important}
 
 /* contact: two light cards, side by side */
 .pf-contact{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px;align-items:stretch;margin-top:104px}
@@ -1215,10 +1219,10 @@ body:has(#track-ui:not([hidden])) .exit-game{display:none}
     <section class="pf-sec pf-skills" aria-labelledby="pf-skills-h">
       <h2 id="pf-skills-h" class="pf-label" data-n="04">Tools</h2>
       <dl>
-        <div><dt>Mechanical Design</dt><dd>CAD (NX, CATIA V6, SolidWorks), DFMA (Injection Molding, Die-Casting, CNC-Machining)</dd></div>
-        <div><dt>Analysis</dt><dd>Tolerance Analysis, FEA (Ansys Mechanical), CFD (Ansys Fluent), RCFA/FMEA, Mold Flow Simulation</dd></div>
-        <div><dt>Manufacturing &amp; Prototyping</dt><dd>Machining (Lathe, Mill), 3D Printing (SLA, SLS, FDM), Waterjet &amp; Laser Cutting</dd></div>
-        <div><dt>Electrical &amp; Software</dt><dd>PCB Design (KiCad, Altium), Embedded (ESP32, Arduino, Raspberry Pi), C++, Python, MATLAB</dd></div>
+        <div><dt>Mechanical Design</dt><dd><ul><li>CAD (NX, CATIA V6, SolidWorks)</li><li>DFMA (Injection Molding, <span style="white-space:nowrap">Die-Casting</span>, <span style="white-space:nowrap">CNC-Machining</span>)</li></ul></dd></div>
+        <div><dt>Analysis</dt><dd><ul><li>Tolerance Analysis</li><li>FEA (Ansys Mechanical)</li><li>CFD (Ansys Fluent)</li><li>RCFA/FMEA</li><li>Mold Flow Simulation</li></ul></dd></div>
+        <div><dt>Manufacturing &amp; Prototyping</dt><dd><ul><li>Machining (Lathe, Mill)</li><li>3D Printing (SLA, SLS, FDM)</li><li>Waterjet &amp; Laser Cutting</li></ul></dd></div>
+        <div><dt>Electrical &amp; Software</dt><dd><ul><li>PCB Design (KiCad, Altium)</li><li>Embedded (ESP32, Arduino, Raspberry Pi)</li><li>C++, Python, MATLAB</li></ul></dd></div>
       </dl>
     </section>
 
