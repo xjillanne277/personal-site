@@ -893,6 +893,9 @@ html[data-theme="dark"] .case-sum{color:#c3c6cb}
 .cs-stats.cs-hl.cs-num dt{font:600 22px/1.15 "IBM Plex Sans",sans-serif;letter-spacing:-.01em;text-transform:none;color:#14181d}
 .cs-stats.cs-hl.cs-num dd{margin-top:4px;font-size:14px;line-height:1.4;color:#59626c}
 html[data-theme="dark"] .cs-stats.cs-hl.cs-num dt{color:#ecebe7}html[data-theme="dark"] .cs-stats.cs-hl.cs-num dd{color:#959aa1}
+.cs-split2.top{align-items:start}.cs-pair.even .cs-fig img{aspect-ratio:3/4;object-fit:contain;background:#fff}
+.proj-nav .pv-s{display:none}@media (max-width:999px){.proj-nav .pv-t{display:none}.proj-nav .pv-s{display:inline}}
+@media (min-width:1000px){.proj-bar{flex-wrap:nowrap}.proj-crumb{flex:1 1 auto;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.proj-nav,.proj-bar>button,.proj-bar>a{flex:none}}
 #xp-dlg{border:0;padding:0;border-radius:14px;max-width:720px;width:calc(100% - 32px);max-height:86vh;background:var(--bg);color:var(--ink);font:400 16px/1.6 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 #xp-dlg::backdrop{background:rgba(17,20,24,.55)}
 #xp-dlg .xp-in{padding:28px 32px 30px;overflow:auto;max-height:86vh;box-sizing:border-box}
@@ -1213,22 +1216,22 @@ html[data-theme="dark"] .cs-stats.cs-hl.cs-num dt{color:#ecebe7}html[data-theme=
       <div>
         <p class="cs-kicker">Level Home · Product Design Engineering · Winter 2026</p>
         <h1>Smart lock hardware: four projects</h1>
-        <p class="cs-lede">Four months on a smart lock in validation. I designed a lifetime test fixture for the keypad, proposed and tested magnets to replace the lock’s accelerometers, fixed bolt binding with tolerance analysis, and did DFM on the molded parts.</p>
+        <p class="cs-lede">Over four months, I worked on four smart lock hardware projects: designing a keypad lifetime-test fixture, proposing magnetometers to replace the accelerometers, resolving bolt binding through tolerance analysis, and improving molded-part manufacturability.</p>
       </div>
       <img class="cs-hero-img" src="img/lc-v2.webp" alt="CAD of the keypad test fixture mounted on the lock">
     </header>
     <dl class="cs-stats cs-hl cs-num">
-      <div><dt>$12M</dt><dd>projected cost savings</dd></div>
+      <div><dt>$12M</dt><dd>projected cost savings, magnetometer sensing</dd></div>
       <div><dt>2M+</dt><dd>test cycles completed</dd></div>
       <div><dt>25%</dt><dd>reduction in actuation-force variability</dd></div>
     </dl>
 
     <section class="cs-sec">
       <h2><span>01</span>Lifetime testing: capacitive-touch keypad</h2>
-      <div class="cs-split2">
-        <div class="cs-pair"><figure class="cs-fig"><img src="img/lc-fixture-real.webp" alt="The built test fixture on the lock, with solenoids over the keypad" loading="lazy"><figcaption>The built fixture on the capacitive-touch keypad. I FDM-printed it in PETG, which stays rigid across the −22 °C to 66 °C test range.</figcaption></figure><figure class="cs-fig"><img src="img/lc-v2-solenoids.webp" alt="Solenoids held by their own mounting holes" loading="lazy"><figcaption>Solenoid mounting</figcaption></figure></div>
+      <div class="cs-split2 top">
+        <div class="cs-pair even"><figure class="cs-fig"><img src="img/lc-fixture-real.webp" alt="The built test fixture on the lock, with solenoids over the keypad" loading="lazy"><figcaption>Built keypad test fixture, FDM-printed in PETG for temperature stability</figcaption></figure><figure class="cs-fig"><img src="img/lc-v2-solenoids.webp" alt="Solenoids held by their own mounting holes" loading="lazy"><figcaption>Solenoid mounting design</figcaption></figure></div>
         <div>
-<div class="cs-box"><span class="cs-box-t">What it does</span><p>Automated lifetime testing of the capacitive-touch keypad. Solenoids press the keys while the fixture and lock sit in the temperature chamber: −22 °C to 66 °C, 10,000 cycles at each temperature.</p></div><div class="cs-box"><span class="cs-box-t">Design</span><p>Each solenoid is held by its own mounting holes, so there’s no lid and the wires can’t catch in the solenoid springs. I worked with EE and firmware to configure the board and drive the solenoids.</p></div>
+<div class="cs-box"><span class="cs-box-t">What it does</span><p>Automated lifetime testing of the capacitive-touch keypad. Solenoids press the keys while the fixture and lock sit in the temperature chamber: −22 °C to 66 °C, 10,000 cycles at each temperature.</p></div><div class="cs-box"><span class="cs-box-t">Design</span><p>Each solenoid is held by its own mounting holes, so there’s no lid and the wires can’t catch in the solenoid springs. I worked with EE and firmware to configure the board and drive the solenoids. I FDM-printed the fixture in PETG, which stays rigid across the −22 °C to 66 °C test range.</p></div>
           <div class="cs-eq wide"><span>Result</span><b>14 issues found across 2M+ cycles</b><p>For example, pressing a key several times very quickly dropped some presses. All 14 were fixed with EE and firmware, and the keypad reached 100% functional success in EVT.</p></div>
         </div>
       </div>
@@ -1723,7 +1726,7 @@ function projNav(id) {
   const pb = document.getElementById('proj-prev'), nb = document.getElementById('proj-next');
   pb.disabled = !p; pb.dataset.step = p || ''; pb.hidden = !p; nb.disabled = !n; nb.dataset.step = n || ''; nb.hidden = !n;
   document.getElementById('proj-next-t').textContent = n ? navTitle(n) : 'none';
-  pb.innerHTML = p ? '← <span class="nx-label">Previous: </span>' + navTitle(p) : '← Previous';
+  pb.innerHTML = p ? '← <span class="pv-t"><span class="nx-label">Previous: </span>' + navTitle(p) + '</span><span class="pv-s">Previous</span>' : '← Previous';
   const art = projEl.querySelector(`[data-proj="${id.split('/')[0]}"]`); art.querySelectorAll('.proj-pn').forEach(x => x.remove());
   const nav = document.createElement('nav'); nav.className = 'proj-pn'; nav.setAttribute('aria-label', 'More write-ups');
   nav.innerHTML = (p ? `<button type="button" data-step="${p}"><small>← Previous</small><b>${navTitle(p)}</b></button>` : '') + (n ? `<button type="button" class="nx" data-step="${n}"><small>Next →</small><b>${navTitle(n)}</b></button>` : '');
