@@ -604,13 +604,6 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .pf-skills dl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin:0}
 .pf-skills dt{font:600 16px var(--f-head);margin-bottom:6px}
 .pf-skills dd{margin:0;font-size:15px;line-height:1.45;color:var(--sub)}
-.pf-skills ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
-.pf-skills li{position:relative;padding-left:14px}
-.pf-skills li::before{content:"";position:absolute;left:0;top:.62em;width:5px;height:5px;border-radius:50%;background:var(--acc)}
-.pf-skills li ul{gap:2px;margin-top:4px}
-.pf-skills li li{padding-left:14px;font-size:14px;color:var(--mute)}
-.pf-skills li li::before{width:6px;height:1.5px;border-radius:0;top:.7em;background:var(--mute)}
-.pf-skills dt{padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:10px!important}
 
 /* contact: two light cards, side by side */
 .pf-contact{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px;align-items:stretch;margin-top:104px}
@@ -951,6 +944,18 @@ html[data-theme="dark"] .cs-stats.cs-hl.cs-num dt{color:#ecebe7}html[data-theme=
 }
 
 .exit-note{display:block;margin-top:3px;font:italic 400 13.5px/1.3 "IBM Plex Sans",system-ui,sans-serif!important;letter-spacing:0;color:inherit!important;opacity:.85}
+
+.sk-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.sk-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.sk-card h3{margin:0 0 10px;font:600 16px var(--f-head);color:var(--ink)}
+.sk-card dl{display:grid;grid-template-columns:minmax(0,1fr)!important;gap:8px;margin:0}
+.sk-card dl div{display:grid;grid-template-columns:92px minmax(0,1fr);gap:8px;align-items:baseline}
+.sk-card dt{font:500 12.5px var(--f-mono);color:var(--mute);margin:0!important;padding-top:3px}
+.sk-card dd{margin:0;display:flex;flex-wrap:wrap;gap:6px}
+.sk-card dd span{font-size:13.5px;line-height:1.3;color:var(--ink);background:#f1f0ec;border-radius:999px;padding:4px 10px;white-space:nowrap}
+html[data-theme="dark"] .sk-card{background:#26292d;border-color:#33373c}
+html[data-theme="dark"] .sk-card dd span{background:#2f3337;color:#e9e7e2}
+@media (max-width:760px){.sk-grid{grid-template-columns:minmax(0,1fr)}.sk-card dl div{grid-template-columns:84px minmax(0,1fr)}.sk-card{padding:14px 14px}}
 /* accessibility helpers */
 .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .skip{position:absolute;left:12px;top:-60px;z-index:50;font:600 15px "IBM Plex Sans",system-ui,sans-serif;background:#111418;color:#fff;border:0;border-radius:8px;padding:12px 16px;cursor:pointer}
@@ -1221,12 +1226,7 @@ body:has(#track-ui:not([hidden])) .exit-game{display:none}
 
     <section class="pf-sec pf-skills" aria-labelledby="pf-skills-h">
       <h2 id="pf-skills-h" class="pf-label" data-n="04">Tools</h2>
-      <dl>
-        <div><dt>Mechanical Design</dt><dd><ul><li>CAD<ul><li>Siemens NX</li><li>CATIA V6</li><li>SolidWorks</li><li>Onshape</li></ul></li><li>DFMA<ul><li>Injection molding</li><li>Precision glass molding</li><li>Die casting</li><li>Die cutting</li><li>CNC machining</li></ul></li></ul></dd></div>
-        <div><dt>Analysis</dt><dd><ul><li>Tolerance analysis</li><li>FEA (Ansys Mechanical)</li><li>CFD (Ansys Fluent)</li><li>Root cause failure analysis (RCFA)</li><li>Failure modes and effects analysis (FMEA)</li><li>Mold flow simulation</li></ul></dd></div>
-        <div><dt>Manufacturing &amp; Prototyping</dt><dd><ul><li>Machining<ul><li>Lathe</li><li>Mill</li><li>3-axis CNC</li></ul></li><li>3D printing<ul><li>FDM</li><li>SLA</li><li>SLS</li></ul></li><li>Waterjet &amp; laser cutting</li></ul></dd></div>
-        <div><dt>Electrical &amp; Software</dt><dd><ul><li>PCB design<ul><li>KiCad</li><li>Altium</li></ul></li><li>Embedded<ul><li>ESP32</li><li>Arduino</li><li>Raspberry Pi</li><li>STM32</li></ul></li><li>Programming<ul><li>C++</li><li>Python</li><li>MATLAB</li></ul></li><li>Data acquisition</li></ul></dd></div>
-      </dl>
+      <div class="sk-grid"><div class="sk-card"><h3>Mechanical Design</h3><dl><div><dt>CAD</dt><dd><span>Siemens NX</span><span>CATIA V6</span><span>SolidWorks</span><span>Onshape</span></dd></div><div><dt>DFMA</dt><dd><span>Injection molding</span><span>Precision glass molding</span><span>Die casting</span><span>Die cutting</span><span>CNC machining</span></dd></div></dl></div><div class="sk-card"><h3>Analysis</h3><dl><div><dt>Methods</dt><dd><span>Tolerance analysis</span><span>RCFA</span><span>FMEA</span></dd></div><div><dt>Simulation</dt><dd><span>FEA (Ansys Mechanical)</span><span>CFD (Ansys Fluent)</span><span>Mold flow</span></dd></div></dl></div><div class="sk-card"><h3>Manufacturing &amp; Prototyping</h3><dl><div><dt>Machining</dt><dd><span>Lathe</span><span>Mill</span><span>3-axis CNC</span></dd></div><div><dt>3D printing</dt><dd><span>FDM</span><span>SLA</span><span>SLS</span></dd></div><div><dt>Cutting</dt><dd><span>Waterjet</span><span>Laser</span></dd></div></dl></div><div class="sk-card"><h3>Electrical &amp; Software</h3><dl><div><dt>PCB design</dt><dd><span>KiCad</span><span>Altium</span></dd></div><div><dt>Embedded</dt><dd><span>ESP32</span><span>Arduino</span><span>Raspberry Pi</span><span>STM32</span></dd></div><div><dt>Programming</dt><dd><span>C++</span><span>Python</span><span>MATLAB</span></dd></div><div><dt>Testing</dt><dd><span>Data acquisition</span></dd></div></dl></div></div>
     </section>
 
     <footer class="pf-contact" id="pf-contact" aria-labelledby="pf-contact-h">
