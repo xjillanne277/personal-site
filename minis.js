@@ -289,7 +289,7 @@ M.lock = (host, ctl, X) => {
   const DX = 44, DY = 8, DW = 72, DH = 84, KY = DY + 34, FLOOR = DY + DH + 2, IN_FLOOR = DY + DH - 5;
   // story: wait (Moe outside) → unlock → open → enter → nap → autolock → home (the end)
   let st, bolt, door, beepT = 0, tt = 0, touched = false, lastS = '', mx = 0, meowT = 1.2, bub = 0;
-  const reset = () => { st = 'wait'; bolt = 1; door = 0; tt = 0; mx = 120; btn.disabled = false; btn.textContent = 'Unlock'; say('Moe’s stuck outside. Tap the keypad to let him in.'); };
+  const reset = () => { X.state.moeHome = false; st = 'wait'; bolt = 1; door = 0; tt = 0; mx = 120; btn.disabled = false; btn.textContent = 'Unlock'; say('Moe’s stuck outside. Tap the keypad to let him in.'); };
   reset();
   const buf = document.createElement('canvas'); buf.width = 24; buf.height = 20; const bc = buf.getContext('2d');
   const moeAt = (x, floorY, h, f) => { bc.clearRect(0, 0, 24, 20); X.moeSprite(bc, 4, 3, f); const w = h * 1.2; P(x + w * .15, floorY - 1, w * .6, 2, 'rgba(0,0,0,.14)'); c.drawImage(buf, 0, 0, 24, 20, x, floorY - h * .75, w, h); };
@@ -304,19 +304,24 @@ M.lock = (host, ctl, X) => {
     tt += dt; beepT = Math.max(0, beepT - dt); bub = Math.max(0, bub - dt); const R = X.reduce ? 4 : 1;
     if (st === 'wait') { meowT -= dt; if (meowT <= 0) { meowT = 2.6; bub = 1.1; X.meow(); } }
     if (st === 'unlock') { bolt = Math.max(0, bolt - dt * R / .3); if (bolt <= 0) { st = 'open'; tt = 0; } }
-    if (st === 'open') { door = Math.min(1, door + dt * R / .8); if (door >= 1) { st = 'enter'; tt = 0; say('In he goes.'); } }
-    if (st === 'enter') { const u = Math.min(1, tt * R / 1.8); mx = 120 - (120 - (DX + 18)) * u; if (u >= 1) { st = 'nap'; tt = 0; } }
-    if (st === 'nap') { if (tt * R > 1) { st = 'close'; tt = 0; } }
-    if (st === 'close') { door = Math.max(0, door - dt * R / .7); if (door <= 0) { bolt = Math.min(1, bolt + dt * R / .3); if (bolt >= 1) { st = 'home'; tt = 0; X.tone(130, .08, 'square', .05); X.chime(); btn.disabled = false; btn.textContent = 'Play again'; say('Welcome home, Moe. The lock locked itself behind him. All done.'); } } }
+    if (st === 'open') { door = Math.min(1, door + dt * R / .8); if (door >= 1) { st = 'toDoor'; tt = 0; } }
+    if (st === 'toDoor') { const u = ease(Math.min(1, tt * R / 1.2)); mx = 120 - (120 - (DX + DW - 10)) * u; if (u >= 1) { st = 'sniff'; tt = 0; say('A quick sniff…'); } }
+    if (st === 'sniff') { if (tt * R > .8) { st = 'inside'; tt = 0; say('In he goes.'); } }
+    if (st === 'inside') { const u = Math.min(1, tt * R / 1.6); mx = DX + DW - 10 - (DW - 28) * u; if (u >= 1) { st = 'hall'; tt = 0; } }
+    if (st === 'hall') { if (tt * R > .9) { st = 'sit'; tt = 0; } }
+    if (st === 'sit') { if (tt * R > 1) { st = 'nap'; tt = 0; say('Bed check: approved.'); } }
+    if (st === 'nap') { if (tt * R > 1.1) { st = 'close'; tt = 0; } }
+    if (st === 'close') { door = Math.max(0, door - dt * R / .7); if (door <= 0) { bolt = Math.min(1, bolt + dt * R / .3); if (bolt >= 1) { st = 'home'; tt = 0; X.state.moeHome = true; X.tone(130, .08, 'square', .05); X.chime(); btn.disabled = false; btn.textContent = 'Play again'; say('Welcome home, Moe. The lock locked itself behind him. He’s napping at Home now if you want to visit.'); } } }
     // wall, frame, step, ground
     P(0, 0, W, H, '#dfe6ea'); for (let y = 5; y < H; y += 6) P(0, y, W, 1, '#ccd5db');
     P(DX - 6, DY - 6, DW + 12, DH + 6, '#2c3035'); P(0, DY + DH, W, H, '#a8b3ba'); P(DX - 10, DY + DH, DW + 20, 3, '#c3ccd2');
     // window: the room, with Moe's bed
-    const home = st === 'nap' || st === 'close' || st === 'home';
+    const home = st === 'nap' || st === 'close' || st === 'home', sitting = st === 'sit';
     P(4, 24, 34, 42, '#2c3035'); c.save(); c.translate(21, 45); c.scale(1.2, 1.2); c.translate(-22, -47);
-    P(10, 32, 24, 30, home || st === 'enter' ? '#f6dca8' : '#e9cf9c');
+    P(10, 32, 24, 30, home || sitting || st === 'hall' ? '#f6dca8' : '#e9cf9c');
     P(10, 32, 24, 2, '#fff1cf'); P(10, 54, 24, 8, '#c99a6b');
     c.fillStyle = '#5f7c93'; c.beginPath(); c.ellipse(22, 57, 9, 3.6, 0, 0, Math.PI * 2); c.fill(); c.fillStyle = '#7f9cb3'; c.beginPath(); c.ellipse(22, 56.2, 7.4, 2.6, 0, 0, Math.PI * 2); c.fill();
+    if (sitting) { bc.clearRect(0, 0, 24, 20); X.moeSprite(bc, 4, 3, 0); c.drawImage(buf, 0, 0, 24, 20, 13, 44, 18, 15); }
     if (home) { // Moe curled up asleep
       c.fillStyle = '#f6e7d4'; c.beginPath(); c.ellipse(23, 53.6, 6.4, 3.2, 0, 0, Math.PI * 2); c.fill();
       c.beginPath(); c.arc(17.6, 53.2, 2.8, 0, Math.PI * 2); c.fill(); P(15.6, 49.6, 1.4, 1.6, '#e9b98a'); P(18.6, 49.6, 1.4, 1.6, '#e9b98a');
@@ -328,7 +333,7 @@ M.lock = (host, ctl, X) => {
     // inside the door: warm hallway
     P(DX, DY, DW, DH, '#f3d9a8'); P(DX, DY + DH - 14, DW, 14, '#c99a6b'); for (let x = DX; x < DX + DW; x += 9) P(x, DY + DH - 14, 1, 14, '#b48654');
     P(DX + 8, DY + DH - 8, 56, 4, '#7f9cb3'); P(DX + DW - 18, DY + 14, 2, 30, '#7a5232'); P(DX + DW - 23, DY + 10, 12, 6, '#fff3c4');
-    if (st === 'enter' && mx < DX + DW) moeAt(mx, IN_FLOOR, 24, Math.floor(now / 140) % 2);
+    if (st === 'inside') moeAt(mx, IN_FLOOR, 24, Math.floor(now / 140) % 2);
     // the door, swinging on its left hinge
     const dw = Math.max(5, Math.round(DW * Math.cos(door * 1.42)));
     P(DX, DY, dw, DH, '#3b3f45'); P(DX, DY, dw, 2, '#4a4f56'); P(DX, DY + 22, dw, 3, '#b88a5a');
@@ -342,7 +347,7 @@ M.lock = (host, ctl, X) => {
     if (door === 0) { const bl = Math.round(9 * bolt); P(DX + DW - 2, KY + 26, 2 + bl, 4, '#c9d1d8'); P(DX + DW - 2, KY + 26, 2 + bl, 1, '#eef2f5'); }
     // Moe outside on the step, then walking in (in front of the frame until he's through)
     if (st === 'wait' || st === 'unlock' || st === 'open') { moeAt(mx, FLOOR, 27, 0); if (bub > 0) { c.fillStyle = 'rgba(255,255,255,.95)'; c.beginPath(); c.roundRect ? c.roundRect(mx + 4, FLOOR - 36, 26, 10, 4) : c.rect(mx + 4, FLOOR - 36, 26, 10); c.fill(); P(mx + 10, FLOOR - 26, 3, 2, 'rgba(255,255,255,.95)'); text(c, 'meow', mx + 17, FLOOR - 34, '#3a3f46', 1, 'c'); } }
-    if (st === 'enter' && mx >= DX + DW) moeAt(mx, FLOOR - (120 - mx) / (120 - DX - DW) * 7, 27 - 3 * (120 - mx) / (120 - DX - DW), Math.floor(now / 140) % 2);
+    if (st === 'toDoor' || st === 'sniff') { const k = (120 - mx) / (120 - (DX + DW - 10)); moeAt(mx, FLOOR - k * 7, 27 - 3 * k, st === 'sniff' ? (Math.floor(now / 260) % 2) : Math.floor(now / 140) % 2); }
     if (st === 'wait' && !touched) cue(c, P, DX + DW - 14, KY + 11, 'Tap', now, X.reduce);
     const ss = st === 'home' ? 'Locked · Moe is home' : bolt > .5 ? 'Locked' : st === 'close' ? 'Locking…' : 'Unlocked';
     if (ss !== lastS) { stat.textContent = ss; lastS = ss; }

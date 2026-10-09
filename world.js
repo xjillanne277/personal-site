@@ -337,7 +337,7 @@ function ledColor(i, now) {
   const s = led.strips[i]; return [s.r, s.g, s.b].map(v => Math.round(Math.min(255, v + s.w * .8)));
 }
 /* things you change inside the houses that show up out on the map */
-const WSTATE = {cells: false, hat: false, shades: false, coat: false, goals: 0, bars: 0};
+const WSTATE = {cells: false, hat: false, shades: false, coat: false, goals: 0, bars: 0, moeHome: false};
 const GAL = {
   photos: [['img/ca-sunset-gull.webp', 'Ventura Pier, Santa Barbara, after a long road trip'], ['img/ca-redwoods.webp', 'Muir Woods'], ['img/ca-palms.webp', 'The Pacifica Taco Bell'], ['img/ca-pier.webp', 'Santa Monica Pier'], ['img/ca-coast-night.webp', 'Half Moon Bay, by the Ritz golf course']],
   moe: [["img/moe-1.webp", "My cat"], ["img/moe-2.webp", "My cat"], ["img/moe-3.webp", "My cat"], ["img/moe-4.webp", "My cat"], ["img/moe-5.webp", "My cat"], ["img/moe-6.webp", "My cat"], ["img/moe-7.webp", "My cat"]]
@@ -563,6 +563,7 @@ function enterRoom() {
 }
 function exitRoom() {
   closeCard(); const fade = document.getElementById('fade'); fade.classList.add('on');
+  WSTATE.moeHome = false;
   setTimeout(() => { scene = 'world'; resize(); const s = spotPx(L.find(l => l.id === 'cabin')); P.x = s.x; P.y = s.y + 6; P.dir = 'down'; P.target = null; autoId = 'cabin'; moe.x = P.x - 14; moe.y = P.y + 4; trail.length = 0; fade.classList.remove('on'); }, reduce ? 0 : 260);
 }
 function ledCard() {
@@ -572,7 +573,7 @@ function ledCard() {
 }
 /* mini experiences live in minis.js, loaded once the game opens */
 let minisP = null, miniInst = null;
-function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=7'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
+function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=8'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
 const MCTX = {reduce, get touch() { return touch; }, led, ledColor, state: WSTATE, girl, moeSprite,
   tone: (...a) => window.__tone && window.__tone(...a), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
 function stopMini() { if (miniInst) { try { miniInst.stop(); } catch (e) {} miniInst = null; } }
@@ -730,7 +731,7 @@ cv.addEventListener('pointerdown', e => {
   if (scene === 'room') { const o = roomHit(e), cam = roomCam(); if (o && o.id === 'moe') { if (++moeClicks % 3 === 1) window.__meow && window.__meow(); roomOpen(o); return; } if (o && Math.abs(o.stand - RP.x) < 20) { roomOpen(o); return; } RP.tx = o ? o.stand : Math.max(12, Math.min(RMW - 14, e.clientX / SC + cam.x)); RP.after = null; return; }
   const cam = camera(); const wx = (e.clientX - offX) / SC + cam.x, wy = (e.clientY - offY) / SC + cam.y;
   const mo = scene === 'room' ? {x: roomMoe.x + 8, y: roomMoe.y + 10} : moe;
-  if (Math.hypot(wx - mo.x, wy - (mo.y - 10)) < 17) { if (++moeClicks % 3 === 1) window.__meow && window.__meow(); galleryCard(RO.find(o => o.id === 'moe')); return; }
+  if (!WSTATE.moeHome && Math.hypot(wx - mo.x, wy - (mo.y - 10)) < 17) { if (++moeClicks % 3 === 1) window.__meow && window.__meow(); galleryCard(RO.find(o => o.id === 'moe')); return; }
   const hit = cur().L.find(l => wx >= l.tx * TS - 4 && wx <= (l.tx + l.w) * TS + 4 && wy >= l.ty * TS - 8 && wy <= (l.ty + l.h) * TS + 4);
   if (hit) { if (hit.kind !== 'nsx' && hit.kind !== 'c5' && rectDist(hit) < 26) openCard(hit); else walkTo(hit, true); return; }
   goTo(wx, wy);
@@ -889,7 +890,7 @@ function draw(now) {
     R(g, bx + 2, by + 9, 30, 3, 'rgba(20,50,90,.35)'); R(g, bx + 3, by, 26, 9, '#8a5a36'); R(g, bx, by + 1, 32, 6, '#8a5a36'); R(g, bx + 2, by + 2, 28, 4, '#b07a4a'); R(g, bx, by + 1, 32, 1, '#6b4426'); R(g, bx + 3, by + 8, 26, 1, '#5e3a20');
     const oar = Math.floor(now / 220) % 2; R(g, bx + 14, by - 2 + oar * 2, 2, 12, '#d9b483'); R(g, bx + 13, by + 9 + oar * 2, 4, 3, '#d9b483');
     if (!reduce) { const w = Math.floor(now / 120) % 3; R(g, bx - 3 - w, by + 4, 2, 1, '#cfe6f7'); R(g, bx + 34 + w, by + 4, 2, 1, '#cfe6f7'); } }
-  const sprites = [[moe.y, () => { sbc.clearRect(0, 0, 24, 38); moeSprite(sbc, 2, 7, moe.moving ? mf : 0); if (WSTATE.hat) moeCap((x, y, w, h, k) => R(sbc, 2 + x, 7 + y, w, h, k), 7, -1, now); g.drawImage(sbuf, 0, 0, 20, 21, Math.round(moe.x - 9 * MOE_K - cam.x), Math.round(moe.y - 18 * MOE_K - cam.y), Math.round(20 * MOE_K), Math.round(21 * MOE_K)); }], [P.y, () => { sbc.clearRect(0, 0, 24, 38); girl(sbc, 2, 10, P.dir, f); gear(sbc, P.dir, now); g.drawImage(sbuf, 0, 0, 24, 38, Math.round(P.x - 12 * GIRL_K - cam.x), Math.round(P.y - 35 * GIRL_K - cam.y + bob), Math.round(24 * GIRL_K), Math.round(38 * GIRL_K)); }]].sort((a, b) => a[0] - b[0]);
+  const sprites = [[WSTATE.moeHome ? -1e9 : moe.y, () => { if (WSTATE.moeHome) return; sbc.clearRect(0, 0, 24, 38); moeSprite(sbc, 2, 7, moe.moving ? mf : 0); if (WSTATE.hat) moeCap((x, y, w, h, k) => R(sbc, 2 + x, 7 + y, w, h, k), 7, -1, now); g.drawImage(sbuf, 0, 0, 20, 21, Math.round(moe.x - 9 * MOE_K - cam.x), Math.round(moe.y - 18 * MOE_K - cam.y), Math.round(20 * MOE_K), Math.round(21 * MOE_K)); }], [P.y, () => { sbc.clearRect(0, 0, 24, 38); girl(sbc, 2, 10, P.dir, f); gear(sbc, P.dir, now); g.drawImage(sbuf, 0, 0, 24, 38, Math.round(P.x - 12 * GIRL_K - cam.x), Math.round(P.y - 35 * GIRL_K - cam.y + bob), Math.round(24 * GIRL_K), Math.round(38 * GIRL_K)); }]].sort((a, b) => a[0] - b[0]);
   sprites.forEach(s => s[1]());
   if (TINT) {
     g.fillStyle = TINT; g.fillRect(0, 0, VW, VH);
