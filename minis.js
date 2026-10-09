@@ -37,16 +37,15 @@ const M = {};
 M.led = (host, ctl, X) => {
   const W = 200, H = 110, {cv, c, P, pt} = make(host, W, H, '#1c1e23');
   const L = X.led, NAMES = ['Off', 'Warm', 'Cool', 'Pink', 'Sunset', 'Ocean', 'Rainbow', 'Chase'];
-  let sel = -1, seq = [];
+  const sel = -1; let seq = [];
   const SY = i => 25 + i * 13;
-  ctl.innerHTML = `<div class="w-sl2">${['r', 'g', 'b', 'w'].map(k => `<label class="w-sl"><span>${{r: 'Red', g: 'Green', b: 'Blue', w: 'White'}[k]}</span><input type="range" min="0" max="255" data-k="${k}"><output></output></label>`).join('')}</div>
-    <div class="w-keys" role="group" aria-label="Presets">${[1, 2, 3, 4, 5, 6, 7].map(n => `<button type="button" class="w-keycap" data-pre="${n}" aria-label="Preset ${n}, ${NAMES[n]}" title="${NAMES[n]}">${n}</button>`).join('')}<button type="button" class="w-keycap w-off" data-pre="0" aria-label="Lights off">Off</button></div>
+  const SW = [[255, 60, 60, 0], [255, 150, 40, 0], [255, 230, 60, 0], [70, 230, 110, 0], [60, 220, 255, 0], [70, 110, 255, 0], [170, 80, 255, 0], [255, 70, 170, 0], [255, 255, 255, 255]];
+  ctl.innerHTML = `<div class="w-keys" role="group" aria-label="Presets">${[1, 2, 3, 4, 5, 6, 7].map(n => `<button type="button" class="w-keycap" data-pre="${n}" aria-label="Preset ${n}, ${NAMES[n]}" title="${NAMES[n]}">${n}</button>`).join('')}<button type="button" class="w-keycap w-off" data-pre="0" aria-label="Lights off">Off</button></div>
     <p class="w-hint" aria-live="polite"></p>`;
-  const sls = [...ctl.querySelectorAll('input')];
-  const base = () => sel < 0 ? 'Pick a preset or drag the sliders. Tap a strip to set just that one.' : `Setting strip ${sel + 1} only. Tap it again for all six.`;
+  const base = () => 'Pick a preset, or tap a strip to change its color. Your lighting stays on around the map.';
   const say = hint(ctl);
-  const cur = () => L.strips[sel < 0 ? 0 : sel];
-  const sync = () => { sls.forEach(i => { i.value = cur()[i.dataset.k]; i.nextElementSibling.textContent = i.value; }); ctl.querySelectorAll('[data-pre]').forEach(b => b.setAttribute('aria-pressed', String(L.pre === +b.dataset.pre))); };
+  const cur = () => L.strips[0];
+  const sync = () => { ctl.querySelectorAll('[data-pre]').forEach(b => b.setAttribute('aria-pressed', String(L.pre === +b.dataset.pre))); };
   const set = (s, v) => Object.assign(s, {r: v[0], g: v[1], b: v[2], w: v[3]});
   const fill = v => { L.strips.forEach(s => set(s, v)); L.mode = 'static'; };
   const grad = a => { a.forEach((v, i) => set(L.strips[i], v)); L.mode = 'static'; };
@@ -56,21 +55,25 @@ M.led = (host, ctl, X) => {
     6: () => { fill([255, 255, 255, 0]); L.mode = 'rainbow'; }, 7: () => { fill([255, 255, 255, 0]); L.mode = 'chase'; }};
   function shades() {
     const max = L.mode === 'static' && L.strips.every(s => s.r === 255 && s.g === 255 && s.b === 255 && s.w === 255);
-    if (max && !X.state.shades) { X.state.shades = true; say('Everything at 255. Sunglasses on.', base()); }
+    if (max && !X.state.shades) { X.state.shades = true; say('All six at full white. Sunglasses on.', base()); }
     else if (!max) X.state.shades = false;
   }
   function preset(n) {
     PRE[n](); L.pre = n; L.touched = true; X.tone(300 + n * 60, .07, 'square', .03);
     seq.push(n); seq = seq.slice(-7);
     if (seq.join('') === '1234567') { L.strips.forEach((s, i) => set(s, i % 2 ? [233, 160, 110, 0] : [255, 236, 214, 40])); L.mode = 'static'; L.pre = 'moe'; X.meow(); say('Secret preset unlocked: Moe.', base()); seq = []; }
-    else say(n ? `Preset ${n}: ${NAMES[n]}. It stays on around the map.` : 'Lights off.', base());
+    else say(n ? `Preset ${n}: ${NAMES[n]}.` : 'Lights off.', base());
     shades(); sync();
   }
-  sls.forEach(i => i.addEventListener('input', () => { const k = i.dataset.k, v = +i.value; (sel < 0 ? L.strips : [L.strips[sel]]).forEach(s => { s[k] = v; }); i.nextElementSibling.textContent = v; L.mode = 'static'; L.pre = 'custom'; L.touched = true; shades(); ctl.querySelectorAll('[data-pre]').forEach(b => b.setAttribute('aria-pressed', 'false')); }));
+  function strip(i) {
+    const s = L.strips[i]; if (L.mode !== 'static') fill([255, 255, 255, 0]);
+    const at = SW.findIndex(v => v[0] === s.r && v[1] === s.g && v[2] === s.b && v[3] === s.w); set(s, SW[(at + 1) % SW.length]);
+    L.pre = 'custom'; L.touched = true; X.tone(500 + i * 70, .04, 'triangle', .03); shades(); sync();
+  }
   ctl.querySelectorAll('[data-pre]').forEach(b => b.addEventListener('click', () => preset(+b.dataset.pre)));
   cv.addEventListener('pointerdown', e => {
     const p = pt(e);
-    if (p.x > 80) { const i = [0, 1, 2, 3, 4, 5].find(k => Math.abs(p.y - SY(k)) < 6.5); if (i != null) { sel = sel === i ? -1 : i; X.tone(560, .04, 'triangle', .03); sync(); say(base()); } return; }
+    if (p.x > 80) { const i = [0, 1, 2, 3, 4, 5].find(k => Math.abs(p.y - SY(k)) < 6.5); if (i != null) strip(i); return; }
     if (p.x >= 27 && p.x <= 37 && p.y >= 21 && p.y < 21 + 7 * 10) { preset(Math.min(7, Math.floor((p.y - 21) / 10) + 1)); return; }
     if (p.x > 38 && p.x < 70 && p.y > 22 && p.y < 66) preset(typeof L.pre === 'number' && L.pre >= 1 && L.pre < 7 ? L.pre + 1 : 1);
   });
@@ -159,7 +162,7 @@ M.cell = (host, ctl, X) => {
   const bez = (e, u) => { const x0 = e.hx, y0 = e.hy, x3 = e.x, y3 = e.y, x1 = x0 + 22, y1 = y0 + 4, x2 = x3 - (x3 > x0 ? 18 : -10), y2 = y3 + 14, m = 1 - u; return [m * m * m * x0 + 3 * m * m * u * x1 + 3 * m * u * u * x2 + u * u * u * x3, m * m * m * y0 + 3 * m * m * u * y1 + 3 * m * u * u * y2 + u * u * u * y3]; };
   const stop = loop((dt, now) => {
     t += dt;
-    if (E.red.att && E.black.att && !powered) { charge = Math.min(1, charge + dt / 1.6); if (charge >= 1) { powered = true; X.state.cells = true; X.chime(); say(base()); } }
+    if (E.red.att && E.black.att && !powered) { charge = Math.min(1, charge + dt / .9); if (charge >= 1) { powered = true; X.state.cells = true; X.chime(); say(base()); } }
     P(0, 0, W, H, '#e8edf1'); P(0, 96, W, 14, '#d3dadf'); P(0, 96, W, 1, '#bfc8ce');
     // a plain old power supply: silver box, fan grille, switch, output posts
     const pulse = powered && !X.reduce ? .85 + .15 * Math.sin(now / 300) : 1;
@@ -286,6 +289,8 @@ M.lock = (host, ctl, X) => {
   const base = 'Tap the keypad on the door.';
   say(base);
   let st = 'locked', bolt = 1, door = 0, beepT = 0, taps = [], opens = 0, touched = false, lastS = '';
+  const mo = X.state.moeOut ? {ph: 'play', x: 134, t: 0, dir: 1, hop: 0} : {ph: 'in', x: 0, t: 0, dir: -1, hop: 0};
+  const ob = document.createElement('canvas'); ob.width = 24; ob.height = 20; const oc = ob.getContext('2d');
   const buf = document.createElement('canvas'); buf.width = 24; buf.height = 20; const bc = buf.getContext('2d');
   // door geometry: big, centered
   const DX = 44, DY = 8, DW = 72, DH = 84, KX = DX + DW - 20, KY = DY + 34;
@@ -303,15 +308,21 @@ M.lock = (host, ctl, X) => {
   });
   const stop = loop((dt, now) => {
     beepT = Math.max(0, beepT - dt);
-    if (st === 'unlocking') { if (bolt > 0) bolt = Math.max(0, bolt - dt / .3); else { door = Math.min(1, door + dt / (X.reduce ? .2 : .8)); if (door >= 1) { st = 'open'; opens++; btn.disabled = false; btn.textContent = 'Close and lock'; if (opens === 1) X.meow(); say(opens === 1 ? 'Unlocked. Moe was waiting inside.' : 'Unlocked. Tap the door to close and lock it.'); } } }
+    if (st === 'unlocking') { if (bolt > 0) bolt = Math.max(0, bolt - dt / .3); else { door = Math.min(1, door + dt / (X.reduce ? .2 : .8)); if (door >= 1) { st = 'open'; opens++; btn.disabled = false; btn.textContent = 'Close and lock'; if (mo.ph === 'in') { mo.ph = 'heart'; mo.t = 0; X.meow(); say('Unlocked. Moe says hi… and he’s off to play.'); } else say('Unlocked. Tap the door to close and lock it.'); } } }
     if (st === 'closing') { if (door > 0) door = Math.max(0, door - dt / (X.reduce ? .2 : .6)); else { bolt = Math.min(1, bolt + dt / .25); if (bolt >= 1) { st = 'locked'; btn.disabled = false; btn.textContent = 'Unlock'; X.tone(130, .08, 'square', .05); say('Locked. The bolt is thrown.', base); } } }
+    mo.t += dt;
+    if (mo.ph === 'heart' && mo.t > .9) { mo.ph = 'walk'; mo.t = 0; }
+    if (mo.ph === 'walk' && mo.t > 1.2) { mo.ph = 'play'; mo.t = 0; X.state.moeOut = true; mo.x = 134; }
+    const yarnX = 132 + Math.sin(mo.t * 1.7) * 13, yarnY = DY + DH - 3;
+    if (mo.ph === 'play') { const nx = mo.x + (yarnX - 8 - mo.x) * Math.min(1, dt * 3); mo.dir = nx > mo.x + .05 ? 1 : nx < mo.x - .05 ? -1 : mo.dir; mo.x = nx; mo.hop = Math.max(0, Math.sin(mo.t * 3.4)) * 4; }
     // wall, frame, step
     P(0, 0, W, H, '#dfe6ea'); for (let y = 5; y < H; y += 6) P(0, y, W, 1, '#ccd5db');
     P(DX - 6, DY - 6, DW + 12, DH + 6, '#2c3035'); P(DX - 10, DY + DH, DW + 20, 4, '#b9c3c9'); P(0, DY + DH + 4, W, H, '#a8b3ba');
     // inside: warm room, lamp, Moe
     P(DX, DY, DW, DH, '#f3d9a8'); P(DX, DY + DH - 16, DW, 16, '#c99a6b'); for (let x = DX; x < DX + DW; x += 9) P(x, DY + DH - 16, 1, 16, '#b48654');
     P(DX + 8, DY + DH - 10, 52, 5, '#7f9cb3'); P(DX + DW - 18, DY + 14, 2, 30, '#7a5232'); P(DX + DW - 23, DY + 10, 12, 6, '#fff3c4');
-    bc.clearRect(0, 0, 24, 20); X.moeSprite(bc, 4, 3, Math.floor(now / 500) % 2); c.drawImage(buf, 0, 0, 24, 20, DX + 6, DY + DH - 50, 48, 40);
+    if (mo.ph === 'in' || mo.ph === 'heart') { bc.clearRect(0, 0, 24, 20); X.moeSprite(bc, 4, 3, Math.floor(now / 500) % 2); c.drawImage(buf, 0, 0, 24, 20, DX + 6, DY + DH - 50, 48, 40); }
+    if (mo.ph === 'heart') { const hy = DY + DH - 56 - mo.t * 10; P(DX + 26, hy, 3, 3, '#e9483c'); P(DX + 31, hy, 3, 3, '#e9483c'); P(DX + 26, hy + 2, 8, 3, '#e9483c'); P(DX + 28, hy + 5, 4, 2, '#e9483c'); }
     if (door > 0) { c.globalCompositeOperation = 'lighter'; glow(c, DX + DW / 2, DY + 40, 60, '255,196,120', .3 * door); c.globalCompositeOperation = 'source-over'; }
     // the door swings on its left hinge
     const dw = Math.max(5, Math.round(DW * Math.cos(door * 1.42)));
@@ -328,6 +339,16 @@ M.lock = (host, ctl, X) => {
     }
     // the bolt, crossing the gap into the frame when locked
     if (door === 0) { const bl = Math.round(9 * bolt); P(DX + DW - 2, KY + 26, 2 + bl, 4, '#c9d1d8'); P(DX + DW - 2, KY + 26, 2 + bl, 1, '#eef2f5'); }
+    // Moe outside: trots out the door, then chases his yarn
+    if (mo.ph === 'walk' || mo.ph === 'play') {
+      let x, y, sz;
+      if (mo.ph === 'walk') { const u = ease(Math.min(1, mo.t / 1.2)); x = DX + 6 + (134 - DX - 6) * u; y = DY + DH - 50 + 22 * u; sz = 48 - 18 * u; mo.dir = 1; }
+      else { x = mo.x; y = DY + DH - 28 - mo.hop; sz = 30; }
+      oc.clearRect(0, 0, 24, 20); X.moeSprite(oc, 4, 3, Math.floor(now / 160) % 2);
+      P(x + 4, DY + DH - 2, sz * .6, 2, 'rgba(0,0,0,.12)');
+      c.save(); if (mo.dir > 0) { c.translate(x + sz, 0); c.scale(-1, 1); c.drawImage(ob, 0, 0, 24, 20, 0, y, sz, sz * .83); } else c.drawImage(ob, 0, 0, 24, 20, x, y, sz, sz * .83); c.restore();
+      if (mo.ph === 'play') { c.fillStyle = '#e98aa6'; c.beginPath(); c.arc(yarnX, yarnY, 3.2, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#c96a88'; c.lineWidth = .6; c.beginPath(); c.arc(yarnX, yarnY, 2, mo.t * 4, mo.t * 4 + 2.5); c.stroke(); c.beginPath(); c.moveTo(yarnX - 3, yarnY + 2); c.quadraticCurveTo(yarnX - 9, yarnY + 3, yarnX - 14, yarnY + 1); c.stroke(); }
+    }
     if (st === 'locked' && !touched && !X.reduce) cue(c, P, DX + DW - 14, KY + 11, 'Tap', now, X.reduce);
     const ss = st === 'locked' ? 'Locked' : st === 'open' ? 'Unlocked' : st === 'unlocking' ? 'Unlocking…' : 'Locking…';
     if (ss !== lastS) { stat.textContent = ss; stat.dataset.state = st; lastS = ss; }
@@ -342,7 +363,7 @@ M.dash = (host, ctl, X) => {
   ctl.innerHTML = `<div class="w-actions"><button type="button" class="w-alt" data-brake>Brake</button><button type="button" class="w-alt" data-cam>Cabin camera</button></div><p class="w-hint" aria-live="polite"></p>`;
   const say = hint(ctl), bb = ctl.querySelector('[data-brake]'), cb = ctl.querySelector('[data-cam]');
   let cam = 0, t = 0, pos = 0, spd = 62, brakeT = 0, stopT = 0, look = 'up', saved = 0, hits = 0, touched = false;
-  let goose = null, gooseT = 3;
+  let goose = null, gooseT = 2, feathers = [];
   const base = () => cam ? (X.touch ? 'Drag low on the picture and she checks her phone. Drag high and she watches the road.' : 'Move your mouse low on the picture and she checks her phone. Move it up and she watches the road.') : 'Watch for geese. Tap the road to brake.';
   const sync = () => { cb.textContent = cam ? 'Front camera' : 'Cabin camera'; bb.hidden = !!cam; };
   const brake = () => { if (cam) return; touched = true; brakeT = 1.6; if (goose && goose.mood === 'walk') goose.braked = true; X.tone(220, .12, 'sawtooth', .02, 120); };
@@ -378,9 +399,10 @@ M.dash = (host, ctl, X) => {
       if (!band && d > 2) F(100 - d * .03, y, Math.max(.8, d * .06), 1, '#f4f2e4');
     }
     const draw = trees.map(o => [o.z, () => { const d = 150 / o.z, y = HOR + d, x = 100 + o.side * (half(d) + d * .9), h = d * .9; F(x - d * .04, y - h * .45, Math.max(.8, d * .08), h * .45, '#6b4a35'); c.fillStyle = '#4f9150'; c.beginPath(); c.arc(x, y - h * .62, Math.max(1, d * .32), 0, Math.PI * 2); c.fill(); }]);
-    if (goose) draw.push([goose.z, () => { const d = 150 / goose.z, y = HOR + d, x = 100 + goose.gx * half(d), k = Math.max(.4, d / 15); gooseAt(x, y, k, goose.mood, now);
+    if (goose) draw.push([goose.z, () => { const d = 150 / goose.z, y = HOR + d - goose.lift * Math.max(.4, d / 15), x = 100 + goose.gx * half(d), k = Math.max(.4, d / 15); if (goose.mood === 'hit') { c.save(); c.translate(x, y - 6 * k); c.rotate(goose.rot); gooseAt(0, 6 * k, k, 'walk', now); c.restore(); } else gooseAt(x, y, k, goose.mood, now);
       if (goose.mood === 'walk') { box(x - 10 * k, y - 20 * k, 22 * k, 21 * k, '#4cff7a', 'GOOSE'); } }]);
     draw.sort((a, b) => b[0] - a[0]).forEach(q => q[1]());
+    feathers = feathers.filter(f => (f.l -= 1 / 60) > 0); feathers.forEach(f => { f.vy += 40 / 60; f.vx *= .98; f.x += f.vx / 60; f.y += f.vy / 60; f.a += .15; c.save(); c.translate(f.x, f.y); c.rotate(f.a); F(-1.5, -.5, 3, 1, f.col); c.restore(); });
     // hood of the car
     c.fillStyle = '#23262b'; c.beginPath(); c.moveTo(0, H); c.lineTo(30, H - 9); c.quadraticCurveTo(100, H - 14, 170, H - 9); c.lineTo(W, H); c.fill();
     if (goose && goose.mood === 'walk' && goose.z < 30 && !touched) cue(c, P, 100, HOR + 44, 'Tap to brake', now, X.reduce);
@@ -407,19 +429,22 @@ M.dash = (host, ctl, X) => {
     t += dt; brakeT = Math.max(0, brakeT - dt); stopT = Math.max(0, stopT - dt);
     const want = brakeT > 0 || stopT > 0 ? 0 : 62;
     spd += (want - spd) * Math.min(1, dt * (want ? 1.2 : 3.2));
-    pos += spd * dt * .03;
-    trees.forEach(o => { o.z -= spd * dt * .05; if (o.z < 1.6) o.z += 42; });
-    if (!goose) { gooseT -= dt; if (gooseT <= 0) { goose = {z: 24, gx: -1.6, mood: 'walk', t: 0, braked: false}; if (!cam) X.tone(1200, .05, 'square', .02); } }
+    const zs = spd * dt * .13; pos += spd * dt * .075;
+    trees.forEach(o => { o.z -= zs; if (o.z < 1.6) o.z += 42; });
+    if (!goose) { gooseT -= dt; if (gooseT <= 0) { goose = {z: 40, gx: -1.5, mood: 'walk', t: 0, braked: false, lift: 0, rot: 0}; if (!cam) X.tone(1200, .05, 'square', .02); } }
     else {
-      goose.t += dt; goose.z -= spd * dt * .05;
+      goose.t += dt; goose.z -= zs;
       if (goose.mood === 'walk') {
-        goose.gx += dt * .3 * (spd < 5 ? 2.2 : 1);
+        goose.gx += dt * .5 * (spd < 5 ? 1.8 : 1);
         if (goose.braked && goose.gx < 1.2) brakeT = Math.max(brakeT, .3);
         if (goose.gx > 1.7) { if (goose.braked) { goose.mood = 'happy'; goose.t = 0; saved++; X.tone(700, .1, 'triangle', .04, 900); say(saved === 1 ? 'You stopped. The goose made it across and says thanks.' : `Goose saved. That’s ${saved}.`, base()); } else goose.mood = 'gone'; }
-        else if (goose.z < 2.6 && Math.abs(goose.gx) < 1.05) { goose.mood = 'sad'; goose.gx = 1.3; goose.z = 7; goose.t = 0; stopT = 2.4; hits++; X.tone(160, .25, 'sawtooth', .04, 90); say('Bonk. The goose is okay, just very sad. Tap the road to brake next time.', base()); }
+        else if (goose.z < 3 && Math.abs(goose.gx) < 1.05) { goose.mood = 'hit'; goose.t = 0; goose.hz = goose.z; goose.hx = goose.gx; stopT = 2.6; hits++; X.tone(160, .25, 'sawtooth', .04, 90);
+          const d = 150 / goose.z, sx = 100 + goose.gx * half(d), sy = HOR + d - 8; for (let n = 0; n < 22; n++) feathers.push({x: sx, y: sy, vx: (Math.random() - .3) * 70, vy: -20 - Math.random() * 50, l: 1.4 + Math.random() * .8, col: n % 3 ? '#f1ece4' : '#8a6a4a', a: Math.random() * 6});
+          say('Bonk. The goose is okay, just very sad. Tap the road to brake next time.', base()); }
       }
-      if (goose.mood === 'happy' || goose.mood === 'sad') { if (goose.mood === 'sad') goose.z = 7; if (goose.t > 2.4) goose.mood = 'gone'; }
-      if (goose.mood === 'gone' && goose.z < 1.5 || goose.z < .8) { goose = null; gooseT = 4 + Math.random() * 4; }
+      if (goose.mood === 'hit') { const u = Math.min(1, goose.t / .7); goose.z = goose.hz + 5 * u; goose.gx = goose.hx + (1.45 - goose.hx) * u; goose.lift = Math.sin(u * Math.PI) * 16; goose.rot = u * Math.PI * 2; if (u >= 1) { goose.mood = 'sad'; goose.t = 0; goose.lift = 0; goose.rot = 0; X.tone(110, .1, 'square', .04); } }
+      if (goose.mood === 'happy' || goose.mood === 'sad') { if (goose.mood === 'sad') goose.z = goose.hz + 5; if (goose.t > 2.2) goose.mood = 'gone'; }
+      if (goose.mood === 'gone' && goose.z < 1.5 || goose.z < .8) { goose = null; gooseT = 1.5 + Math.random() * 1.5; }
     }
     cv.dataset.goose = goose ? goose.mood : '';
     cam ? cabin(now) : front(now);
@@ -454,10 +479,10 @@ M.steel = (host, ctl, X) => {
   ['pointerup', 'pointercancel'].forEach(k => cv.addEventListener(k, () => hold(false)));
   sync(); say(bars ? `${bars} bar${bars > 1 ? 's' : ''} so far. Tap the scrap bucket for another.` : 'Turn scrap into steel bar. Tap the scrap bucket to charge the furnace.');
   const stop = loop((dt, now) => {
-    tt += dt; const R = X.reduce ? 3 : 1;
+    tt += dt; const R = X.reduce ? 3 : 1.6;
     if (st === 'charge') { const k = Math.min(1, tt * R / 1.2); if (k >= .7) scrap.forEach((s, i) => { s.y = Math.min(1, s.y + dt * R * (2 + i * .15)); }); if (tt * R > 1.9) { st = 'melt'; tt = 0; sync(); say('Press and hold the furnace to strike the arc. Get it to 1600 °C.'); } }
     if (st === 'melt') {
-      if (holding) { temp = Math.min(1600, temp + dt * 520); if (Math.random() < dt * 30) for (let n = 0; n < 2; n++) sparks.push({x: 58 + (Math.random() - .5) * 20, y: 78, vx: (Math.random() - .5) * 80, vy: -40 - Math.random() * 60, l: .5}); if (Math.random() < dt * 8) X.tone(55 + Math.random() * 20, .12, 'sawtooth', .025); }
+      if (holding) { temp = Math.min(1600, temp + dt * 900); if (Math.random() < dt * 30) for (let n = 0; n < 2; n++) sparks.push({x: 58 + (Math.random() - .5) * 20, y: 78, vx: (Math.random() - .5) * 80, vy: -40 - Math.random() * 60, l: .5}); if (Math.random() < dt * 8) X.tone(55 + Math.random() * 20, .12, 'sawtooth', .025); }
       else temp = Math.max(25, temp - dt * 60);
       pool = Math.max(0, Math.min(1, (temp - 1100) / 500));
       if (temp >= 1600) { st = 'tap'; tt = 0; holding = false; sync(); say('Tapping: the furnace tilts and pours into the ladle.'); }
@@ -543,17 +568,17 @@ M.mem = (host, ctl, X) => {
     t += dt;
     if (coating >= 0) { coating += dt / (X.reduce ? .4 : 1.5); if (coating >= 1) { coating = -1; coat = 1; X.state.coat = true; X.chime(); say(base()); } }
     spawnT -= dt; const leftV = parts.filter(p => p.v && !p.side).length;
-    if (spawnT <= 0 && leftV < 12 && !end) { add(true); spawnT = .6; }
+    if (spawnT <= 0 && leftV < 16 && !end) { add(true); spawnT = .3; }
     // the bucket is full: Moe comes over for a drink, and that's the end
     if (tank >= 60 && !end) { end = {phase: 'walk', x: W + 12, t: 0}; say('The bucket is full. Someone heard it…'); }
     if (end) { end.t += dt;
       if (end.phase === 'walk') { end.x -= dt * (X.reduce ? 200 : 40); if (end.x <= 168) { end.x = 168; end.phase = 'drink'; end.t = 0; X.meow(); } }
       else if (end.phase === 'drink') { tank = Math.max(18, tank - dt * 9); if (!X.reduce && Math.floor(end.t * 6) % 2 && Math.random() < .3) X.tone(900 + Math.random() * 300, .02, 'sine', .01); if (end.t > 4.5) { end.phase = 'done'; end.t = 0; X.chime(); say('Moe had a drink and he’s happy. All done. Reset to play again.'); } } }
     parts.forEach(p => {
-      if (p.side) { p.vy = Math.min(26, p.vy + 30 * dt); p.vx *= .97; p.x += p.vx * dt; p.y += p.vy * dt; if (p.y > 96 - 12 * tank / 60) { p.dead = true; if (!end) tank = Math.min(60, tank + 3); } return; }
+      if (p.side) { p.vy = Math.min(26, p.vy + 30 * dt); p.vx *= .97; p.x += p.vx * dt; p.y += p.vy * dt; if (p.y > 96 - 12 * tank / 60) { p.dead = true; if (!end) tank = Math.min(60, tank + 6); } return; }
       p.x += p.vx * dt; p.y += p.vy * dt;
       if (p.x < 6) { p.x = 6; p.vx = Math.abs(p.vx); } if (p.y < TOP + 2) { p.y = TOP + 2; p.vy = Math.abs(p.vy); } if (p.y > BOT - 2) { p.y = BOT - 2; p.vy = -Math.abs(p.vy); }
-      if (p.x > MX - 5) { if (p.v && coat && Math.random() < .8) { p.side = 1; p.x = MX + 6; p.vx = 22 + Math.random() * 26; p.vy = (Math.random() - .5) * 8; X.tone(1400 + Math.random() * 500, .02, 'sine', .008); } else { p.x = MX - 5; p.vx = -Math.abs(p.vx); } }
+      if (p.x > MX - 5) { if (p.v && coat && Math.random() < .92) { p.side = 1; p.x = MX + 6; p.vx = 22 + Math.random() * 26; p.vy = (Math.random() - .5) * 8; X.tone(1400 + Math.random() * 500, .02, 'sine', .008); } else { p.x = MX - 5; p.vx = -Math.abs(p.vx); } }
     });
     for (let i = parts.length - 1; i >= 0; i--) if (parts[i].dead) parts.splice(i, 1);
     const target = 38 + 32 * Math.min(1, parts.filter(p => p.v && !p.side).length / 14); rh += (target - rh) * Math.min(1, dt * .7);
@@ -653,6 +678,86 @@ M.toy = (host, ctl, X) => {
     text(c, 'GOALS ' + goals, 4, 4, '#1f2126');
     if (winding && pw >= 1) text(c, 'FULLY WOUND', 41, 104, '#1f2126', 1, 'c');
     if (!wound && !ball.live && !kick) cue(c, P, 41, 78, 'Hold', now, X.reduce);
+  });
+  return {stop};
+};
+
+
+/* ---------- Waterloo: FrostBot, icing a cupcake ---------- */
+M.cake = (host, ctl, X) => {
+  const W = 160, H = 96, {cv, c, P} = make(host, W, H, '#f3ebe0');
+  const F = (x, y, w, h, k) => { c.fillStyle = k; c.fillRect(x, y, w, h); };
+  ctl.innerHTML = `<div class="w-actions"><button type="button" class="w-alt" data-ice>Hold to ice</button><span class="w-stat"></span></div><p class="w-hint" aria-live="polite"></p>`;
+  const say = hint(ctl), btn = ctl.querySelector('[data-ice]'), stat = ctl.querySelector('.w-stat');
+  const base = 'Press and hold the piston to pipe icing. Let go once the cupcake is iced all the way around.';
+  const N = 48, REV = 2.6, CX = 80, TY = 62, RX = 27, RY = 7;
+  let rot = 0, holding = false, used = false, done = false, cov, spills, drips, best = X.state.cakeBest || 0, tries = X.state.cakeTries || 0, moe = 0, swap = 0;
+  const reset = () => { cov = new Float32Array(N); spills = 0; drips = []; done = false; used = false; };
+  reset(); say(base);
+  const mb = document.createElement('canvas'); mb.width = 24; mb.height = 20; const mbc = mb.getContext('2d');
+  function finish() {
+    const covered = cov.filter(v => v >= .55).length / N, acc = Math.max(0, Math.min(100, Math.round(covered * 100 - spills * 1.5)));
+    done = true; tries++; X.state.cakeTries = tries; if (acc > best) { best = acc; X.state.cakeBest = best; }
+    stat.textContent = `Accuracy ${acc}% · Best ${best}%`;
+    if (acc >= 98) { moe = 3.5; X.meow(); X.chime(); say(`${acc}%. That beats FrostBot’s 98%. Moe approves. Tap for another cupcake.`); }
+    else if (covered < .9) say(`${acc}%. Some bare spots. Hold a little longer next time. Tap for another cupcake.`);
+    else if (spills) say(`${acc}%. It spilled over the edge. Let go a little sooner. Tap for another cupcake.`);
+    else say(`${acc}%. FrostBot hit 98% over 100 trials. Tap for another cupcake.`);
+    X.tone(acc >= 90 ? 880 : 520, .12, 'triangle', .04);
+  }
+  const press = () => { if (done) { swap = 1; reset(); say(base); return; } if (swap > .2) return; holding = true; used = true; X.tone(300, .08, 'triangle', .03); };
+  const release = () => { if (!holding) return; holding = false; if (cov.some(v => v > .05)) finish(); };
+  cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); press(); });
+  ['pointerup', 'pointercancel'].forEach(k => cv.addEventListener(k, release));
+  btn.addEventListener('pointerdown', e => { e.preventDefault(); press(); });
+  ['pointerup', 'pointerleave', 'pointercancel'].forEach(k => btn.addEventListener(k, release));
+  btn.addEventListener('keydown', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); if (!e.repeat) press(); } });
+  btn.addEventListener('keyup', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); release(); } });
+  stat.textContent = best ? `Best ${best}%` : 'FrostBot: 98%';
+  const stop = loop((dt, now) => {
+    const sp = Math.PI * 2 / REV; rot = (rot + sp * dt) % (Math.PI * 2); swap = Math.max(0, swap - dt * 4); moe = Math.max(0, moe - dt);
+    // the nozzle sits over the front of the cupcake; the bin under it gets icing, spread to its neighbours
+    if (holding && !done) {
+      const a = ((Math.PI / 2 - rot) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2), i = Math.floor(a / (Math.PI * 2) * N) % N, r = N / REV;
+      cov[i] += r * dt; if (cov[i] > 1.6 && !(cov[i] - r * dt > 1.6)) { spills++; drips.push({i, y: 0, v: 0}); X.tone(140, .08, 'sine', .03); }
+    }
+    F(0, 0, W, H, '#f3ebe0'); F(0, 0, W, 4, '#ebe1d3');
+    // table, turntable
+    F(0, 86, W, 10, '#c79a62'); F(0, 86, W, 1, '#d9b07a');
+    c.fillStyle = '#9aa4ab'; c.beginPath(); c.ellipse(CX, 84, 38, 7, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#c3ccd1'; c.beginPath(); c.ellipse(CX, 83, 38, 7, 0, 0, Math.PI * 2); c.fill();
+    for (let k = 0; k < 8; k++) { const a = rot + k * Math.PI / 4; if (Math.sin(a) > 0) F(CX + Math.cos(a) * 35 - .5, 83 + Math.sin(a) * 6 - .5, 1.4, 1.4, '#8a949c'); }
+    // spilled icing on the plate
+    drips.forEach(d => { const a = d.i / N * Math.PI * 2 + rot; d.v += 60 * dt; d.y = Math.min(20, d.y + d.v * dt); if (Math.sin(a) > -.2) { const x = CX + Math.cos(a) * (RX + 2), y = TY + Math.sin(a) * RY + d.y; c.fillStyle = '#fff4ea'; c.beginPath(); c.ellipse(x, Math.min(y, 82 + Math.sin(a) * 3), 2.4, d.y >= 20 ? 1.4 : 2, 0, 0, Math.PI * 2); c.fill(); } });
+    // the cupcake slides in fresh after each try
+    c.save(); c.globalAlpha = 1 - swap;
+    // paper liner with pleats that turn with it
+    c.fillStyle = '#f2a7bd'; c.beginPath(); c.moveTo(CX - 22, 81); c.lineTo(CX - RX - 1, TY); c.lineTo(CX + RX + 1, TY); c.lineTo(CX + 22, 81); c.closePath(); c.fill();
+    c.fillStyle = '#e58ea8'; c.beginPath(); c.ellipse(CX, 81, 22, 4, 0, 0, Math.PI); c.fill();
+    for (let k = 0; k < 14; k++) { const a = rot + k * Math.PI * 2 / 14; if (Math.sin(a) <= 0) continue; const tx = CX + Math.cos(a) * (RX + 1), bx = CX + Math.cos(a) * 22; c.strokeStyle = 'rgba(160,60,90,.35)'; c.lineWidth = .8; c.beginPath(); c.moveTo(tx, TY + Math.sin(a) * 2); c.lineTo(bx, 81 + Math.sin(a) * 3); c.stroke(); }
+    // cake top
+    c.fillStyle = '#b5774a'; c.beginPath(); c.ellipse(CX, TY, RX + 1, RY + 1, 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = '#c98a5a'; c.beginPath(); c.ellipse(CX, TY - 2, RX - 2, RY - 1, 0, 0, Math.PI * 2); c.fill();
+    // icing blobs, back to front
+    const blobs = []; for (let i = 0; i < N; i++) { if (cov[i] < .05) continue; const a = i / N * Math.PI * 2 + rot; blobs.push([Math.sin(a), i, a, RX - 4]); blobs.push([Math.sin(a) - .01, i, a + .3, RX - 13]); }
+    const mean = cov.reduce((q, v) => q + Math.min(1, v), 0) / N; if (mean > .15) { c.fillStyle = `rgba(255,246,238,${Math.min(1, mean * 1.2)})`; c.beginPath(); c.ellipse(CX, TY - 4 - mean * 2, RX - 12, RY - 3, 0, 0, Math.PI * 2); c.fill(); }
+    blobs.sort((p, q) => p[0] - q[0]).forEach(([sa, i, a, rr]) => { const v = Math.min(1.7, cov[i]), x = CX + Math.cos(a) * rr, y = TY - 2 + Math.sin(a) * (RY - 1) * rr / (RX - 4) - v * (rr < RX - 6 ? 6 : 4), r = 2.2 + Math.min(1, v) * 2.4;
+      c.fillStyle = v > 1.6 ? '#ffe9de' : '#fff6ee'; c.beginPath(); c.ellipse(x, y, r, r * .8, 0, 0, Math.PI * 2); c.fill(); c.fillStyle = 'rgba(220,170,190,.55)'; c.beginPath(); c.ellipse(x + .6, y + r * .45, r * .8, r * .3, 0, 0, Math.PI * 2); c.fill();
+      if (i % 4 === 0 && v > .55) F(x - .6, y - r * .4, 1, 1, ['#e35d50', '#5b8ee6', '#f2c14e', '#47a668'][i % 16 / 4 | 0]); });
+    if (done && cov.filter(v => v >= .55).length === N && spills === 0 && moe > 0 || (done && best >= 98 && moe > 0)) { F(CX - 1, TY - 18, 2, 8, '#5b8ee6'); c.fillStyle = '#ffcf5a'; c.beginPath(); c.ellipse(CX, TY - 20, 1.6, 2.6, 0, 0, Math.PI * 2); c.fill(); c.globalCompositeOperation = 'lighter'; glow(c, CX, TY - 20, 8, '255,200,90', .5); c.globalCompositeOperation = 'source-over'; }
+    c.restore();
+    // FrostBot's piston: grey beam, cylinder, nozzle (fixed)
+    F(26, 5, 112, 6, '#8e959c'); for (let x = 30; x < 136; x += 6) { c.fillStyle = '#6f767d'; c.beginPath(); c.arc(x + 1, 8, 1.2, 0, Math.PI * 2); c.fill(); }
+    F(130, 11, 6, 76, '#8e959c'); for (let y = 16; y < 84; y += 6) { c.fillStyle = '#6f767d'; c.beginPath(); c.arc(133, y, 1.2, 0, Math.PI * 2); c.fill(); }
+    F(CX - 7, 11, 14, 4, '#6f767d');
+    const push = holding ? 3 : 0;
+    F(CX - 1.5, 12, 3, 6 + push, '#c9ced3');
+    F(CX - 6, 18 + push, 12, 18, '#e8ecef'); F(CX - 6, 18 + push, 12, 2, '#ffffff'); F(CX + 4, 18 + push, 2, 18, '#c9ced3');
+    F(CX - 4, 22 + push, 8, 11, 'rgba(255,246,238,.9)');
+    c.fillStyle = '#9aa4ab'; c.beginPath(); c.moveTo(CX - 6, 36 + push); c.lineTo(CX + 6, 36 + push); c.lineTo(CX + 1.5, 44 + push); c.lineTo(CX - 1.5, 44 + push); c.fill();
+    if (holding && !done) { const ty = TY + RY - 6; F(CX - 1.2, 44 + push, 2.4, ty - 44 - push, '#fff6ee'); }
+    if (!used && !done) cue(c, P, CX, 28, 'Hold', now, X.reduce);
+    if (moe > 0) { mbc.clearRect(0, 0, 24, 20); X.moeSprite(mbc, 4, 3, Math.floor(now / 300) % 2); const k = Math.min(1, moe, 3.5 - moe + .001); c.drawImage(mb, 0, 0, 24, 20, W - 40 * k, 58, 36, 30); }
   });
   return {stop};
 };

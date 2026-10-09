@@ -29,7 +29,7 @@ for (let i = 0; i < MW * MH; i++) if (tiles[i] === T.OCEAN) block[i] = 1;
 const RES = 'resume.pdf';
 const L = [
   {id: 'waterloo', label: 'Waterloo', yr: '2022', tx: 2, ty: 16, w: 5, h: 4, spot: [4, 20], kind: 'school', tour: 1,
-   card: {title: 'University of Waterloo', meta: 'Mechanical Engineering · started Fall 2022', mini: 'toy', proj: 'waterloo/toy', blurb: ['Where it started. My first build was a wind-up soccer toy for ME100: a cam and follower that kicks a ping-pong ball.']}},
+   card: {title: 'University of Waterloo', meta: 'Mechanical Engineering · started Fall 2022', mini: 'toy', proj: 'waterloo/toy', tabs: [['toy', 'ME100 · Wind-up toy', 'waterloo/toy'], ['cake', 'ME101 · FrostBot', 'waterloo']], blurb: ['Where it started: a wind-up soccer toy for ME100, then FrostBot, a cake-icing robot, for ME101.']}},
   {id: 'evercloak', label: 'Evercloak', yr: '2023', tx: 8, ty: 13, w: 4, h: 3, spot: [10, 16], kind: 'office', tour: 2,
    card: {title: 'Evercloak Inc.', meta: 'Mechanical Engineering Co-op · Kitchener · Winter 2023', mini: 'mem', blurb: ['My first co-op. I designed a prototype dehumidifier enclosure and tested membrane materials for it.']}},
   {id: 'valbruna', label: 'Valbruna', yr: '2023', tx: 13, ty: 8, w: 5, h: 4, spot: [15, 12], kind: 'factory', tour: 3,
@@ -572,7 +572,7 @@ function ledCard() {
 }
 /* mini experiences live in minis.js, loaded once the game opens */
 let minisP = null, miniInst = null;
-function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=4'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
+function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=6'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
 const MCTX = {reduce, get touch() { return touch; }, led, ledColor, state: WSTATE, girl, moeSprite,
   tone: (...a) => window.__tone && window.__tone(...a), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
 function stopMini() { if (miniInst) { try { miniInst.stop(); } catch (e) {} miniInst = null; } }
@@ -596,7 +596,7 @@ function miniCard(id, c) {
   const more = c.proj ? `<button type="button" class="w-more" data-proj="${c.proj}">${esc(c.more || 'Read the full story')}${touch ? '' : ' <span class="w-key">E</span>'}</button>` : '';
   card.innerHTML = `<div class="w-card-in has-mini" role="dialog" aria-labelledby="w-card-title"><button type="button" class="w-close" aria-label="Close">✕</button>
     <h2 id="w-card-title">${esc(c.title)}</h2><p class="w-meta">${esc(c.meta)}</p>${(c.blurb || []).map(b => `<p class="w-blurb">${esc(b)}</p>`).join('')}
-    <div class="w-mini" data-mini="${c.mini}"></div>${c.img ? `<img class="w-img w-photo" hidden src="${c.img}" alt="${esc(c.imgAlt || '')}">` : ''}
+    ${c.tabs ? `<div class="w-tabs" role="tablist">${c.tabs.map(([k, lab], i) => `<button type="button" role="tab" class="w-tab" data-tab="${k}" aria-selected="${i === 0}">${esc(lab)}</button>`).join('')}</div>` : ''}<div class="w-mini" data-mini="${c.mini}"></div>${c.img ? `<img class="w-img w-photo" hidden src="${c.img}" alt="${esc(c.imgAlt || '')}">` : ''}
     <div class="w-ctl"></div>
     ${c.img || more ? `<div class="w-actions w-foot">${c.img ? `<button type="button" class="w-alt" data-photo>${esc(c.photo)}</button>` : ''}${more}</div>` : ''}</div>`;
   card.hidden = false;
@@ -606,7 +606,9 @@ function miniCard(id, c) {
   if (ph) ph.addEventListener('click', () => { const im = card.querySelector('.w-photo'), mi = card.querySelector('.w-mini'), ct = card.querySelector('.w-ctl'), show = im.hidden; im.hidden = !show; mi.hidden = ct.hidden = show; ph.textContent = show ? 'Back to the toy' : c.photo; if (show && !im.complete) im.onload = fitCard; fitCard(); });
   card.querySelector('.w-close').focus({preventScroll: true});
   const host = card.querySelector('.w-mini'), ctl = card.querySelector('.w-ctl');
-  loadMinis().then(M => { if (openId !== id || !host.isConnected || !M[c.mini]) return; miniInst = M[c.mini](host, ctl, MCTX); fitCard(); requestAnimationFrame(fitCard); }).catch(() => { ctl.innerHTML = '<p class="w-hint">This one didn’t load. Try closing and opening it again.</p>'; });
+  const startMini = (M, key) => { stopMini(); host.innerHTML = ''; ctl.innerHTML = ''; miniInst = M[key](host, ctl, MCTX); fitCard(); requestAnimationFrame(fitCard); };
+  card.querySelectorAll('.w-tab').forEach(t => t.addEventListener('click', () => { card.querySelectorAll('.w-tab').forEach(o => o.setAttribute('aria-selected', String(o === t))); const tb = c.tabs.find(x => x[0] === t.dataset.tab), mo = card.querySelector('.w-more'); if (mo && tb[2]) mo.dataset.proj = tb[2]; loadMinis().then(M => { if (openId === id && host.isConnected) startMini(M, t.dataset.tab); }); window.__sfx && window.__sfx('open'); }));
+  loadMinis().then(M => { if (openId !== id || !host.isConnected || !M[c.mini]) return; startMini(M, c.mini); }).catch(() => { ctl.innerHTML = '<p class="w-hint">This one didn’t load. Try closing and opening it again.</p>'; });
 }
 function openCard(l) {
   window.track && l && track('stop_open', {stop: l.id});
