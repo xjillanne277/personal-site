@@ -432,6 +432,7 @@ function moeNap(c, ox, oy, now) {
   P_(23, 4, 8, 5, '#e9b98a'); P_(23, 6, 3, 1, '#7a5a48'); P_(28, 6, 3, 1, '#7a5a48'); P_(26, 8, 2, 1, '#e98a9a');
   P_(0, 11, 10, 3, '#e9b98a'); P_(18, 13, 6, 2, '#e9b98a');
   if (!reduce && Math.floor(now / 1400) % 3 === 0) { P_(33, -6, 3, 1, '#ffffff'); P_(36, -10, 4, 1, '#ffffff'); }
+  if (WSTATE.hat) moeCap(P_, 26, 0, now);
 }
 function roomResize() { cvFull(); SC = Math.max(2, Math.min(6, Math.floor(Math.min(innerWidth / RMW, (innerHeight - 160) / RMH)))); VW = Math.ceil(innerWidth / SC); VH = Math.ceil(innerHeight / SC); cv.width = VW; cv.height = VH; g.imageSmoothingEnabled = false; }
 function roomCam() { const U = VH - Math.round(160 / SC); const cx = RMW <= VW ? Math.round((RMW - VW) / 2) : Math.max(0, Math.min(RMW - VW, Math.round(RP.x) - Math.round(VW / 2))); return {x: cx, y: Math.round((RMH - U) / 2) - 2}; }
@@ -543,7 +544,7 @@ function ledCard() {
 }
 /* mini experiences live in minis.js, loaded once the game opens */
 let minisP = null, miniInst = null;
-function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=2'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
+function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=3'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
 const MCTX = {reduce, get touch() { return touch; }, led, ledColor, state: WSTATE, girl, moeSprite,
   tone: (...a) => window.__tone && window.__tone(...a), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
 function stopMini() { if (miniInst) { try { miniInst.stop(); } catch (e) {} miniInst = null; } }
@@ -805,6 +806,12 @@ function cap(P, cx, y0, hw, view, now) {
   const w = reduce ? 4 : Math.round(Math.abs(Math.cos(now / 55)) * 5) + 1;
   P(cx - w, y0 - 8, w, 1, CAP.P[0]); P(cx + 1, y0 - 8, w, 1, CAP.P[1]); P(cx, y0 - 8, 1, 1, '#f6d36b');
 }
+/* a tiny cap for Moe, between his ears */
+function moeCap(P, cx, y0, now) {
+  P(cx - 1, y0 - 3, 3, 1, CAP.Y[0]); P(cx - 2, y0 - 2, 1, 1, CAP.B[0]); P(cx - 1, y0 - 2, 3, 1, CAP.Y[0]); P(cx + 2, y0 - 2, 1, 1, CAP.R[0]);
+  P(cx - 3, y0 - 1, 2, 1, CAP.B[1]); P(cx - 1, y0 - 1, 3, 1, CAP.Y[1]); P(cx + 2, y0 - 1, 2, 1, CAP.R[1]); P(cx - 3, y0, 7, 1, CAP.G[0]);
+  P(cx, y0 - 4, 1, 1, CAP.R[0]); const w = reduce ? 2 : Math.round(Math.abs(Math.cos(now / 50)) * 3) + 1; P(cx - w, y0 - 5, w, 1, CAP.P[0]); P(cx + 1, y0 - 5, w, 1, CAP.P[1]); P(cx, y0 - 5, 1, 1, '#f6d36b');
+}
 /* easter eggs from the houses, worn on the map: sunglasses (LEDs at full white) and the propeller hat */
 function gear(c, dir, now) {
   const Q = (x, y, w, h, k) => R(c, 2 + x, 10 + y, w, h, k);
@@ -849,7 +856,7 @@ function draw(now) {
     R(g, bx + 2, by + 9, 30, 3, 'rgba(20,50,90,.35)'); R(g, bx + 3, by, 26, 9, '#8a5a36'); R(g, bx, by + 1, 32, 6, '#8a5a36'); R(g, bx + 2, by + 2, 28, 4, '#b07a4a'); R(g, bx, by + 1, 32, 1, '#6b4426'); R(g, bx + 3, by + 8, 26, 1, '#5e3a20');
     const oar = Math.floor(now / 220) % 2; R(g, bx + 14, by - 2 + oar * 2, 2, 12, '#d9b483'); R(g, bx + 13, by + 9 + oar * 2, 4, 3, '#d9b483');
     if (!reduce) { const w = Math.floor(now / 120) % 3; R(g, bx - 3 - w, by + 4, 2, 1, '#cfe6f7'); R(g, bx + 34 + w, by + 4, 2, 1, '#cfe6f7'); } }
-  const sprites = [[moe.y, () => { sbc.clearRect(0, 0, 24, 38); moeSprite(sbc, 2, 3, moe.moving ? mf : 0); g.drawImage(sbuf, 0, 0, 20, 17, Math.round(moe.x - 9 * MOE_K - cam.x), Math.round(moe.y - 14 * MOE_K - cam.y), Math.round(20 * MOE_K), Math.round(17 * MOE_K)); }], [P.y, () => { sbc.clearRect(0, 0, 24, 38); girl(sbc, 2, 10, P.dir, f); gear(sbc, P.dir, now); g.drawImage(sbuf, 0, 0, 24, 38, Math.round(P.x - 12 * GIRL_K - cam.x), Math.round(P.y - 35 * GIRL_K - cam.y + bob), Math.round(24 * GIRL_K), Math.round(38 * GIRL_K)); }]].sort((a, b) => a[0] - b[0]);
+  const sprites = [[moe.y, () => { sbc.clearRect(0, 0, 24, 38); moeSprite(sbc, 2, 7, moe.moving ? mf : 0); if (WSTATE.hat) moeCap((x, y, w, h, k) => R(sbc, 2 + x, 7 + y, w, h, k), 7, -1, now); g.drawImage(sbuf, 0, 0, 20, 21, Math.round(moe.x - 9 * MOE_K - cam.x), Math.round(moe.y - 18 * MOE_K - cam.y), Math.round(20 * MOE_K), Math.round(21 * MOE_K)); }], [P.y, () => { sbc.clearRect(0, 0, 24, 38); girl(sbc, 2, 10, P.dir, f); gear(sbc, P.dir, now); g.drawImage(sbuf, 0, 0, 24, 38, Math.round(P.x - 12 * GIRL_K - cam.x), Math.round(P.y - 35 * GIRL_K - cam.y + bob), Math.round(24 * GIRL_K), Math.round(38 * GIRL_K)); }]].sort((a, b) => a[0] - b[0]);
   sprites.forEach(s => s[1]());
   if (TINT) {
     g.fillStyle = TINT; g.fillRect(0, 0, VW, VH);

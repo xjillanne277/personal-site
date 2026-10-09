@@ -183,12 +183,12 @@ M.cell = (host, ctl, X) => {
 /* ---------- Google: the propeller hat ---------- */
 M.hat = (host, ctl, X) => {
   const W = 150, H = 84, {cv, c, P} = make(host, W, H, '#cfe9f7', true);
-  ctl.innerHTML = `<div class="w-actions"><button type="button" class="w-go" data-spin>Spin it</button></div><p class="w-hint" aria-live="polite"></p>`;
-  const say = hint(ctl);
+  ctl.innerHTML = `<div class="w-actions"><button type="button" class="w-go" data-spin>Spin it</button><span class="w-stat" aria-live="off"></span></div><p class="w-hint" aria-live="polite"></p>`;
+  const say = hint(ctl), stat = ctl.querySelector('.w-stat');
   const base = 'Tap the hat to spin the propeller. Keep tapping.';
   say(base);
-  let om = 0, ang = 0, lift = 0, fly = null, flights = 0, t = 0;
-  const spin = () => { if (fly && fly.phase !== 'down') return; om = Math.min(64, om + 7.5); if (om > 14) X.state.hat = true; X.tone(240 + om * 9, .05, 'triangle', .035); };
+  let om = 0, ang = 0, lift = 0, fly = null, flights = 0, t = 0, lastStat = '';
+  const spin = () => { if (fly) return; om = Math.min(64, om + 9); if (om > 14) X.state.hat = true; X.tone(240 + om * 9, .05, 'triangle', .035); };
   cv.addEventListener('pointerdown', spin); ctl.querySelector('[data-spin]').addEventListener('click', spin);
   // "Intern", embroidered like the real hat
   const GL = {I: ['111', '010', '010', '010', '010', '010', '111'], n: ['0000', '0000', '1110', '1001', '1001', '1001', '1001'], t: ['010', '010', '111', '010', '010', '010', '011'], e: ['0000', '0000', '0110', '1001', '1111', '1000', '0111'], r: ['0000', '0000', '1011', '1100', '1000', '1000', '1000']};
@@ -212,7 +212,7 @@ M.hat = (host, ctl, X) => {
     P(cx - cw, by - 1, cw * 2, 1, 'rgba(0,0,0,.12)');
     // bill: sticks out in front only, seen from a little above, with the colored stitching
     const brx = 39, bry = 17, bcy = by - 3;
-    const bf = y => .62 + .38 * Math.min(1, y / (bry * .4));
+    const bf = y => .93 + .07 * Math.min(1, y / (bry * .4));
     for (let y = 0; y <= bry; y++) { const w = Math.round(brx * bf(y) * Math.sqrt(1 - (y / bry) ** 2)); P(cx - w, bcy + y, w * 2, 1, y > bry - 2 ? GRN[2] : y > bry - 5 ? GRN[1] : GRN[0]); }
     [[35, 14, '#f08a24'], [31, 11.6, '#f6d36b'], [27, 9.4, '#5b8ee6']].forEach(([rx, ry, col]) => { for (let a = .1; a < Math.PI - .1; a += .03) { if (Math.floor(a / .03) % 3 === 2) continue; const yy = Math.sin(a) * ry; P(cx + Math.cos(a) * rx * bf(yy * bry / ry), bcy + yy, 1, 1, col); } });
     word(cx - 13, top + 13);
@@ -227,30 +227,35 @@ M.hat = (host, ctl, X) => {
     if (s * 1 >= 0) { blade(-1, '#3d5fd8', '#5a7cf0'); blade(1, '#4f71ea', '#7d98f5'); } else { blade(1, '#4f71ea', '#7d98f5'); blade(-1, '#3d5fd8', '#5a7cf0'); }
     P(cx - 1, py - 1, 3, 3, '#f6d36b'); P(cx - 1, py - 1, 1, 1, '#fff');
   }
-  function pill(x, y, s, align) { const w = s.length * 4 + 5; const X0 = align === 'r' ? x - w : x; P(X0, y, w, 10, 'rgba(255,255,255,.78)'); text(c, s, X0 + 3, y + 3, '#202124'); }
   const stop = loop((dt, now) => {
-    t += dt; om = Math.max(0, om - (.6 + om * .33) * dt); ang += om * dt;
-    if (!fly) { if (om > 52) lift += dt; else lift = Math.max(0, lift - dt); if (lift > .9 && !X.reduce) { fly = {y: 0, vy: -10, phase: 'up', t: 0}; flights++; X.tone(300, .4, 'triangle', .04, 900); say(flights === 1 ? 'Liftoff! That’s enough RPM to fly.' : `Liftoff number ${flights}.`, base); } }
+    t += dt; ang += om * dt;
+    if (!fly) {
+      om = Math.max(0, om - (.6 + om * .3) * dt);
+      if (om > 38) lift += dt; else lift = Math.max(0, lift - dt * 2);
+      if (lift > .35) { fly = {y: 0, vy: 0, phase: 'up', t: 0, b: 0}; flights++; X.tone(300, .5, 'triangle', .04, 1100); say(flights === 1 ? 'Liftoff! There it goes…' : `Liftoff number ${flights}.`); }
+    }
     let hy = 0, hx = 0;
     if (fly) {
-      if (fly.phase !== 'down') om = Math.max(om, 54);
       fly.t += dt;
-      if (fly.phase === 'up') { fly.vy -= 70 * dt; fly.y = Math.max(-16, fly.y + fly.vy * dt); hx = Math.round(Math.sin(fly.t * 3) * 5); if (fly.y <= -16) { fly.phase = 'wait'; fly.t = 0; } }
-      else if (fly.phase === 'wait') { hx = Math.round(Math.sin(fly.t * 3) * 5); fly.y = -16 + Math.sin(fly.t * 4) * 1.5; if (fly.t > 1.4) { fly.phase = 'down'; fly.t = 0; } }
-      else { fly.y += 14 * dt; om = Math.max(om, 22); hx = Math.round(Math.sin(fly.t * 2.6) * 5); if (fly.y >= 0) { fly = null; lift = 0; om = 12; X.tone(160, .08, 'square', .04); } }
-      hy = fly ? Math.round(fly.y) : 0;
+      if (fly.phase === 'up') { om = 64; fly.vy -= 160 * dt; fly.y += fly.vy * dt; hx = Math.sin(fly.t * 5) * 4 * Math.min(1, fly.t * 2); if (fly.y < -100) { fly.phase = 'gone'; fly.t = 0; say('Gone. Give it a second…'); } }
+      else if (fly.phase === 'gone') { om = 30; if (fly.t > (X.reduce ? .3 : 1.3)) { fly.phase = 'down'; fly.t = 0; fly.y = -100; fly.vy = 0; } }
+      else if (fly.phase === 'down') { om = Math.max(18, om - dt * 8); fly.vy = Math.min(55, fly.vy + 40 * dt); fly.y += fly.vy * dt; hx = Math.sin(fly.t * 2.4) * 8 * Math.min(1, -fly.y / 40); if (fly.y >= 0) { fly.y = 0; fly.phase = 'bounce'; fly.vy = -70; fly.b = 0; X.tone(150, .09, 'square', .05); } }
+      else { om = Math.max(0, om - dt * 20); fly.vy += 400 * dt; fly.y += fly.vy * dt;
+        if (fly.y >= 0) { fly.y = 0; fly.b++; fly.vy = -70 * Math.pow(.42, fly.b); X.tone(180 + fly.b * 40, .06, 'square', .04); if (fly.b >= 4 || Math.abs(fly.vy) < 6) { fly = null; lift = 0; om = 0; say(flights === 1 ? 'Boing. Safe landing. Spin it again?' : 'Landed. Again?', base); } } }
+      if (fly) hy = Math.round(fly.y);
     }
+    const sq = fly && fly.phase === 'bounce' && fly.y > -1.5 ? 1 : 0;
     const jit = om > 34 && !X.reduce && !fly ? Math.round(Math.sin(t * 40) * (om - 34) / 16) : 0;
-    // sky, clouds, desk, box
+    // sky, smooth clouds, desk, box
     P(0, 0, W, 50, '#cfe9f7'); P(0, 50, W, 20, '#e3f2fb');
-    [[20, 12, 0], [104, 8, 1], [70, 24, 2]].forEach(([x, y, i]) => { const cx = (x + t * (2 + i)) % 180 - 15; P(cx, y, 16, 4, '#ffffff'); P(cx + 3, y - 3, 9, 3, '#ffffff'); });
+    c.fillStyle = '#ffffff';
+    [[20, 12, 0], [104, 8, 1], [70, 24, 2]].forEach(([x, y, i]) => { const cx = (x + t * (2 + i)) % 180 - 15; c.fillRect(cx, y, 16, 4); c.fillRect(cx + 3, y - 3, 9, 3); });
     P(0, 70, W, 14, '#e8dccb'); P(0, 70, W, 1, '#d4c4ad');
     P(28, 68, 94, 16, '#c79a62'); P(28, 68, 94, 2, '#d9b07a'); P(72, 68, 6, 16, '#e3c494'); P(32, 78, 14, 1, '#a87d48');
-    ['#4285f4', '#ea4335', '#fbbc05', '#34a853'].forEach((col, i) => P(96 + i * 5, 77, 3, 3, col));
-    const shw = Math.max(20, 80 + hy * 2); P(75 - shw / 2, 72, shw, 2, `rgba(90,60,30,${fly ? .18 : .28})`);
-    hat(75 + hx + jit, 58 + hy, now);
-    pill(3, 3, 'RPM ' + Math.round(om * 60 / (Math.PI * 2)));
-    if (flights) pill(W - 3, 3, 'LIFTOFFS ' + flights, 'r');
+    const shw = Math.max(16, 80 + Math.max(-100, hy) * .6); P(75 - shw / 2, 72, shw, 2, `rgba(90,60,30,${fly ? .2 : .28})`);
+    hat(Math.round(75 + hx + jit), 58 + hy + sq, now);
+    const st = `RPM ${Math.round(om * 60 / (Math.PI * 2))}` + (flights ? ` · Liftoffs ${flights}` : '');
+    if (st !== lastStat) { stat.textContent = st; lastStat = st; }
   });
   return {stop};
 };
