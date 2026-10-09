@@ -523,6 +523,7 @@ function nearest(max = 18) { let best = null, bd = max; cur().L.forEach(l => { c
 /* click-to-walk finds a route around buildings and trees instead of walking into them */
 function passTile(x, y) { return x >= 0 && y >= 0 && x < MW && y < MH && !block[idx(x, y)] && tiles[idx(x, y)] !== T.OCEAN; }
 function nearPass(x, y) { if (passTile(x, y)) return [x, y]; for (let r = 1; r < 6; r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) if ((Math.abs(dx) === r || Math.abs(dy) === r) && passTile(x + dx, y + dy)) return [x + dx, y + dy]; return null; }
+function awayFromWater(q) { const wetAt = (px, py) => tiles[idx(Math.floor(px / TS), Math.floor(py / TS))] === T.WATER; if (wetAt(q.x, q.y)) return q; for (let k = 1; k <= 12; k++) { if (wetAt(q.x - k, q.y)) return {x: q.x - k + 13, y: q.y}; if (wetAt(q.x + k, q.y)) return {x: q.x + k - 13, y: q.y}; } return q; }
 function findPath(x0, y0, x1, y1) {
   const s = nearPass(Math.floor(x0 / TS), Math.floor(y0 / TS)), e = nearPass(Math.floor(x1 / TS), Math.floor(y1 / TS)); if (!s || !e) return null;
   const N = MW * MH, g = new Float32Array(N).fill(1e9), from = new Int32Array(N).fill(-1), done = new Uint8Array(N), open = [];
@@ -537,13 +538,14 @@ function findPath(x0, y0, x1, y1) {
   if (from[ei] < 0 && ei !== si) return null;
   const tilesPath = []; for (let c = ei; c !== -1; c = from[c]) tilesPath.unshift(c);
   // drop water tiles (the boat crosses them) and keep only the corners of the route
-  const pts = tilesPath.filter(i => tiles[i] !== T.WATER).map(i => ({x: (i % MW) * TS + 8, y: ((i / MW) | 0) * TS + 10}));
+  const pts = tilesPath.filter(i => tiles[i] !== T.WATER).map(i => awayFromWater({x: (i % MW) * TS + 8, y: ((i / MW) | 0) * TS + 10}));
   const clear = (a, b) => { const n = Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 4); for (let k = 0; k <= n; k++) { const x = a.x + (b.x - a.x) * k / n, y = a.y + (b.y - a.y) * k / n; if (feetBlocked(x, y) || tiles[idx(Math.floor(x / TS), Math.floor(y / TS))] === T.WATER) return false; } return true; };
   const out = []; let a = {x: x0, y: y0}, i = 0;
   while (i < pts.length) { let j = pts.length - 1; while (j > i && !clear(a, pts[j])) j--; out.push(pts[j]); a = pts[j]; i = j + 1; }
   return out;
 }
 function goTo(x, y, after) {
+  ({x, y} = awayFromWater({x, y}));
   const path = findPath(P.x, P.y, x, y); P.stuck = 0; P.after = after || null; P.final = {x, y}; P.retried = false;
   if (path && path.length) { path[path.length - 1] = blockedAt(x, y) ? path[path.length - 1] : {x, y}; P.path = path; P.target = P.path.shift(); }
   else { P.path = null; P.target = {x, y}; }
@@ -573,10 +575,10 @@ function ledCard() {
 }
 /* mini experiences live in minis.js, loaded once the game opens */
 let minisP = null, miniInst = null;
-function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=9'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
+function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=10'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
 const MCTX = {reduce, get touch() { return touch; }, led, ledColor, state: WSTATE, girl, moeSprite,
-  tone: (...a) => window.__tone && window.__tone(...a), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
-function stopMini() { if (miniInst) { try { miniInst.stop(); } catch (e) {} miniInst = null; } }
+  tone: (...a) => window.__tone && window.__tone(...a), motor: om => window.__motor && window.__motor.set(om), thock: (v, p) => window.__thock && window.__thock(v, p), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
+function stopMini() { window.__motor && window.__motor.stop(); if (miniInst) { try { miniInst.stop(); } catch (e) {} miniInst = null; } }
 /* shrink the picture or toy so the whole card fits on screen without scrolling */
 function fitCard() {
   const inn = card.querySelector('.w-card-in'); if (!inn || card.hidden) return;
@@ -785,14 +787,14 @@ function step(now) {
       let tx = Math.floor(P.x / TS) + dirR; while (tx > 0 && tx < MW - 1 && tiles[idx(tx, ty)] === T.WATER) tx += dirR;
       const okLand = (x, y) => y > 0 && y < MH - 1 && tiles[idx(x, y)] !== T.WATER && tiles[idx(x, y)] !== T.OCEAN && !block[idx(x, y)] && !block[idx(x + dirR, y)];
       let ly = null; let x0 = Math.floor(P.x / TS); for (let k = 0; k < 4 && tiles[idx(x0, ty)] !== T.WATER; k++) x0 += dirR; for (const d of [0, 1, -1, 2, -2, 3, -3]) { let x = x0; while (x > 0 && x < MW - 1 && tiles[idx(x, ty + d)] === T.WATER) x += dirR; if (okLand(x, ty + d)) { ly = ty + d; tx = x; break; } }
-      if (ly != null && tx > 0 && tx < MW - 1 && (tx - x0) * dirR > 0) { boat = {x0: P.x, x1: tx * TS + 8 + dirR * 2, y0: P.y, y1: ly * TS + 10, t: 0, dur: Math.max(.7, Math.abs(tx * TS - P.x) / 150), strokes: 0}; P.stuck = 0; boat0dir = dirR; window.__splash && window.__splash(1); window.__water && window.__water(boat.dur); }
+      if (ly != null && tx > 0 && tx < MW - 1 && (tx - x0) * dirR > 0) { boat = {x0: P.x, x1: tx * TS + 8 + dirR * 7, y0: P.y, y1: ly * TS + 10, t: 0, dur: Math.max(.7, Math.abs(tx * TS - P.x) / 150), strokes: 0}; P.stuck = 0; boat0dir = dirR; window.__splash && window.__splash(1); window.__water && window.__water(boat.dur); }
     }
     if (!boat) {
-      const okX = !feetBlocked(P.x + vx, P.y) && !wet(P.x + vx + Math.sign(vx) * 4, P.y), okY = !feetBlocked(P.x, P.y + vy) && !wet(P.x, P.y + vy + Math.sign(vy) * 3);
+      const okX = !feetBlocked(P.x + vx, P.y) && !wet(P.x + vx + Math.sign(vx) * 11, P.y), okY = !feetBlocked(P.x, P.y + vy) && !wet(P.x, P.y + vy + Math.sign(vy) * 3) && !wet(P.x - 11, P.y + vy) && !wet(P.x + 11, P.y + vy);
       if (okX) P.x += vx; if (okY) P.y += vy;
       // blocked head-on: nudge sideways toward the nearer open side so corners don't snag
-      if (!okX && vx && Math.abs(vx) >= Math.abs(vy)) { for (let k = 1; k <= 8; k++) { if (!feetBlocked(P.x + vx, P.y - k)) { P.y -= Math.min(k, sp); break; } if (!feetBlocked(P.x + vx, P.y + k)) { P.y += Math.min(k, sp); break; } } }
-      if (!okY && vy && Math.abs(vy) > Math.abs(vx)) { for (let k = 1; k <= 8; k++) { if (!feetBlocked(P.x - k, P.y + vy)) { P.x -= Math.min(k, sp); break; } if (!feetBlocked(P.x + k, P.y + vy)) { P.x += Math.min(k, sp); break; } } }
+      if (!okX && vx && Math.abs(vx) >= Math.abs(vy) && feetBlocked(P.x + vx, P.y)) { for (let k = 1; k <= 8; k++) { if (!feetBlocked(P.x + vx, P.y - k)) { P.y -= Math.min(k, sp); break; } if (!feetBlocked(P.x + vx, P.y + k)) { P.y += Math.min(k, sp); break; } } }
+      if (!okY && vy && Math.abs(vy) > Math.abs(vx) && feetBlocked(P.x, P.y + vy)) { for (let k = 1; k <= 8; k++) { if (!feetBlocked(P.x - k, P.y + vy)) { P.x -= Math.min(k, sp); break; } if (!feetBlocked(P.x + k, P.y + vy)) { P.x += Math.min(k, sp); break; } } }
     }
     if (P.target && !across && Math.hypot(P.x - ox, P.y - oy) < sp * .2) { P.stuck += dt; if (P.stuck > .35 && P.final && !P.retried) { const f = P.final, a = P.after; goTo(f.x, f.y, a); P.retried = true; } else if (P.stuck > .35) { const l = P.after; P.target = null; P.after = null; if (l && Math.hypot(spotPx(l).x - P.x, spotPx(l).y - P.y) < 60) openCard(l); } } else P.stuck = 0;
     walkT += dt; trail.push([P.x, P.y]); if (trail.length > 60) trail.shift();
@@ -1035,7 +1037,7 @@ function welcome() {
   const t0 = performance.now(); const early = () => { setTimeout(hide, Math.max(0, 6000 - (performance.now() - t0))); };
   addEventListener('keydown', early); cv.addEventListener('pointerdown', early); setTimeout(hide, 10000);
 }
-window.__w = {goTo, blocked: (x, y) => feetBlocked(x, y), get P() { return P; }, get moe() { return moe; }, get RP() { return RP; }, get scene() { return scene; }, camera: () => scene === 'room' ? roomCam() : camera(), get SC() { return SC; }, RO, roomOpen, led, WSTATE};
+window.__w = {get boat() { return boat; }, goTo, blocked: (x, y) => feetBlocked(x, y), get P() { return P; }, get moe() { return moe; }, get RP() { return RP; }, get scene() { return scene; }, camera: () => scene === 'room' ? roomCam() : camera(), get SC() { return SC; }, RO, roomOpen, led, WSTATE};
 window.World = {
   start() { loadMinis().catch(() => {}); if (!welcomed) { const c = L.find(l => l.id === 'cabin'); P.x = (c.tx + c.w + .7) * TS; P.y = (c.ty - .2) * TS; P.dir = 'down'; P.target = null; moe.x = P.x - 14; moe.y = P.y + 4; trail.length = 0; } resize(); root.hidden = false; running = true; last = performance.now(); cv.setAttribute('tabindex', '0'); cv.focus({preventScroll: true}); requestAnimationFrame(step); if (!welcomed) welcome(); },
   stop() { if (scene === 'track') leaveTrack(true); hideDrive(); running = false; root.hidden = true; keys.clear(); closeCard(); }

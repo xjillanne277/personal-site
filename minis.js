@@ -208,7 +208,7 @@ M.hat = (host, ctl, X) => {
   const base = 'Tap the hat to spin the propeller. Keep tapping.';
   say(base);
   let om = 0, ang = 0, lift = 0, fly = null, flights = 0, t = 0, lastStat = '';
-  let tapped = false; const spin = () => { tapped = true; if (fly) return; om = Math.min(64, om + 9); if (om > 14) X.state.hat = true; X.tone(240 + om * 9, .05, 'triangle', .035); };
+  let tapped = false; const spin = () => { tapped = true; if (fly) return; om = Math.min(64, om + 9); if (om > 14) X.state.hat = true; X.tone(900, .015, 'square', .012); };
   cv.addEventListener('pointerdown', spin); ctl.querySelector('[data-spin]').addEventListener('click', spin);
   // "Intern", embroidered like the real hat
   const GL = {I: ['111', '010', '010', '010', '010', '010', '111'], n: ['0000', '0000', '1110', '1001', '1001', '1001', '1001'], t: ['010', '010', '111', '010', '010', '010', '011'], e: ['0000', '0000', '0110', '1001', '1111', '1000', '0111'], r: ['0000', '0000', '1011', '1100', '1000', '1000', '1000']};
@@ -259,9 +259,9 @@ M.hat = (host, ctl, X) => {
       fly.t += dt;
       if (fly.phase === 'up') { om = 64; fly.vy -= 160 * dt; fly.y += fly.vy * dt; hx = Math.sin(fly.t * 5) * 4 * Math.min(1, fly.t * 2); if (fly.y < -100) { fly.phase = 'gone'; fly.t = 0; say('Gone. Give it a second…'); } }
       else if (fly.phase === 'gone') { om = 30; if (fly.t > (X.reduce ? .3 : 1.3)) { fly.phase = 'down'; fly.t = 0; fly.y = -100; fly.vy = 0; } }
-      else if (fly.phase === 'down') { om = Math.max(18, om - dt * 8); fly.vy = Math.min(55, fly.vy + 40 * dt); fly.y += fly.vy * dt; hx = Math.sin(fly.t * 2.4) * 8 * Math.min(1, -fly.y / 40); if (fly.y >= 0) { fly.y = 0; fly.phase = 'bounce'; fly.vy = -70; fly.b = 0; X.tone(150, .09, 'square', .05); } }
+      else if (fly.phase === 'down') { om = Math.max(18, om - dt * 8); fly.vy = Math.min(55, fly.vy + 40 * dt); fly.y += fly.vy * dt; hx = Math.sin(fly.t * 2.4) * 8 * Math.min(1, -fly.y / 40); if (fly.y >= 0) { fly.y = 0; fly.phase = 'bounce'; fly.vy = -70; fly.b = 0; X.thock(1, 1); } }
       else { om = Math.max(0, om - dt * 20); fly.vy += 400 * dt; fly.y += fly.vy * dt;
-        if (fly.y >= 0) { fly.y = 0; fly.b++; fly.vy = -70 * Math.pow(.42, fly.b); X.tone(180 + fly.b * 40, .06, 'square', .04); if (fly.b >= 4 || Math.abs(fly.vy) < 6) { fly = null; lift = 0; om = 0; say(flights === 1 ? 'Boing. Safe landing. Spin it again?' : 'Landed. Again?', base); } } }
+        if (fly.y >= 0) { fly.y = 0; fly.b++; fly.vy = -70 * Math.pow(.42, fly.b); X.thock(Math.pow(.55, fly.b), 1 + fly.b * .12); if (fly.b >= 4 || Math.abs(fly.vy) < 6) { fly = null; lift = 0; om = 0; say(flights === 1 ? 'Boing. Safe landing. Spin it again?' : 'Landed. Again?', base); } } }
       if (fly) hy = Math.round(fly.y);
     }
     const sq = fly && fly.phase === 'bounce' && fly.y > -1.5 ? 1 : 0;
@@ -275,10 +275,11 @@ M.hat = (host, ctl, X) => {
     const shw = Math.max(16, 80 + Math.max(-100, hy) * .6); P(75 - shw / 2, 72, shw, 2, `rgba(90,60,30,${fly ? .2 : .28})`);
     hat(Math.round(75 + hx + jit), 58 + hy + sq, now);
     if (!tapped && !fly) cue(c, P, 75, 40, 'Tap', now, X.reduce);
+    X.motor(om);
     const st = `RPM ${Math.round(om * 60 / (Math.PI * 2))}` + (flights ? ` · Liftoffs ${flights}` : '');
     if (st !== lastStat) { stat.textContent = st; lastStat = st; }
   });
-  return {stop};
+  return {stop: () => { stop(); X.motor(0); }};
 };
 
 /* ---------- Level: unlock the door ---------- */
@@ -704,21 +705,21 @@ M.cake = (host, ctl, X) => {
   const say = hint(ctl), btn = ctl.querySelector('[data-ice]'), stat = ctl.querySelector('.w-stat');
   const base = 'Press and hold the piston to pipe icing. Let go once the cupcake is iced all the way around.';
   const N = 48, REV = 2.6, CX = 80, TY = 62, RX = 27, RY = 7;
-  let rot = 0, holding = false, used = false, done = false, cov, spills, drips, best = X.state.cakeBest || 0, tries = X.state.cakeTries || 0, moe = 0, swap = 0;
-  const reset = () => { cov = new Float32Array(N); spills = 0; drips = []; done = false; used = false; };
+  let rot = 0, holding = false, used = false, done = false, cov, spills, drips, best = X.state.cakeBest || 0, tries = X.state.cakeTries || 0, swap = 0, eat = null, crumbs = [], candle = false;
+  const reset = () => { cov = new Float32Array(N); spills = 0; drips = []; done = false; used = false; eat = null; crumbs = []; candle = false; };
   reset(); say(base);
   const mb = document.createElement('canvas'); mb.width = 24; mb.height = 20; const mbc = mb.getContext('2d');
   function finish() {
     const covered = cov.filter(v => v >= .55).length / N, acc = Math.max(0, Math.min(100, Math.round(covered * 100 - spills * 1.5)));
     done = true; tries++; X.state.cakeTries = tries; if (acc > best) { best = acc; X.state.cakeBest = best; }
     stat.textContent = `Accuracy ${acc}% · Best ${best}%`;
-    if (acc >= 98) { moe = 3.5; X.meow(); X.chime(); say(`${acc}%. That beats FrostBot’s 98%. Moe approves. Tap for another cupcake.`); }
+    if (acc >= 90) { candle = acc >= 98; eat = {ph: 'walk', t: 0, bites: 0, acc}; X.chime(); say(acc >= 98 ? `${acc}%. That beats FrostBot’s 98%. Someone noticed…` : `${acc}%. Nice icing. Someone noticed…`); }
     else if (covered < .9) say(`${acc}%. Some bare spots. Hold a little longer next time. Tap for another cupcake.`);
     else if (spills) say(`${acc}%. It spilled over the edge. Let go a little sooner. Tap for another cupcake.`);
     else say(`${acc}%. FrostBot hit 98% over 100 trials. Tap for another cupcake.`);
     X.tone(acc >= 90 ? 880 : 520, .12, 'triangle', .04);
   }
-  const press = () => { if (done) { swap = 1; reset(); say(base); return; } if (swap > .2) return; holding = true; used = true; X.tone(300, .08, 'triangle', .03); };
+  const press = () => { if (eat && eat.ph !== 'happy') return; if (done) { swap = 1; reset(); say(base); return; } if (swap > .2) return; holding = true; used = true; X.tone(300, .08, 'triangle', .03); };
   const release = () => { if (!holding) return; holding = false; if (cov.some(v => v > .05)) finish(); };
   cv.addEventListener('pointerdown', e => { cv.setPointerCapture(e.pointerId); press(); });
   ['pointerup', 'pointercancel'].forEach(k => cv.addEventListener(k, release));
@@ -728,7 +729,16 @@ M.cake = (host, ctl, X) => {
   btn.addEventListener('keyup', e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); release(); } });
   stat.textContent = best ? `Best ${best}%` : 'FrostBot: 98%';
   const stop = loop((dt, now) => {
-    const sp = Math.PI * 2 / REV; rot = (rot + sp * dt) % (Math.PI * 2); swap = Math.max(0, swap - dt * 4); moe = Math.max(0, moe - dt);
+    const sp = Math.PI * 2 / REV; if (!eat) rot = (rot + sp * dt) % (Math.PI * 2); swap = Math.max(0, swap - dt * 4);
+    // Moe eats it: walk up, sniff, four bites, lick, heart
+    const BITES = [[CX + 24, TY + 2, 11], [CX + 12, TY + 6, 12], [CX, TY + 4, 14], [CX - 14, TY + 8, 16]];
+    if (eat) { eat.t += dt;
+      if (eat.ph === 'walk' && eat.t > .9) { eat.ph = 'sniff'; eat.t = 0; }
+      else if (eat.ph === 'sniff' && eat.t > .5) { eat.ph = 'bite'; eat.t = 0; }
+      else if (eat.ph === 'bite' && eat.t > .42) { eat.t = 0; const [bx, by] = BITES[eat.bites]; eat.bites++; X.thock(.8, .7 + eat.bites * .05); X.tone(180 + Math.random() * 60, .05, 'square', .02);
+        for (let n = 0; n < 10; n++) crumbs.push({x: bx - 6 + Math.random() * 6, y: by - 4, vx: (Math.random() - .5) * 50, vy: -20 - Math.random() * 30, col: n % 3 ? '#c98a5a' : '#fff6ee'});
+        if (eat.bites >= BITES.length) { eat.ph = 'lick'; eat.t = 0; X.meow(); } }
+      else if (eat.ph === 'lick' && eat.t > .7) { eat.ph = 'happy'; eat.t = 0; say(`${eat.acc}%. Moe ate the whole cupcake. Tap for another.`); } }
     // the nozzle sits over the front of the cupcake; the bin under it gets icing, spread to its neighbours
     if (holding && !done) {
       const a = ((Math.PI / 2 - rot) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2), i = Math.floor(a / (Math.PI * 2) * N) % N, r = N / REV;
@@ -743,7 +753,11 @@ M.cake = (host, ctl, X) => {
     // spilled icing on the plate
     drips.forEach(d => { const a = d.i / N * Math.PI * 2 + rot; d.v += 60 * dt; d.y = Math.min(20, d.y + d.v * dt); if (Math.sin(a) > -.2) { const x = CX + Math.cos(a) * (RX + 2), y = TY + Math.sin(a) * RY + d.y; c.fillStyle = '#fff4ea'; c.beginPath(); c.ellipse(x, Math.min(y, 82 + Math.sin(a) * 3), 2.4, d.y >= 20 ? 1.4 : 2, 0, 0, Math.PI * 2); c.fill(); } });
     // the cupcake slides in fresh after each try
+    const gone = eat && eat.bites >= BITES.length;
+    if (gone) { c.fillStyle = '#f2a7bd'; c.beginPath(); c.ellipse(CX + 2, 81, 16, 3, 0, 0, Math.PI * 2); c.fill(); c.fillStyle = '#e58ea8'; for (let k = 0; k < 6; k++) F(CX - 12 + k * 5, 79 + (k % 2), 3, 2, '#e58ea8'); }
     c.save(); c.globalAlpha = 1 - swap;
+    if (eat && eat.bites) { c.beginPath(); c.rect(0, 0, W, H); for (let k = 0; k < eat.bites; k++) { const [bx, by, br] = BITES[k]; c.moveTo(bx + br, by); c.arc(bx, by, br, 0, Math.PI * 2, true); } c.clip('evenodd'); }
+    if (!gone) {
     // paper liner with pleats that turn with it
     c.fillStyle = '#f2a7bd'; c.beginPath(); c.moveTo(CX - 22, 81); c.lineTo(CX - RX - 1, TY); c.lineTo(CX + RX + 1, TY); c.lineTo(CX + 22, 81); c.closePath(); c.fill();
     c.fillStyle = '#e58ea8'; c.beginPath(); c.ellipse(CX, 81, 22, 4, 0, 0, Math.PI); c.fill();
@@ -757,7 +771,8 @@ M.cake = (host, ctl, X) => {
     blobs.sort((p, q) => p[0] - q[0]).forEach(([sa, i, a, rr]) => { const v = Math.min(1.7, cov[i]), x = CX + Math.cos(a) * rr, y = TY - 2 + Math.sin(a) * (RY - 1) * rr / (RX - 4) - v * (rr < RX - 6 ? 6 : 4), r = 2.2 + Math.min(1, v) * 2.4;
       c.fillStyle = v > 1.6 ? '#ffe9de' : '#fff6ee'; c.beginPath(); c.ellipse(x, y, r, r * .8, 0, 0, Math.PI * 2); c.fill(); c.fillStyle = 'rgba(220,170,190,.55)'; c.beginPath(); c.ellipse(x + .6, y + r * .45, r * .8, r * .3, 0, 0, Math.PI * 2); c.fill();
       if (i % 4 === 0 && v > .55) F(x - .6, y - r * .4, 1, 1, ['#e35d50', '#5b8ee6', '#f2c14e', '#47a668'][i % 16 / 4 | 0]); });
-    if (done && cov.filter(v => v >= .55).length === N && spills === 0 && moe > 0 || (done && best >= 98 && moe > 0)) { F(CX - 1, TY - 18, 2, 8, '#5b8ee6'); c.fillStyle = '#ffcf5a'; c.beginPath(); c.ellipse(CX, TY - 20, 1.6, 2.6, 0, 0, Math.PI * 2); c.fill(); c.globalCompositeOperation = 'lighter'; glow(c, CX, TY - 20, 8, '255,200,90', .5); c.globalCompositeOperation = 'source-over'; }
+    }
+    if (candle && !gone) { F(CX - 1, TY - 18, 2, 8, '#5b8ee6'); c.fillStyle = '#ffcf5a'; c.beginPath(); c.ellipse(CX, TY - 20, 1.6, 2.6, 0, 0, Math.PI * 2); c.fill(); c.globalCompositeOperation = 'lighter'; glow(c, CX, TY - 20, 8, '255,200,90', .5); c.globalCompositeOperation = 'source-over'; }
     c.restore();
     // FrostBot's piston: grey beam, cylinder, nozzle (fixed)
     F(26, 5, 112, 6, '#8e959c'); for (let x = 30; x < 136; x += 6) { c.fillStyle = '#6f767d'; c.beginPath(); c.arc(x + 1, 8, 1.2, 0, Math.PI * 2); c.fill(); }
@@ -770,7 +785,20 @@ M.cake = (host, ctl, X) => {
     c.fillStyle = '#9aa4ab'; c.beginPath(); c.moveTo(CX - 6, 36 + push); c.lineTo(CX + 6, 36 + push); c.lineTo(CX + 1.5, 44 + push); c.lineTo(CX - 1.5, 44 + push); c.fill();
     if (holding && !done) { const ty = TY + RY - 6; F(CX - 1.2, 44 + push, 2.4, ty - 44 - push, '#fff6ee'); }
     if (!used && !done) cue(c, P, CX, 28, 'Hold', now, X.reduce);
-    if (moe > 0) { mbc.clearRect(0, 0, 24, 20); X.moeSprite(mbc, 4, 3, Math.floor(now / 300) % 2); const k = Math.min(1, moe, 3.5 - moe + .001); c.drawImage(mb, 0, 0, 24, 20, W - 40 * k, 58, 36, 30); }
+    // crumbs, then Moe on the table (in front of the frame)
+    crumbs = crumbs.filter(q => q.y < 86); crumbs.forEach(q => { q.vy += 160 * dt; q.x += q.vx * dt; q.y += q.vy * dt; F(q.x, q.y, 1.2, 1.2, q.col); });
+    if (eat) {
+      const h = 33, w = 40, fl = 86; let x = 101, y = fl - h * .75, f = 0;
+      if (eat.ph === 'walk') { x = 170 - 69 * ease(Math.min(1, eat.t / .9)); f = Math.floor(now / 130) % 2; }
+      if (eat.ph === 'sniff') x = 101 - Math.sin(eat.t * 18) * .8;
+      if (eat.ph === 'bite') { const k = Math.sin(Math.min(1, eat.t / .25) * Math.PI); x = 101 - k * 6 - eat.bites * 3; y -= k * 1.5; }
+      if (eat.ph === 'lick' || eat.ph === 'happy') x = 101 - BITES.length * 3;
+      mbc.clearRect(0, 0, 24, 20); X.moeSprite(mbc, 4, 3, f);
+      F(x + 6, fl - 1, w * .6, 2, 'rgba(0,0,0,.14)'); c.drawImage(mb, 0, 0, 24, 20, x, y, w, h);
+      if (eat.ph === 'bite' && eat.t < .25) { F(x + 9, y + 9, 4, 2, '#7a3a3a'); }
+      if (eat.ph === 'lick' && Math.floor(eat.t * 8) % 2) F(x + 11, y + 11, 3, 2, '#f08a9a');
+      if (eat.ph === 'happy') { const hy = y - 4 - (eat.t % 1.2) * 8; F(x + 10, hy, 3, 3, '#e9483c'); F(x + 15, hy, 3, 3, '#e9483c'); F(x + 10, hy + 2, 8, 3, '#e9483c'); F(x + 12, hy + 5, 4, 2, '#e9483c'); }
+    }
   });
   return {stop};
 };
