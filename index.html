@@ -1040,7 +1040,7 @@ html[data-theme="dark"] .cs-stats.cs-hl.cs-num dt{color:#ecebe7}html[data-theme=
       <div class="pf-first three">
         <button type="button" class="pf-fy" data-open="geotab"><span class="pf-fy-img"><img src="img/gt-cert.webp" alt="" loading="lazy"></span><span class="pf-fy-body"><span class="pf-kicker">Geotab hackathon · 2024</span><b>Project Jarvis</b><span>Distracted-driving detection with computer vision. 1st of 11 teams.</span><span class="pf-tags"><i>Model training</i><i>Computer vision</i><i>Python</i></span></span></button>
         <button type="button" class="pf-fy" data-open="waterloo"><span class="pf-fy-img"><img src="img/fb-v2-render.webp" alt="" loading="lazy"></span><span class="pf-fy-body"><span class="pf-kicker">ME101 · 2023</span><b>FrostBot</b><span>A LEGO cake-icing robot, redesigned in CAD with an 80/20 frame and a pneumatic piston.</span><span class="pf-tags"><i>Mechanisms</i><i>Pneumatics</i><i>C++</i></span></span></button>
-        <button type="button" class="pf-fy" data-open="waterloo"><span class="pf-fy-img"><img src="img/toy-photo.webp" alt="" loading="lazy"></span><span class="pf-fy-body"><span class="pf-kicker">ME100 · 2022</span><b>Wind-up soccer toy</b><span>A cam and follower that kicks a ping-pong ball, on a $50 budget.</span><span class="pf-tags"><i>Cam and follower</i><i>Laser cutting</i><i>Soldering</i></span></span></button>
+        <button type="button" class="pf-fy" data-open="waterloo/toy"><span class="pf-fy-img"><img src="img/toy-photo.webp" alt="" loading="lazy"></span><span class="pf-fy-body"><span class="pf-kicker">ME100 · 2022</span><b>Wind-up soccer toy</b><span>A cam and follower that kicks a ping-pong ball, on a $50 budget.</span><span class="pf-tags"><i>Cam and follower</i><i>Laser cutting</i><i>Soldering</i></span></span></button>
       </div>
     </section>
 
@@ -1471,7 +1471,7 @@ html[data-theme="dark"] .cs-stats.cs-hl.cs-num dt{color:#ecebe7}html[data-theme=
       <div class="proj-figs fy-grid2 fy-calcs"><figure><img src="img/fb-calc1.webp" alt="Assumptions: buttercream yield stress and plastic viscosity" loading="lazy"><figcaption>Fig. 17 · Assumptions.</figcaption></figure><figure><img src="img/fb-calc3.webp" alt="Required flow rate calculation" loading="lazy"><figcaption>Fig. 18 · Required flow rate.</figcaption></figure><figure><img src="img/fb-calc4.webp" alt="Pressure drop calculations" loading="lazy"><figcaption>Fig. 19 · Pressure drop.</figcaption></figure><figure><img src="img/fb-calc6.webp" alt="Plunger force and bore size" loading="lazy"><figcaption>Fig. 20 · Plunger force and bore.</figcaption></figure></div>
     </section>
 
-    <section class="proj-ch">
+    <section class="proj-ch" data-stop="toy">
       <h2><span>03</span> Wind-up soccer toy · ME100, Fall 2022</h2>
       <p>A portable alternative to foosball for kids aged 6 to 12: a motor turns a cam, the cam drives a follower, and the follower swings an acrylic leg to kick the ball. Laser-cut wood, on a $50 budget per prototype.</p>
       <p>The first prototype used a gearbox to drive the kick. The second moved to a TT motor and cam on a car base, which was simpler and kicked more reliably.</p>
@@ -1700,7 +1700,7 @@ function show(m) {
   if (prev === 'play' && window.World) window.World.stop();
   if (m === 'play') { if (!gameMuted) setMusic(true); }
   else if (AC && musicOn && (m === 'portfolio' || prev === 'play')) setMusic(false);
-  if (m === 'portfolio') { pfEl.scrollTop = 0; document.getElementById('pf-name').focus({preventScroll: true}); }
+  if (m === 'portfolio') { pfEl.scrollTop = 0; document.getElementById('pf-name').focus({preventScroll: true}); pfEl.querySelectorAll('img[loading="lazy"]').forEach(im => { im.loading = 'eager'; }); }
   if (m === 'play' && window.World) window.World.start();
   document.title = m === 'play' ? 'Jillanne Youssef · Game' : 'Jillanne Youssef | Mechanical & Product Design Engineer';
   if (projEl.hidden) window.pv && pv(m === 'play' ? 'game' : m);
@@ -1713,35 +1713,55 @@ projEl.addEventListener('click', e => {
   const im = e.target.closest('figure img'); if (im) { window.track && track('image_zoom', {project: projOpenId, image: (im.getAttribute('src') || '').replace('img/', '')}); const z = document.createElement('div'); z.id = 'zoom'; z.setAttribute('role', 'dialog'); z.setAttribute('aria-label', 'Enlarged image'); z.innerHTML = `<img src="${im.getAttribute('src')}" alt="${im.alt}">`; z.addEventListener('click', () => z.remove()); document.body.appendChild(z); }
 });
 addEventListener('keydown', e => { const z = document.getElementById('zoom'); if (z && e.key === 'Escape') { e.stopImmediatePropagation(); z.remove(); } }, true);
-const PF_ORDER = ['led', 'level', 'geotab', 'waterloo'];
+const PF_ORDER = ['led', 'level', 'geotab', 'waterloo', 'waterloo/toy'];
+/* in the portfolio, the first-year write-up is two stops: FrostBot (top) and the wind-up toy (chapter 03) */
+const PF_TITLES = {waterloo: 'FrostBot', 'waterloo/toy': 'Wind-up soccer toy'};
+const navTitle = k => (mode !== 'play' && PF_TITLES[k]) || TITLES[k];
 function projList() { return mode === 'play' ? ORDER : PF_ORDER; }
 function projNav(id) {
-  const L = projList(), i = L.indexOf(id), p = L[i - 1], n = L[i + 1];
+  const L = projList(); let i = L.indexOf(id); if (i < 0) { id = id.split('/')[0]; i = L.indexOf(id); } const p = L[i - 1], n = L[i + 1];
   const pb = document.getElementById('proj-prev'), nb = document.getElementById('proj-next');
   pb.disabled = !p; pb.dataset.step = p || ''; pb.hidden = !p; nb.disabled = !n; nb.dataset.step = n || ''; nb.hidden = !n;
-  document.getElementById('proj-next-t').textContent = n ? TITLES[n] : 'none';
-  const art = projEl.querySelector(`[data-proj="${id}"]`); art.querySelectorAll('.proj-pn').forEach(x => x.remove());
+  document.getElementById('proj-next-t').textContent = n ? navTitle(n) : 'none';
+  pb.innerHTML = p ? '← <span class="nx-label">Previous: </span>' + navTitle(p) : '← Previous';
+  const art = projEl.querySelector(`[data-proj="${id.split('/')[0]}"]`); art.querySelectorAll('.proj-pn').forEach(x => x.remove());
   const nav = document.createElement('nav'); nav.className = 'proj-pn'; nav.setAttribute('aria-label', 'More write-ups');
-  nav.innerHTML = (p ? `<button type="button" data-step="${p}"><small>← Previous</small><b>${TITLES[p]}</b></button>` : '') + (n ? `<button type="button" class="nx" data-step="${n}"><small>Next →</small><b>${TITLES[n]}</b></button>` : '');
+  nav.innerHTML = (p ? `<button type="button" data-step="${p}"><small>← Previous</small><b>${navTitle(p)}</b></button>` : '') + (n ? `<button type="button" class="nx" data-step="${n}"><small>Next →</small><b>${navTitle(n)}</b></button>` : '');
   art.appendChild(nav);
 }
-function openProj(id) {
+function openProj(id, sub) {
+  const stop = sub ? id + '/' + sub : id;
+  if (!projEl.hidden && projOpenId === id) { projNav(stop); scrollToStop(id, sub); return; }
   reportProjTime();
   projEl.querySelectorAll('[data-proj]').forEach(a => a.hidden = a.dataset.proj !== id);
   const a = projEl.querySelector(`[data-proj="${id}"]`);
   document.getElementById('proj-crumb').textContent = a ? a.dataset.crumb : '';
   document.getElementById('proj-close').textContent = mode === 'play' ? (matchMedia('(pointer: coarse)').matches ? '← Back to the game' : '← Back to the game (Esc)') : '← Back to portfolio';
-  projNav(id);
+  projNav(stop);
   projEl.hidden = false; projEl.scrollTop = 0; document.getElementById('proj-close').focus({preventScroll: true});
+  if (sub) requestAnimationFrame(() => scrollToStop(id, sub));
   window.pv && pv('case study: ' + id);
   window.track && track('case_study_open', {project: id, from: mode === 'play' ? 'game' : mode});
   projOpenAt = performance.now(); projOpenId = id;
 }
+function scrollToStop(id, sub) {
+  const t = sub && projEl.querySelector(`[data-proj="${id}"] [data-stop="${sub}"]`);
+  const bar = projEl.querySelector('.proj-bar');
+  projEl.scrollTo({top: t ? t.getBoundingClientRect().top - projEl.getBoundingClientRect().top + projEl.scrollTop - (bar ? bar.offsetHeight : 0) - 16 : 0, behavior: 'instant'});
+}
+/* while reading the first-year write-up, Previous/Next follow whichever project is on screen */
+projEl.addEventListener('scroll', () => {
+  if (mode === 'play' || projOpenId !== 'waterloo') return;
+  const t = projEl.querySelector('[data-proj="waterloo"] [data-stop="toy"]'); if (!t) return;
+  const stop = t.getBoundingClientRect().top < innerHeight * .45 ? 'waterloo/toy' : 'waterloo';
+  if (stop === projEl.dataset.stop) return; projEl.dataset.stop = stop; projNav(stop);
+  history.replaceState(null, '', '#project/' + stop);
+}, {passive: true});
 function route() {
   let h = location.hash.replace(/^#\/?/, '');
   try { h = decodeURIComponent(h); } catch (e) {}
-  const pm = h.match(/^project\/(\w+)/);
-  if (pm && projEl.querySelector(`[data-proj="${pm[1]}"]`)) { if (!mode || mode === 'welcome') { projEl.hidden = false; show('portfolio'); } openProj(pm[1]); return; }
+  const pm = h.match(/^project\/(\w+)(?:\/(\w+))?/);
+  if (pm && projEl.querySelector(`[data-proj="${pm[1]}"]`)) { if (!mode || mode === 'welcome') { projEl.hidden = false; show('portfolio'); } openProj(pm[1], pm[2]); projEl.dataset.stop = pm[2] ? pm[1] + '/' + pm[2] : pm[1]; return; }
   const wasProj = !projEl.hidden; projEl.hidden = true;
   if (wasProj) reportProjTime();
   const nm = h === 'portfolio' ? 'portfolio' : h === 'play' ? 'play' : 'welcome';
