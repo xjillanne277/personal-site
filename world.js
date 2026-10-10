@@ -744,15 +744,14 @@ addEventListener('keydown', e => {
 });
 addEventListener('keyup', e => { if (KEYMAP[e.key]) keys.delete(KEYMAP[e.key]); });
 addEventListener('blur', () => keys.clear());
-/* touch: a quick tap walks there (with pathfinding); press and drag is a thumbstick */
-const joyEl = document.createElement('div'); joyEl.id = 'joy'; joyEl.hidden = true; joyEl.innerHTML = '<i></i>'; cv.parentElement.appendChild(joyEl);
+/* touch: a quick tap walks there (with pathfinding); a drag does nothing, so brushing the screen doesn't move her */
 let joy = null;
 cv.addEventListener('pointerdown', e => {
   touch = e.pointerType === 'touch'; closeCard();
   if (touch && scene === 'world') { if (!e.isPrimary) return; joy = {id: e.pointerId, x0: e.clientX, y0: e.clientY, t0: performance.now(), on: false, vx: 0, vy: 0, e}; try { cv.setPointerCapture(e.pointerId); } catch (er) {} return; }
   tapAt(e);
 });
-const joyEnd = e => { if (!joy || e.pointerId !== joy.id) return; const j = joy; joy = null; joyEl.hidden = true; if (!j.on && e.type === 'pointerup' && performance.now() - j.t0 < 600) tapAt(j.e); };
+const joyEnd = e => { if (!joy || e.pointerId !== joy.id) return; const j = joy; joy = null; if (!j.on && e.type === 'pointerup' && performance.now() - j.t0 < 600) tapAt(j.e); };
 cv.addEventListener('pointerup', joyEnd); cv.addEventListener('pointercancel', joyEnd);
 function tapAt(e) {
   if (scene === 'room') { const o = roomHit(e), cam = roomCam(); if (o && o.id === 'moe') { window.__meow && window.__meow(); moeHeart = performance.now(); } if (o && Math.abs(o.stand - RP.x) < 20) { roomOpen(o); return; } RP.tx = o ? o.stand : Math.max(12, Math.min(RMW - 14, e.clientX / SC + cam.x)); RP.after = o && o.id === 'moe' ? o : null; return; }
@@ -764,12 +763,7 @@ function tapAt(e) {
   goTo(wx, wy);
 }
 cv.addEventListener('pointermove', e => {
-  if (joy && e.pointerId === joy.id) {
-    const dx = e.clientX - joy.x0, dy = e.clientY - joy.y0, d = Math.hypot(dx, dy), R = 44;
-    if (!joy.on && d > 16) { joy.on = true; P.target = null; P.path = null; P.after = null; joyEl.hidden = false; joyEl.style.transform = `translate(${joy.x0}px,${joy.y0}px)`; }
-    if (joy.on) { const k = Math.min(1, d / R); joy.vx = d ? dx / d * k : 0; joy.vy = d ? dy / d * k : 0; joyEl.firstChild.style.transform = `translate(${joy.vx * R}px,${joy.vy * R}px)`; }
-    return;
-  }
+  if (joy && e.pointerId === joy.id) { if (Math.hypot(e.clientX - joy.x0, e.clientY - joy.y0) > 16) joy.on = true; return; }
   if (scene !== 'world' || !(e.buttons & 1) || e.pointerType === 'touch') return; const cam = camera(); P.target = {x: (e.clientX - offX) / SC + cam.x, y: (e.clientY - offY) / SC + cam.y}; P.path = null; P.after = null; P.stuck = 0; });
 prompt.addEventListener('click', () => { if (scene === 'room') { const o = roomNearest(); if (o) roomOpen(o); return; } const n = nearest(); if (n) openCard(n); });
 
@@ -791,7 +785,6 @@ function step(now) {
   if (driveFor && Math.hypot(spotPx(L.find(o => o.id === driveFor)).x - P.x, spotPx(L.find(o => o.id === driveFor)).y - P.y) > 90) hideDrive();
   let vx = 0, vy = 0;
   if (keys.has('left')) vx -= 1; if (keys.has('right')) vx += 1; if (keys.has('up')) vy -= 1; if (keys.has('down')) vy += 1;
-  let joyK = 1; if (joy && joy.on && Math.hypot(joy.vx, joy.vy) > .25) { vx = joy.vx; vy = joy.vy; joyK = Math.min(1, Math.hypot(vx, vy) * 1.15); }
   if (!vx && !vy && P.target) {
     const dx = P.target.x - P.x, dy = P.target.y - P.y, d = Math.hypot(dx, dy);
     if (d < 3) { if (P.path && P.path.length) P.target = P.path.shift(); else { P.target = null; P.path = null; if (P.after) { const l = P.after; P.after = null; openCard(l); } } }
@@ -806,7 +799,7 @@ function step(now) {
     if (boat.t >= 1) { const tg = P.target; boat = null; boatCool = .8; const keep = tg && !(scene === 'world' && tiles[idx(Math.floor(tg.x / TS), Math.floor(tg.y / TS))] === T.WATER) && (tg.x - P.x) * boat0dir >= -4; if (!keep) { if (P.path && P.path.length) { while (P.path.length > 1 && (P.path[0].x - P.x) * boat0dir < 0) P.path.shift(); P.target = P.path.shift(); } else { P.target = null; P.after = null; } } P.stuck = 0; }
     draw(now); requestAnimationFrame(step); return;
   }
-  const sp = 175 * dt * joyK, len = Math.hypot(vx, vy) || 1;
+  const sp = 175 * dt, len = Math.hypot(vx, vy) || 1;
   P.moving = !!(vx || vy);
   if (P.moving) {
     vx = vx / len * sp; vy = vy / len * sp;

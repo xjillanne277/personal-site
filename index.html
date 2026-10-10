@@ -1060,11 +1060,6 @@ body:has(#track-ui:not([hidden])) .exit-game{display:none}
 .cv-dl{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5)}
 .cv-page{padding:12px 12px calc(24px + env(safe-area-inset-bottom,0px))}
 .cv-page img{display:block;width:100%;height:auto;max-width:900px;margin:0 auto;background:#fff;border-radius:4px;box-shadow:0 8px 30px rgba(0,0,0,.35)}
-/* touch thumbstick */
-#joy{position:absolute;left:0;top:0;z-index:6;width:0;height:0;pointer-events:none}
-#joy::before{content:"";position:absolute;left:-46px;top:-46px;width:92px;height:92px;border-radius:50%;background:rgba(251,243,228,.28);box-shadow:0 0 0 3px rgba(58,42,32,.45),inset 0 0 0 2px rgba(251,243,228,.6)}
-#joy i{position:absolute;left:-20px;top:-20px;width:40px;height:40px;border-radius:50%;background:rgba(251,243,228,.92);box-shadow:0 0 0 3px #6b4a32,0 3px 0 3px rgba(0,0,0,.2)}
-#joy[hidden]{display:none}
 /* game: 44px controls on touch screens, time-of-day clear of Exit */
 @media (pointer:coarse),(max-width:760px){
   #world-bar button.b{min-height:44px}
