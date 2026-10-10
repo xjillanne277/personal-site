@@ -349,7 +349,7 @@ const RO = [
   {id: 'desk', label: 'My setup', x: 40, y: 82, w: 110, h: 46, stand: 92, kind: 'room',
    card: {title: 'My setup', meta: 'The bunny case is non-negotiable', img: 'img/setup.webp', imgAlt: 'Jillanne’s desk setup with a white bunny-eared PC case and two monitors', body: ['Ironside build in a bunny case: Intel Core i5-12400F, GeForce RTX 4060, 32 GB DDR4-3200, 1 TB PCIe 4.0 NVMe, 650 W Gold PSU and individually sleeved cherry-blossom pink cables.', 'Two MSI 27" 1440p 170 Hz monitors.']}},
   {id: 'minimoe', label: 'Mini Moe', x: 80, y: 36, w: 16, h: 20, stand: 88, kind: 'room',
-   card: {title: 'Mini Moe', meta: '3D printed', body: ['I missed Moe while I was away on co-op, so I 3D printed him to watch me study.'], img: 'img/minimoe.webp', imgAlt: 'A white 3D-printed cat figure next to a laptop and handwritten notes'}},
+   card: {title: 'Mini Moe', meta: '3D printed', body: ['I missed Moe because I was away at school, so I 3D printed him to watch me study.'], img: 'img/minimoe.webp', imgAlt: 'A white 3D-printed cat figure next to a laptop and handwritten notes'}},
   {id: 'led', label: 'LED strip', x: 40, y: 57, w: 110, h: 8, stand: 96, kind: 'led'},
   {id: 'photos', label: 'Photo wall', x: 160, y: 18, w: 56, h: 60, stand: 188, kind: 'gallery', gal: 'photos', title: 'Photo wall', meta: 'Four co-op terms in California'},
   {id: 'tv', label: 'Arcade', x: 304, y: 110, w: 48, h: 50, stand: 334, kind: 'arcade'},
