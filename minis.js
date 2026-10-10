@@ -485,15 +485,18 @@ M.steel = (host, ctl, X) => {
   }
   function go() { if (st !== 'ready') return; st = 'charge'; tt = 0; scrap.forEach(s => { s.y = 0; s.in = false; }); temp = 25; pool = 0; fill = 0; tilt = 0; lx = 86; ly = 80; strand = 0; hx = TORCH; billets = []; bed = []; good = 0; stampT = []; truck = W + 4; shipped = 0; say('Charging the furnace with scrap.'); sync(); }
   // the torch cuts at TORCH; the billet is whatever has come out past it
-  function cut(len, auto) {
+  /* every tap counts: tap early and the torch waits for the mark, so each cut is an on-spec billet */
+  let armed = false;
+  function cut() {
     if (st !== 'cut') return;
-    const L = len == null ? hx - TORCH : len, ok = !auto && Math.abs(L - SPEC) <= TOL && good + billets.filter(b => b.ok).length < ORDER;
+    if (hx - TORCH < SPEC - TOL) { if (!armed) { armed = true; say('Torch ready. It cuts as soon as the strand reaches the mark.'); } return; }
+    armed = false;
+    const L = hx - TORCH, ok = good + billets.filter(b => b.ok).length < ORDER;
     billets.push({x: hx, len: L, ok, y: RY, vy: 0, a: 1}); hx = TORCH; cutT = 0;
     for (let n = 0; n < 10; n++) sparks.push({x: TORCH + (Math.random() - .5) * 2, y: RY, vx: (Math.random() - .3) * 70, vy: -20 - Math.random() * 50, l: .45});
     X.tone(900 + Math.random() * 200, .09, 'sawtooth', .015);
     if (ok && good + billets.filter(b => b.ok).length >= ORDER) { st = 'drain'; sync(); say('On spec. That’s the last one for this order.'); }
     else if (ok) say('On spec. Off to the rolling mill.');
-    else say(L < SPEC ? 'Too short, that one’s scrap. Wait for the yellow mark.' : 'Too long, that one’s scrap. Cut a little sooner.');
   }
   const hold = on => { if (st === 'cut') { if (on) cut(); return; } if (st !== 'melt') { if (on && st === 'ready') go(); return; } holding = on; sync(); };
   btn.addEventListener('click', () => { if (st === 'ready') go(); });
@@ -514,11 +517,12 @@ M.steel = (host, ctl, X) => {
       if (temp >= 1600) { st = 'tap'; tt = 0; holding = false; sync(); say('Tapping: the furnace tilts and pours into the ladle.'); }
     }
     if (st === 'tap') { tilt = Math.min(1, tt * R / .4); if (tt * R > .4) { fill = Math.min(1, fill + dt * R / 1.1); pool = Math.max(0, 1 - fill); } if (tt * R > 1.6) { st = 'move'; tt = 0; say('The crane takes the ladle to the caster.'); } }
-    if (st === 'move') { tilt = Math.max(0, tilt - dt * 3); const k = ease(Math.min(1, tt * R / 1.2)); lx = 86 + k * 31; ly = 80 - k * 46 - Math.sin(k * Math.PI) * 10; if (tt * R > 1.2) { st = 'cast'; tt = 0; say('The steel freezes into a strand. Tap to torch-cut it when it reaches the yellow mark.'); } }
+    if (st === 'move') { tilt = Math.max(0, tilt - dt * 3); const k = ease(Math.min(1, tt * R / 1.2)); lx = 86 + k * 31; ly = 80 - k * 46 - Math.sin(k * Math.PI) * 10; if (tt * R > 1.2) { st = 'cast'; tt = 0; say('The steel freezes into a strand. Tap the torch to cut it into billets.'); } }
     if (st === 'cast') { strand = Math.min(1, tt * R / .8); if (strand >= 1) { st = 'cut'; tt = 0; sync(); } }
     if (st === 'cut') {
       hx += dt * (X.reduce ? 8 : 12);
-      if (hx - TORCH > SPEC + 12) cut(hx - TORCH, true);
+      if (armed && hx - TORCH >= SPEC) cut();
+      if (hx - TORCH > SPEC + 12) cut();
       fill = Math.max(.08, 1 - (good + billets.filter(b => b.ok).length) / ORDER);
     }
     if (st === 'drain' && !billets.some(b => b.ok)) { st = 'ship'; tt = 0; sync(); say('Order filled. The crane’s loading the truck…'); }
@@ -584,8 +588,6 @@ M.steel = (host, ctl, X) => {
       const passed = STANDS.filter(s => b.x > s).length, len = b.len + passed * 7, th = 5 - passed;
       P(b.x - len, RY + (5 - th) / 2, len, th, passed < 2 ? '#e06b2c' : passed < 3 ? '#c9552f' : '#a8483a');
     });
-    // scrap bin under the runout
-    P(140, 100, 24, 9, '#4a4f57'); P(140, 100, 24, 1, '#7d838b'); text(c, 'SCRAP', 152, 102, '#9aa0a6', .7, 'c');
     // cooling bed + the bundle (rides the crane when shipping)
     P(BED - 22, 96, 30, 2, '#5a524d');
     const s = st === 'ship' ? tt * (X.reduce ? 1.6 : 1) : 0;
@@ -618,7 +620,7 @@ M.steel = (host, ctl, X) => {
     }
     if (st === 'ship' && shipped) { c.save(); c.translate(177, 33); c.rotate(-.18); const k = Math.min(1, (s - 2.4) / .15); c.globalAlpha = k; c.strokeStyle = '#c4423a'; c.lineWidth = 1; c.strokeRect(-21, -6, 42, 12); text(c, 'SHIPPED', 0, -3.5, '#c4423a', 1, 'c'); c.restore(); }
     if (st === 'ready') cue(c, P, 21, 30, 'Tap', now, X.reduce); else if (st === 'melt' && !holding) cue(c, P, 58, 78, 'Hold', now, X.reduce);
-    else if (st === 'cut' && hx - TORCH > SPEC - 8 && cutT > .4) cue(c, P, TORCH, RY + 2, 'Cut', now, X.reduce);
+    else if (st === 'cut' && !armed && cutT > .4) cue(c, P, TORCH, RY + 2, 'Cut', now, X.reduce);
     sparks = sparks.filter(q => (q.l -= dt) > 0); sparks.forEach(q => { q.vy += 220 * dt; q.x += q.vx * dt; q.y += q.vy * dt; P(q.x, q.y, 1, 1, q.l > .25 ? '#fff3a0' : '#ff8a2a'); });
     if (st === 'melt' || st === 'tap') { text(c, Math.round(temp) + '°C', 4, 104 - 8, temp > 1400 ? '#ffb347' : '#c9c1bb'); P(4, 92, 30, 2, '#4a4440'); P(4, 92, 30 * (temp / 1600), 2, temp > 1400 ? '#ff8a2a' : '#c9452a'); }
     else text(c, 'BARS ' + bars, 4, 101 - 4, '#c9c1bb');
