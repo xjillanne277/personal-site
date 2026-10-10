@@ -35,7 +35,7 @@ const L = [
   {id: 'valbruna', label: 'Valbruna', yr: '2023', tx: 13, ty: 8, w: 5, h: 4, spot: [15, 12], kind: 'factory', tour: 3,
    card: {title: 'Valbruna ASW', meta: 'Mechanical Engineering Co-op · Welland · Fall 2023', mini: 'steel', blurb: ['A steel mill in Welland. I modeled how scrap melts inside the electric arc furnace.']}},
   {id: 'geotab', label: 'Geotab', yr: '2024', tx: 18, ty: 4, w: 4, h: 3, spot: [20, 7], kind: 'office', tour: 4,
-   card: {title: 'Geotab', meta: 'System Verification Intern · Oakville · Summer 2024', mini: 'dash', blurb: ['A summer of dashcams: I built a rack that kept them cool during testing, and my hackathon team placed 1st of 11.']}},
+   card: {title: 'Geotab', meta: 'System Verification Intern · Oakville · Summer 2024', mini: 'dash', blurb: ['A summer of dashcams: I built a rack that kept them cool during testing. For the intern hackathon, my team developed a computer vision system for object and attention detection in dashcams, and placed 1st of 11.']}},
   {id: 'teslacells', label: 'Tesla Cells', yr: '2025', tx: 27, ty: 3, w: 5, h: 4, spot: [29, 7], kind: 'modern', tour: 5,
    card: {title: 'Tesla, Cell Equipment', meta: 'Mechanical Design Engineering Intern · Palo Alto · Winter 2025', mini: 'cell', blurb: ['Battery cell equipment in Palo Alto: a magnetic clamp for lamination and a foil-stretching machine.']}},
   {id: 'teslalight', label: 'Tesla Lighting', yr: '2025', tx: 35, ty: 3, w: 5, h: 4, spot: [37, 7], kind: 'modern', tour: 6,
