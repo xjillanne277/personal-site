@@ -1857,7 +1857,7 @@ function fitLanding() {
   if (titleEl.hidden) return;
   const panel = titleEl.querySelector('.panel'); if (!panel) return;
   titleEl.classList.remove('compact'); titleEl.style.paddingTop = '';
-  const artTop = (Math.round(H * .80) - 26) * S - 10, topMin = badge.getBoundingClientRect().bottom + 14;
+  const sb = document.getElementById('sound'), artTop = (Math.round(H * .80) - 26) * S - 10, topMin = Math.max(badge.getBoundingClientRect().bottom, sb && innerWidth <= 760 ? sb.getBoundingClientRect().bottom : 0) + 14;
   const pt0 = parseFloat(getComputedStyle(titleEl).paddingTop);
   let ph = panel.offsetHeight; if (pt0 + ph <= artTop) return;
   if (artTop - ph >= topMin) { titleEl.style.paddingTop = (artTop - ph) + 'px'; return; }

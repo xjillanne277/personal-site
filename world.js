@@ -949,8 +949,8 @@ function draw(now) {
     const n = labelNodes[i]; const vis = !l.nolabel && x > -40 && x < innerWidth + 40 && y > 8 && y < innerHeight;
     n.hidden = !vis; if (!vis) return;
     const w = n._w || (n._w = n.offsetWidth) || 120, h = n._h || (n._h = n.offsetHeight) || 20;
-    x = Math.max(w / 2 + 6, Math.min(innerWidth - w / 2 - 6, x));
-    for (let k = 0; k < 4; k++) { const hit = placed.find(r => Math.abs(r.x - x) < (r.w + w) / 2 + 4 && Math.abs(r.y - y) < (r.h + h) / 2 + 2); if (!hit) break; y = hit.y - hit.h - 4; }
+    if (innerWidth > 760) x = Math.max(w / 2 + 6, Math.min(innerWidth - w / 2 - 6, x)); // phones: labels stay pinned to their building
+    for (let k = 0; k < 4 && innerWidth > 760; k++) { const hit = placed.find(r => Math.abs(r.x - x) < (r.w + w) / 2 + 4 && Math.abs(r.y - y) < (r.h + h) / 2 + 2); if (!hit) break; y = hit.y - hit.h - 4; }
     placed.push({x, y, w, h});
     n.style.transform = `translate(${Math.round(x)}px,${Math.round(y)}px) translate(-50%,-100%)`;
   });
