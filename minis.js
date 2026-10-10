@@ -273,7 +273,7 @@ M.hat = (host, ctl, X) => {
     const shw = Math.max(16, 80 + Math.max(-100, hy) * .6); P(75 - shw / 2, 72, shw, 2, `rgba(90,60,30,${fly ? .2 : .28})`);
     hat(Math.round(75 + hx + jit), 58 + hy + sq, now);
     if (!tapped && !fly) cue(c, P, 75, 40, 'Tap', now, X.reduce);
-    X.motor(om);
+    X.motor(om, fly ? (fly.phase === 'gone' ? 1 : Math.min(1, -fly.y / 90)) : 0);
     const st = `RPM ${Math.round(om * 60 / (Math.PI * 2))}` + (flights ? ` · Liftoffs ${flights}` : '');
     if (st !== lastStat) { stat.textContent = st; lastStat = st; }
   });
@@ -304,7 +304,7 @@ M.lock = (host, ctl, X) => {
   }
   function go() {
     touched = true;
-    if (st === 'wait') { st = STEPS[0][0]; si = 0; tt = 0; beepT = .5; btn.disabled = true; [880, 1047, 1319].forEach((f, i) => setTimeout(() => X.tone(f, .06, 'square', .03), i * 70)); X.sfx && setTimeout(() => X.sfx('lock', .7), 120); say('Unlocked.'); }
+    if (st === 'wait') { st = STEPS[0][0]; si = 0; tt = 0; beepT = .5; btn.disabled = true; [880, 1047, 1319].forEach((f, i) => setTimeout(() => X.tone(f, .06, 'square', .03), i * 70)); X.sfx && setTimeout(() => X.sfx('lock', .32), 60); say('Unlocked.'); }
     else if (st === 'home') reset();
   }
   btn.addEventListener('click', go);
@@ -315,7 +315,7 @@ M.lock = (host, ctl, X) => {
     // advance the timeline
     if (si >= 0 && st !== 'home') { tt += dt * (X.reduce ? 3 : 1); while (si < STEPS.length && tt >= STEPS[si][1]) { tt -= STEPS[si][1]; si++;
         const nx = si < STEPS.length ? STEPS[si][0] : 'home';
-        if (nx === 'open' && X.sfx) X.sfx('creak', .5); if (nx === 'close' && X.sfx) X.sfx('creak', .38, 1.15); if (nx === 'lock' && X.sfx) X.sfx('lock', .7, .95);
+        if (nx === 'open' && X.sfx) X.sfx('creak', .22, 1.25, .75, .35); if (nx === 'close' && X.sfx) X.sfx('creak', .16, 1.5, .5, .25); if (nx === 'lock' && X.sfx) X.sfx('lock', .3, .95);
         if (nx === 'sniff') say('A quick sniff…'); if (nx === 'inside') say('In he goes.'); if (nx === 'sit') { say('Bed check: approved.'); X.tone(520, .05, 'triangle', .02); } if (nx === 'doze') X.tone(330, .2, 'sine', .02, 220);
         if (nx === 'home') { X.state.moeHome = true; if (!X.sfx) X.tone(130, .08, 'square', .05); X.chime(); btn.disabled = false; btn.textContent = 'Play again'; say('Welcome home, Moe. The lock locked itself behind him. He’s napping at Home now if you want to visit.'); }
         st = nx; } }

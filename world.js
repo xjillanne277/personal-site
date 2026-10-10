@@ -582,9 +582,9 @@ function ledCard() {
 }
 /* mini experiences live in minis.js, loaded once the game opens */
 let minisP = null, miniInst = null;
-function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=17'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
+function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=18'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
 const MCTX = {reduce, get touch() { return touch; }, led, ledColor, state: WSTATE, girl, moeSprite,
-  tone: (...a) => window.__tone && window.__tone(...a), motor: om => window.__motor && window.__motor.set(om), thock: (v, p) => window.__thock && window.__thock(v, p), land: (v, p) => window.__land && window.__land(v, p), sfx: (k, v, r) => window.__play && window.__play(k, v, r), bite: () => window.__bite && window.__bite(), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
+  tone: (...a) => window.__tone && window.__tone(...a), motor: (om, alt) => window.__motor && window.__motor.set(om, alt),  thock: (v, p) => window.__thock && window.__thock(v, p), land: (v, p) => window.__land && window.__land(v, p), sfx: (k, v, r, d, f) => window.__play && window.__play(k, v, r, d, f), bite: () => window.__bite && window.__bite(), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
 function stopMini() { window.__motor && window.__motor.stop(); if (miniInst) { try { miniInst.stop(); } catch (e) {} miniInst = null; } }
 /* shrink the picture or toy so the whole card fits on screen without scrolling */
 function fitCard() {

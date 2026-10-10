@@ -2129,11 +2129,11 @@ function rev(kind) {
 window.__rev = rev;
 const SFX = {};
 function loadSfx() { ['rev', 'meow', 'paddle', 'heli.wav', 'chips', 'creak', 'lock'].forEach(f => { const k = f.split('.')[0]; if (SFX[k] !== undefined) return; SFX[k] = null; fetch('sfx/' + (f.includes('.') ? f : f + '.mp3')).then(r => r.arrayBuffer()).then(b => AC.decodeAudioData(b)).then(buf => { SFX[k] = buf; }).catch(() => {}); }); }
-function playSfx(k, vol, rate, off, dur) { if (!AC || !musicOn || !SFX[k]) return; const s = AC.createBufferSource(), g = AC.createGain(); g.gain.value = vol; s.buffer = SFX[k]; if (rate) s.playbackRate.value = rate; s.connect(g); g.connect(AC.destination); if (off != null) s.start(0, off, dur); else s.start(); }
+function playSfx(k, vol, rate, off, dur, fade) { if (!AC || !musicOn || !SFX[k]) return; const s = AC.createBufferSource(), g = AC.createGain(), t = AC.currentTime; s.buffer = SFX[k]; if (rate) s.playbackRate.value = rate; g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + .015); if (dur && fade) { g.gain.setValueAtTime(vol, t + Math.max(.02, dur - fade)); g.gain.linearRampToValueAtTime(0, t + dur); } s.connect(g); g.connect(AC.destination); s.start(t, off || 0, dur ? dur + .02 : undefined); }
 /* recorded sounds (Freesound, credited in the README): door creak + lock for Level, chip crunches for Moe's bites */
-window.__play = (k, v = .6, r = 1) => playSfx(k, v, r);
+window.__play = (k, v = .6, r = 1, d, f) => playSfx(k, v, r, 0, d, f);
 let biteN = 0;
-window.__bite = () => { const i = (biteN++) % 7; playSfx('chips', .55, .95 + Math.random() * .1, i * .45, .36); };
+window.__bite = () => { const i = (biteN++) % 7; playSfx('chips', .28, .95 + Math.random() * .1, i * .45, .3, .12); };
 window.__engine = () => playSfx('rev', .55);
 function meow() {
   if (!AC || !musicOn) return;
@@ -2202,14 +2202,16 @@ window.__tone = (f, d = .08, type = 'square', v = .04, f2) => { if (!AC || !musi
 let motorN = null;
 /* propeller: no tone, just soft air chopped by the blades, like a tiny helicopter */
 window.__motor = {
-  set(om) {
+  set(om, alt = 0) {
     if (!AC || !musicOn) { if (motorN) this.stop(); return; }
     if (SFX.heli && (!motorN || motorN.rec)) {
-      if (!motorN && om > 1) { const src = AC.createBufferSource(), g = AC.createGain(); g.gain.value = 0; src.buffer = SFX.heli; src.loop = true; src.connect(g); g.connect(AC.destination); src.start(); motorN = {src, g, rec: true}; }
+      /* the recorded rotor, played a little faster and thinner so it reads as a toy, not a real helicopter;
+         quiet, and it fades away as the hat flies up */
+      if (!motorN && om > 1) { const src = AC.createBufferSource(), hp = AC.createBiquadFilter(), lp = AC.createBiquadFilter(), g = AC.createGain(); g.gain.value = 0; src.buffer = SFX.heli; src.loop = true; hp.type = 'highpass'; hp.frequency.value = 320; lp.type = 'lowpass'; lp.frequency.value = 2600; src.connect(hp); hp.connect(lp); lp.connect(g); g.connect(AC.destination); src.start(); motorN = {src, g, rec: true}; }
       if (!motorN) return;
-      const t = AC.currentTime, k = Math.min(1, om / 64);
-      motorN.src.playbackRate.setTargetAtTime(Math.max(.45, Math.min(1.7, om / Math.PI / 10.8)), t, .06);
-      motorN.g.gain.setTargetAtTime(om < 1 ? 0 : .05 + k * .13, t, .08);
+      const t = AC.currentTime, k = Math.min(1, om / 64), a = Math.max(0, Math.min(1, alt));
+      motorN.src.playbackRate.setTargetAtTime(Math.max(.7, Math.min(1.9, om / Math.PI / 10.8 * 1.3)), t, .06);
+      motorN.g.gain.setTargetAtTime(om < 1 ? 0 : (.025 + k * .055) * (1 - .92 * a), t, .1);
       if (om < 1) { clearTimeout(motorN.offT); motorN.offT = setTimeout(() => window.__motor.stop(), 400); } else clearTimeout(motorN.offT);
       return;
     }
