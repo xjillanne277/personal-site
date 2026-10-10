@@ -15,3 +15,12 @@ Just HTML, CSS and JavaScript, no framework or build step. Hosted on GitHub Page
 - `index.html`: welcome screen, portfolio, project write-ups
 - `world.js`: the pixel world
 - `img/`, `vid/`, `sfx/`: pictures, videos and sounds
+
+## sound credits
+
+From [Freesound](https://freesound.org), trimmed and looped for the game:
+
+- helicopterRaw_30sec.wav by lorenzosu, [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/)
+- Eating Chips.wav by Luzanne0, [CC BY-NC 3.0](https://creativecommons.org/licenses/by-nc/3.0/)
+- Door Creak by coosemek, [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/)
+- Door-Lock-Turn-03.wav by DWOBoyle, [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)

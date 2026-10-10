@@ -304,7 +304,7 @@ M.lock = (host, ctl, X) => {
   }
   function go() {
     touched = true;
-    if (st === 'wait') { st = STEPS[0][0]; si = 0; tt = 0; beepT = .5; btn.disabled = true; [880, 1047, 1319].forEach((f, i) => setTimeout(() => X.tone(f, .06, 'square', .03), i * 70)); say('Unlocked.'); }
+    if (st === 'wait') { st = STEPS[0][0]; si = 0; tt = 0; beepT = .5; btn.disabled = true; [880, 1047, 1319].forEach((f, i) => setTimeout(() => X.tone(f, .06, 'square', .03), i * 70)); X.sfx && setTimeout(() => X.sfx('lock', .7), 120); say('Unlocked.'); }
     else if (st === 'home') reset();
   }
   btn.addEventListener('click', go);
@@ -315,8 +315,9 @@ M.lock = (host, ctl, X) => {
     // advance the timeline
     if (si >= 0 && st !== 'home') { tt += dt * (X.reduce ? 3 : 1); while (si < STEPS.length && tt >= STEPS[si][1]) { tt -= STEPS[si][1]; si++;
         const nx = si < STEPS.length ? STEPS[si][0] : 'home';
+        if (nx === 'open' && X.sfx) X.sfx('creak', .5); if (nx === 'close' && X.sfx) X.sfx('creak', .38, 1.15); if (nx === 'lock' && X.sfx) X.sfx('lock', .7, .95);
         if (nx === 'sniff') say('A quick sniff…'); if (nx === 'inside') say('In he goes.'); if (nx === 'sit') { say('Bed check: approved.'); X.tone(520, .05, 'triangle', .02); } if (nx === 'doze') X.tone(330, .2, 'sine', .02, 220);
-        if (nx === 'home') { X.state.moeHome = true; X.tone(130, .08, 'square', .05); X.chime(); btn.disabled = false; btn.textContent = 'Play again'; say('Welcome home, Moe. The lock locked itself behind him. He’s napping at Home now if you want to visit.'); }
+        if (nx === 'home') { X.state.moeHome = true; if (!X.sfx) X.tone(130, .08, 'square', .05); X.chime(); btn.disabled = false; btn.textContent = 'Play again'; say('Welcome home, Moe. The lock locked itself behind him. He’s napping at Home now if you want to visit.'); }
         st = nx; } }
     const u = si >= 0 && si < STEPS.length ? Math.min(1, tt / STEPS[si][1]) : 1;
     // door and bolt follow the timeline
@@ -804,7 +805,7 @@ M.cake = (host, ctl, X) => {
     if (eat) { eat.t += dt;
       if (eat.ph === 'walk' && eat.t > .9) { eat.ph = 'sniff'; eat.t = 0; }
       else if (eat.ph === 'sniff' && eat.t > .5) { eat.ph = 'bite'; eat.t = 0; }
-      else if (eat.ph === 'bite' && eat.t > .34) { eat.t = 0; eat.bites++; const bx = edgeAt(eat.bites); X.thock(.7, .75 + eat.bites * .04);
+      else if (eat.ph === 'bite' && eat.t > .34) { eat.t = 0; eat.bites++; const bx = edgeAt(eat.bites); X.bite ? X.bite() : X.thock(.7, .75 + eat.bites * .04);
         for (let n = 0; n < 8; n++) crumbs.push({x: bx + Math.random() * 3, y: TY - 4 + Math.random() * 16, vx: 10 + Math.random() * 30, vy: -10 - Math.random() * 25, col: n % 3 ? '#c98a5a' : n % 2 ? '#fff6ee' : '#f2a7bd'});
         if (eat.bites >= NB) { eat.ph = 'lick'; eat.t = 0; X.meow(); } }
       else if (eat.ph === 'lick' && eat.t > .7) { eat.ph = 'happy'; eat.t = 0; say(`${eat.acc}%. Moe ate the whole cupcake. Tap for another.`); } }

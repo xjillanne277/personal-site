@@ -2128,8 +2128,12 @@ function rev(kind) {
 }
 window.__rev = rev;
 const SFX = {};
-function loadSfx() { ['rev', 'meow', 'paddle'].forEach(k => { if (SFX[k] !== undefined) return; SFX[k] = null; fetch('sfx/' + k + '.mp3').then(r => r.arrayBuffer()).then(b => AC.decodeAudioData(b)).then(buf => { SFX[k] = buf; }).catch(() => {}); }); }
-function playSfx(k, vol) { if (!AC || !musicOn || !SFX[k]) return; const s = AC.createBufferSource(), g = AC.createGain(); g.gain.value = vol; s.buffer = SFX[k]; s.connect(g); g.connect(AC.destination); s.start(); }
+function loadSfx() { ['rev', 'meow', 'paddle', 'heli.wav', 'chips', 'creak', 'lock'].forEach(f => { const k = f.split('.')[0]; if (SFX[k] !== undefined) return; SFX[k] = null; fetch('sfx/' + (f.includes('.') ? f : f + '.mp3')).then(r => r.arrayBuffer()).then(b => AC.decodeAudioData(b)).then(buf => { SFX[k] = buf; }).catch(() => {}); }); }
+function playSfx(k, vol, rate, off, dur) { if (!AC || !musicOn || !SFX[k]) return; const s = AC.createBufferSource(), g = AC.createGain(); g.gain.value = vol; s.buffer = SFX[k]; if (rate) s.playbackRate.value = rate; s.connect(g); g.connect(AC.destination); if (off != null) s.start(0, off, dur); else s.start(); }
+/* recorded sounds (Freesound, credited in the README): door creak + lock for Level, chip crunches for Moe's bites */
+window.__play = (k, v = .6, r = 1) => playSfx(k, v, r);
+let biteN = 0;
+window.__bite = () => { const i = (biteN++) % 7; playSfx('chips', .55, .95 + Math.random() * .1, i * .45, .36); };
 window.__engine = () => playSfx('rev', .55);
 function meow() {
   if (!AC || !musicOn) return;
@@ -2200,6 +2204,15 @@ let motorN = null;
 window.__motor = {
   set(om) {
     if (!AC || !musicOn) { if (motorN) this.stop(); return; }
+    if (SFX.heli && (!motorN || motorN.rec)) {
+      if (!motorN && om > 1) { const src = AC.createBufferSource(), g = AC.createGain(); g.gain.value = 0; src.buffer = SFX.heli; src.loop = true; src.connect(g); g.connect(AC.destination); src.start(); motorN = {src, g, rec: true}; }
+      if (!motorN) return;
+      const t = AC.currentTime, k = Math.min(1, om / 64);
+      motorN.src.playbackRate.setTargetAtTime(Math.max(.45, Math.min(1.7, om / Math.PI / 10.8)), t, .06);
+      motorN.g.gain.setTargetAtTime(om < 1 ? 0 : .05 + k * .13, t, .08);
+      if (om < 1) { clearTimeout(motorN.offT); motorN.offT = setTimeout(() => window.__motor.stop(), 400); } else clearTimeout(motorN.offT);
+      return;
+    }
     if (!motorN && om > 1) {
       const len = AC.sampleRate * 2, buf = AC.createBuffer(1, len, AC.sampleRate), d = buf.getChannelData(0); let last = 0;
       for (let i = 0; i < len; i++) { const w = Math.random() * 2 - 1; last = (last + .04 * w) / 1.04; d[i] = last * 3; }
@@ -2218,7 +2231,7 @@ window.__motor = {
     motorN.g.gain.setTargetAtTime(om < 1 ? 0 : .02 + k * .05, t, .08);
     if (om < 1) { clearTimeout(motorN.offT); motorN.offT = setTimeout(() => window.__motor.stop(), 400); } else clearTimeout(motorN.offT);
   },
-  stop() { if (!motorN) return; const n = motorN; motorN = null; try { n.g.gain.setTargetAtTime(0, AC.currentTime, .03); setTimeout(() => { n.src.stop(); n.lfo.stop(); n.off && n.off.stop(); }, 200); } catch (e) {} }
+  stop() { if (!motorN) return; const n = motorN; motorN = null; try { n.g.gain.setTargetAtTime(0, AC.currentTime, .03); setTimeout(() => { try { n.src.stop(); n.lfo && n.lfo.stop(); n.off && n.off.stop(); } catch (e) {} }, 200); } catch (e) {} }
 };
 window.__thock = (v = 1, p = 1) => {
   if (!AC || !musicOn) return;
