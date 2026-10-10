@@ -257,9 +257,9 @@ M.hat = (host, ctl, X) => {
       fly.t += dt;
       if (fly.phase === 'up') { om = 64; fly.vy -= 160 * dt; fly.y += fly.vy * dt; hx = Math.sin(fly.t * 5) * 4 * Math.min(1, fly.t * 2); if (fly.y < -100) { fly.phase = 'gone'; fly.t = 0; say('Gone. Give it a second…'); } }
       else if (fly.phase === 'gone') { om = 30; if (fly.t > (X.reduce ? .3 : 1.3)) { fly.phase = 'down'; fly.t = 0; fly.y = -100; fly.vy = 0; } }
-      else if (fly.phase === 'down') { om = Math.max(18, om - dt * 8); fly.vy = Math.min(55, fly.vy + 40 * dt); fly.y += fly.vy * dt; hx = Math.sin(fly.t * 2.4) * 8 * Math.min(1, -fly.y / 40); if (fly.y >= 0) { fly.y = 0; fly.phase = 'bounce'; fly.vy = -70; fly.b = 0; X.thock(1, 1); } }
+      else if (fly.phase === 'down') { om = Math.max(18, om - dt * 8); fly.vy = Math.min(55, fly.vy + 40 * dt); fly.y += fly.vy * dt; hx = Math.sin(fly.t * 2.4) * 8 * Math.min(1, -fly.y / 40); if (fly.y >= 0) { fly.y = 0; fly.phase = 'bounce'; fly.vy = -70; fly.b = 0; (X.land || X.thock)(1, 1); } }
       else { om = Math.max(0, om - dt * 20); fly.vy += 400 * dt; fly.y += fly.vy * dt;
-        if (fly.y >= 0) { fly.y = 0; fly.b++; fly.vy = -70 * Math.pow(.42, fly.b); X.thock(Math.pow(.55, fly.b), 1 + fly.b * .12); if (fly.b >= 4 || Math.abs(fly.vy) < 6) { fly = null; lift = 0; om = 0; say(flights === 1 ? 'Boing. Safe landing. Spin it again?' : 'Landed. Again?', base); } } }
+        if (fly.y >= 0) { fly.y = 0; fly.b++; fly.vy = -70 * Math.pow(.42, fly.b); (X.land || X.thock)(Math.pow(.55, fly.b), 1 + fly.b * .06); if (fly.b >= 4 || Math.abs(fly.vy) < 6) { fly = null; lift = 0; om = 0; say(flights === 1 ? 'Boing. Safe landing. Spin it again?' : 'Landed. Again?', base); } } }
       if (fly) hy = Math.round(fly.y);
     }
     const sq = fly && fly.phase === 'bounce' && fly.y > -1.5 ? 1 : 0;
