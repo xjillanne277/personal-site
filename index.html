@@ -76,6 +76,7 @@ addEventListener('pagehide',function(){flush();track('visit_summary',{pages_seen
   --f-pixel:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
   color-scheme:light;
 }
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html,body{height:100%;margin:0;background:#9fc8e8;overflow:hidden}
 [hidden]{display:none!important}
 body{font-family:var(--f-pixel);color:var(--ink)}
@@ -1856,15 +1857,22 @@ const titleEl = document.getElementById('title'), pfEl = document.getElementById
 function fitLanding() {
   if (titleEl.hidden) return;
   const panel = titleEl.querySelector('.panel'); if (!panel) return;
-  titleEl.classList.remove('compact'); titleEl.style.paddingTop = '';
+  titleEl.classList.remove('compact'); titleEl.style.paddingTop = ''; panel.style.transform = ''; panel.style.marginBottom = '';
   const sb = document.getElementById('sound'), artTop = (Math.round(H * .80) - 26) * S - 10, topMin = Math.max(badge.getBoundingClientRect().bottom, sb && innerWidth <= 760 ? sb.getBoundingClientRect().bottom : 0) + 14;
   const pt0 = parseFloat(getComputedStyle(titleEl).paddingTop);
   let ph = panel.offsetHeight; if (pt0 + ph <= artTop) return;
   if (artTop - ph >= topMin) { titleEl.style.paddingTop = (artTop - ph) + 'px'; return; }
   titleEl.classList.add('compact'); ph = panel.offsetHeight;
-  titleEl.style.paddingTop = Math.max(topMin, Math.min(pt0, artTop - ph)) + 'px';
+  if (artTop - ph >= topMin) { titleEl.style.paddingTop = Math.min(pt0, artTop - ph) + 'px'; return; }
+  /* still too tall (bigger text in some in-app browsers): shrink the whole card a little so the art stays visible */
+  const k = Math.max(.72, (artTop - topMin) / ph); titleEl.style.paddingTop = topMin + 'px';
+  if (k < 1) { panel.style.transformOrigin = 'top center'; panel.style.transform = `scale(${k.toFixed(3)})`; panel.style.marginBottom = -Math.round(ph * (1 - k)) + 'px'; }
 }
 addEventListener('resize', fitLanding); document.fonts && document.fonts.ready.then(fitLanding); requestAnimationFrame(fitLanding);
+/* in-app browsers (LinkedIn, Instagram) load fonts late and change the viewport after load: refit whenever the card or viewport changes size */
+if ('ResizeObserver' in window) { let lastH = 0; new ResizeObserver(() => { const h = titleEl.querySelector('.panel').offsetHeight; if (Math.abs(h - lastH) > 2) { lastH = h; requestAnimationFrame(fitLanding); } }).observe(titleEl.querySelector('.panel')); }
+window.visualViewport && visualViewport.addEventListener('resize', () => requestAnimationFrame(fitLanding));
+addEventListener('load', () => setTimeout(fitLanding, 300));
 function go(where) {
   if (where === 'play' && !gameMuted) { setMusic(true); setTimeout(chime, 60); }
   if (reduce) { location.hash = where; return; }
