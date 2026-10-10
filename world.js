@@ -1077,7 +1077,7 @@ function welcome() {
 }
 window.__w = {get boat() { return boat; }, goTo, blocked: (x, y) => feetBlocked(x, y), get P() { return P; }, get moe() { return moe; }, get RP() { return RP; }, get scene() { return scene; }, camera: () => scene === 'room' ? roomCam() : camera(), get SC() { return SC; }, RO, roomOpen, led, WSTATE};
 window.World = {
-  start() { loadMinis().catch(() => {}); if (!welcomed) { const c = L.find(l => l.id === 'cabin'); P.x = (c.tx + c.w + .7) * TS; P.y = (c.ty - .2) * TS; P.dir = 'down'; P.target = null; moe.x = P.x - 14; moe.y = P.y + 4; trail.length = 0; } resize(); root.hidden = false; running = true; last = performance.now(); cv.setAttribute('tabindex', '0'); cv.focus({preventScroll: true}); requestAnimationFrame(step); if (!welcomed) welcome(); },
+  start() { loadMinis().catch(() => {}); if (!welcomed) { /* start at stop 1 (Waterloo, 2022) so the map reads left to right like a timeline */ const w = spotPx(L.find(l => l.id === 'waterloo')); P.x = w.x + 22; P.y = w.y; if (feetBlocked(P.x, P.y)) P.x = w.x; P.dir = 'right'; P.target = null; moe.x = P.x - 14; moe.y = P.y + 4; trail.length = 0; } resize(); root.hidden = false; running = true; last = performance.now(); cv.setAttribute('tabindex', '0'); cv.focus({preventScroll: true}); requestAnimationFrame(step); if (!welcomed) welcome(); },
   stop() { if (scene === 'track') leaveTrack(true); hideDrive(); running = false; root.hidden = true; keys.clear(); closeCard(); }
 };
 })();
