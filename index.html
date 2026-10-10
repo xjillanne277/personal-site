@@ -2133,7 +2133,7 @@ function playSfx(k, vol, rate, off, dur, fade) { if (!AC || !musicOn || !SFX[k])
 /* recorded sounds (Freesound, credited in the README): door creak + lock for Level, chip crunches for Moe's bites */
 window.__play = (k, v = .6, r = 1, d, f) => playSfx(k, v, r, 0, d, f);
 let biteN = 0;
-window.__bite = () => { const i = (biteN++) % 7; playSfx('chips', .28, .95 + Math.random() * .1, i * .45, .3, .12); };
+window.__bite = () => { const i = (biteN++) % 2; playSfx('chips', .2, .96 + Math.random() * .08, i * .45, .28, .12); }; /* only the two crisp crunches */
 window.__engine = () => playSfx('rev', .55);
 function meow() {
   if (!AC || !musicOn) return;
