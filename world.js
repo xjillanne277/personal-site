@@ -747,8 +747,16 @@ addEventListener('blur', () => keys.clear());
 /* touch only (desktop is unchanged): a quick tap walks there; press and hold keeps her walking toward your finger,
    re-routing around buildings every fraction of a second, and letting go stops her */
 let joy = null;
-function holdStart() { if (!joy || joy.hold) return; joy.hold = true; holdGo(); joy.iv = setInterval(holdGo, 220); }
-function holdGo() { if (!joy || !joy.hold || scene !== 'world' || boat) return; const cam = camera(); goTo((joy.cx - offX) / SC + cam.x, (joy.cy - offY) / SC + cam.y); }
+function holdStart() { if (!joy || joy.hold) return; joy.hold = true; holdGo(true); joy.iv = setInterval(holdGo, 120); }
+/* while holding or dragging: if the straight line to your finger is clear, follow it directly (smooth);
+   otherwise route around buildings or take the boat */
+function lineClear(x0, y0, x1, y1) { const d = Math.hypot(x1 - x0, y1 - y0), n = Math.ceil(d / 5); for (let k = 1; k <= n; k++) { const x = x0 + (x1 - x0) * k / n, y = y0 + (y1 - y0) * k / n; if (feetBlocked(x, y) || tiles[idx(Math.floor(x / TS), Math.floor(y / TS))] === T.WATER || tiles[idx(Math.floor((x + 11) / TS), Math.floor(y / TS))] === T.WATER || tiles[idx(Math.floor((x - 11) / TS), Math.floor(y / TS))] === T.WATER) return false; } return true; }
+function holdGo(force) {
+  if (!joy || !joy.hold || scene !== 'world' || boat) return;
+  const cam = camera(), wx = (joy.cx - offX) / SC + cam.x, wy = (joy.cy - offY) / SC + cam.y;
+  if (lineClear(P.x, P.y, wx, wy)) { P.target = {x: wx, y: wy}; P.path = null; P.after = null; P.final = null; P.stuck = 0; joy.routed = 0; return; }
+  const now = performance.now(); if (force || now - (joy.routed || 0) > 200) { joy.routed = now; goTo(wx, wy); }
+}
 cv.addEventListener('pointerdown', e => {
   touch = e.pointerType === 'touch'; closeCard();
   if (touch && scene === 'world') { if (!e.isPrimary) return; joy = {id: e.pointerId, x0: e.clientX, y0: e.clientY, cx: e.clientX, cy: e.clientY, t0: performance.now(), on: false, hold: false, e}; joy.tm = setTimeout(holdStart, 280); try { cv.setPointerCapture(e.pointerId); } catch (er) {} return; }
@@ -766,7 +774,7 @@ function tapAt(e) {
   goTo(wx, wy);
 }
 cv.addEventListener('pointermove', e => {
-  if (joy && e.pointerId === joy.id) { joy.cx = e.clientX; joy.cy = e.clientY; if (Math.hypot(e.clientX - joy.x0, e.clientY - joy.y0) > 16) { joy.on = true; holdStart(); } return; }
+  if (joy && e.pointerId === joy.id) { joy.cx = e.clientX; joy.cy = e.clientY; if (Math.hypot(e.clientX - joy.x0, e.clientY - joy.y0) > 12) { joy.on = true; holdStart(); } if (joy.hold) holdGo(); return; }
   if (scene !== 'world' || !(e.buttons & 1) || e.pointerType === 'touch') return; const cam = camera(); P.target = {x: (e.clientX - offX) / SC + cam.x, y: (e.clientY - offY) / SC + cam.y}; P.path = null; P.after = null; P.stuck = 0; });
 prompt.addEventListener('click', () => { if (scene === 'room') { const o = roomNearest(); if (o) roomOpen(o); return; } const n = nearest(); if (n) openCard(n); });
 
@@ -1067,7 +1075,7 @@ function welcome() {
   welcomed = true;
   const h = document.createElement('div'); h.id = 'w-hint'; h.setAttribute('role', 'status');
   h.innerHTML = touch
-    ? '<b>How to move</b><span>Tap somewhere to walk there</span><span>Hold to keep walking</span><span>Tap a building to open it</span>'
+    ? '<b>How to move</b><span>Tap somewhere to walk there</span><span>Hold or drag to steer</span><span>Tap a building to open it</span>'
     : '<b>How to move</b><span>WASD or the arrow keys</span><span>Click somewhere to walk there</span><span>Click and drag to steer</span><span>E to open things</span>';
   root.appendChild(h);
   let gone = false;
