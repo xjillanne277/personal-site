@@ -112,86 +112,95 @@ M.cell = (host, ctl, X) => {
   const W = 200, H = 110, {cv, c, P, pt} = make(host, W, H, '#e8edf1');
   ctl.innerHTML = `<div class="w-actions"><button type="button" class="w-alt" data-reset>Reset</button></div><p class="w-hint" aria-live="polite"></p>`;
   const say = hint(ctl);
-  const T = {pos: {x: 185, y: 64}, neg: {x: 100, y: 64}};
-  const E = {red: {hx: 63, hy: 63, home: [82, 38], col: '#d7372f', want: 'pos', name: 'Red'}, black: {hx: 63, hy: 81, home: [82, 100], col: '#2b2d31', want: 'neg', name: 'Black'}};
+  /* a battery cell on the left, a little electric car on the right: wire the car to the cell and it charges, then takes a lap */
+  const BX = 14, BY = 52, BW = 72, BH = 26, CX = 118, CY = 60, PORT = {x: CX + 6, y: CY + 13};
+  const T = {pos: {x: BX + BW + 6, y: BY + BH / 2}, neg: {x: BX - 5, y: BY + BH / 2}};
+  const E = {red: {home: [104, 34], col: '#d7372f', want: 'pos', name: 'Red', dy: -1}, black: {home: [104, 100], col: '#2b2d31', want: 'neg', name: 'Black', dy: 2}};
   Object.values(E).forEach(e => { e.x = e.home[0]; e.y = e.home[1]; e.att = null; });
-  let grab = null, sel = null, moved = 0, wrong = 0, charge = 0, powered = false, sparks = [], smoke = [], t = 0;
-  const snap = (e, k) => { e.att = k; e.x = T[k].x + (k === 'pos' ? 3 : -4); e.y = T[k].y; };
-  if (X.state.cells) { snap(E.red, 'pos'); snap(E.black, 'neg'); charge = 1; powered = true; }
+  let grab = null, sel = null, moved = 0, wrong = 0, charge = 0, powered = false, sparks = [], smoke = [], drive = null, t = 0;
+  const snap = (e, k) => { e.att = k; e.x = T[k].x + (k === 'pos' ? 1 : -1); e.y = T[k].y; };
   const back = e => { e.x = e.home[0]; e.y = e.home[1]; e.att = null; };
-  const base = () => powered ? 'Charged. The Tesla Cells building is glowing on the map.' : 'Drag the wires from the power supply to the battery. Red to +, black to −.';
+  if (X.state.cells) powered = true;
+  const base = () => powered ? 'Charged! The Tesla Cell Equipment building is glowing on the map. Reset to charge it again.' : 'Charge the car: drag its wires to the cell. Red to +, black to −.';
   say(base());
   function attach(k, t2) {
     const e = E[k];
     if (Object.values(E).some(o => o !== e && o.att === t2)) { back(e); return; }
     if (e.want === t2) {
       snap(e, t2); sel = null; X.tone(880, .05, 'square', .03);
-      say(E.red.att && E.black.att ? 'Connected. Charging…' : `${e.name} is on. Now the ${k === 'red' ? 'black' : 'red'} one.`);
+      say(E.red.att && E.black.att ? 'Connected. Charging the car…' : `${e.name} is on. Now the ${k === 'red' ? 'black' : 'red'} one.`);
     } else {
       wrong++; back(e); sel = null; X.tone(90, .2, 'sawtooth', .05);
       for (let n = 0; n < 16; n++) sparks.push({x: T[t2].x, y: T[t2].y, vx: (Math.random() - .5) * 110, vy: -Math.random() * 90, l: .5});
       if (wrong % 3 === 0) { for (let n = 0; n < 9; n++) smoke.push({x: T[t2].x + (Math.random() - .5) * 8, y: T[t2].y - 4, r: 2 + Math.random() * 3, vy: -10 - Math.random() * 10, l: 2}); say('And there goes the magic smoke. Red to +, black to −.', base()); }
-      else say('Sparks! That is the wrong terminal.', base());
+      else say('Sparks! Wrong way round, so the car won’t charge.', base());
     }
   }
-  function reset() { back(E.red); back(E.black); charge = 0; powered = false; X.state.cells = false; sel = null; say(base()); }
+  function reset() { back(E.red); back(E.black); charge = 0; powered = false; drive = null; X.state.cells = false; sel = null; say(base()); }
   ctl.querySelector('[data-reset]').addEventListener('click', reset);
   const near = (p, o, r) => Math.hypot(o.x - p.x, o.y - p.y) < r;
   cv.addEventListener('pointerdown', e => {
+    if (powered || drive) return;
     const p = pt(e); moved = 0;
     const k = Object.keys(E).find(k2 => near(p, E[k2], 11));
-    if (k) { if (powered) return; if (E[k].att) { E[k].att = null; charge = 0; } grab = k; sel = k; cv.setPointerCapture(e.pointerId); return; }
+    if (k) { if (E[k].att) { E[k].att = null; charge = 0; } grab = k; sel = k; cv.setPointerCapture(e.pointerId); return; }
     const t2 = Object.keys(T).find(k2 => near(p, T[k2], 13)); if (t2 && sel) attach(sel, t2);
   });
   cv.addEventListener('pointermove', e => { if (!grab) return; const p = pt(e), o = E[grab]; moved += Math.hypot(p.x - o.x, p.y - o.y); o.x = Math.max(4, Math.min(W - 4, p.x)); o.y = Math.max(4, Math.min(H - 4, p.y)); });
   const up = e => {
     if (!grab) return; const k = grab; grab = null; const p = pt(e);
     const t2 = Object.keys(T).find(k2 => near(p, T[k2], 14));
-    if (t2 && moved > 3) attach(k, t2); else { back(E[k]); if (moved <= 3) { sel = k; say(`${E[k].name} wire picked up. Tap a terminal.`); } else sel = null; }
+    if (t2 && moved > 3) attach(k, t2); else { back(E[k]); if (moved <= 3) { sel = k; say(`${E[k].name} wire picked up. Tap a terminal on the cell.`); } else sel = null; }
   };
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
-  cv.tabIndex = 0; cv.setAttribute('aria-label', 'A power supply, a battery and two wires. Press R or B to pick up a wire, then + or − to connect it.');
+  cv.tabIndex = 0; cv.setAttribute('aria-label', 'A battery cell, a little electric car and two wires. Press R or B to pick up a wire, then + or − to connect it to the cell.');
   cv.addEventListener('keydown', e => {
+    if (powered || drive) return;
     const k = e.key.toLowerCase();
     if (k === 'r' || k === 'b') { sel = k === 'r' ? 'red' : 'black'; say(`${E[sel].name} wire picked up. Press + or −.`); e.stopPropagation(); }
     else if ((k === '+' || k === '=') && sel) { attach(sel, 'pos'); e.stopPropagation(); }
     else if ((k === '-' || k === '_') && sel) { attach(sel, 'neg'); e.stopPropagation(); }
   });
-  const bez = (e, u) => { const x0 = e.hx, y0 = e.hy, x3 = e.x, y3 = e.y, x1 = x0 + 22, y1 = y0 + 4, x2 = x3 - (x3 > x0 ? 18 : -10), y2 = y3 + 14, m = 1 - u; return [m * m * m * x0 + 3 * m * m * u * x1 + 3 * m * u * u * x2 + u * u * u * x3, m * m * m * y0 + 3 * m * m * u * y1 + 3 * m * u * u * y2 + u * u * u * y3]; };
+  // wires run from the car's charge port, so they ride along with it
+  const bez = (e, ox, u) => { const x0 = PORT.x + ox, y0 = PORT.y + e.dy, x3 = e.x, y3 = e.y, x1 = x0 - 16, y1 = y0 + 6, x2 = x3 + (x3 < x0 ? 16 : -10), y2 = y3 + 14, m = 1 - u; return [m * m * m * x0 + 3 * m * m * u * x1 + 3 * m * u * u * x2 + u * u * u * x3, m * m * m * y0 + 3 * m * m * u * y1 + 3 * m * u * u * y2 + u * u * u * y3]; };
+  function car(ox, lights, spin) {
+    const x = CX + ox, y = CY;
+    P(x + 4, y + 28, 64, 3, 'rgba(0,0,0,.14)');
+    P(x + 2, y + 10, 68, 14, '#3f6fb0'); P(x + 2, y + 10, 68, 2, '#6b94d0'); P(x + 2, y + 22, 68, 2, '#2c4f82');
+    P(x + 16, y + 2, 34, 9, '#3f6fb0'); P(x + 20, y, 26, 3, '#3f6fb0'); P(x + 20, y + 3, 11, 7, '#bfe0f5'); P(x + 33, y + 3, 13, 7, '#bfe0f5'); P(x + 31, y + 3, 2, 7, '#2c4f82');
+    P(x + 66, y + 13, 4, 4, lights ? '#fff3a0' : '#d7dce0'); P(x + 2, y + 13, 3, 4, lights ? '#ff6b5e' : '#8e3a33');
+    P(x + 4, y + 11, 6, 6, '#2c4f82'); P(x + 5, y + 12, 4, 4, charge > 0 && charge < 1 ? '#f2c14e' : powered ? '#47c26a' : '#1d2a3f');
+    [x + 16, x + 54].forEach(wx => { disc(P, wx, y + 25, 6, '#1f2125'); disc(P, wx, y + 25, 3, '#9aa1a8'); const a = spin; P(wx + Math.round(Math.cos(a) * 2) - .5, y + 25 + Math.round(Math.sin(a) * 2) - .5, 1, 1, '#1f2125'); });
+    if (lights) { c.globalCompositeOperation = 'lighter'; glow(c, x + 70, y + 15, 12, '255,240,170', .45); c.globalCompositeOperation = 'source-over'; }
+  }
   const stop = loop((dt, now) => {
     t += dt;
-    if (E.red.att && E.black.att && !powered) { charge = Math.min(1, charge + dt / .9); if (charge >= 1) { powered = true; X.state.cells = true; X.chime(); say(base()); } }
+    if (E.red.att && E.black.att && !powered && !drive) { charge = Math.min(1, charge + dt / 1.1); if (charge >= 1) { drive = {t: 0}; back(E.red); back(E.black); X.tone(660, .09, 'square', .035); setTimeout(() => X.tone(660, .12, 'square', .035), 140); say('Fully charged. Off it goes!'); } }
+    let ox = 0, spin = 0;
+    if (drive) { drive.t += dt * (X.reduce ? 3 : 1); const d = drive.t;
+      if (d < 1.1) ox = Math.pow(d / 1.1, 2) * 140; else if (d < 2.5) ox = -150 + 150 * ease(Math.min(1, (d - 1.1) / 1.4)); else { drive = null; powered = true; X.state.cells = true; X.chime(); say(base()); }
+      spin = d * 18; }
     P(0, 0, W, H, '#e8edf1'); P(0, 96, W, 14, '#d3dadf'); P(0, 96, W, 1, '#bfc8ce');
-    // a plain old power supply: silver box, fan grille, switch, output posts
-    const pulse = powered && !X.reduce ? .85 + .15 * Math.sin(now / 300) : 1;
-    P(8, 93, 56, 3, 'rgba(0,0,0,.12)'); P(6, 44, 56, 50, '#b9bfc5'); P(6, 44, 56, 2, '#d7dce0'); P(6, 92, 56, 2, '#8e959c'); P(6, 44, 2, 50, '#cfd4d8'); P(60, 44, 2, 50, '#9aa1a8');
-    for (const [sx, sy] of [[9, 47], [57, 47], [9, 89], [57, 89]]) P(sx, sy, 2, 2, '#7d848b');
-    disc(P, 26, 67, 15, '#7d848b'); disc(P, 26, 67, 14, '#3b3f45');
-    for (let r = 4; r <= 12; r += 4) { c.strokeStyle = '#8e959c'; c.lineWidth = .8; c.beginPath(); c.arc(26, 67, r, 0, Math.PI * 2); c.stroke(); }
-    const fa = powered || charge > 0 ? now / (X.reduce ? 1e9 : 90) : 0; c.strokeStyle = '#9aa1a8'; c.lineWidth = 1.2; for (let k = 0; k < 4; k++) { const a = fa + k * Math.PI / 2; c.beginPath(); c.moveTo(26, 67); c.lineTo(26 + Math.cos(a) * 12, 67 + Math.sin(a) * 12); c.stroke(); }
-    disc(P, 26, 67, 2, '#c9ced3');
-    P(46, 50, 10, 6, '#2b2d31'); P(47, 51, 4, 4, powered || E.red.att || E.black.att ? '#e9483c' : '#5a5f66');
-    disc(P, 51, 74, 2, powered ? '#47c26a' : '#3d6b4a'); if (powered) { c.globalCompositeOperation = 'lighter'; glow(c, 51, 74, 6, '71,194,106', .6 * pulse); c.globalCompositeOperation = 'source-over'; }
-    P(58, 59, 6, 8, '#2b2d31'); P(59, 60, 4, 6, '#d7372f'); P(58, 77, 6, 8, '#2b2d31'); P(59, 78, 4, 6, '#3a3d44');
-    text(c, '+', 49, 59, '#d7372f', 1.3, 'c'); text(c, '−', 49, 79, '#2b2d31', 1.3, 'c');
-    // a regular AA-style battery: black body, copper top, silver ends
-    const BX = 104, BY = 50, BW = 76, BH = 28;
+    // the cell: black body, copper band, silver ends
     P(BX + 2, BY + BH + 1, BW, 3, 'rgba(0,0,0,.14)');
     P(BX - 3, BY + 6, 4, BH - 12, '#c9ced3'); P(BX - 3, BY + 6, 4, 1, '#eef1f3');
-    P(BX, BY, BW, BH, '#1d1f23'); P(BX + BW - 26, BY, 26, BH, '#c27a35');
-    P(BX, BY + 3, BW, 2, 'rgba(255,255,255,.22)'); P(BX, BY + BH - 4, BW, 3, 'rgba(0,0,0,.28)'); P(BX + BW - 26, BY, 1, BH, '#8a5422');
-    P(BX + BW, BY + 4, 3, BH - 8, '#c9ced3'); P(BX + BW + 3, BY + 9, 4, BH - 18, '#dfe3e6'); P(BX + BW + 3, BY + 9, 4, 1, '#f6f8f9');
-    text(c, '+', BX + BW - 13, BY + 9, '#2b1a0a', 1.6, 'c'); text(c, '−', BX + 12, BY + 8, '#c9ced3', 1.6, 'c');
-    // charge meter above the battery (no label), fills while charging
-    if (charge > 0) { const mx = BX + 18, my = BY - 14; P(mx, my, 40, 9, '#2b2d31'); P(mx + 40, my + 2, 2, 5, '#2b2d31'); for (let k = 0; k < 4; k++) if (charge > k / 4 + .01) P(mx + 2 + k * 9.5, my + 2, 8, 5, charge >= 1 ? '#47c26a' : '#f2c14e');
-      if (charge < 1 && !X.reduce && Math.floor(now / 300) % 2) { P(mx + 46, my, 3, 4, '#f2c14e'); P(mx + 45, my + 4, 5, 1, '#f2c14e'); P(mx + 46, my + 5, 3, 4, '#f2c14e'); } }
+    P(BX, BY, BW, BH, '#1d1f23'); P(BX + BW - 24, BY, 24, BH, '#c27a35');
+    P(BX, BY + 3, BW, 2, 'rgba(255,255,255,.22)'); P(BX, BY + BH - 4, BW, 3, 'rgba(0,0,0,.28)'); P(BX + BW - 24, BY, 1, BH, '#8a5422');
+    P(BX + BW, BY + 4, 3, BH - 8, '#c9ced3'); P(BX + BW + 3, BY + 8, 4, BH - 16, '#dfe3e6'); P(BX + BW + 3, BY + 8, 4, 1, '#f6f8f9');
+    text(c, '+', BX + BW - 12, BY + 8, '#2b1a0a', 1.6, 'c'); text(c, '−', BX + 12, BY + 7, '#c9ced3', 1.6, 'c');
+    car(ox, !!drive || powered, spin);
+    // charge meter over the car while it charges
+    if (charge > 0 && !drive && !powered) { const mx = CX + 16, my = CY - 14; P(mx, my, 40, 9, '#2b2d31'); P(mx + 40, my + 2, 2, 5, '#2b2d31'); for (let k = 0; k < 4; k++) if (charge > k / 4 + .01) P(mx + 2 + k * 9.5, my + 2, 8, 5, charge >= 1 ? '#47c26a' : '#f2c14e');
+      if (!X.reduce && Math.floor(now / 300) % 2) { P(mx + 46, my, 3, 4, '#f2c14e'); P(mx + 45, my + 4, 5, 1, '#f2c14e'); P(mx + 46, my + 5, 3, 4, '#f2c14e'); } }
+    if (powered && !drive) text(c, 'CHARGED', CX + 36, CY - 13, '#2f7a5f', 1, 'c');
     if (sel && !grab && Math.floor(now / 300) % 2) Object.values(T).forEach(o => { P(o.x - 7, o.y - 9, 14, 1, '#f2c14e'); P(o.x - 7, o.y + 9, 14, 1, '#f2c14e'); });
-    // wires
-    c.lineWidth = 2.4; c.lineCap = 'round';
-    Object.values(E).forEach(e => { c.strokeStyle = e.col; c.beginPath(); for (let u = 0; u <= 1.001; u += .05) { const [x, y] = bez(e, u); u ? c.lineTo(x, y) : c.moveTo(x, y); } c.stroke(); P(e.x - 3, e.y - 3, 6, 6, e.col); P(e.x - 2, e.y - 2, 2, 2, 'rgba(255,255,255,.5)'); if (sel === Object.keys(E).find(k => E[k] === e) && Math.floor(now / 250) % 2) { P(e.x - 5, e.y - 5, 10, 1, '#f2c14e'); P(e.x - 5, e.y + 4, 10, 1, '#f2c14e'); } });
-    if (E.red.att && E.black.att && !X.reduce) Object.values(E).forEach((e, j) => { for (let k = 0; k < 4; k++) { const u = ((now / 900) + k / 4 + j * .12) % 1, [x, y] = bez(e, j ? u : 1 - u); P(x - 1, y - 1, 2, 2, '#fff6b0'); } });
-    if (!powered && !grab) { const nx = sel ? null : !E.red.att ? E.red : !E.black.att ? E.black : null; if (nx) cue(c, P, nx.x, nx.y, 'Drag', now, X.reduce); else if (sel) cue(c, P, T[E[sel].want].x, T[E[sel].want].y, 'Tap', now, X.reduce); }
-    // sparks + smoke
+    // wires (hidden while the car is out on its lap)
+    if (!drive && !powered) {
+      c.lineWidth = 2.4; c.lineCap = 'round';
+      Object.values(E).forEach(e => { c.strokeStyle = e.col; c.beginPath(); for (let u = 0; u <= 1.001; u += .05) { const [x, y] = bez(e, ox, u); u ? c.lineTo(x, y) : c.moveTo(x, y); } c.stroke(); P(e.x - 3, e.y - 3, 6, 6, e.col); P(e.x - 2, e.y - 2, 2, 2, 'rgba(255,255,255,.5)'); if (sel === Object.keys(E).find(k => E[k] === e) && Math.floor(now / 250) % 2) { P(e.x - 5, e.y - 5, 10, 1, '#f2c14e'); P(e.x - 5, e.y + 4, 10, 1, '#f2c14e'); } });
+      if (E.red.att && E.black.att && !X.reduce) Object.values(E).forEach((e, j) => { for (let k = 0; k < 4; k++) { const u = ((now / 900) + k / 4 + j * .12) % 1, [x, y] = bez(e, ox, j ? 1 - u : u); P(x - 1, y - 1, 2, 2, '#fff6b0'); } });
+      if (!grab) { const nx = sel ? null : !E.red.att ? E.red : !E.black.att ? E.black : null; if (nx) cue(c, P, nx.x, nx.y, 'Drag', now, X.reduce); else if (sel) cue(c, P, T[E[sel].want].x, T[E[sel].want].y, 'Tap', now, X.reduce); }
+    }
     sparks = sparks.filter(s => (s.l -= dt) > 0); sparks.forEach(s => { s.vy += 200 * dt; s.x += s.vx * dt; s.y += s.vy * dt; P(s.x, s.y, 1, 1, s.l > .3 ? '#fff3a0' : '#ff9a3c'); });
     smoke = smoke.filter(s => (s.l -= dt) > 0); smoke.forEach(s => { s.y += s.vy * dt; s.r += dt * 3; c.globalAlpha = Math.min(.6, s.l / 2); disc(P, Math.round(s.x), Math.round(s.y), Math.round(s.r), '#8a8f96'); c.globalAlpha = 1; });
   });

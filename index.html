@@ -80,7 +80,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 html,body{height:100%;margin:0;background:#9fc8e8;overflow:hidden}
 [hidden]{display:none!important}
 body{font-family:var(--f-pixel);color:var(--ink)}
-#world{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;display:block}
+#world{position:fixed;left:0;top:0;width:100%;height:100lvh;image-rendering:pixelated;image-rendering:crisp-edges;display:block}
 
 .screen{position:fixed;inset:0;overflow-y:auto;display:grid;justify-items:center;align-content:start;padding-inline:16px;padding-top:calc(clamp(72px,13vh,150px) + env(safe-area-inset-top,0px));padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
 .panel{position:relative;box-sizing:border-box;background:var(--panel);padding:30px 40px 28px;max-width:min(640px,100%);width:100%;text-align:center;
@@ -1115,7 +1115,7 @@ body:has(#track-ui:not([hidden])) .exit-game{display:none}
     <p class="title-ask">Where do you want to start?</p>
     <ul class="menu doors" role="menu" aria-label="Choose a version">
       <li role="none"><button role="menuitem" class="door pf" id="opt-pf" aria-current="true" data-go="portfolio"><b>Portfolio</b><span>My engineering work, quick to read. Projects, experience and résumé.</span><em>Estimated time: 3 minutes</em></button></li>
-      <li role="none"><button role="menuitem" class="door" id="opt-play" aria-current="false" data-go="play"><b>Game</b><span>Get to know me in a small pixel world: my story, my room, my cat.</span><em>Estimated time: 7 minutes<small class="exit-note">(you can exit at any time)</small></em></button></li>
+      <li role="none"><button role="menuitem" class="door" id="opt-play" aria-current="false" data-go="play"><b>Game</b><span>Get to know me in a small pixel world: my story, my room, my cat.</span><em>Estimated time: 4 minutes<small class="exit-note">(you can exit at any time)</small></em></button></li>
     </ul>
   </div>
 </main>
@@ -1233,7 +1233,7 @@ body:has(#track-ui:not([hidden])) .exit-game{display:none}
       </div>
       <a class="pf-play" href="#play">
         <span class="pf-sprite big" aria-hidden="true"></span>
-        <span><b>Off the clock</b>My story, my room and my cat, in a small game.<em>Estimated time: 7 minutes<small class="exit-note">(you can exit at any time)</small></em></span>
+        <span><b>Off the clock</b>My story, my room and my cat, in a small game.<em>Estimated time: 4 minutes<small class="exit-note">(you can exit at any time)</small></em></span>
         <span class="pf-play-go">Play →</span>
       </a>
     </footer>
@@ -1689,12 +1689,15 @@ document.documentElement.style.background = C.sky[1]; document.body.style.backgr
 /* ============ world ============ */
 const cv = document.getElementById('world'), g = cv.getContext('2d');
 let S = 4, W = 0, H = 0, t0 = performance.now(), cam = 0, last = t0;
+/* size the scene to the large viewport (toolbars hidden), so phones and in-app browsers showing or hiding
+   their address bar while you scroll don't rebuild and jump the sky and mountains */
+const lvhProbe = document.createElement('div'); lvhProbe.style.cssText = 'position:fixed;left:-9px;top:0;width:1px;height:100vh;height:100lvh;visibility:hidden;pointer-events:none'; document.body.appendChild(lvhProbe);
 function resize() {
-  S = Math.max(3, Math.round(innerHeight / 190));
-  W = Math.ceil(innerWidth / S); H = Math.ceil(innerHeight / S);
-  cv.width = W; cv.height = H; g.imageSmoothingEnabled = false;
+  const vh = Math.max(innerHeight, lvhProbe.offsetHeight || 0), s = Math.max(3, Math.round(vh / 190)), w = Math.ceil(innerWidth / s), h = Math.ceil(vh / s);
+  if (w === W && h === H && s === S) return false;
+  S = s; W = w; H = h; cv.width = W * 2; cv.height = H * 2; g.setTransform(2, 0, 0, 2, 0, 0); cv.style.height = (H * S) + 'px'; g.imageSmoothingEnabled = false; return true;
 }
-addEventListener('resize', () => { resize(); buildLayers(); }); resize();
+addEventListener('resize', () => { if (resize()) buildLayers(); }); resize();
 const R = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(Math.round(x), Math.round(y), w, h); };
 const rnd = s => { const x = Math.sin(s * 127.1) * 43758.5453; return x - Math.floor(x); };
 
@@ -1720,8 +1723,8 @@ function mix(a, b, t) { const p = s => [1, 3, 5].map(i => parseInt(s.slice(i, i 
 
 function cloudsDraw() {
   clouds.forEach(([x, y, w]) => {
-    const sx = Math.floor(((x - cam * .15 - (performance.now() / 400)) % (W + 80) + W + 80) % (W + 80)) - 40;
-    R(sx, y, w, 4, C.cloud); R(sx + 3, y - 3, w - 8, 3, C.cloud); R(sx + 6, y - 5, w - 14, 2, C.cloud);
+    const sx = Math.round((((x - cam * .15 - (performance.now() / 400)) % (W + 80) + W + 80) % (W + 80)) * 2) / 2 - 40;
+    g.fillStyle = C.cloud; g.fillRect(sx, y, w, 4); g.fillRect(sx + 3, y - 3, w - 8, 3); g.fillRect(sx + 6, y - 5, w - 14, 2);
   });
 }
 const LW = 1024; const layers = {};
@@ -1749,7 +1752,7 @@ function makeGround(gy) {
   layers.ground = c;
 }
 function buildLayers() { const gy = Math.round(H * .80); makeLayer('far', H * .60, 10, C.far, 1); makeLayer('near', H * .67, 7, C.near, 4); makeGround(gy); }
-function drawLayer(key, par, camI) { const c = layers[key]; const off = ((Math.round(camI * par) % LW) + LW) % LW; for (let x = -off; x < W; x += LW) g.drawImage(c, x, 0); }
+function drawLayer(key, par, camI) { const c = layers[key]; const off = Math.round((((camI * par) % LW) + LW) % LW * 2) / 2; for (let x = -off; x < W; x += LW) g.drawImage(c, x, 0); } /* half-pixel steps: the far hills glide instead of jumping */
 
 /* objects placed along the world loop */
 const objs = [
@@ -1820,8 +1823,8 @@ function frame(now) {
   const gy = Math.round(H * .80);            // ground line for road objects
   const camI = Math.floor(cam);
   sky(); cloudsDraw();
-  drawLayer('far', .15, camI);
-  drawLayer('near', .35, camI);
+  drawLayer('far', .15, cam);
+  drawLayer('near', .35, cam);
   drawLayer('ground', 1, camI);
   const sorted = objs;
   for (const o of sorted) {

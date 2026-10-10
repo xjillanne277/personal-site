@@ -36,8 +36,8 @@ const L = [
    card: {title: 'Valbruna ASW', meta: 'Mechanical Engineering Co-op · Welland · Fall 2023', mini: 'steel', blurb: ['A steel mill in Welland. I modeled how scrap melts inside the electric arc furnace.']}},
   {id: 'geotab', label: 'Geotab', yr: '2024', tx: 18, ty: 4, w: 4, h: 3, spot: [20, 7], kind: 'office', tour: 4,
    card: {title: 'Geotab', meta: 'System Verification Intern · Oakville · Summer 2024', mini: 'dash', blurb: ['A summer of dashcams: I built a rack that kept them cool during testing. For the intern hackathon, my team developed a computer vision system for object and attention detection in dashcams, and placed 1st of 11.']}},
-  {id: 'teslacells', label: 'Tesla Cells', yr: '2025', tx: 27, ty: 3, w: 5, h: 4, spot: [29, 7], kind: 'modern', tour: 5,
-   card: {title: 'Tesla, Cell Equipment', meta: 'Mechanical Design Engineering Intern · Palo Alto · Winter 2025', mini: 'cell', blurb: ['Battery cell equipment in Palo Alto: a magnetic clamp for lamination and a foil-stretching machine.']}},
+  {id: 'teslacells', label: 'Tesla Cell Equipment', yr: '2025', tx: 27, ty: 3, w: 5, h: 4, spot: [29, 7], kind: 'modern', tour: 5,
+   card: {title: 'Tesla Cell Equipment', meta: 'Mechanical Design Engineering Intern · Palo Alto · Winter 2025', mini: 'cell', blurb: ['My first internship in California, and it was a lot of fun. I can’t share many details, so here’s a cell. Do you know how to connect it?']}},
   {id: 'teslalight', label: 'Tesla Lighting', yr: '2025', tx: 35, ty: 3, w: 5, h: 4, spot: [37, 7], kind: 'modern', tour: 6,
    card: {title: 'Tesla, Lighting, Switches & Sensors', meta: 'Mechanical Design Engineering Intern · Fremont · Fall 2025', mini: 'led', proj: 'led', more: 'Read the LED controller story', blurb: ['I designed an interior cabin light, and built an RGBW LED controller for the lighting design studio. Try it.']}},
   {id: 'level', label: 'Level Home', yr: '2026', tx: 40, ty: 11, w: 4, h: 3, spot: [41, 14], kind: 'office', tour: 7,
@@ -582,7 +582,7 @@ function ledCard() {
 }
 /* mini experiences live in minis.js, loaded once the game opens */
 let minisP = null, miniInst = null;
-function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=20'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
+function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=21'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
 const MCTX = {reduce, get touch() { return touch; }, led, ledColor, state: WSTATE, girl, moeSprite,
   tone: (...a) => window.__tone && window.__tone(...a), motor: (om, alt) => window.__motor && window.__motor.set(om, alt),  thock: (v, p) => window.__thock && window.__thock(v, p), land: (v, p) => window.__land && window.__land(v, p), sfx: (k, v, r, d, f) => window.__play && window.__play(k, v, r, d, f), bite: () => window.__bite && window.__bite(), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
 function stopMini() { window.__motor && window.__motor.stop(); if (miniInst) { try { miniInst.stop(); } catch (e) {} miniInst = null; } }
@@ -1024,7 +1024,8 @@ function leaveTrack(now) {
   if (now) { done(); return; }
   const fade = document.getElementById('fade'); fade.classList.add('on'); setTimeout(() => { done(); fade.classList.remove('on'); cv.focus({preventScroll: true}); }, reduce ? 0 : 260);
 }
-function trackResize() { cvFull(); SC = Math.max(1.6, Math.min(3, Math.round(Math.min(innerWidth, innerHeight) / 300 * 2) / 2)); VW = Math.ceil(innerWidth / SC); VH = Math.ceil(innerHeight / SC); cv.width = VW; cv.height = VH; g.imageSmoothingEnabled = false; }
+function trackResize() { cvFull(); SC = Math.max(1.6, Math.min(3, Math.round(Math.min(innerWidth, innerHeight) / 300 * 2) / 2)); VW = Math.ceil(innerWidth / SC); VH = Math.ceil(innerHeight / SC); TR = Math.min(SC, 2); cv.width = Math.ceil(VW * TR); cv.height = Math.ceil(VH * TR); g.setTransform(TR, 0, 0, TR, 0, 0); g.imageSmoothingEnabled = false; }
+let TR = 1; // drive scene renders at up to 2 canvas pixels per world pixel, so motion moves in half-pixel steps
 function trackStep(dt) {
   if (!drv) return;
   const up = keys.has('up'), dn = keys.has('down'), lf = keys.has('left'), rt = keys.has('right');
@@ -1046,20 +1047,21 @@ function trackStep(dt) {
   drv.flame += dt * 30; drv.shake = Math.max(0, drv.shake - dt);
   // camera leads a little in the direction of travel
   const lx = drv.x + Math.cos(drv.a) * drv.v * .35, ly = drv.y + Math.sin(drv.a) * drv.v * .35; drv.cx += (lx - drv.cx) * Math.min(1, dt * 4); drv.cy += (ly - drv.cy) * Math.min(1, dt * 4);
-  tui.querySelector('#tr-spd').textContent = `${kmh} km/h`; tui.querySelector('#tr-top').textContent = `Top ${drv.top}`; tui.querySelector('#tr-cones').textContent = `Cones ${drv.cones}`;
-  const bar = tui.querySelector('.tr-hud'); bar.style.setProperty('--tank', drv.tank); bar.classList.toggle('boosting', drv.boost > 0);
+  const hud = drv.hud || (drv.hud = {spd: tui.querySelector('#tr-spd'), top: tui.querySelector('#tr-top'), cones: tui.querySelector('#tr-cones'), bar: tui.querySelector('.tr-hud'), k: ''});
+  const key = kmh + '|' + drv.top + '|' + drv.cones + '|' + Math.round(drv.tank * 50) + '|' + (drv.boost > 0);
+  if (key !== hud.k) { hud.k = key; hud.spd.textContent = `${kmh} km/h`; hud.top.textContent = `Top ${drv.top}`; hud.cones.textContent = `Cones ${drv.cones}`; hud.bar.style.setProperty('--tank', Math.round(drv.tank * 50) / 50); hud.bar.classList.toggle('boosting', drv.boost > 0); }
 }
 function drawTrack(now) {
-  const sh = 0;
-  const cx = Math.round(drv.cx - VW / 2), cy = Math.round(drv.cy - VH / 2);
+  const sh = 0, q = v => Math.round(v * TR) / TR; // snap to screen pixels, not world pixels: smooth at speed
+  const cx = q(drv.cx - VW / 2), cy = q(drv.cy - VH / 2);
   g.fillStyle = '#e3d39c'; g.fillRect(0, 0, VW, VH);
-  for (let ty = -mod(cy, DH); ty < VH; ty += DH) for (let tx = -mod(cx, DW); tx < VW; tx += DW) { g.drawImage(dart, tx, ty); g.drawImage(skid, tx, ty); }
-  cones.forEach(c => { g.save(); g.translate(Math.round(drv.x - cx + wrapD(c.x - drv.x, DW)), Math.round(drv.y - cy + wrapD(c.y - drv.y, DH))); g.rotate(c.a); const P_ = (x, y, w, h, k) => { g.fillStyle = k; g.fillRect(x, y, w, h); }; P_(-4, 3, 9, 2, 'rgba(0,0,0,.18)'); P_(-1, -6, 2, 2, '#f08a24'); P_(-2, -4, 4, 3, '#f08a24'); P_(-2, -1, 4, 1, '#ffffff'); P_(-3, 0, 6, 3, '#f08a24'); P_(-4, 3, 8, 2, '#c4651a'); g.restore(); });
+  for (let ty = -mod(cy, DH); ty < VH; ty += DH) for (let tx = -mod(cx, DW); tx < VW; tx += DW) { g.drawImage(dart, q(tx), q(ty)); g.drawImage(skid, q(tx), q(ty)); }
+  cones.forEach(c => { g.save(); g.translate(q(drv.x - cx + wrapD(c.x - drv.x, DW)), q(drv.y - cy + wrapD(c.y - drv.y, DH))); g.rotate(c.a); const P_ = (x, y, w, h, k) => { g.fillStyle = k; g.fillRect(x, y, w, h); }; P_(-4, 3, 9, 2, 'rgba(0,0,0,.18)'); P_(-1, -6, 2, 2, '#f08a24'); P_(-2, -4, 4, 3, '#f08a24'); P_(-2, -1, 4, 1, '#ffffff'); P_(-3, 0, 6, 3, '#f08a24'); P_(-4, 3, 8, 2, '#c4651a'); g.restore(); });
   const bx = drv.x - cx, by = drv.y - cy;
   if (drv.boost > 0) { g.save(); g.translate(bx, by); g.rotate(drv.a - Math.PI / 2); const f = Math.floor(drv.flame) % 3; [['#ffe066', 6 + f], ['#ff8a2a', 10 + f * 2], ['#e8442c', 14 + f * 2]].reverse().forEach(([c, len]) => { g.fillStyle = c; g.fillRect(-7, -22 - len, 4, len); g.fillRect(3, -22 - len, 4, len); }); g.restore(); }
-  g.fillStyle = 'rgba(0,0,0,.18)'; g.beginPath(); g.ellipse(Math.round(bx) + 3, Math.round(by) + 5, 17, 17, 0, 0, Math.PI * 2); g.fill();
+  g.fillStyle = 'rgba(0,0,0,.18)'; g.beginPath(); g.ellipse(q(bx) + 3, q(by) + 5, 17, 17, 0, 0, Math.PI * 2); g.fill();
   cbx.clearRect(0, 0, 32, 44); car(cbx, 1, 0, CARS[drv.kind], 1, true);
-  g.save(); g.translate(Math.round(bx), Math.round(by)); g.rotate(drv.a - Math.PI / 2); g.drawImage(carBuf, -16, -22); g.restore();
+  g.save(); g.translate(q(bx), q(by)); g.rotate(drv.a - Math.PI / 2); g.drawImage(carBuf, -16, -22); g.restore();
   if (TINT) { g.fillStyle = TINT; g.fillRect(0, 0, VW, VH); }
 }
 addEventListener('keydown', e => {
