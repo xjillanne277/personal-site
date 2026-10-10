@@ -744,14 +744,17 @@ addEventListener('keydown', e => {
 });
 addEventListener('keyup', e => { if (KEYMAP[e.key]) keys.delete(KEYMAP[e.key]); });
 addEventListener('blur', () => keys.clear());
-/* touch: a quick tap walks there (with pathfinding); a drag does nothing, so brushing the screen doesn't move her */
+/* touch only (desktop is unchanged): a quick tap walks there; press and hold keeps her walking toward your finger,
+   re-routing around buildings every fraction of a second, and letting go stops her */
 let joy = null;
+function holdStart() { if (!joy || joy.hold) return; joy.hold = true; holdGo(); joy.iv = setInterval(holdGo, 220); }
+function holdGo() { if (!joy || !joy.hold || scene !== 'world' || boat) return; const cam = camera(); goTo((joy.cx - offX) / SC + cam.x, (joy.cy - offY) / SC + cam.y); }
 cv.addEventListener('pointerdown', e => {
   touch = e.pointerType === 'touch'; closeCard();
-  if (touch && scene === 'world') { if (!e.isPrimary) return; joy = {id: e.pointerId, x0: e.clientX, y0: e.clientY, t0: performance.now(), on: false, vx: 0, vy: 0, e}; try { cv.setPointerCapture(e.pointerId); } catch (er) {} return; }
+  if (touch && scene === 'world') { if (!e.isPrimary) return; joy = {id: e.pointerId, x0: e.clientX, y0: e.clientY, cx: e.clientX, cy: e.clientY, t0: performance.now(), on: false, hold: false, e}; joy.tm = setTimeout(holdStart, 280); try { cv.setPointerCapture(e.pointerId); } catch (er) {} return; }
   tapAt(e);
 });
-const joyEnd = e => { if (!joy || e.pointerId !== joy.id) return; const j = joy; joy = null; if (!j.on && e.type === 'pointerup' && performance.now() - j.t0 < 600) tapAt(j.e); };
+const joyEnd = e => { if (!joy || e.pointerId !== joy.id) return; const j = joy; joy = null; clearTimeout(j.tm); clearInterval(j.iv); if (j.hold) { if (!boat) { P.target = null; P.path = null; P.after = null; P.final = null; P.stuck = 0; } return; } if (!j.on && e.type === 'pointerup') tapAt(j.e); };
 cv.addEventListener('pointerup', joyEnd); cv.addEventListener('pointercancel', joyEnd);
 function tapAt(e) {
   if (scene === 'room') { const o = roomHit(e), cam = roomCam(); if (o && o.id === 'moe') { window.__meow && window.__meow(); moeHeart = performance.now(); } if (o && Math.abs(o.stand - RP.x) < 20) { roomOpen(o); return; } RP.tx = o ? o.stand : Math.max(12, Math.min(RMW - 14, e.clientX / SC + cam.x)); RP.after = o && o.id === 'moe' ? o : null; return; }
@@ -763,7 +766,7 @@ function tapAt(e) {
   goTo(wx, wy);
 }
 cv.addEventListener('pointermove', e => {
-  if (joy && e.pointerId === joy.id) { if (Math.hypot(e.clientX - joy.x0, e.clientY - joy.y0) > 16) joy.on = true; return; }
+  if (joy && e.pointerId === joy.id) { joy.cx = e.clientX; joy.cy = e.clientY; if (Math.hypot(e.clientX - joy.x0, e.clientY - joy.y0) > 16) { joy.on = true; holdStart(); } return; }
   if (scene !== 'world' || !(e.buttons & 1) || e.pointerType === 'touch') return; const cam = camera(); P.target = {x: (e.clientX - offX) / SC + cam.x, y: (e.clientY - offY) / SC + cam.y}; P.path = null; P.after = null; P.stuck = 0; });
 prompt.addEventListener('click', () => { if (scene === 'room') { const o = roomNearest(); if (o) roomOpen(o); return; } const n = nearest(); if (n) openCard(n); });
 
@@ -1064,7 +1067,7 @@ function welcome() {
   welcomed = true;
   const h = document.createElement('div'); h.id = 'w-hint'; h.setAttribute('role', 'status');
   h.innerHTML = touch
-    ? '<b>How to move</b><span>Tap somewhere to walk there</span><span>Drag to steer</span><span>Tap a building to open it</span>'
+    ? '<b>How to move</b><span>Tap somewhere to walk there</span><span>Hold to keep walking</span><span>Tap a building to open it</span>'
     : '<b>How to move</b><span>WASD or the arrow keys</span><span>Click somewhere to walk there</span><span>Click and drag to steer</span><span>E to open things</span>';
   root.appendChild(h);
   let gone = false;
