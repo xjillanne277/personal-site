@@ -29,7 +29,7 @@ for (let i = 0; i < MW * MH; i++) if (tiles[i] === T.OCEAN) block[i] = 1;
 const RES = 'resume.pdf';
 const L = [
   {id: 'waterloo', label: 'Waterloo', yr: '2022', tx: 2, ty: 16, w: 5, h: 4, spot: [4, 20], kind: 'school', tour: 1,
-   card: {title: 'University of Waterloo', meta: 'Mechanical Engineering · started Fall 2022', mini: 'toy', proj: 'waterloo/toy', tabs: [['toy', 'ME100 · Wind-up toy', 'waterloo/toy'], ['cake', 'ME101 · FrostBot', 'waterloo']], blurb: ['Where it started: a wind-up soccer toy for ME100, then FrostBot, a cake-icing robot, for ME101.']}},
+   card: {title: 'University of Waterloo', meta: 'Mechanical Engineering · started Fall 2022', mini: 'toy', proj: 'toy', tabs: [['toy', 'ME100 · Wind-up toy', 'toy'], ['cake', 'ME101 · FrostBot', 'waterloo']], blurb: ['Where it started: a wind-up soccer toy for ME100, then FrostBot, a cake-icing robot, for ME101.']}},
   {id: 'evercloak', label: 'Evercloak', yr: '2023', tx: 8, ty: 13, w: 4, h: 3, spot: [10, 16], kind: 'office', tour: 2,
    card: {title: 'Evercloak Inc.', meta: 'Mechanical Engineering Co-op · Kitchener · Winter 2023', mini: 'mem', blurb: ['My first co-op. I designed a prototype dehumidifier enclosure and tested membrane materials for it.']}},
   {id: 'valbruna', label: 'Valbruna', yr: '2023', tx: 13, ty: 8, w: 5, h: 4, spot: [15, 12], kind: 'factory', tour: 3,
