@@ -926,7 +926,8 @@ html[data-theme="dark"] .case-sum{color:#c3c6cb}
 html[data-theme="dark"] .cs-stats.cs-hl.cs-num dt{color:#ecebe7}html[data-theme="dark"] .cs-stats.cs-hl.cs-num dd{color:#959aa1}
 .cs-split2.top{align-items:start}.cs-pair.even .cs-fig img{aspect-ratio:3/4;object-fit:contain;background:#fff}
 .proj-nav .pv-s{display:none}@media (max-width:999px){.proj-nav .pv-t{display:none}.proj-nav .pv-s{display:inline}}
-@media (min-width:1000px){.proj-bar{flex-wrap:nowrap}.proj-crumb{flex:1 1 auto;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.proj-nav,.proj-bar>button,.proj-bar>a{flex:none}}
+@media (min-width:761px) and (max-width:1099px){.proj-crumb{white-space:normal!important;line-height:1.3!important;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;font-size:13px!important}}
+@media (min-width:761px){.proj-bar{flex-wrap:nowrap}.proj-crumb{flex:1 1 auto;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.proj-nav,.proj-bar>button,.proj-bar>a{flex:none}}
 /* game cards: sized to the screen, with room for a mini experience */
 #world-card{z-index:10}
 .w-card-in{--cardH:min(66vh,600px);max-height:var(--cardH);box-sizing:border-box}
@@ -1136,7 +1137,7 @@ body:has(#track-ui:not([hidden])) .exit-game{display:none}
     <p class="sub">3B Mechanical Engineering student at the University of Waterloo.</p>
     <p class="title-ask">Where do you want to start?</p>
     <ul class="menu doors" role="menu" aria-label="Choose a version">
-      <li role="none"><button role="menuitem" class="door pf" id="opt-pf" aria-current="true" data-go="portfolio"><b>Portfolio</b><span>My engineering work, quick to read. Projects, experience and résumé.</span><em>Estimated time: 3 minutes</em></button></li>
+      <li role="none"><button role="menuitem" class="door pf" id="opt-pf" aria-current="true" data-go="portfolio"><b>Portfolio</b><span>My engineering work, quick to read. Projects, experience and résumé.</span></button></li>
       <li role="none"><button role="menuitem" class="door" id="opt-play" aria-current="false" data-go="play"><b>Game</b><span>Get to know me in a small pixel world: my story, my room, my cat.</span><em>Estimated time: 4 minutes<small class="exit-note">(you can exit at any time)</small></em></button></li>
     </ul>
   </div>
@@ -1359,7 +1360,7 @@ body:has(#track-ui:not([hidden])) .exit-game{display:none}
     <section class="cs-sec">
       <h2><span>06</span>PCB</h2>
       <div class="cs-box"><span class="cs-box-t">Board</span><p>2-layer, mixed-signal, laid out in KiCad and reviewed with the EEs. I had it fabricated, then hand-soldered and assembled it.</p></div>
-      <div class="cs-gallery g3"><figure class="cs-fig"><img src="img/cs-route.webp" alt="PCB placement and routing in KiCad" loading="lazy"><figcaption>Placement and routing</figcaption></figure><figure class="cs-fig"><img src="img/cs-pour.webp" alt="Ground pour across the board" loading="lazy"><figcaption>Ground pour on both layers</figcaption></figure><figure class="cs-fig"><img src="img/cs-relief.webp" alt="Capacitor pads with ground vias next to them" loading="lazy"><figcaption>Capacitor pads, with adjacent GND vias tying the ground pour between layers</figcaption></figure></div>
+      <div class="cs-gallery g3"><figure class="cs-fig"><img src="img/cs-route.webp" alt="PCB placement and routing in KiCad" loading="lazy"><figcaption>Placement and routing</figcaption></figure><figure class="cs-fig"><img src="img/cs-pour.webp" alt="Ground pour across the board" loading="lazy"><figcaption>Ground pour on both layers, with a keep-out zone under the ESP32 antenna</figcaption></figure><figure class="cs-fig"><img src="img/cs-relief.webp" alt="Capacitor pads with ground vias next to them" loading="lazy"><figcaption>Capacitor pads, with adjacent GND vias tying the ground pour between layers</figcaption></figure></div>
       <div class="cs-gallery g2"><figure class="cs-fig"><img src="img/cs-top.webp" alt="3D render of the top of the PCB" loading="lazy"><figcaption>Top</figcaption></figure><figure class="cs-fig"><img src="img/cs-bottom.webp" alt="3D render of the bottom of the PCB" loading="lazy"><figcaption>Bottom</figcaption></figure></div>
     </section>
 
@@ -1943,7 +1944,7 @@ function openZoom(inner, label, multi, opener) {
   z._close = close; z.addEventListener('click', close);
   document.body.appendChild(z); projEl.inert = true; z.querySelector('.z-close').focus({preventScroll: true});
   /* single images: scale to fill the screen (up to 3x), so zooming never shows a picture smaller than it was on the page */
-  if (!multi) { const im = z.querySelector('img'); const fit = () => { const nw = im.naturalWidth, nh = im.naturalHeight; if (!nw || !z.isConnected) return; const k = Math.min((innerWidth - 48) / nw, (innerHeight - 110) / nh, 3); Object.assign(im.style, {width: Math.round(nw * k) + 'px', height: Math.round(nh * k) + 'px', maxWidth: 'none', maxHeight: 'none'}); }; if (im.complete) fit(); else im.addEventListener('load', fit); const onR = () => { if (!z.isConnected) removeEventListener('resize', onR); else fit(); }; addEventListener('resize', onR); }
+  if (!multi) { const im = z.querySelector('img'); const fit = () => { const nw = im.naturalWidth, nh = im.naturalHeight; if (!nw || !z.isConnected) return; const fw = innerWidth < 700 ? .94 : .82, ow = opener && opener.getBoundingClientRect ? opener.getBoundingClientRect().width : 0; const k = Math.max(Math.min(innerWidth * fw / nw, innerHeight * .8 / nh, 1400 / nw, 2), Math.min(ow * 1.15, innerWidth - 24) / nw); Object.assign(im.style, {width: Math.round(nw * k) + 'px', height: Math.round(nh * k) + 'px', maxWidth: 'none', maxHeight: 'none'}); }; if (im.complete) fit(); else im.addEventListener('load', fit); const onR = () => { if (!z.isConnected) removeEventListener('resize', onR); else fit(); }; addEventListener('resize', onR); }
 }
 addEventListener('keydown', e => {
   const z = document.getElementById('zoom'); if (!z) return;
