@@ -84,7 +84,12 @@ window.pv=function(name){gaPv&&gaPv(name);if(name===last)return;last=name;postho
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://www.jillanneyoussef.com/og-image.png?v=3">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
+<link rel="icon" type="image/png" sizes="96x96" href="/favicon-96.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Jillanne Youssef","url":"https://www.jillanneyoussef.com/","jobTitle":"Mechanical Engineering student","affiliation":{"@type":"CollegeOrUniversity","name":"University of Waterloo"},"image":["https://www.jillanneyoussef.com/og-square.png","https://www.jillanneyoussef.com/og-image.png"],"sameAs":["https://www.linkedin.com/in/jillanne-youssef/"]}</script>
 <title>Jillanne Youssef | Mechanical &amp; Product Design Engineer</title>
 <meta name="description" content="Jillanne Youssef, 3B Mechanical Engineering at the University of Waterloo. Turning early concepts into manufacturable hardware through prototyping, mechanical design, validation, and DFM. Open to Summer 2027 internships.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -980,6 +985,11 @@ html[data-theme="dark"] .cs-stats.cs-hl.cs-num dt{color:#ecebe7}html[data-theme=
 html[data-theme="dark"] .sk-card{background:#26292d;border-color:#33373c}
 html[data-theme="dark"] .sk-card dd span{background:#2f3337;color:#e9e7e2}
 @media (max-width:760px){.sk-grid{grid-template-columns:minmax(0,1fr)}.sk-card dl div{grid-template-columns:84px minmax(0,1fr)}.sk-card{padding:14px 14px}}
+/* landing: the portfolio door reads as the main way in */
+.menu .door.pf b{font-size:clamp(26px,3.3vw,34px)!important}
+.menu .door .door-cta{align-self:end;font:700 15px var(--f-pixel)!important;color:#f4fbf6!important;letter-spacing:0}
+.menu .door.pf{grid-template-rows:auto auto 1fr;align-content:stretch}
+.menu{justify-items:stretch!important}.menu li{display:flex}.menu .door{width:100%;box-sizing:border-box}
 /* accessibility helpers */
 .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .skip{position:absolute;left:12px;top:-60px;z-index:50;font:600 15px "IBM Plex Sans",system-ui,sans-serif;background:#111418;color:#fff;border:0;border-radius:8px;padding:12px 16px;cursor:pointer}
@@ -1137,8 +1147,8 @@ body:has(#track-ui:not([hidden])) .exit-game{display:none}
     <p class="sub">3B Mechanical Engineering student at the University of Waterloo.</p>
     <p class="title-ask">Where do you want to start?</p>
     <ul class="menu doors" role="menu" aria-label="Choose a version">
-      <li role="none"><button role="menuitem" class="door pf" id="opt-pf" aria-current="true" data-go="portfolio"><b>Portfolio</b><span>My engineering work, quick to read. Projects, experience and résumé.</span></button></li>
-      <li role="none"><button role="menuitem" class="door" id="opt-play" aria-current="false" data-go="play"><b>Game</b><span>Get to know me in a small pixel world: my story, my room, my cat.</span><em>Estimated time: 4 minutes<small class="exit-note">(you can exit at any time)</small></em></button></li>
+      <li role="none"><button role="menuitem" class="door pf" id="opt-pf" aria-current="true" data-go="portfolio"><b>Engineering portfolio</b><span>Projects, experience and résumé.</span><em class="door-cta">See my work →</em></button></li>
+      <li role="none"><button role="menuitem" class="door" id="opt-play" aria-current="false" data-go="play"><b>Game</b><span>Get to know me outside of work: my story, my room, my cat.</span><em>Estimated time: 4 minutes<small class="exit-note">(you can exit at any time)</small></em></button></li>
     </ul>
   </div>
 </main>
@@ -1245,7 +1255,7 @@ body:has(#track-ui:not([hidden])) .exit-game{display:none}
 
     <section class="pf-sec pf-skills" aria-labelledby="pf-skills-h">
       <h2 id="pf-skills-h" class="pf-label" data-n="04">Skills</h2>
-      <div class="sk-grid"><div class="sk-card"><h3>Mechanical Design</h3><dl><div><dt>CAD</dt><dd><span>Siemens NX</span><span>CATIA V6</span><span>SolidWorks</span><span>Onshape</span></dd></div><div><dt>DFMA</dt><dd><span>Injection molding</span><span>Precision glass molding</span><span>Die casting</span><span>Die cutting</span><span>CNC machining (3- &amp; 5-axis)</span></dd></div></dl></div><div class="sk-card"><h3>Analysis</h3><dl><div><dt>Methods</dt><dd><span>Tolerance analysis</span><span>RCFA</span><span>FMEA</span></dd></div><div><dt>Simulation</dt><dd><span>FEA (Ansys Mechanical)</span><span>CFD (Ansys Fluent)</span><span>Mold flow</span></dd></div></dl></div><div class="sk-card"><h3>Manufacturing &amp; Prototyping</h3><dl><div><dt>Machining</dt><dd><span>Lathe</span><span>Mill</span><span>3-axis CNC</span></dd></div><div><dt>3D printing</dt><dd><span>FDM</span><span>SLA</span><span>SLS</span></dd></div><div><dt>Cutting</dt><dd><span>Waterjet</span><span>Laser</span></dd></div><div><dt>Electronics</dt><dd><span>Breadboard prototyping</span><span>Soldering</span><span>PCB assembly</span></dd></div></dl></div><div class="sk-card"><h3>Electrical &amp; Software</h3><dl><div><dt>PCB design</dt><dd><span>KiCad</span><span>Altium</span></dd></div><div><dt>Embedded</dt><dd><span>ESP32</span><span>Arduino</span><span>Raspberry Pi</span><span>STM32</span></dd></div><div><dt>Programming</dt><dd><span>C++</span><span>Python</span><span>MATLAB</span></dd></div><div><dt>Testing</dt><dd><span>Data acquisition</span><span>PCB bring-up</span></dd></div></dl></div></div>
+      <div class="sk-grid"><div class="sk-card"><h3>Mechanical Design</h3><dl><div><dt>CAD</dt><dd><span>Siemens NX</span><span>CATIA V6</span><span>SolidWorks</span><span>Onshape</span></dd></div><div><dt>DFMA</dt><dd><span>Injection molding</span><span>Precision glass molding</span><span>Die casting</span><span>Die cutting</span><span>CNC machining (3- &amp; 5-axis)</span></dd></div></dl></div><div class="sk-card"><h3>Analysis</h3><dl><div><dt>Methods</dt><dd><span>Tolerance analysis</span><span>RCFA</span><span>FMEA</span></dd></div><div><dt>Simulation</dt><dd><span>FEA (Ansys Mechanical)</span><span>CFD (Ansys Fluent)</span><span>Mold flow</span></dd></div></dl></div><div class="sk-card"><h3>Manufacturing &amp; Prototyping</h3><dl><div><dt>Machining</dt><dd><span>Lathe</span><span>Mill</span><span>3-axis CNC</span></dd></div><div><dt>3D printing</dt><dd><span>FDM</span><span>SLA</span><span>SLS</span></dd></div><div><dt>Cutting</dt><dd><span>Waterjet</span><span>Laser</span></dd></div><div><dt>Electronics</dt><dd><span>Breadboarding</span><span>Soldering</span><span>PCB assembly</span></dd></div></dl></div><div class="sk-card"><h3>Electrical &amp; Software</h3><dl><div><dt>PCB design</dt><dd><span>KiCad</span><span>Altium</span></dd></div><div><dt>Embedded</dt><dd><span>ESP32</span><span>Arduino</span><span>Raspberry Pi</span><span>STM32</span></dd></div><div><dt>Programming</dt><dd><span>C++</span><span>Python</span><span>MATLAB</span></dd></div><div><dt>Testing</dt><dd><span>Data acquisition</span><span>PCB bring-up</span></dd></div></dl></div></div>
     </section>
 
     <footer class="pf-contact" id="pf-contact" aria-labelledby="pf-contact-h">
