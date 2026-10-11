@@ -57,7 +57,7 @@ if(mine||!/(^|\.)jillanneyoussef\.com$/.test(location.hostname))return;
 posthog.init('phc_pa4M8Vc85fpo7vPVdsMcpwAzSshtLEWUvhkJyViGZVLE',{
   api_host:'https://us.i.posthog.com',
   defaults:'2026-05-30',
-  person_profiles:'identified_only',
+  person_profiles:'always', /* links repeat visits from the same browser into one visitor */
   capture_pageview:false /* page views are sent by pv() below so they use the same names as GA */
 });
 posthog.register({site_version:'2026-10'});
