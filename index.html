@@ -675,6 +675,9 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 
 /* write-ups: slides full width and readable; photos side by side; click any picture to enlarge */
 .proj-figs{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+/* hand calculations: two even columns, each row the same height */
+.proj-figs.fy-calcs{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:start}
+@media (max-width:700px){.proj-figs.fy-calcs{grid-template-columns:minmax(0,1fr)}}
 .proj figure img{cursor:zoom-in}
 .proj-nav{display:flex;gap:8px;margin-left:auto}
 .proj-nav button{font:600 14px "IBM Plex Sans",system-ui,sans-serif;background:#f1f2f4;color:#1f2328;border:1px solid #d9dde2;border-radius:7px;padding:8px 12px;cursor:pointer;white-space:nowrap}
