@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<script>/* opened straight to the portfolio or a write-up (e.g. from /portfolio): hide the welcome screen before the first paint so it never flashes */
+(function(){try{var h=location.hash;if(/^#\/?(portfolio|project\/)/.test(h)){var d=document.documentElement,dark=false;try{dark=localStorage.getItem('jy-theme')==='dark'}catch(e){}d.classList.add('boot-pf');d.style.background=dark?'#1d1f22':'#fafaf8';}}catch(e){}})();</script>
+<style>.boot-pf #title,.boot-pf #world,.boot-pf .badge,.boot-pf #sound{visibility:hidden!important}.boot-pf body{background:transparent!important}</style>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1EQKKFH75R"></script>
 <script>
 /* Analytics (GA4). Every event carries: site_version, entry_point, page_name. See ANALYTICS notes in the repo history. */
@@ -727,7 +730,7 @@ img.w-logo{position:absolute;left:0;top:0;pointer-events:none;background:#fff;bo
 .cs-more:hover{background:#c0472c}
 html[data-theme="dark"] .cs-more{background:#e9e7e2;color:#1d1f22}
 #zoom.multi{overflow-y:auto;place-items:start center}
-#zoom.multi .zstack{display:grid;gap:16px;max-width:min(1200px,100%);padding:8px 0}
+#zoom.multi .zstack{display:grid;gap:16px;width:min(1600px,100%);padding:8px 0}
 #zoom.multi img{width:100%;height:auto;max-height:none}
 .cs-eq em{display:block;margin-top:6px;font:500 13px/1.4 "IBM Plex Mono",monospace;font-style:normal;color:#59626c}
 html[data-theme="dark"] .cs-eq em{color:#a3a8af}
@@ -905,6 +908,7 @@ html[data-theme="dark"] .cs-box ul{color:#d6d4cf}
 html[data-theme="dark"] .pf-now{background:#26292d}
 /* clearer section breaks */
 .pf-sec{padding-top:72px!important;margin-top:56px;border-top:1px solid var(--line)}
+.pf-logos+.pf-sec{border-top:0;margin-top:0}
 #pf .pf-label{display:flex;align-items:baseline;gap:14px;margin:0 0 14px!important;font:700 clamp(30px,3.6vw,42px)/1.1 var(--f-head)!important;letter-spacing:-.025em!important;text-transform:none!important;color:var(--ink)!important}
 #pf .pf-label::before{content:attr(data-n);font:600 14px var(--f-mono);letter-spacing:.06em;color:var(--acc)}
 .cs-fig:has(.cs-tiny){position:relative}.cs-fig figcaption.cs-tiny{position:absolute;right:10px;bottom:7px;margin:0;font-size:9.5px;letter-spacing:.02em;color:#8a9097;pointer-events:none}
@@ -1355,7 +1359,7 @@ body:has(#track-ui:not([hidden])) .exit-game{display:none}
     <section class="cs-sec">
       <h2><span>06</span>PCB</h2>
       <div class="cs-box"><span class="cs-box-t">Board</span><p>2-layer, mixed-signal, laid out in KiCad and reviewed with the EEs. I had it fabricated, then hand-soldered and assembled it.</p></div>
-      <div class="cs-gallery g3"><figure class="cs-fig"><img src="img/cs-route.webp" alt="PCB placement and routing in KiCad" loading="lazy"><figcaption>Placement and routing</figcaption></figure><figure class="cs-fig"><img src="img/cs-pour.webp" alt="Ground pour across the board" loading="lazy"><figcaption>Ground pour on both layers</figcaption></figure><figure class="cs-fig"><img src="img/cs-relief.webp" alt="Thermal relief pads on ground connections" loading="lazy"><figcaption>Thermal reliefs on the capacitor pads for hand soldering, with adjacent GND vias tying the ground pour between layers</figcaption></figure></div>
+      <div class="cs-gallery g3"><figure class="cs-fig"><img src="img/cs-route.webp" alt="PCB placement and routing in KiCad" loading="lazy"><figcaption>Placement and routing</figcaption></figure><figure class="cs-fig"><img src="img/cs-pour.webp" alt="Ground pour across the board" loading="lazy"><figcaption>Ground pour on both layers</figcaption></figure><figure class="cs-fig"><img src="img/cs-relief.webp" alt="Capacitor pads with ground vias next to them" loading="lazy"><figcaption>Capacitor pads, with adjacent GND vias tying the ground pour between layers</figcaption></figure></div>
       <div class="cs-gallery g2"><figure class="cs-fig"><img src="img/cs-top.webp" alt="3D render of the top of the PCB" loading="lazy"><figcaption>Top</figcaption></figure><figure class="cs-fig"><img src="img/cs-bottom.webp" alt="3D render of the bottom of the PCB" loading="lazy"><figcaption>Bottom</figcaption></figure></div>
     </section>
 
@@ -1702,7 +1706,8 @@ const hr = new Date().getHours();
 const phase = hr >= 20 || hr < 5 ? 'night' : hr < 7 ? 'dawn' : hr < 17 ? 'day' : 'dusk';
 const C = PAL[phase];
 let titleOn = true;
-document.documentElement.style.background = C.sky[1]; document.body.style.background = C.sky[1];
+const skyBg = () => { document.documentElement.style.background = C.sky[1]; document.body.style.background = C.sky[1]; };
+if (!document.documentElement.classList.contains('boot-pf')) skyBg();
 
 /* ============ world ============ */
 const cv = document.getElementById('world'), g = cv.getContext('2d');
@@ -1914,6 +1919,7 @@ function show(m) {
   if (prev === 'play' && window.World) window.World.stop();
   if (m === 'play') { if (!gameMuted) setMusic(true); }
   else if (AC && musicOn && (m === 'portfolio' || prev === 'play')) setMusic(false);
+  if (document.documentElement.classList.contains('boot-pf')) { document.documentElement.classList.remove('boot-pf'); skyBg(); }
   if (m === 'portfolio') { pfEl.scrollTop = 0; document.getElementById('pf-name').focus({preventScroll: true}); eagerImgs(pfEl); preloadWriteups(); }
   if (m === 'play' && window.World) window.World.start();
   document.title = m === 'play' ? 'Jillanne Youssef · Game' : 'Jillanne Youssef | Mechanical & Product Design Engineer';
@@ -1936,6 +1942,8 @@ function openZoom(inner, label, multi, opener) {
   const close = () => { z.remove(); projEl.inert = false; if (opener && opener.isConnected) opener.focus({preventScroll: true}); };
   z._close = close; z.addEventListener('click', close);
   document.body.appendChild(z); projEl.inert = true; z.querySelector('.z-close').focus({preventScroll: true});
+  /* single images: scale to fill the screen (up to 3x), so zooming never shows a picture smaller than it was on the page */
+  if (!multi) { const im = z.querySelector('img'); const fit = () => { const nw = im.naturalWidth, nh = im.naturalHeight; if (!nw || !z.isConnected) return; const k = Math.min((innerWidth - 48) / nw, (innerHeight - 110) / nh, 3); Object.assign(im.style, {width: Math.round(nw * k) + 'px', height: Math.round(nh * k) + 'px', maxWidth: 'none', maxHeight: 'none'}); }; if (im.complete) fit(); else im.addEventListener('load', fit); const onR = () => { if (!z.isConnected) removeEventListener('resize', onR); else fit(); }; addEventListener('resize', onR); }
 }
 addEventListener('keydown', e => {
   const z = document.getElementById('zoom'); if (!z) return;
