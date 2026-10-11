@@ -412,6 +412,8 @@ const RO = [
 const RP = {x: 22, dir: 1, tx: null, after: null};
 let hoverObj = null;
 const roomLabel = document.createElement('div'); roomLabel.className = 'w-label w-room-label'; roomLabel.hidden = true; document.getElementById('world-labels').appendChild(roomLabel);
+/* the way out is always labelled (hover-only labels never show on phones): a world-style label over the door that leaves when tapped or clicked */
+const doorLabel = document.createElement('button'); doorLabel.type = 'button'; doorLabel.className = 'w-label w-door-label'; doorLabel.textContent = 'Back outside'; doorLabel.setAttribute('aria-label', 'Back outside: leave the house'); doorLabel.hidden = true; doorLabel.addEventListener('click', e => { e.stopPropagation(); exitRoom(); }); document.getElementById('world-labels').appendChild(doorLabel);
 function girlSide(c, ox, oy, f, flip) {
   const S2 = 2, P_ = (x, y, w, h, k) => { const X = flip ? (24 - x - w) : x; R(c, ox + X * S2, oy + y * S2, w * S2, h * S2, k); };
   const HAIR = '#2a1a14', HAIR2 = '#4a2e22', SK = '#e8bfa0';
@@ -502,7 +504,8 @@ function drawRoomFront(now) {
   g.globalCompositeOperation = 'source-over';
   // DOM: hide world labels, show hover label + prompt
   labelNodes.forEach(n => n.hidden = true); iconNodes.forEach(([, im]) => im.hidden = true);
-  if (hoverObj) { roomLabel.hidden = false; roomLabel.textContent = hoverObj.label; const lw = roomLabel.offsetWidth || 80; roomLabel.style.transform = `translate(${Math.round(Math.max(lw / 2 + 6, Math.min(innerWidth - lw / 2 - 6, (hoverObj.x + hoverObj.w / 2 - cam.x) * SC)))}px,${Math.round((hoverObj.y - 3 - cam.y) * SC)}px) translate(-50%,-100%)`; } else roomLabel.hidden = true;
+  { const d = RO.find(o => o.id === 'door'); doorLabel.hidden = !card.hidden || document.getElementById('fade').classList.contains('on'); if (!doorLabel.hidden) { const lw = doorLabel.offsetWidth || 90, lh = doorLabel.offsetHeight || 20, tod = document.getElementById('tod'), tb = tod && !tod.hidden ? tod.getBoundingClientRect().bottom : 0; /* stay clear of the time-of-day bar on short screens */ doorLabel.style.transform = `translate(${Math.round(Math.max(lw / 2 + 6, Math.min(innerWidth - lw / 2 - 6, (d.x + d.w / 2 - cam.x) * SC)))}px,${Math.round(Math.max(tb + 8 + lh, (d.y - 3 - cam.y) * SC))}px) translate(-50%,-100%)`; } }
+  if (hoverObj && hoverObj.id !== 'door') { roomLabel.hidden = false; roomLabel.textContent = hoverObj.label; const lw = roomLabel.offsetWidth || 80; roomLabel.style.transform = `translate(${Math.round(Math.max(lw / 2 + 6, Math.min(innerWidth - lw / 2 - 6, (hoverObj.x + hoverObj.w / 2 - cam.x) * SC)))}px,${Math.round((hoverObj.y - 3 - cam.y) * SC)}px) translate(-50%,-100%)`; } else roomLabel.hidden = true;
   const n = roomNearest();
   if (n && card.hidden && RP.tx == null) { prompt.hidden = false; prompt.textContent = (touch ? 'Tap to ' : 'Press E to ') + (n.kind === 'door' ? 'go outside' : 'look at ' + n.label.toLowerCase()); const pw = prompt.offsetWidth || 160, rx = (RP.x - cam.x) * SC; prompt.style.transform = `translate(${Math.round(Math.max(pw / 2 + 8, Math.min(innerWidth - pw / 2 - 8, rx)))}px,${Math.round((FLOOR - 70 - cam.y) * SC)}px) translate(-50%,-100%)`; }
   else prompt.hidden = true;
@@ -560,7 +563,7 @@ function goTo(x, y, after) {
 function walkTo(l, open) { closeCard(); const s = spotPx(l); goTo(s.x, s.y, open ? l : null); }
 function teleport(l, open) {
   closeCard(); const fade = document.getElementById('fade'); fade.classList.add('on');
-  setTimeout(() => { if (scene === 'room') { scene = 'world'; resize(); } const s = spotPx(l); P.x = s.x; P.y = s.y; P.dir = 'up'; P.target = null; moe.x = P.x - 14; moe.y = P.y + 8; trail.length = 0; fade.classList.remove('on'); if (open) openCard(l); }, reduce ? 0 : 260);
+  setTimeout(() => { if (scene === 'room') { scene = 'world'; doorLabel.hidden = true; resize(); } const s = spotPx(l); P.x = s.x; P.y = s.y; P.dir = 'up'; P.target = null; moe.x = P.x - 14; moe.y = P.y + 8; trail.length = 0; fade.classList.remove('on'); if (open) openCard(l); }, reduce ? 0 : 260);
 }
 
 /* ---------------- cards ---------------- */
@@ -571,9 +574,9 @@ function enterRoom() {
   setTimeout(() => { worldPos.x = P.x; worldPos.y = P.y; scene = 'room'; window.track && track('enter_room'); resize(); RP.x = 22; RP.dir = 1; RP.tx = null; P.target = null; autoId = 'door'; trail.length = 0; fade.classList.remove('on'); }, reduce ? 0 : 260);
 }
 function exitRoom() {
-  closeCard(); const fade = document.getElementById('fade'); fade.classList.add('on');
+  doorLabel.hidden = true; closeCard(); const fade = document.getElementById('fade'); fade.classList.add('on');
   WSTATE.moeHome = false;
-  setTimeout(() => { scene = 'world'; resize(); const s = spotPx(L.find(l => l.id === 'cabin')); P.x = s.x; P.y = s.y + 6; P.dir = 'down'; P.target = null; autoId = 'cabin'; moe.x = P.x - 14; moe.y = P.y + 4; trail.length = 0; fade.classList.remove('on'); }, reduce ? 0 : 260);
+  setTimeout(() => { scene = 'world'; doorLabel.hidden = true; resize(); const s = spotPx(L.find(l => l.id === 'cabin')); P.x = s.x; P.y = s.y + 6; P.dir = 'down'; P.target = null; autoId = 'cabin'; moe.x = P.x - 14; moe.y = P.y + 4; trail.length = 0; fade.classList.remove('on'); }, reduce ? 0 : 260);
 }
 function ledCard() {
   window.track && track('stop_open', {stop: 'room: led strip'});
@@ -1014,7 +1017,7 @@ function enterTrack(kind) {
     drv = {kind, x: 800, y: 500, a: 0, v: 0, top, boost: 0, tank: 1, cones: 0, flame: 0, cx: 800, cy: 500, shake: 0};
     skc.clearRect(0, 0, DW, DH); resetCones();
     keys.clear(); P.target = null; tui.hidden = false; document.getElementById('world-bar').hidden = true; document.getElementById('tod').hidden = true; prompt.hidden = true; roomLabel.hidden = true;
-    labelNodes.forEach(n => n.hidden = true); iconNodes.forEach(([, im]) => im.hidden = true);
+    labelNodes.forEach(n => n.hidden = true); iconNodes.forEach(([, im]) => im.hidden = true); doorLabel.hidden = true;
     resize(); window.__engine && window.__engine(kind); fade.classList.remove('on');
   }, reduce ? 0 : 260);
 }
