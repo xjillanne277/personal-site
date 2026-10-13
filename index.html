@@ -1342,6 +1342,12 @@ html[data-theme="dark"] .proj-res b{color:#8fd9b4}
 @media (max-width:860px){.cs-stats.cs-hl div+div{border-top-width:2px}}
 @media (max-width:640px){.case-img{border-right-width:0;border-bottom-width:2px}}
 @media (max-width:860px) and (min-width:641px){.case-img{border-bottom-width:0}}
+/* skills: plain comma-separated lists, no bubbles; labels in the body font */
+.sk-card dt{font:600 15px/1.4 "IBM Plex Sans",system-ui,sans-serif;color:var(--ink);padding-top:0}
+.sk-card dd{display:block;font-size:15px;line-height:1.5;color:var(--sub)}
+.sk-card dd span,html[data-theme="dark"] .sk-card dd span{display:inline;background:none;border-radius:0;padding:0;font-size:inherit;line-height:inherit;color:inherit;white-space:normal}
+.sk-card dd span:not(:last-child)::after{content:", "}
+.sk-card dl{gap:10px}
 /* archived write-ups: a clear note at the top */
 .arch-note{margin:10px 0 18px;padding:12px 16px;border-left:4px solid #8a8f96;background:#f4f5f6;border-radius:0 8px 8px 0;font-size:16px;line-height:1.5;color:#3a4048;max-width:62ch}
 .arch-note b{color:#14181d}
@@ -1430,7 +1436,7 @@ html[data-theme="dark"] .arch-note b{color:#ecebe7}
           <span class="case-title">Universal RGBW LED controller</span>
           <span class="case-sum">A standalone controller so lighting designers can test colour on production LED strips without a firmware engineer. I proposed it, designed my first PCB, and handed it off in seven weeks.</span>
           <span class="case-metrics"><span><b>6×</b>LED capacity vs. <span style="white-space:nowrap">off-the-shelf</span> controller</span><span><b>7 weeks</b>concept to handoff</span><span><b>2-layer</b>custom PCB designed and assembled</span></span>
-          <span class="case-tags"><span>KiCad</span><span>ESP32</span><span>C++</span><span>SLA enclosure</span><span>Thermal analysis</span></span>
+          <span class="case-tags"><span>KiCad</span><span>ESP32</span><span>C++</span><span>Enclosure design</span><span>Snap fits</span><span>Thermal analysis</span></span>
           <span class="case-cta">Read the case study <span aria-hidden="true">→</span></span>
         </span>
       </a>
