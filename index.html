@@ -61,7 +61,9 @@ posthog.init('phc_pa4M8Vc85fpo7vPVdsMcpwAzSshtLEWUvhkJyViGZVLE',{
   api_host:'https://us.i.posthog.com',
   defaults:'2026-05-30',
   person_profiles:'always', /* links repeat visits from the same browser into one visitor */
-  capture_pageview:false /* page views are sent by pv() below so they use the same names as GA */
+  capture_pageview:false, /* page views are sent by pv() below so they use the same names as GA */
+  /* visits through /portfolio: attach where the click really came from (the redirect hides it) */
+  before_send:function(event){try{var r=sessionStorage.getItem('jy_orig_ref');if(r!==null&&event&&event.properties){event.properties.original_referrer=r;event.properties.via_portfolio_link=true;}}catch(e){}return event;}
 });
 posthog.register({site_version:'2026-10'});
 /* same page names as GA: welcome, portfolio, game, case study: <id> */
