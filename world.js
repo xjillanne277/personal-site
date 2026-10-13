@@ -231,8 +231,8 @@ bake();
 const H = '#2a1a14', H2 = '#4a2e22', S = '#e8bfa0', S2 = '#d6a886', TEE = '#1f2126', J = '#4f6d8f', SH = '#eceff1';
 function girl(c, ox, oy, dir, f, noShadow) {
   const P = (x, y, w, h, k) => R(c, ox + x, oy + y, w, h, k);
-  if (!noShadow) P(4, 24, 12, 2, 'rgba(0,0,0,.18)');
-  const lift = f === 1 ? 1 : 0, lift2 = f === 2 ? 1 : 0;
+  const pass = f === 2 || f === 4;
+  if (!noShadow) P(4, 24 + (pass ? 1 : 0), 12, 2, 'rgba(0,0,0,.18)');
   if (dir === 'down' || dir === 'up') {
     P(5, 1, 10, 2, H); P(4, 3, 12, 3, H); P(3, 5, 3, 12, H); P(14, 5, 3, 12, H); P(2, 8, 2, 8, H); P(16, 8, 2, 8, H);
     if (dir === 'down') {
@@ -242,8 +242,10 @@ function girl(c, ox, oy, dir, f, noShadow) {
       P(9, 10, 2, 1, '#b5605a'); P(6, 10, 1, 1, '#f0b4a0'); P(13, 10, 1, 1, '#f0b4a0'); P(8, 12, 4, 1, S2);
     } else P(5, 4, 10, 13, H);
     [[5, 2], [13, 2], [4, 7], [15, 7], [3, 11], [16, 11], [4, 15], [15, 15], [7, 3], [12, 3]].forEach(([x, y]) => P(x, y, 1, 1, H2));
-    P(6, 13, 8, 6, TEE); P(4, 13, 2, 3, TEE); P(14, 13, 2, 3, TEE); P(4, 16, 2, 3, S); P(14, 16, 2, 3, S);
-    P(7, 19, 6, 3, J); P(7, 22 - lift, 2, 2, SH); P(11, 22 - lift2, 2, 2, SH);
+    // arms swing opposite to the legs; legs: the forward foot lands a pixel lower, the back foot lifts
+    const aL = f === 1 ? -1 : f === 3 ? 1 : 0, aR = -aL, fL = f === 1 ? 1 : f === 3 ? -1 : 0, fR = -fL;
+    P(6, 13, 8, 6, TEE); P(4, 13, 2, 3, TEE); P(14, 13, 2, 3, TEE); P(4, 16, 2, 3 + aL, S); P(14, 16, 2, 3 + aR, S);
+    P(7, 19, 6, 2, J); P(7, 21, 2, 1 + fL, J); P(11, 21, 2, 1 + fR, J); P(7, 22 + fL, 2, 2, SH); P(11, 22 + fR, 2, 2, SH);
   } else {
     const fl = dir === 'left' ? (x, w) => 20 - x - w : x => x;
     const Q = (x, y, w, h, k) => P(fl(x, w), y, w, h, k);
@@ -251,17 +253,28 @@ function girl(c, ox, oy, dir, f, noShadow) {
     Q(10, 5, 5, 7, S); Q(10, 5, 2, 3, H); Q(12, 5, 2, 1, H); Q(12, 7, 2, 1, H);
     Q(12, 8, 2, 2, '#fff'); Q(13, 8, 1, 2, '#3b2418'); Q(13, 11, 1, 1, '#b5605a'); Q(10, 12, 3, 1, S2);
     [[5, 2], [9, 2], [5, 7], [4, 10], [6, 13], [4, 15], [7, 4]].forEach(([x, y]) => Q(x, y, 1, 1, H2));
-    Q(7, 13, 7, 6, TEE); Q(9, 13, 3, 3, TEE); Q(10, 16, 2, 3, S);
-    Q(8, 19, 5, 3, J); Q(f === 1 ? 7 : 8, 22, 2, 2, SH); Q(f === 2 ? 12 : 11, 22, 3, 2, SH);
+    // side view: on contact frames the legs scissor (far leg darker); on passing frames they pass under the body
+    const JD = '#3d566f', SD = '#c9cfd4', arm = f === 1 ? 1 : f === 3 ? -1 : 0;
+    Q(7, 13, 7, 6, TEE); Q(9, 13, 3, 3, TEE);
+    Q(8, 19, 5, 2, J);
+    if (f === 1 || f === 3) {
+      const nearFwd = f === 1, back = [7, 5], fwd = [11, 13];
+      const far = nearFwd ? back : fwd, near = nearFwd ? fwd : back;
+      Q(far[0], 21, 2, 1, JD); Q(far[1], 22, 3, 2, SD);
+      Q(near[0], 21, 2, 1, J); Q(near[1], 22, 3, 2, SH);
+    } else if (pass) { Q(9, 21, 3, 1, J); Q(10, 21, 3, 1, SD); Q(9, 22, 3, 2, SH); }
+    else { Q(8, 21, 5, 1, J); Q(8, 22, 2, 2, SH); Q(11, 22, 3, 2, SH); }
+    Q(10 + arm, 16, 2, 3, S);
   }
 }
 function moeSprite(c, ox, oy, f) {
   const P = (x, y, w, h, k) => R(c, ox + x, oy + y, w, h, k), cr = '#f6e7d4', pt = '#e9b98a';
-  P(1, 11, 12, 2, 'rgba(0,0,0,.15)');
+  const pass = f === 2 || f === 4, pL = f === 1 ? -1 : 0, pR = f === 3 ? -1 : 0, tl = f === 1 ? 1 : f === 3 ? -1 : 0;
+  P(1, 11 + (pass ? 1 : 0), 12, 2, 'rgba(0,0,0,.15)');
   P(2, 4, 10, 7, cr); P(3, 0, 8, 6, cr); P(3, -1, 2, 2, pt); P(9, -1, 2, 2, pt);
   P(5, 2, 4, 3, pt); P(5, 2, 1, 1, '#7fb3e0'); P(8, 2, 1, 1, '#7fb3e0'); P(6, 4, 2, 1, '#f2a0a8');
-  P(11, 7 + (f ? 1 : 0), 3, 2, pt); P(13, 5 + (f ? 1 : 0), 2, 3, pt);
-  P(3, 10 + (f ? 0 : 1), 2, 2, pt); P(9, 10 + (f ? 1 : 0), 2, 2, pt);
+  P(11, 7, 3, 2, pt); P(13 + tl, 5, 2, 3, pt);
+  P(3 + (f === 1 ? -1 : 0), 10 + pL, 2, 2, pt); P(9 + (f === 3 ? 1 : 0), 10 + pR, 2, 2, pt);
 }
 const pops = {nsx: 0, c5: 0}, popT = {nsx: 0, c5: 0}; const carClicks = {nsx: 0, c5: 0};
 function car(c, X, Y, o, up, noShadow) {
@@ -425,7 +438,9 @@ function girlSide(c, ox, oy, f, flip) {
   P_(7, 15, 3, 3, HAIR); P_(14, 15, 3, 3, HAIR); P_(3, 20, 4, 4, HAIR); P_(17, 20, 4, 4, HAIR); P_(4, 24, 2, 1, HAIR); P_(18, 24, 2, 1, HAIR);
   P_(7, 17, 10, 9, '#1f2126'); P_(8, 17, 8, 1, '#2c2f36'); P_(10, 17, 4, 1, '#d6a886'); P_(5, 18, 3, 3, '#1f2126'); P_(16, 18, 3, 3, '#1f2126'); P_(6, 21, 2, 5, SK); P_(16, 21, 2, 5, SK);
   P_(9, 26, 6, 3, '#4f6d8f');
-  if (f === 0) { P_(9, 29, 2, 2, '#eceff1'); P_(13, 29, 2, 2, '#eceff1'); } else if (f === 1) { P_(9, 29, 2, 1, '#4f6d8f'); P_(8, 30, 3, 1, '#eceff1'); P_(13, 29, 2, 2, '#eceff1'); } else { P_(9, 29, 2, 2, '#eceff1'); P_(13, 29, 2, 1, '#4f6d8f'); P_(13, 30, 3, 1, '#eceff1'); }
+  if (f === 1) { P_(9, 29, 2, 1, '#4f6d8f'); P_(7, 30, 3, 1, '#eceff1'); P_(13, 29, 2, 2, '#eceff1'); }
+  else if (f === 3) { P_(9, 29, 2, 2, '#eceff1'); P_(13, 29, 2, 1, '#4f6d8f'); P_(14, 30, 3, 1, '#eceff1'); }
+  else { P_(9, 29, 2, 2, '#eceff1'); P_(13, 29, 2, 2, '#eceff1'); }
   if (WSTATE.shades) { P_(8, 9, 4, 3, '#111111'); P_(12, 10, 1, 1, '#111111'); P_(13, 9, 4, 3, '#111111'); P_(9, 9, 1, 1, '#555555'); P_(14, 9, 1, 1, '#555555'); }
   if (WSTATE.hat) { const C_ = (x, y, w, h, k) => R(c, ox + x * S2, oy + y * S2, w * S2, h * S2, k); cap(C_, 12, 6, 8, 'front', performance.now()); }
 }
@@ -473,7 +488,7 @@ function roomStep(dt) {
   if (v) RP.tx = null;
   if (!v && RP.tx != null) { const d = RP.tx - RP.x; if (Math.abs(d) < 2) { RP.tx = null; if (RP.after) { const o = RP.after; RP.after = null; roomOpen(o); } } else v = Math.sign(d); }
   P.moving = !!v;
-  if (v) { RP.dir = v; const x0 = RP.x; RP.x = Math.max(12, Math.min(RMW - 14, RP.x + v * 140 * dt)); walkT += Math.abs(RP.x - x0) / STRIDE; }
+  if (v) { RP.dir = v; const x0 = RP.x; RP.x = Math.max(12, Math.min(RMW - 14, RP.x + v * 140 * dt)); walkT += Math.abs(RP.x - x0) / (STEP_PX * 2); }
   if (autoId) { const a = RO.find(o => o.id === autoId); if (!a || Math.abs(a.stand - RP.x) > 26) autoId = null; }
   const nn = roomNearest();
 }
@@ -490,7 +505,7 @@ function drawRoomFront(now) {
   for (let x = 42; x < 148; x += 3) R(g, x - cam.x, 58 - cam.y, 2, 1, `rgb(${lc[seg(x)]})`);
   // Moe + Jillanne
   moeNap(g, 116 - cam.x, 158 - cam.y, now); heartAt(142 - cam.x, 148 - cam.y, now);
-  const f = P.moving && !reduce ? (Math.floor(walkT * 8) % 2) + 1 : 0, bob = !P.moving && !reduce && Math.floor(now / 500) % 2 ? 1 : 0;
+  const f = P.moving && !reduce ? (Math.floor(walkT) % 4) + 1 : 0, bob = f === 2 || f === 4 ? -1 : !P.moving && !reduce && Math.floor(now / 500) % 2 ? 1 : 0;
   girlSide(g, Math.round(RP.x) - 24 - cam.x, FLOOR - 62 - cam.y + bob, f, RP.dir < 0);
   // hover outline
   if (hoverObj) { g.strokeStyle = 'rgba(255,248,225,.9)'; g.lineWidth = 1; g.strokeRect(hoverObj.x - cam.x - 1.5, hoverObj.y - cam.y - 1.5, hoverObj.w + 3, hoverObj.h + 3); }
@@ -522,7 +537,8 @@ const trail = []; const moe = {x: P.x - 14, y: P.y + 6};
 const keys = new Set();
 let boat = null, boatCool = 0, landDir = 0, boat0dir = 0;
 const visited = new Set(); let autoId = null;
-const STRIDE = 144; /* ground covered per leg cycle (two steps of 18 px); walkT * 8 picks the frame */
+/* walk cycles run on distance, not time: one frame per STEP_PX of ground, four frames per cycle (contact, pass, contact, pass) */
+const STEP_PX = 11, MOE_STEP_PX = 9; let moeT = 0;
 let running = false, last = 0, tourIdx = -1, openId = null, walkT = 0, touch = matchMedia('(pointer: coarse)').matches;
 
 function blockedAt(px, py) { const c = cur(), tx = Math.floor(px / TS), ty = Math.floor(py / TS); if (tx < 0 || ty < 0 || tx >= c.W || ty >= c.H) return true; return c.block[ty * c.W + tx] === 1; }
@@ -687,7 +703,7 @@ function arcadeCard() {
     for (let i = 0; i < 240; i += 12) P((i - (arc.t += 0) - (arc.score * 4) % 12 + 240) % 240, GY + 7, 4, 1, '#6fae5f');
     arc.obs.forEach(o => { if (o.k === 'cone') { P(o.x + 3, GY - 11, 2, 2, '#f08a24'); P(o.x + 2, GY - 9, 4, 3, '#f08a24'); P(o.x + 2, GY - 6, 4, 1, '#ffffff'); P(o.x + 1, GY - 5, 6, 3, '#f08a24'); P(o.x, GY - 2, 8, 2, '#c4651a'); } else { P(o.x, GY - 9, 12, 9, '#a8794e'); P(o.x, GY - 9, 12, 2, '#c4935f'); P(o.x + 5, GY - 9, 2, 9, '#6e4a2c'); } });
     P(25, GY - 1, 13, 2, 'rgba(0,0,0,.18)');
-    girl(x, 22, GY - 26 - Math.round(arc.y), 'right', arc.started && !arc.over && arc.y === 0 ? (Math.floor(arc.f) % 2) + 1 : 0, true);
+    girl(x, 22, GY - 26 - Math.round(arc.y), 'right', arc.started && !arc.over && arc.y === 0 ? (Math.floor(arc.f * 1.6) % 4) + 1 : 0, true);
     arc.msg.hidden = arc.started && !arc.over; arc.msg.textContent = !arc.started ? (touch ? 'Tap to start' : 'Press Space to start') : 'Bonk! ' + (touch ? 'Tap' : 'Press Space') + ' to try again';
     arc.out.textContent = `Score ${Math.floor(arc.score)} · Best ${arc.best}`;
     requestAnimationFrame(frame);
@@ -755,9 +771,9 @@ let joy = null;
 function joyVec() {
   if (!joy || scene !== 'world' || boat) return null;
   const cam = camera(), sx = (P.x - cam.x) * SC + offX, sy = (P.y - 12 - cam.y) * SC + offY;
-  const dx = joy.cx - sx, dy = joy.cy - sy, d = Math.hypot(dx, dy), dead = 16, full = 90;
+  const dx = joy.cx - sx, dy = joy.cy - sy, d = Math.hypot(dx, dy), dead = 22, full = 120;
   if (d < dead) return {x: 0, y: 0, m: 0};
-  return {x: dx / d, y: dy / d, m: Math.min(1, .45 + .55 * (d - dead) / (full - dead))};
+  return {x: dx / d, y: dy / d, m: Math.min(1, .4 + .6 * (d - dead) / (full - dead))};
 }
 cv.addEventListener('pointerdown', e => {
   touch = e.pointerType === 'touch'; closeCard();
@@ -776,7 +792,7 @@ function tapAt(e) {
   goTo(wx, wy);
 }
 cv.addEventListener('pointermove', e => {
-  if (joy && e.pointerId === joy.id) { joy.cx = e.clientX; joy.cy = e.clientY; if (Math.hypot(e.clientX - joy.x0, e.clientY - joy.y0) > 14) joy.on = true; return; }
+  if (joy && e.pointerId === joy.id) { joy.cx = e.clientX; joy.cy = e.clientY; if (Math.hypot(e.clientX - joy.x0, e.clientY - joy.y0) > 18) joy.on = true; return; }
   if (scene !== 'world' || !(e.buttons & 1) || e.pointerType === 'touch') return; const cam = camera(); P.target = {x: (e.clientX - offX) / SC + cam.x, y: (e.clientY - offY) / SC + cam.y}; P.path = null; P.after = null; P.stuck = 0; });
 prompt.addEventListener('click', () => { if (scene === 'room') { const o = roomNearest(); if (o) roomOpen(o); return; } const n = nearest(); if (n) openCard(n); });
 
@@ -838,14 +854,14 @@ function step(now) {
       if (!okY && vy && Math.abs(vy) > Math.abs(vx) && feetBlocked(P.x, P.y + vy)) { for (let k = 1; k <= 8; k++) { if (!feetBlocked(P.x - k, P.y + vy)) { P.x -= Math.min(k, sp); break; } if (!feetBlocked(P.x + k, P.y + vy)) { P.x += Math.min(k, sp); break; } } }
     }
     if (P.target && !across && Math.hypot(P.x - ox, P.y - oy) < sp * .2) { P.stuck += dt; if (P.stuck > .35 && P.final && !P.retried) { const f = P.final, a = P.after; goTo(f.x, f.y, a); P.retried = true; } else if (P.stuck > .35) { const l = P.after; P.target = null; P.after = null; if (l && Math.hypot(spotPx(l).x - P.x, spotPx(l).y - P.y) < 60) openCard(l); } } else P.stuck = 0;
-    if (Math.hypot(P.x - ox, P.y - oy) < sp * .15) P.moving = false; else { walkT += Math.hypot(P.x - ox, P.y - oy) / STRIDE; /* legs follow the ground covered, so a slow walk steps slowly */ trail.push([P.x, P.y]); if (trail.length > 60) trail.shift(); }
+    if (Math.hypot(P.x - ox, P.y - oy) < sp * .15) P.moving = false; else { walkT += Math.hypot(P.x - ox, P.y - oy) / STEP_PX; trail.push([P.x, P.y]); if (trail.length > 60) trail.shift(); }
   }
   // Moe follows a few steps behind (outside only)
   if (scene === 'world') {
   const tg = trail.length > 12 ? trail[trail.length - 12] : [P.x - 18, P.y + 6];
   const mdx = tg[0] - moe.x, mdy = tg[1] - moe.y, md = Math.hypot(mdx, mdy);
   moe.moving = md > 14;
-  if (md > 14) { moe.x += mdx / md * Math.min(md - 14, 185 * dt); moe.y += mdy / md * Math.min(md - 14, 185 * dt); }
+  if (md > 14) { const ms = Math.min(md - 14, 185 * dt); moe.x += mdx / md * ms; moe.y += mdy / md * ms; moeT += ms / MOE_STEP_PX; }
   }
   // auto-open when you walk up to something
   if (autoId) { const a = cur().L.find(l => l.id === autoId); if (!a || rectDist(a) > 30) autoId = null; }
@@ -927,14 +943,14 @@ function draw(now) {
   car(g, nsx.tx * TS + 1 - cam.x, nsx.ty * TS + 2 - cam.y, CARS.nsx, pops.nsx);
   car(g, c5.tx * TS + 1 - cam.x, c5.ty * TS + 2 - cam.y, CARS.c5, pops.c5);
   // sprites, sorted by y
-  const f = P.moving && !reduce ? (Math.floor(walkT * 8) % 2) + 1 : 0;
-  const bob = !P.moving && !boat && !reduce && Math.floor(now / 500) % 2 ? 1 : 0;
-  const mf = Math.floor(now / 220) % 2;
+  const f = P.moving && !reduce ? (Math.floor(walkT) % 4) + 1 : 0;
+  const bob = f === 2 || f === 4 ? -1 : !P.moving && !boat && !reduce && Math.floor(now / 500) % 2 ? 1 : 0;
+  const mf = moe.moving && !reduce ? (Math.floor(moeT) % 4) + 1 : 0, mbob = mf === 2 || mf === 4 ? -1 : 0;
   if (boat) { const bx = Math.round(P.x) - 16 - cam.x, by = Math.round(P.y) - 6 - cam.y;
     R(g, bx + 2, by + 9, 30, 3, 'rgba(20,50,90,.35)'); R(g, bx + 3, by, 26, 9, '#8a5a36'); R(g, bx, by + 1, 32, 6, '#8a5a36'); R(g, bx + 2, by + 2, 28, 4, '#b07a4a'); R(g, bx, by + 1, 32, 1, '#6b4426'); R(g, bx + 3, by + 8, 26, 1, '#5e3a20');
     const oar = Math.floor(now / 220) % 2; R(g, bx + 14, by - 2 + oar * 2, 2, 12, '#d9b483'); R(g, bx + 13, by + 9 + oar * 2, 4, 3, '#d9b483');
     if (!reduce) { const w = Math.floor(now / 120) % 3; R(g, bx - 3 - w, by + 4, 2, 1, '#cfe6f7'); R(g, bx + 34 + w, by + 4, 2, 1, '#cfe6f7'); } }
-  const sprites = [[WSTATE.moeHome ? -1e9 : moe.y, () => { if (WSTATE.moeHome) return; sbc.clearRect(0, 0, 24, 38); moeSprite(sbc, 2, 7, moe.moving ? mf : 0); if (WSTATE.hat) moeCap((x, y, w, h, k) => R(sbc, 2 + x, 7 + y, w, h, k), 7, -1, now); g.drawImage(sbuf, 0, 0, 20, 21, Math.round(moe.x - 9 * MOE_K - cam.x), Math.round(moe.y - 18 * MOE_K - cam.y), Math.round(20 * MOE_K), Math.round(21 * MOE_K)); }], [P.y, () => { sbc.clearRect(0, 0, 24, 38); girl(sbc, 2, 10, P.dir, f); gear(sbc, P.dir, now); g.drawImage(sbuf, 0, 0, 24, 38, Math.round(P.x - 12 * GIRL_K - cam.x), Math.round(P.y - 35 * GIRL_K - cam.y + bob), Math.round(24 * GIRL_K), Math.round(38 * GIRL_K)); }]].sort((a, b) => a[0] - b[0]);
+  const sprites = [[WSTATE.moeHome ? -1e9 : moe.y, () => { if (WSTATE.moeHome) return; sbc.clearRect(0, 0, 24, 38); moeSprite(sbc, 2, 7, mf); if (WSTATE.hat) moeCap((x, y, w, h, k) => R(sbc, 2 + x, 7 + y, w, h, k), 7, -1, now); g.drawImage(sbuf, 0, 0, 20, 21, Math.round(moe.x - 9 * MOE_K - cam.x), Math.round(moe.y - 18 * MOE_K - cam.y + mbob), Math.round(20 * MOE_K), Math.round(21 * MOE_K)); }], [P.y, () => { sbc.clearRect(0, 0, 24, 38); girl(sbc, 2, 10, P.dir, f); gear(sbc, P.dir, now); g.drawImage(sbuf, 0, 0, 24, 38, Math.round(P.x - 12 * GIRL_K - cam.x), Math.round(P.y - 35 * GIRL_K - cam.y + bob), Math.round(24 * GIRL_K), Math.round(38 * GIRL_K)); }]].sort((a, b) => a[0] - b[0]);
   sprites.forEach(s => s[1]());
   if (TINT) {
     g.fillStyle = TINT; g.fillRect(0, 0, VW, VH);
