@@ -1307,6 +1307,11 @@ html[data-theme="dark"]{color-scheme:dark}
 .pf-first.arch .pf-fy-body>span:last-child{font-size:14.5px}
 @media (max-width:960px) and (min-width:641px){.pf-first.arch{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (prefers-reduced-motion:reduce){.pf-arch-box>summary::after{transition:none}}
+/* results in the older write-ups: the same green as the case-study results */
+.proj-res{border-left:4px solid #2f7a5f;background:#f2f9f5;padding:12px 16px;border-radius:0 10px 10px 0}
+.proj-res b{color:#1d6b4e}
+html[data-theme="dark"] .proj-res{background:#1f3329;border-left-color:#4fae84}
+html[data-theme="dark"] .proj-res b{color:#8fd9b4}
 /* archived write-ups: a clear note at the top */
 .arch-note{margin:10px 0 18px;padding:12px 16px;border-left:4px solid #8a8f96;background:#f4f5f6;border-radius:0 8px 8px 0;font-size:16px;line-height:1.5;color:#3a4048;max-width:62ch}
 .arch-note b{color:#14181d}
@@ -1719,6 +1724,7 @@ html[data-theme="dark"] .arch-note b{color:#ecebe7}
     </section>
     <figure class="proj-wide proj-slide"><img src="img/gt-app.webp" alt="Five screens of the driver app: login, score summary, score report, AI score improver and profile" loading="lazy" width="1057" height="441"><figcaption>Fig. 2 · The driver app, designed in Figma.</figcaption></figure>
       <figure class="proj-wide proj-slide"><img src="img/gt-cv.webp" alt="Computer vision on dashcam footage: tailgating and object detection, street sign detection, and PII blurring with attentive and distracted driving indicators" loading="lazy" width="1271" height="329"><figcaption>Fig. 3 · The models running on real footage.</figcaption></figure>
+      <h3 class="fy-h">System overview and what I owned</h3>
       <figure class="proj-wide proj-slide gt-diagram"><svg viewBox="0 0 560 330" role="img" aria-label="Pipeline: dashcam video goes through PII blurring into an in-cabin model that classifies attentive versus distracted driving, feeding a driver score. A front camera feeds an object detection model.">
                 <defs><marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="#111418"/></marker></defs>
                 <g font-family="IBM Plex Sans, system-ui, sans-serif" font-size="12" fill="#111418">
@@ -1744,11 +1750,12 @@ html[data-theme="dark"] .arch-note b{color:#ecebe7}
                   <rect x="20" y="292" width="14" height="14" rx="3" fill="#fdf1ec" stroke="#c0472c" stroke-width="2"/><text x="42" y="304" font-size="11" fill="#4a5059">my part: code, video pipeline, in-cabin model</text>
                 </g>
               </svg><figcaption>Fig. 4 · How the pieces fit, with my part highlighted.</figcaption></figure>
-      <figure class="proj-wide proj-slide"><img src="img/gt-cert.webp" alt="Certificate of Achievement: first place, Geotab’s 10th Intern Innovation Challenge, Summer 2024, Project Jarvis" loading="lazy" style="max-width:560px" width="716" height="404"><figcaption>Fig. 5 · First place.</figcaption></figure>
+      <figure class="proj-wide proj-slide"><img src="img/gt-cert.webp" alt="Certificate of Achievement: first place, Geotab’s 10th Intern Innovation Challenge, Summer 2024, Project Jarvis" loading="lazy" style="max-width:560px" width="716" height="404"><figcaption>Fig. 5 · We won!</figcaption></figure>
     <section class="proj-ch">
       <h2><span>2</span> My actual co-op work: a dashcam test rack</h2>
-      <p class="proj-did">I designed a closed-loop, air-cooled test rack for the dashcams: 3D-printed mounts and cheap PC fans in a modular plastic enclosure. It holds the cameras at <b>26 °C</b>.</p>
-      <p class="proj-res">I also moved AI dashcam testing onto historical feed data, which cuts <b>32.4 tonnes of CO₂</b> a year.</p>
+      <p class="proj-did">I designed a closed-loop, air-cooled test rack for the dashcams: 3D-printed mounts and cheap PC fans in a modular plastic enclosure. It holds the cameras at <b>26 °C</b>, which keeps them from overheating while they sit close together in the enclosed rack. I sized the cooling with a factor of safety of 2.</p>
+      <p class="proj-did">AI dashcam testing used to mean employees driving with dashcams for a set number of miles each week (it varied by person and location), often out to remote areas or through busy cities. I helped replace that with recorded footage: I supplied historical feeds and reached out to data vendors who already had dashcam videos, and those videos were uploaded to the dashcams in my test rack.</p>
+      <p class="proj-res">That switch cuts an estimated <b>32.4 tonnes of CO₂</b> a year.</p>
     </section>
   </article>
 
