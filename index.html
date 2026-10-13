@@ -1373,6 +1373,7 @@ html[data-theme="dark"] .cs-box-t{color:#ecebe7}
 @media (max-width:380px){.pf-exp .xp-side{flex-wrap:wrap;gap:8px}}
 .cs-fig.cs-bench{margin:22px auto 0;max-width:760px}
 .cs-fig.cs-bench img{width:100%;height:auto;max-height:none;object-fit:cover}
+#pf .pf-label::before{content:none!important}
 /* currently building: a plain card, no side stripe; label, title, then who/where */
 .pf-now{border:2px solid var(--line)!important;border-radius:14px}
 .pf-now-head{margin-bottom:6px}
@@ -1463,7 +1464,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     <p class="pf-logos"><span>Work terms at</span> Google, Level Home, Tesla (2×), Geotab, Valbruna, Evercloak</p>
 
     <section class="pf-sec" id="pf-work" aria-labelledby="pf-work-h">
-      <div class="pf-sec-row"><h2 id="pf-work-h" class="pf-label" data-n="1">Selected work</h2><p class="pf-aside">Two projects I can show in depth. Click one for the full write-up.</p></div>
+      <div class="pf-sec-row"><h2 id="pf-work-h" class="pf-label">Selected work</h2><p class="pf-aside">Two projects I can show in depth. Click one for the full write-up.</p></div>
       <a class="case" href="#project/led" data-open="led">
         <span class="case-img"><img src="img/led-exploded.webp" alt="" fetchpriority="high" width="1088" height="1200"></span>
         <span class="case-body">
@@ -1471,7 +1472,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
           <span class="case-title">RGBW lighting prototyping system</span>
           <span class="case-sum">A standalone controller so lighting designers can test colour on production LED strips without a firmware engineer. I proposed it, designed my first PCB, and handed it off in seven weeks.</span>
           <span class="case-metrics"><span><b>6×</b>LED capacity vs. <span style="white-space:nowrap">off-the-shelf</span> controller</span><span><b>7 weeks</b>concept to handoff</span><span><b>2-layer</b>custom PCB designed and assembled</span></span>
-          <span class="case-tags"><span>KiCad</span><span>ESP32</span><span>C++</span><span>Enclosure design</span><span>Snap fits</span><span>Thermal analysis</span></span>
+          <span class="case-tags"><span>KiCad</span><span>ESP32</span><span>C++</span><span>Enclosure design</span><span>Snap-fits</span><span>Thermal analysis</span></span>
           <span class="case-cta">Read the case study <span aria-hidden="true">→</span></span>
         </span>
       </a>
@@ -1503,7 +1504,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </section>
 
     <section class="pf-sec" id="pf-exp" aria-labelledby="pf-exp-h">
-      <div class="pf-sec-row"><h2 id="pf-exp-h" class="pf-label" data-n="2">Experience</h2><div class="pf-clear pf-clear-row"><b>✓ All cleared to share.</b><p>Roles with no photos are described in text, only as far as written here.</p></div><p class="pf-aside">Click to expand any role for details.</p></div>
+      <div class="pf-sec-row"><h2 id="pf-exp-h" class="pf-label">Experience</h2><div class="pf-clear pf-clear-row"><b>✓ All cleared to share.</b><p>Roles with no photos are described in text, only as far as written here.</p></div><p class="pf-aside">Click to expand any role for details.</p></div>
       <ol class="pf-exp">
         <li data-xp="google"><span class="when">Summer 2026</span><span class="who"><b>Google</b>Product Design Engineering Intern, Pixel Hardware</span><span class="what">Advanced Architecture PD team, across Pixel phone and Pixel Watch: nano-molded antenna-split parts, watch display glass geometry, failure modes, and design and DFM on plastic injection-molded parts.</span><span class="xp-side"><span class="tag no">No photos or media</span><button type="button" class="pf-go sm" data-xp="google">Details →</button></span></li>
         <li data-xp="level"><span class="when">Winter 2026</span><span class="who"><b>Level Home</b>Product Design Engineering Intern</span><span class="what">Magnetometer lock sensing ($12M projected), a 2M-cycle test fixture, a fix for bolt binding, and DFM on 20+ parts.</span><span class="xp-side"><span class="tag ok">Photos and media shown</span><button type="button" class="pf-go sm" data-xp="level">Details →</button></span></li>
@@ -1518,11 +1519,11 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
 
 
     <section class="pf-sec pf-skills" aria-labelledby="pf-skills-h">
-      <h2 id="pf-skills-h" class="pf-label" data-n="3">Skills</h2>
+      <h2 id="pf-skills-h" class="pf-label">Skills</h2>
       <div class="sk-grid"><div class="sk-card"><h3>Mechanical Design</h3><dl><div><dt>CAD</dt><dd><span>Siemens NX</span><span>CATIA V6</span><span>SolidWorks</span><span>Onshape</span></dd></div><div><dt>DFMA</dt><dd><span>Injection molding</span><span>Precision glass molding</span><span>Die casting</span><span>Die cutting</span><span>CNC machining (3- &amp; 5-axis)</span></dd></div></dl></div><div class="sk-card"><h3>Analysis</h3><dl><div><dt>Methods</dt><dd><span>Tolerance analysis</span><span>RCFA</span><span>FMEA</span></dd></div><div><dt>Simulation</dt><dd><span>FEA (Ansys Mechanical)</span><span>CFD (Ansys Fluent)</span><span>Mold flow</span></dd></div></dl></div><div class="sk-card"><h3>Manufacturing &amp; Prototyping</h3><dl><div><dt>Machining</dt><dd><span>Lathe</span><span>Mill</span><span>3-axis CNC</span></dd></div><div><dt>3D printing</dt><dd><span>FDM</span><span>SLA</span><span>SLS</span></dd></div><div><dt>Cutting</dt><dd><span>Waterjet</span><span>Laser</span></dd></div><div><dt>Electronics</dt><dd><span>Breadboarding</span><span>Soldering</span><span>PCB assembly</span></dd></div></dl></div><div class="sk-card"><h3>Electrical &amp; Software</h3><dl><div><dt>PCB design</dt><dd><span>KiCad</span><span>Altium</span></dd></div><div><dt>Embedded</dt><dd><span>ESP32</span><span>Arduino</span><span>Raspberry Pi</span><span>STM32</span></dd></div><div><dt>Programming</dt><dd><span>C++</span><span>Python</span><span>MATLAB</span></dd></div><div><dt>Testing</dt><dd><span>Data acquisition</span><span>PCB bring-up</span></dd></div></dl></div></div>
     </section>
     <section class="pf-sec pf-arch" id="pf-first" aria-labelledby="pf-first-h">
-      <div class="pf-sec-row"><h2 id="pf-first-h" class="pf-label" data-n="4">Archive</h2><p class="pf-aside">Class and hackathon projects from first and second year. They didn’t make the main cut, but they show where I started.</p></div>
+      <div class="pf-sec-row"><h2 id="pf-first-h" class="pf-label">Archive</h2><p class="pf-aside">Class and hackathon projects from first and second year. They didn’t make the main cut, but they show where I started.</p></div>
       <details class="pf-arch-box"><summary><span><span class="ab-show">Show</span><span class="ab-hide">Hide</span> the 3 archived projects</span></summary>
       <div class="pf-first arch">
         <a class="pf-fy" href="#project/geotab" data-open="geotab"><span class="pf-fy-img fill"><img src="img/gt-cert.webp" alt="" loading="lazy" width="716" height="404"></span><span class="pf-fy-body"><span class="pf-kicker">Geotab hackathon, 2024</span><b>Project Jarvis</b><span>Distracted-driving detection with computer vision. 1st of 11 teams.</span><span class="pf-tags"><i>Model training</i><i>Computer vision</i><i>Python</i></span></span></a>
@@ -1572,7 +1573,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </dl>
 
     <section class="cs-sec">
-      <h2><span>1</span>Requirements</h2>
+      <h2>Requirements</h2>
       <div class="cs-cards">
         <div><b>Time</b><p>Done in 2 months, by December 2025</p></div>
         <div><b>Electrical</b><p>Reliable for 10+ hours a day</p></div>
@@ -1582,7 +1583,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </section>
 
     <section class="cs-sec">
-      <h2><span>2</span>Three prototypes in seven weeks</h2>
+      <h2>Three prototypes in seven weeks</h2>
       <div class="cs-steps">
         <div><figure class="cs-fig"><img src="img/cs-p0.webp" alt="Prototype 0 on the bench: Arduino, keypad, knob, LCD and a blue LED strip" loading="lazy" width="1004" height="694"><figcaption></figcaption></figure><div class="cs-box"><span class="cs-box-t">P0: proof of concept</span><p>Arduino, keypad, knob and LCD from parts on hand. One strip, one colour channel at a time.</p></div></div>
         <div><figure class="cs-fig"><img src="img/cs-p1-hands.webp" alt="Prototype 1 being wired on the bench" loading="lazy" width="1400" height="788"><figcaption></figcaption></figure><div class="cs-box"><span class="cs-box-t">P1: functional prototype</span><p>ESP32, five sliders, programmable buttons and an OLED. Several strips at once.</p></div></div>
@@ -1598,7 +1599,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </section>
 
     <section class="cs-sec">
-      <h2><span>3</span>Choosing the microcontroller</h2>
+      <h2>Choosing the microcontroller</h2>
       <div class="cs-box k-why"><span class="cs-box-t">Why switch</span><p>P0 ran out of pins and needed a cable for every firmware update. I scored three options; ESP32 won on wireless updates and room to grow.</p></div>
       <div class="cs-scroll"><table class="cs-table">
         <thead><tr><th>Criterion (pass/fail)</th><th>Weight</th><th class="win">ESP32</th><th>Pico W</th><th>STM32</th></tr></thead>
@@ -1609,7 +1610,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </section>
 
     <section class="cs-sec">
-      <h2><span>4</span>Schematic: Rev A, then Rev B</h2>
+      <h2>Schematic: Rev A, then Rev B</h2>
       <div class="cs-box k-why"><span class="cs-box-t">Why Rev B</span><p>Several Rev A parts couldn’t arrive in time, so Rev B swaps each one for an equivalent I could get within a day. The circuit works the same.</p></div>
       <div class="cs-pair"><figure class="cs-fig"><img src="img/cs-sch-a.webp" alt="Rev A schematic" loading="lazy" width="1232" height="849"><figcaption>Rev A</figcaption></figure><figure class="cs-fig"><img src="img/cs-sch-b.webp" alt="Rev B schematic" loading="lazy" width="1175" height="808"><figcaption>Rev B (built)</figcaption></figure></div>
       <ul class="cs-changes">
@@ -1622,7 +1623,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </section>
 
     <section class="cs-sec">
-      <h2><span>5</span>Power and protection</h2>
+      <h2>Power and protection</h2>
       <div class="cs-power">
         <div class="cs-node">12 V, 144 W adapter</div><i>→</i>
         <div class="cs-node accent">15 A time-delay fuse</div><i>→</i>
@@ -1642,7 +1643,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </section>
 
     <section class="cs-sec">
-      <h2><span>6</span>PCB</h2>
+      <h2>PCB</h2>
       <div class="cs-box"><span class="cs-box-t">Board</span><p>2-layer, mixed-signal, laid out in KiCad and reviewed with the EEs. I had it fabricated, then hand-soldered and assembled it.</p></div>
       <div class="cs-gallery g3"><figure class="cs-fig"><img src="img/cs-route.webp" alt="PCB placement and routing in KiCad" loading="lazy" width="1151" height="791"><figcaption>Placement and routing</figcaption></figure><figure class="cs-fig"><img src="img/cs-pour.webp" alt="Ground pour across the board" loading="lazy" width="960" height="650"><figcaption>Ground pour on both layers, with a keep-out zone under the ESP32 antenna</figcaption></figure><figure class="cs-fig"><img src="img/cs-relief.webp" alt="Capacitor pads with ground vias next to them" loading="lazy" width="624" height="378"><figcaption>Capacitor pads, with adjacent GND vias tying the ground pour between layers</figcaption></figure></div>
       <div class="cs-gallery g2"><figure class="cs-fig"><img src="img/cs-top.webp" alt="3D render of the top of the PCB" loading="lazy" width="588" height="407"><figcaption>Top</figcaption></figure><figure class="cs-fig"><img src="img/cs-bottom.webp" alt="3D render of the bottom of the PCB" loading="lazy" width="595" height="408"><figcaption>Bottom</figcaption></figure></div>
@@ -1650,7 +1651,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </section>
 
     <section class="cs-sec">
-      <h2><span>7</span>Does the buck converter need a heatsink?</h2>
+      <h2>Does the buck converter need a heatsink?</h2>
       <div class="cs-verdict"><b>No.</b> Worst case, the IC reaches <strong>83.9 °C</strong>, well under its <strong>125 °C</strong> limit.</div>
       <div class="cs-eqs">
         <div class="cs-eq"><span>Output power</span><b>5 V × 0.37 A = 1.85 W</b><p>Display 0.12 A + ESP32 0.25 A</p></div>
@@ -1662,7 +1663,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </section>
 
     <section class="cs-sec">
-      <h2><span>8</span>Enclosure</h2>
+      <h2>Enclosure</h2>
       <div class="cs-split2">
         <div><figure class="cs-fig"><img src="img/cs-exploded.webp" alt="Exploded view of the enclosure, PCBA and display" loading="lazy" width="1210" height="1377"><figcaption>Exploded assembly</figcaption></figure></div>
         <div>
@@ -1677,13 +1678,13 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </section>
 
     <section class="cs-sec">
-      <h2><span>9</span>Firmware</h2>
+      <h2>Firmware</h2>
       <div class="cs-flow"><div>Read buttons<small>40 ms debounce</small></div><i>→</i><div>Read sliders<small>median of 3, then smoothing</small></div><i>→</i><div>Changed enough?<small>hysteresis, no flicker</small></div><i>→</i><div>Update strips<small>brightness scales all channels</small></div></div>
       <button type="button" class="cs-more" data-zoom="img/slide-33.webp">See the full firmware flowchart <span aria-hidden="true">→</span></button>
     </section>
 
     <section class="cs-sec">
-      <h2><span>10</span>Result</h2>
+      <h2>Result</h2>
       <div class="cs-verdict">Designers now set colours and presets themselves. Each controller drives <strong>6× more LEDs</strong> than the off-the-shelf units it replaced, and the team has an SOP to build more.</div>
     </section>
   </article>
@@ -1704,7 +1705,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </dl>
 
     <section class="cs-sec">
-      <h2><span>1</span>Lifetime testing: capacitive-touch keypad</h2>
+      <h2>Lifetime testing: capacitive-touch keypad</h2>
       <div class="cs-split2 top">
         <div class="cs-pair even"><figure class="cs-fig"><img src="img/lc-fixture-real.webp" alt="The built test fixture on the lock, with solenoids over the keypad" loading="lazy" width="825" height="1100"><figcaption>Keypad lifetime-test fixture, FDM-printed in PETG</figcaption></figure><figure class="cs-fig"><img src="img/lc-v2-solenoids.webp" alt="Solenoids held by their own mounting holes" loading="lazy" width="1017" height="1232"><figcaption>Solenoid mounting design</figcaption></figure></div>
         <div>
@@ -1715,7 +1716,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </section>
 
     <section class="cs-sec">
-      <h2><span>2</span>Lock retraction sensing</h2>
+      <h2>Lock retraction sensing</h2>
 <div class="cs-boxes"><div class="cs-box k-prob"><span class="cs-box-t">Problem</span><p>Two accelerometers on flex circuits (FPCAs) detected whether the bolt was retracted. They were noisy, missed the fully locked and fully retracted positions, reported intermediate positions we didn’t need, and were expensive.</p></div><div class="cs-box"><span class="cs-box-t">Proposal</span><p>Replace them with magnetometers and insert-molded magnets: simpler and more robust. I tested the idea before it went to review.</p></div></div>
       <div class="cs-gallery g3" style="margin-top:0"><figure class="cs-fig"><img src="img/lc-puck-retracted.webp" alt="Lock mechanism, bolt retracted" loading="lazy" width="730" height="714"><figcaption>Mechanism, bolt retracted</figcaption></figure><figure class="cs-fig"><img src="img/lc-puck-thrown.webp" alt="Lock mechanism, bolt thrown" loading="lazy" width="1400" height="1031"><figcaption>Mechanism, bolt thrown</figcaption></figure><figure class="cs-fig"><img src="img/lc-bench2.webp" alt="Test setup: debugger, main board and magnetometer flex on the lock" loading="lazy" width="1400" height="1050"><figcaption>Test setup: debugger, main board and magnetometer flex on the lock</figcaption></figure></div>
       <div class="cs-box"><span class="cs-box-t">Test</span><ol>
@@ -1735,7 +1736,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </section>
 
     <section class="cs-sec">
-      <h2><span>3</span>Tolerance analysis to fix bolt binding</h2>
+      <h2>Tolerance analysis to fix bolt binding</h2>
 <div class="cs-boxes"><div class="cs-box k-prob"><span class="cs-box-t">Problem</span><p>In cycle testing, the bolt sometimes bound while extending and retracting, mostly when cycled fast or when the lock was knocked. Only some prototypes did it, because part tolerances varied between builds.</p></div><div class="cs-box"><span class="cs-box-t">What I did</span><p>Ran tolerance stack-ups on every dimension in the bolt travel path, with datums defined to the travel path, and tightened the critical tolerances. The parts were remade and retested.</p></div></div>
       <p class="cs-cap">A few of the stack-ups:</p>
       <div class="cs-gallery g3" style="margin-top:0"><figure class="cs-fig"><img src="img/lv-tol2.webp" alt="Tolerance stack-up cross-section" loading="lazy" width="1000" height="779"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol5.webp" alt="Tolerance stack-up cross-section" loading="lazy" width="885" height="798"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol4.webp" alt="Tolerance stack-up cross-section" loading="lazy" width="366" height="427"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol1.webp" alt="Tolerance stack-up cross-section" loading="lazy" width="1000" height="708"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol3.webp" alt="Tolerance stack-up cross-section" loading="lazy" width="831" height="779"><figcaption></figcaption></figure><figure class="cs-fig"><img src="img/lv-tol6.webp" alt="Tolerance stack-up cross-section" loading="lazy" width="837" height="790"><figcaption></figcaption></figure></div>
@@ -1743,7 +1744,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </section>
 
     <section class="cs-sec">
-      <h2><span>4</span>DFM on molded parts</h2>
+      <h2>DFM on molded parts</h2>
       <div class="cs-box"><span class="cs-box-t">Molded and die-cast parts</span><p>I led DFM on 20+ plastic injection-molded and die-cast parts. In supplier tooling reviews, I moved parting lines and gates off cosmetic surfaces without changing the industrial design. Both parts below are cosmetic: the customer sees them when they open the box.</p></div>
       <div class="cs-ba">
         <div class="cs-ba-row"><figure class="cs-fig"><img src="img/lv-dfm4.webp" alt="Cosmetic eyelet before DFM" loading="lazy" width="739" height="1000"><figcaption>Cosmetic eyelet, before DFM</figcaption></figure><i>→</i><figure class="cs-fig"><img src="img/lv-dfm1.webp" alt="Cosmetic eyelet after DFM" loading="lazy" width="980" height="1000"><figcaption>Cosmetic eyelet, after DFM</figcaption></figure></div>
@@ -1757,7 +1758,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </section>
 
     <section class="cs-sec">
-      <h2><span>5</span>Lifetime testing: lock mechanism</h2>
+      <h2>Lifetime testing: lock mechanism</h2>
       <div class="cs-split2">
         <figure class="cs-fig"><img src="img/lc-fail.webp" alt="Photos of a subassembly failure found during cycle testing" loading="lazy" width="1366" height="594"><figcaption>A failure at 3.7M cycles</figcaption></figure>
         <div>
@@ -1767,7 +1768,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </section>
 
     <section class="cs-sec">
-      <h2><span>6</span>Technical drawings I made</h2>
+      <h2>Technical drawings I made</h2>
       <div class="pf-clear" style="margin:0 0 16px;display:inline-block;padding:10px 16px"><p style="margin:0">I made many more drawings at Level; these are the ones I’m allowed to share.</p></div>
       <div class="cs-gallery g3" style="margin-top:0"><figure class="cs-fig"><img src="img/lc-dwg3.webp" alt="Drawing of a cosmetic injection-molded plastic part" loading="lazy" width="596" height="421"><figcaption>Cosmetic injection-molded plastic part: owned the DFM and drawing.</figcaption></figure><figure class="cs-fig"><img src="img/lc-dwg1.webp" alt="Drawing of an adhesive die-cut" loading="lazy" width="594" height="420"><figcaption>Adhesive die-cut: owned the DFA and drawing.</figcaption></figure><figure class="cs-fig"><img src="img/lc-dwg2.webp" alt="Drawing of a sintered magnet" loading="lazy" width="596" height="421"><figcaption>Sintered magnet: owned the DFM and drawing.</figcaption></figure></div>
     </section>
@@ -1789,7 +1790,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     <figure class="proj-wide fy-video" style="margin-top:28px"><video src="vid/jarvis-road.mp4" poster="img/jarvis-road-poster.webp" autoplay muted loop playsinline preload="metadata" aria-label="Front camera object detection on a highway, boxing cars and a bus"></video><figcaption>Fig. 1: Object detection from the front camera.</figcaption></figure>
     <aside class="gt-limits"><b>Limitations</b><p>The output is noisy: boxes flicker between frames and some labels are wrong. Time and compute were the limits. We had a week, and not enough compute to train a better model.</p></aside>
     <section class="proj-ch">
-      <h2><span>1</span> Learning computer vision in a week</h2>
+      <h2>Learning computer vision in a week</h2>
       <p class="proj-did">Geotab’s 10th Intern Innovation Challenge asked teams to build a video telematics product using AI. I’m a mechanical engineer and had never trained a model.</p>
       <p class="proj-learn">So I spent two days learning how to train computer vision models, five days building one that worked, and the last three polishing it with my team.</p>
       <p class="proj-did">I owned the code and the video pipeline. We built two models, one watching the driver and one doing object detection out the front. I trained the in-cabin one to tell attentive driving from distracted driving (adjusting the radio, drinking, talking), with PII blurred out of the video. My teammates built a driver score on top of it.</p>
@@ -1826,7 +1827,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
       <h3 class="fy-h">We won!</h3>
       <figure class="proj-wide proj-slide"><img src="img/gt-cert.webp" alt="Certificate of Achievement: first place, Geotab’s 10th Intern Innovation Challenge, Summer 2024, Project Jarvis" loading="lazy" style="max-width:560px" width="716" height="404"><figcaption>Fig. 5: 1st place certificate</figcaption></figure>
     <section class="proj-ch">
-      <h2><span>2</span> My actual co-op work: a dashcam test rack</h2>
+      <h2>My actual co-op work: a dashcam test rack</h2>
       <p class="proj-did">I designed a closed-loop, air-cooled test rack for the dashcams: 3D-printed mounts and cheap PC fans in a modular plastic enclosure. It holds the cameras at <b>26 °C</b>, which keeps them from overheating while they sit close together in the enclosed rack. I sized the cooling with a factor of safety of 2.</p>
       <p class="proj-did">AI dashcam testing used to mean employees driving with dashcams for a set number of miles each week (it varied by person and location), often out to remote areas or through busy cities. I helped replace that with recorded footage: I supplied historical feeds and reached out to data vendors who already had dashcam videos, and those videos were uploaded to the dashcams in my test rack.</p>
       <p class="proj-res">That switch cuts an estimated <b>32.4 tonnes of CO₂</b> a year.</p>
@@ -1846,7 +1847,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
       </dl>
     </header>
     <section class="proj-ch">
-      <h2><span>1</span> What I worked on</h2>
+      <h2>What I worked on</h2>
       <p class="proj-did">On the phone, I did design and DFM on nano-molded antenna-split parts.</p>
       <p class="proj-did">On the watch, I owned the design and validation of the screen geometry for the precision-molded display glass. Between prototype testing and DFM with the supplier, I got rid of the optical distortion while staying inside the wall-thickness and draft limits.</p>
       <p class="proj-did">For seal testing, I made a production-representative test coupon and fixture that recreates the titanium-to-resin interface, so seal failures can be root-caused without building complete watches. That made failure analysis on the watch’s seals possible in-house and saved $15K in vendor testing.</p>
@@ -1869,7 +1870,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
       </dl>
     </header>
     <section class="proj-ch">
-      <h2><span>1</span> What I worked on</h2>
+      <h2>What I worked on</h2>
       <p class="proj-did">I designed a high-temperature magnetic clamping assembly for lamination. Tolerance stack-ups and a vibration-resistant design keep it at 0.1 mm clearance. Yield went up 15%, and setup went from 30 seconds to 5.</p>
       <p class="proj-did">I led the mechanical, electrical and controls design of a modular foil-stretching machine with load-cell tension control. It halved wrinkling and creasing failures.</p>
       <p class="proj-did">I also designed and built the control box (Arduino, load cell, amplifier, signal conditioner) for closed-loop pneumatic control of the nip rollers. It holds the nip force within ±2% of target under dynamic load.</p>
@@ -1884,7 +1885,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
       <dl class="proj-stats"><div><dt>$900K</dt><dd>potential scrap losses found with CFD</dd></div><div><dt>$45K</dt><dd>saved per fan enclosure</dd></div><div><dt>100,000</dt><dd>CFM fan, brought to code</dd></div><div><dt>CFD</dt><dd>my first real simulation work</dd></div></dl>
     </header>
     <section class="proj-ch">
-      <h2><span>1</span> What I worked on</h2>
+      <h2>What I worked on</h2>
       <p class="proj-did">I modelled scrap melting in an electric arc furnace in ANSYS Fluent and found thermal inefficiencies worth $900K CAD in potential scrap losses.</p>
       <p class="proj-did">I reverse-engineered arc furnace parts in SolidWorks, using GD&amp;T to capture the original design intent.</p>
       <p class="proj-did">I also redesigned a 100,000 CFM fan enclosure to meet the Ontario Building Code, which saves $45K CAD per unit.</p>
@@ -1899,7 +1900,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
       <dl class="proj-stats"><div><dt>+40%</dt><dd>dehumidification performance</dd></div><div><dt>DFMA</dt><dd>first enclosure for off-site manufacturing</dd></div></dl>
     </header>
     <section class="proj-ch">
-      <h2><span>1</span> What I worked on</h2>
+      <h2>What I worked on</h2>
       <p class="proj-did">I designed a prototype dehumidifier enclosure using DFMA, with the CAD and GD&amp;T drawings needed for it to seal and be manufactured off-site.</p>
       <p class="proj-did">I also improved dehumidification performance by 40% by picking a better membrane material. I designed the tests for it myself: absorption, evaporation rate and elongation.</p>
     </section>
@@ -1915,7 +1916,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </header>
 
     <section class="proj-ch">
-      <h2><span>1</span> FrostBot V1: ME101, Summer 2023</h2>
+      <h2>FrostBot V1: ME101, Summer 2023</h2>
       <figure class="proj-wide fy-video"><video src="vid/frostbot-demo.mp4" poster="img/frostbot-demo-poster.webp" autoplay muted loop playsinline preload="metadata" aria-label="FrostBot V1 icing a dessert"></video><figcaption>Fig. 1: FrostBot V1 icing a dessert.</figcaption></figure>
       <div class="fy-two">
         <div><h3 class="fy-h">The problem</h3><p>Automate the icing of circular desserts to improve consistency, throughput and precision.</p>
@@ -1936,7 +1937,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </section>
 
     <section class="proj-ch">
-      <h2><span>2</span> FrostBot V2: redesign, October 2025</h2>
+      <h2>FrostBot V2: redesign, October 2025</h2>
       <p>V1 worked, but it flexed, it wasn’t precise, and its motor overheated on thicker icing. Two years and four co-ops later, I redesigned it as if it were going on a production line.</p>
       <div class="fy-two">
         <div><h3 class="fy-h">Mechanical goals</h3><ul class="fy-list"><li>More rigid, more precise</li><li>Adjustable z-axis</li><li>No piston motor to overheat, so thicker icing works</li><li>Modular and scalable</li><li>Better materials where it touches food</li></ul></div>
@@ -1968,7 +1969,7 @@ html[data-theme="dark"] .sk-card dd span{border-color:#3d4147;background:transpa
     </header>
 
     <section class="proj-ch">
-      <h2><span>1</span> The toy</h2>
+      <h2>The toy</h2>
       <p>A portable alternative to foosball for kids aged 6 to 12: a motor turns a cam, the cam drives a follower, and the follower swings an acrylic leg to kick the ball. Laser-cut wood, on a $50 budget per prototype.</p>
       <p>The first prototype used a gearbox to drive the kick. The second moved to a TT motor and cam on a car base, which was simpler and kicked more reliably.</p>
       <div class="proj-figs fy-grid2"><figure><img src="img/toy-gearbox.webp" alt="Pencil drawing of the first prototype with a gearbox driving the kick" loading="lazy" width="394" height="384"><figcaption>Fig. 1: First prototype: a gearbox drives the kick.</figcaption></figure><figure><img src="img/toy-exploded.webp" alt="Pencil exploded view of the second prototype" loading="lazy" width="395" height="386"><figcaption>Fig. 2: Second prototype, exploded.</figcaption></figure><figure><img src="img/toy-photo.webp" alt="The finished toy with a ping-pong ball under its acrylic leg" loading="lazy" width="478" height="432"><figcaption>Fig. 3: The finished toy.</figcaption></figure><figure><img src="img/toy-labelled.webp" alt="Labelled exterior and interior" loading="lazy" width="478" height="195"><figcaption>Fig. 4: Exterior and interior, labelled.</figcaption></figure></div>
