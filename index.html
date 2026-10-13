@@ -1329,7 +1329,7 @@ html[data-theme="dark"]{color-scheme:dark}
     <div class="pf-cta">
       <button type="button" class="theme-btn" aria-label="Switch to dark mode" title="Dark mode"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="moon" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><g class="sun"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></g></svg></button>
       <a class="pf-game" href="#play"><span class="pf-sprite" aria-hidden="true"></span><span class="pf-game-t">Game</span></a>
-      <a class="pf-btn" href="resume.pdf" target="_blank" rel="noopener">Résumé</a>
+      <a class="pf-btn" href="resume.pdf?v=2" target="_blank" rel="noopener">Résumé</a>
     </div>
   </header>
 
@@ -1340,7 +1340,7 @@ html[data-theme="dark"]{color-scheme:dark}
         <p class="pf-lede">I turn early concepts into manufacturable hardware through prototyping, mechanical design, validation, and DFM.</p>
         <p class="pf-school">3B Mechanical Engineering · University of Waterloo</p>
         <div class="pf-actions">
-          <a class="pf-btn big" href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
+          <a class="pf-btn big" href="resume.pdf?v=2" target="_blank" rel="noopener">Résumé (PDF)</a>
           <button type="button" class="pf-btn ghost big" data-copy>Copy email</button>
           <a class="pf-btn ghost big" href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn</a>
         </div>
@@ -1426,7 +1426,7 @@ html[data-theme="dark"]{color-scheme:dark}
       <div>
         <h2 id="pf-contact-h">Let’s talk.</h2>
         <p class="pf-mail"><code>j4yousse@uwaterloo.ca</code><a class="pf-mailto" href="mailto:j4yousse@uwaterloo.ca">Email me</a><button type="button" data-copy aria-label="Copy email address">Copy</button><span class="sr-only" role="status" data-copy-status></span></p>
-        <p class="pf-foot-links"><a href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a><a href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn</a></p>
+        <p class="pf-foot-links"><a href="resume.pdf?v=2" target="_blank" rel="noopener">Résumé (PDF)</a><a href="https://www.linkedin.com/in/jillanne-youssef/" target="_blank" rel="noopener">LinkedIn</a></p>
       </div>
       <a class="pf-play" href="#play">
         <span class="pf-sprite big" aria-hidden="true"></span>
@@ -1444,7 +1444,7 @@ html[data-theme="dark"]{color-scheme:dark}
     <span class="proj-crumb" id="proj-crumb"></span>
     <span class="proj-nav"><button type="button" id="proj-prev">← Previous</button><button type="button" id="proj-next"><span class="nx-label">Next: </span><span id="proj-next-t"></span> →</button></span>
     <button type="button" class="theme-btn" aria-label="Switch to dark mode" title="Dark mode"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="moon" d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/><g class="sun"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></g></svg></button>
-    <a class="proj-resume" href="resume.pdf" target="_blank" rel="noopener">Résumé (PDF)</a>
+    <a class="proj-resume" href="resume.pdf?v=2" target="_blank" rel="noopener">Résumé (PDF)</a>
   </div>
   <article role="main" tabindex="-1" class="proj-sheet cs" data-proj="led" data-crumb="Tesla · Lighting, Switches &amp; Sensors · Fall 2025" hidden>
     <header class="cs-hero">
@@ -1873,7 +1873,7 @@ html[data-theme="dark"]{color-scheme:dark}
   </nav>
 </div>
 <div class="fade" id="fade"></div>
-<div id="cv-view" role="dialog" aria-modal="true" aria-label="Résumé" hidden><div class="cv-bar"><button type="button" class="cv-back">← Back to site</button><a class="cv-dl" href="resume.pdf" download data-direct>Download PDF</a></div><div class="cv-page"><img alt="Jillanne Youssef’s résumé" width="1700" height="2200"></div></div>
+<div id="cv-view" role="dialog" aria-modal="true" aria-label="Résumé" hidden><div class="cv-bar"><button type="button" class="cv-back">← Back to site</button><a class="cv-dl" href="resume.pdf?v=2" download data-direct>Download PDF</a></div><div class="cv-page"><img alt="Jillanne Youssef’s résumé" width="1700" height="2200"></div></div>
 
 <dialog id="xp-dlg" aria-label="Role details"><div class="xp-in"><button type="button" class="xp-x" aria-label="Close" data-xp-close>×</button><div id="xp-body"></div></div></dialog>
 <script>
@@ -2228,7 +2228,7 @@ window.__sfx = () => chime();
   const v = document.getElementById('cv-view'), img = v.querySelector('img'), mq = matchMedia('(max-width: 760px), (pointer: coarse)');
   let opener = null, pushed = false;
   const close = fromPop => { if (v.hidden) return; v.hidden = true; document.documentElement.style.overflow = ''; if (pushed && !fromPop) { pushed = false; history.back(); } pushed = false; if (opener && opener.isConnected) opener.focus({preventScroll: true}); };
-  const open = a => { opener = a; if (!img.getAttribute('src')) img.src = 'img/resume-page.webp?v=1'; v.hidden = false; v.scrollTop = 0; try { history.pushState({cv: 1}, ''); pushed = true; } catch (e) {} v.querySelector('.cv-back').focus({preventScroll: true}); };
+  const open = a => { opener = a; if (!img.getAttribute('src')) img.src = 'img/resume-page.webp?v=2'; v.hidden = false; v.scrollTop = 0; try { history.pushState({cv: 1}, ''); pushed = true; } catch (e) {} v.querySelector('.cv-back').focus({preventScroll: true}); };
   document.addEventListener('click', e => { const a = e.target.closest && e.target.closest('a[href*="resume.pdf"]'); if (!a || a.hasAttribute('data-direct') || !mq.matches || e.metaKey || e.ctrlKey) return; e.preventDefault(); open(a); });
   v.querySelector('.cv-back').addEventListener('click', () => close());
   addEventListener('popstate', () => close(true));
