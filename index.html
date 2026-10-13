@@ -1279,8 +1279,39 @@ html[data-theme="dark"]{color-scheme:dark}
 #pf,.proj,#xp-dlg .xp-in,#zoom{overscroll-behavior:contain}
 #pf,.proj{scroll-padding-top:64px}
 .pf-sec,.proj-ch{scroll-margin-top:0}
-.cs-table td,.case-metrics b,.cs-stats dt,.cs-eq b,.pf-now-facts dd{font-variant-numeric:tabular-nums}
+.cs-table td,.cs-stats dt,.cs-eq b,.pf-now-facts dd{font-variant-numeric:tabular-nums}
 #pf .pf-label,.pf-now h2,.sk-card h3,.pf-fy b,#xp-dlg h2,#xp-dlg h3{text-wrap:balance}
+
+/* project cards: the CAD fills the white panel */
+.case-img{position:relative;min-height:320px;padding:0}
+.case-img img{position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px);max-height:none;max-width:none;object-fit:contain}
+@media (max-width:640px){.case-img{height:250px;min-height:0}.case-img img{inset:10px;width:calc(100% - 20px);height:calc(100% - 20px)}}
+/* hero line and work terms read as plain sentences */
+.pf-logos span{font:inherit;color:var(--mute);margin-right:4px;vertical-align:baseline}
+/* archive: closed by default, big pictures inside */
+.pf-arch-box{border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.pf-arch-box>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;cursor:pointer;font:600 16px var(--f-head);color:var(--ink);border-radius:14px}
+.pf-arch-box>summary::-webkit-details-marker{display:none}
+.pf-arch-box .ab-hide,.pf-arch-box[open] .ab-show{display:none}.pf-arch-box[open] .ab-hide{display:inline}
+.pf-arch-box>summary::after{content:"";width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translate(-2px,-2px);transition:transform .2s}
+.pf-arch-box[open]>summary::after{transform:rotate(-135deg) translate(-2px,-2px)}
+.pf-arch-box>summary:hover{background:var(--panel)}
+.pf-arch-box[open]>summary{border-bottom:1px solid var(--line);border-radius:14px 14px 0 0}
+.pf-arch-box .pf-first.arch{padding:16px;gap:16px}
+.pf-first.arch .pf-fy{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0;overflow:hidden;border-radius:12px}
+.pf-first.arch .pf-fy-img{position:relative;display:block;width:100%;aspect-ratio:4/3;border-radius:0;background:#fff;border-bottom:1px solid var(--line)}
+.pf-first.arch .pf-fy-img img{position:absolute;inset:0;width:100%;height:100%;padding:12px;box-sizing:border-box;object-fit:contain}
+.pf-first.arch .pf-fy-img.fill{background:#2a3566}.pf-first.arch .pf-fy-img.fill img{padding:0}
+.pf-first.arch .pf-fy-body{padding:14px 16px 16px}
+.pf-first.arch .pf-fy b{font-size:18px}
+.pf-first.arch .pf-fy-body>span:last-child{font-size:14.5px}
+@media (max-width:960px) and (min-width:641px){.pf-first.arch{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (prefers-reduced-motion:reduce){.pf-arch-box>summary::after{transition:none}}
+/* archived write-ups: a clear note at the top */
+.arch-note{margin:10px 0 18px;padding:12px 16px;border-left:4px solid #8a8f96;background:#f4f5f6;border-radius:0 8px 8px 0;font-size:16px;line-height:1.5;color:#3a4048;max-width:62ch}
+.arch-note b{color:#14181d}
+html[data-theme="dark"] .arch-note{background:#26292d;color:#c3c6cb;border-left-color:#6b7077}
+html[data-theme="dark"] .arch-note b{color:#ecebe7}
 </style>
 <style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}@media (hover:none),(pointer:coarse){
   html{-webkit-tap-highlight-color:transparent}
@@ -1338,7 +1369,7 @@ html[data-theme="dark"]{color-scheme:dark}
       <div class="pf-hero-text">
         <h1 id="pf-name" tabindex="-1">Jillanne Youssef</h1>
         <p class="pf-lede">I turn early concepts into manufacturable hardware through prototyping, mechanical design, validation, and DFM.</p>
-        <p class="pf-school">3B Mechanical Engineering · University of Waterloo</p>
+        <p class="pf-school">3B Mechanical Engineering at the University of Waterloo</p>
         <div class="pf-actions">
           <a class="pf-btn big" href="resume.pdf?v=2" target="_blank" rel="noopener">Résumé (PDF)</a>
           <button type="button" class="pf-btn ghost big" data-copy>Copy email</button>
@@ -1353,7 +1384,7 @@ html[data-theme="dark"]{color-scheme:dark}
       </dl>
     </section>
 
-    <p class="pf-logos"><span>Work terms at</span> Google <b>·</b> Level Home <b>·</b> Tesla (2×) <b>·</b> Geotab <b>·</b> Valbruna <b>·</b> Evercloak</p>
+    <p class="pf-logos"><span>Work terms at</span> Google, Level Home, Tesla (2×), Geotab, Valbruna, Evercloak</p>
 
     <section class="pf-sec" id="pf-work" aria-labelledby="pf-work-h">
       <div class="pf-sec-row"><h2 id="pf-work-h" class="pf-label" data-n="1">Selected work</h2><p class="pf-aside">Two projects I can show in depth. Click one for the full write-up.</p></div>
@@ -1415,11 +1446,13 @@ html[data-theme="dark"]{color-scheme:dark}
     </section>
     <section class="pf-sec pf-arch" id="pf-first" aria-labelledby="pf-first-h">
       <div class="pf-sec-row"><h2 id="pf-first-h" class="pf-label" data-n="4">Archive</h2><p class="pf-aside">Class and hackathon projects from first and second year. They didn’t make the main cut, but they’re here for nostalgia.</p></div>
+      <details class="pf-arch-box"><summary><span><span class="ab-show">Show</span><span class="ab-hide">Hide</span> the 3 archived projects</span></summary>
       <div class="pf-first arch">
-        <a class="pf-fy" href="#project/geotab" data-open="geotab"><span class="pf-fy-img"><img src="img/gt-cert.webp" alt="" loading="lazy" width="716" height="404"></span><span class="pf-fy-body"><span class="pf-kicker">Geotab hackathon · 2024</span><b>Project Jarvis</b><span>Distracted-driving detection with computer vision. 1st of 11 teams.</span><span class="pf-tags"><i>Model training</i><i>Computer vision</i><i>Python</i></span></span></a>
+        <a class="pf-fy" href="#project/geotab" data-open="geotab"><span class="pf-fy-img fill"><img src="img/gt-cert.webp" alt="" loading="lazy" width="716" height="404"></span><span class="pf-fy-body"><span class="pf-kicker">Geotab hackathon · 2024</span><b>Project Jarvis</b><span>Distracted-driving detection with computer vision. 1st of 11 teams.</span><span class="pf-tags"><i>Model training</i><i>Computer vision</i><i>Python</i></span></span></a>
         <a class="pf-fy" href="#project/waterloo" data-open="waterloo"><span class="pf-fy-img"><img src="img/fb-v2-render.webp" alt="" loading="lazy" width="1334" height="1400"></span><span class="pf-fy-body"><span class="pf-kicker">ME101 · 2023</span><b>FrostBot</b><span>A LEGO cake-icing robot, redesigned in CAD with an 80/20 frame and a pneumatic piston.</span><span class="pf-tags"><i>Mechanisms</i><i>Pneumatics</i><i>C++</i></span></span></a>
-        <a class="pf-fy" href="#project/toy" data-open="toy"><span class="pf-fy-img"><img src="img/toy-exploded.webp" alt="" loading="lazy" width="395" height="386"></span><span class="pf-fy-body"><span class="pf-kicker">ME100 · 2022</span><b>Wind-up soccer toy</b><span>A cam and follower that kicks a ping-pong ball, on a $50 budget.</span><span class="pf-tags"><i>Cam and follower</i><i>Laser cutting</i><i>Soldering</i></span></span></a>
+        <a class="pf-fy" href="#project/toy" data-open="toy"><span class="pf-fy-img"><img src="img/toy-sketch.webp" alt="" loading="lazy" width="744" height="772"></span><span class="pf-fy-body"><span class="pf-kicker">ME100 · 2022</span><b>Wind-up soccer toy</b><span>A cam and follower that kicks a ping-pong ball, on a $50 budget.</span><span class="pf-tags"><i>Cam and follower</i><i>Laser cutting</i><i>Soldering</i></span></span></a>
       </div>
+      </details>
     </section>
 
     <footer class="pf-contact" id="pf-contact" aria-labelledby="pf-contact-h">
@@ -1664,7 +1697,8 @@ html[data-theme="dark"]{color-scheme:dark}
 
   <article role="main" tabindex="-1" class="proj-sheet" data-proj="geotab" data-crumb="Geotab · System Verification Intern · Summer 2024" hidden>
     <header class="proj-head">
-      <p class="proj-kicker">Project notebook</p>
+      <p class="proj-kicker">Archived project</p>
+      <p class="arch-note"><b>From my second year: a one-week intern hackathon in 2024.</b> It’s here for nostalgia, not as an example of the work I do now. My current work is under Selected work in the portfolio.</p>
       <h1>Project Jarvis: distracted-driving detection system</h1>
       <p class="proj-lede">Geotab’s Intern Innovation Challenge, Summer 2024, with two other interns. I’d never trained a model before, learned how that week, and ended up owning the code and video pipeline. We placed first of 11 teams.</p>
       <dl class="proj-stats">
@@ -1792,7 +1826,8 @@ html[data-theme="dark"]{color-scheme:dark}
 
   <article role="main" tabindex="-1" class="proj-sheet" data-proj="waterloo" data-crumb="University of Waterloo · ME101, and a 2025 redesign" hidden>
     <header class="proj-head">
-      <p class="proj-kicker">Project notebook</p>
+      <p class="proj-kicker">Archived project</p>
+      <p class="arch-note"><b>From my first year (ME101, 2023), with a redesign from 2025.</b> It’s here for nostalgia, not as an example of the work I do now. My current work is under Selected work in the portfolio.</p>
       <h1>FrostBot</h1>
       <p class="proj-lede">A first-year design project. I came back to it two years later and redesigned it with everything I’d learned on co-op.</p>
       <dl class="proj-stats"><div><dt>98%</dt><dd>icing placement accuracy over 100 trials (target ≥80%)</dd></div><div><dt>100</dt><dd>verification trials</dd></div><div><dt>±2 mm</dt><dd>placement target</dd></div><div><dt>9/16″</dt><dd>pneumatic cylinder bore, V2</dd></div></dl>
@@ -1845,7 +1880,8 @@ html[data-theme="dark"]{color-scheme:dark}
   </article>
   <article role="main" tabindex="-1" class="proj-sheet" data-proj="toy" data-crumb="University of Waterloo · ME100 · Fall 2022" hidden>
     <header class="proj-head">
-      <p class="proj-kicker">Project notebook</p>
+      <p class="proj-kicker">Archived project</p>
+      <p class="arch-note"><b>From my first term (ME100, 2022).</b> It’s here for nostalgia, not as an example of the work I do now. My current work is under Selected work in the portfolio.</p>
       <h1>Wind-up soccer toy</h1>
       <p class="proj-lede">My first design project at Waterloo (ME100, Fall 2022).</p>
     </header>
@@ -2139,7 +2175,8 @@ addEventListener('keydown', e => {
 const PF_ORDER = ['led', 'level', 'geotab', 'waterloo', 'toy'];
 /* in the portfolio, the first-year write-up is two stops: FrostBot (top) and the wind-up toy (chapter 03) */
 const PF_TITLES = {};
-const navTitle = k => (mode !== 'play' && PF_TITLES[k]) || TITLES[k];
+const ARCHIVED = ['geotab', 'waterloo', 'toy'];
+const navTitle = k => ((mode !== 'play' && PF_TITLES[k]) || TITLES[k]) + (ARCHIVED.includes(k) ? ' (archived)' : '');
 /* the Previous/Next sequence is picked when a write-up opens and kept while reading: the portfolio's own order, or the full order for write-ups only linked from the game */
 let navL = null, projOpener = null;
 function projList() { return navL || (mode === 'play' ? ORDER : PF_ORDER); }
