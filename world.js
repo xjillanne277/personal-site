@@ -473,7 +473,7 @@ function roomStep(dt) {
   if (v) RP.tx = null;
   if (!v && RP.tx != null) { const d = RP.tx - RP.x; if (Math.abs(d) < 2) { RP.tx = null; if (RP.after) { const o = RP.after; RP.after = null; roomOpen(o); } } else v = Math.sign(d); }
   P.moving = !!v;
-  if (v) { RP.dir = v; RP.x = Math.max(12, Math.min(RMW - 14, RP.x + v * 140 * dt)); walkT += dt; }
+  if (v) { RP.dir = v; const x0 = RP.x; RP.x = Math.max(12, Math.min(RMW - 14, RP.x + v * 140 * dt)); walkT += Math.abs(RP.x - x0) / STRIDE; }
   if (autoId) { const a = RO.find(o => o.id === autoId); if (!a || Math.abs(a.stand - RP.x) > 26) autoId = null; }
   const nn = roomNearest();
 }
@@ -522,6 +522,7 @@ const trail = []; const moe = {x: P.x - 14, y: P.y + 6};
 const keys = new Set();
 let boat = null, boatCool = 0, landDir = 0, boat0dir = 0;
 const visited = new Set(); let autoId = null;
+const STRIDE = 144; /* ground covered per leg cycle (two steps of 18 px); walkT * 8 picks the frame */
 let running = false, last = 0, tourIdx = -1, openId = null, walkT = 0, touch = matchMedia('(pointer: coarse)').matches;
 
 function blockedAt(px, py) { const c = cur(), tx = Math.floor(px / TS), ty = Math.floor(py / TS); if (tx < 0 || ty < 0 || tx >= c.W || ty >= c.H) return true; return c.block[ty * c.W + tx] === 1; }
@@ -837,7 +838,7 @@ function step(now) {
       if (!okY && vy && Math.abs(vy) > Math.abs(vx) && feetBlocked(P.x, P.y + vy)) { for (let k = 1; k <= 8; k++) { if (!feetBlocked(P.x - k, P.y + vy)) { P.x -= Math.min(k, sp); break; } if (!feetBlocked(P.x + k, P.y + vy)) { P.x += Math.min(k, sp); break; } } }
     }
     if (P.target && !across && Math.hypot(P.x - ox, P.y - oy) < sp * .2) { P.stuck += dt; if (P.stuck > .35 && P.final && !P.retried) { const f = P.final, a = P.after; goTo(f.x, f.y, a); P.retried = true; } else if (P.stuck > .35) { const l = P.after; P.target = null; P.after = null; if (l && Math.hypot(spotPx(l).x - P.x, spotPx(l).y - P.y) < 60) openCard(l); } } else P.stuck = 0;
-    if (Math.hypot(P.x - ox, P.y - oy) < sp * .15) P.moving = false; else { walkT += dt; trail.push([P.x, P.y]); if (trail.length > 60) trail.shift(); }
+    if (Math.hypot(P.x - ox, P.y - oy) < sp * .15) P.moving = false; else { walkT += Math.hypot(P.x - ox, P.y - oy) / STRIDE; /* legs follow the ground covered, so a slow walk steps slowly */ trail.push([P.x, P.y]); if (trail.length > 60) trail.shift(); }
   }
   // Moe follows a few steps behind (outside only)
   if (scene === 'world') {
