@@ -56,7 +56,8 @@ const L = [
    card: {title: 'C5 Corvette', meta: 'Black, pop-up headlights', body: ['Click it and the headlights pop up.']}}
 ];
 
-L.forEach(l => { if (l.kind === 'plot') return; for (let y = l.ty; y < l.ty + l.h; y++) for (let x = l.tx; x < l.tx + l.w; x++) block[idx(x, y)] = 1; });
+// Google's top row is just the two roof peaks, so she can walk behind them (the roof is drawn over her there)
+L.forEach(l => { if (l.kind === 'plot') return; for (let y = l.ty + (l.id === 'google' ? 1 : 0); y < l.ty + l.h; y++) for (let x = l.tx; x < l.tx + l.w; x++) block[idx(x, y)] = 1; });
 const TOUR = L.filter(l => l.tour).sort((a, b) => a.tour - b.tour);
 
 /* Bay Area decor */
@@ -169,6 +170,15 @@ function house(X, Y, w, h, roof, wall, o = {}) {
   if (o.chimney) { R(m, X + w - 16, Y - 8, 8, 12, shade(wall, -20)); }
 }
 function shade(hex, a) { const n = parseInt(hex.slice(1), 16); const c = [(n >> 16) & 255, (n >> 8) & 255, n & 255].map(v => Math.max(0, Math.min(255, v + a))); return '#' + c.map(v => v.toString(16).padStart(2, '0')).join(''); }
+function bayView(c, X, Y, w, h, lit, X0 = X) { // Google Bay View: tent canopies clad in blue-silver dragonscale solar, colourful bikes
+  R(c, X + 2, Y + h - 2, w, 4, 'rgba(0,0,0,.18)');
+  R(c, X, Y + h - 22, w, 22, '#9cc8e8'); for (let xx = X + 6; xx < X + w; xx += 8) R(c, xx, Y + h - 22, 1, 22, '#7fa7c4');
+  const peaks = 2, pw = w / peaks;
+  for (let pk = 0; pk < peaks; pk++) for (let row = 0; row < 40; row++) { const half = Math.round(pw / 2 * Math.min(1, row / 22)); const cx = X + pk * pw + pw / 2; for (let xx = cx - half; xx < cx + half; xx += 2) { const t = (Math.floor((xx - X + X0) / 2) + row) % 3; R(c, xx, Y + row, 2, 1, ['#7f9fbf', '#b9cfe0', '#5d7fa1'][t]); } }
+  R(c, X + w / 2 - 6, Y + h - 14, 12, 14, '#4b5b66');
+  ['#f2c14e', '#e35d50', '#47a668', '#5b8ee6'].forEach((col, i) => { const bx = X + 4 + i * 9, by = Y + h + 4; R(c, bx, by + 3, 7, 1, col); R(c, bx + 1, by, 1, 4, col); R(c, bx + 5, by, 1, 4, col); R(c, bx, by + 4, 2, 2, '#222'); R(c, bx + 5, by + 4, 2, 2, '#222'); });
+  if (lit) for (let i = 0; i < 4; i++) lights.push([X + 10 + i * 20, Y + h - 12, 16]);
+}
 function drawLandmark(l) {
   const _l = l;
   const X = l.tx * TS, Y = l.ty * TS, w = l.w * TS, h = l.h * TS;
@@ -211,14 +221,7 @@ function drawLandmark(l) {
         R(m, X, Y + 26, w, 20, '#9cc8e8'); for (let xx = X + 10; xx < X + w; xx += 10) R(m, xx, Y + 26, 1, 20, '#7fa7c4'); for (let i = 0; i < 4; i++) lights.push([X + 10 + i * 20, Y + 36, 16]);
         R(m, X + w / 2 - 7, Y + h - 16, 14, 16, '#5b6670'); break; }
       R(m, X + 2, Y + h - 2, w, 4, 'rgba(0,0,0,.18)'); R(m, X, Y, w, h, '#eef1f3'); R(m, X, Y, w, 8, '#cfd6dc'); for (let i = 0; i < 4; i++) { R(m, X + 6 + i * 18, Y + 18, 12, 30, '#9cc8e8'); lights.push([X + 12 + i * 18, Y + 32, 18]); } R(m, X + w / 2 - 7, Y + h - 16, 14, 16, '#5b6670'); break;
-    case 'modern2': { // Google Bay View: tent canopies clad in blue-silver dragonscale solar, colourful bikes
-      R(m, X + 2, Y + h - 2, w, 4, 'rgba(0,0,0,.18)');
-      R(m, X, Y + h - 22, w, 22, '#9cc8e8'); for (let xx = X + 6; xx < X + w; xx += 8) R(m, xx, Y + h - 22, 1, 22, '#7fa7c4');
-      const peaks = 2, pw = w / peaks;
-      for (let pk = 0; pk < peaks; pk++) for (let row = 0; row < 40; row++) { const half = Math.round(pw / 2 * Math.min(1, row / 22)); const cx = X + pk * pw + pw / 2; for (let xx = cx - half; xx < cx + half; xx += 2) { const t = (Math.floor(xx / 2) + row) % 3; R(m, xx, Y + row, 2, 1, ['#7f9fbf', '#b9cfe0', '#5d7fa1'][t]); } }
-      R(m, X + w / 2 - 6, Y + h - 14, 12, 14, '#4b5b66');
-      ['#f2c14e', '#e35d50', '#47a668', '#5b8ee6'].forEach((c, i) => { const bx = X + 4 + i * 9, by = Y + h + 4; R(m, bx, by + 3, 7, 1, c); R(m, bx + 1, by, 1, 4, c); R(m, bx + 5, by, 1, 4, c); R(m, bx, by + 4, 2, 2, '#222'); R(m, bx + 5, by + 4, 2, 2, '#222'); });
-      for (let i = 0; i < 4; i++) lights.push([X + 10 + i * 20, Y + h - 12, 16]); break; }
+    case 'modern2': bayView(m, X, Y, w, h, true); break;
     case 'modern2_old': R(m, X + 2, Y + h - 2, w, 4, 'rgba(0,0,0,.18)'); R(m, X, Y, w, h, '#f4f1ea'); R(m, X, Y, w, 8, '#dcd6c8'); ['#5b8ee6', '#e35d50', '#f2c14e', '#47a668'].forEach((c, i) => R(m, X + 6 + i * 18, Y + 3, 14, 3, c)); for (let i = 0; i < 4; i++) { R(m, X + 6 + i * 18, Y + 18, 12, 28, '#a8d2ee'); lights.push([X + 12 + i * 18, Y + 32, 18]); } R(m, X + w / 2 - 7, Y + h - 16, 14, 16, '#5b6670'); break;
     case 'workshop': house(X, Y, w, h, '#6f7f8f', '#b9a089', {door: '#8c7a66'}); disc(m, X + 22, Y + 12, 6, '#d9b24a'); disc(m, X + 22, Y + 12, 2, '#6f7f8f'); break;
     case 'tower': R(m, X + 2, Y + h - 2, w, 4, 'rgba(0,0,0,.18)'); R(m, X + 6, Y + 10, w - 12, h - 10, '#d8cfc0'); for (let yy = Y + 14; yy < Y + h; yy += 5) R(m, X + 6, yy, w - 12, 1, '#c4b9a8'); R(m, X + 2, Y, w - 4, 12, '#8b7aa8'); for (let i = 0; i < 4; i++) R(m, X + 4 + i * 10, Y - 4, 6, 4, '#8b7aa8'); R(m, X + w / 2 - 4, Y + 18, 8, 8, '#ffe39a'); lights.push([X + w / 2, Y + 22, 22]); R(m, X + w / 2 - 5, Y + h - 14, 10, 14, '#6b4a35'); break;
@@ -227,12 +230,15 @@ function drawLandmark(l) {
   }
 }
 bake();
+/* the Google building on its own transparent layer, drawn over her (and Moe) when they walk behind the roof peaks */
+const GOOG = L.find(l => l.id === 'google'), googTop = document.createElement('canvas'); googTop.width = GOOG.w * TS; googTop.height = GOOG.h * TS;
+bayView(googTop.getContext('2d'), 0, 0, googTop.width, googTop.height, false, GOOG.tx * TS);
+const GOOG_BACK = (GOOG.ty + 1) * TS + 2; // feet above this line = behind the roof peaks
 /* ---------------- sprites ---------------- */
 const H = '#2a1a14', H2 = '#4a2e22', S = '#e8bfa0', S2 = '#d6a886', TEE = '#1f2126', J = '#4f6d8f', SH = '#eceff1';
 function girl(c, ox, oy, dir, f, noShadow) {
   const P = (x, y, w, h, k) => R(c, ox + x, oy + y, w, h, k);
-  const pass = f === 2 || f === 4;
-  if (!noShadow) P(4, 24 + (pass ? 1 : 0), 12, 2, 'rgba(0,0,0,.18)');
+  if (!noShadow) P(4, 24, 12, 2, 'rgba(0,0,0,.18)');
   if (dir === 'down' || dir === 'up') {
     P(5, 1, 10, 2, H); P(4, 3, 12, 3, H); P(3, 5, 3, 12, H); P(14, 5, 3, 12, H); P(2, 8, 2, 8, H); P(16, 8, 2, 8, H);
     if (dir === 'down') {
@@ -242,10 +248,10 @@ function girl(c, ox, oy, dir, f, noShadow) {
       P(9, 10, 2, 1, '#b5605a'); P(6, 10, 1, 1, '#f0b4a0'); P(13, 10, 1, 1, '#f0b4a0'); P(8, 12, 4, 1, S2);
     } else P(5, 4, 10, 13, H);
     [[5, 2], [13, 2], [4, 7], [15, 7], [3, 11], [16, 11], [4, 15], [15, 15], [7, 3], [12, 3]].forEach(([x, y]) => P(x, y, 1, 1, H2));
-    // arms swing opposite to the legs; legs: the forward foot lands a pixel lower, the back foot lifts
-    const aL = f === 1 ? -1 : f === 3 ? 1 : 0, aR = -aL, fL = f === 1 ? 1 : f === 3 ? -1 : 0, fR = -fL;
-    P(6, 13, 8, 6, TEE); P(4, 13, 2, 3, TEE); P(14, 13, 2, 3, TEE); P(4, 16, 2, 3 + aL, S); P(14, 16, 2, 3 + aR, S);
-    P(7, 19, 6, 2, J); P(7, 21, 2, 1 + fL, J); P(11, 21, 2, 1 + fR, J); P(7, 22 + fL, 2, 2, SH); P(11, 22 + fR, 2, 2, SH);
+    // walk: frames 1 and 3 lift one foot a pixel (the other stays planted) and swing the opposite hand; 2 and 4 are the standing pose
+    const upL = f === 1, upR = f === 3;
+    P(6, 13, 8, 6, TEE); P(4, 13, 2, 3, TEE); P(14, 13, 2, 3, TEE); P(4, 16, 2, upR ? 2 : 3, S); P(14, 16, 2, upL ? 2 : 3, S);
+    P(7, 19, 6, 3, J); P(7, 22 - (upL ? 1 : 0), 2, 2, SH); P(11, 22 - (upR ? 1 : 0), 2, 2, SH);
   } else {
     const fl = dir === 'left' ? (x, w) => 20 - x - w : x => x;
     const Q = (x, y, w, h, k) => P(fl(x, w), y, w, h, k);
@@ -253,28 +259,29 @@ function girl(c, ox, oy, dir, f, noShadow) {
     Q(10, 5, 5, 7, S); Q(10, 5, 2, 3, H); Q(12, 5, 2, 1, H); Q(12, 7, 2, 1, H);
     Q(12, 8, 2, 2, '#fff'); Q(13, 8, 1, 2, '#3b2418'); Q(13, 11, 1, 1, '#b5605a'); Q(10, 12, 3, 1, S2);
     [[5, 2], [9, 2], [5, 7], [4, 10], [6, 13], [4, 15], [7, 4]].forEach(([x, y]) => Q(x, y, 1, 1, H2));
-    // side view: on contact frames the legs scissor (far leg darker); on passing frames they pass under the body
-    const JD = '#3d566f', SD = '#c9cfd4', arm = f === 1 ? 1 : f === 3 ? -1 : 0;
+    // side view: frames 1 and 3 open the legs into a step (the far leg a shade darker), 2 and 4 are the standing pose;
+    // the near arm swings opposite the near leg
+    const JD = '#3d566f', SD = '#c9cfd4', arm = f === 1 ? -1 : f === 3 ? 1 : 0;
     Q(7, 13, 7, 6, TEE); Q(9, 13, 3, 3, TEE);
-    Q(8, 19, 5, 2, J);
     if (f === 1 || f === 3) {
-      const nearFwd = f === 1, back = [7, 5], fwd = [11, 13];
-      const far = nearFwd ? back : fwd, near = nearFwd ? fwd : back;
-      Q(far[0], 21, 2, 1, JD); Q(far[1], 22, 3, 2, SD);
-      Q(near[0], 21, 2, 1, J); Q(near[1], 22, 3, 2, SH);
-    } else if (pass) { Q(9, 21, 3, 1, J); Q(10, 21, 3, 1, SD); Q(9, 22, 3, 2, SH); }
-    else { Q(8, 21, 5, 1, J); Q(8, 22, 2, 2, SH); Q(11, 22, 3, 2, SH); }
+      const nearFwd = f === 1;
+      Q(8, 19, 5, 2, J);
+      Q(nearFwd ? 7 : 11, 21, 2, 1, JD); Q(nearFwd ? 6 : 12, 22, 3, 2, SD);
+      Q(nearFwd ? 11 : 7, 21, 2, 1, J); Q(nearFwd ? 12 : 6, 22, 3, 2, SH);
+    } else { Q(8, 19, 5, 3, J); Q(8, 22, 2, 2, SH); Q(11, 22, 3, 2, SH); }
     Q(10 + arm, 16, 2, 3, S);
   }
 }
-function moeSprite(c, ox, oy, f) {
+function moeSprite(c, ox, oy, f, mini) {
   const P = (x, y, w, h, k) => R(c, ox + x, oy + y, w, h, k), cr = '#f6e7d4', pt = '#e9b98a';
-  const pass = f === 2 || f === 4, pL = f === 1 ? -1 : 0, pR = f === 3 ? -1 : 0, tl = f === 1 ? 1 : f === 3 ? -1 : 0;
-  P(1, 11 + (pass ? 1 : 0), 12, 2, 'rgba(0,0,0,.15)');
+  P(1, 11, 12, 2, 'rgba(0,0,0,.15)');
   P(2, 4, 10, 7, cr); P(3, 0, 8, 6, cr); P(3, -1, 2, 2, pt); P(9, -1, 2, 2, pt);
   P(5, 2, 4, 3, pt); P(5, 2, 1, 1, '#7fb3e0'); P(8, 2, 1, 1, '#7fb3e0'); P(6, 4, 2, 1, '#f2a0a8');
-  P(11, 7, 3, 2, pt); P(13 + tl, 5, 2, 3, pt);
-  P(3 + (f === 1 ? -1 : 0), 10 + pL, 2, 2, pt); P(9 + (f === 3 ? 1 : 0), 10 + pR, 2, 2, pt);
+  // the mini games still use the original two-pose Moe (f is 0 or 1)
+  if (mini) { P(11, 7 + (f ? 1 : 0), 3, 2, pt); P(13, 5 + (f ? 1 : 0), 2, 3, pt); P(3, 10 + (f ? 0 : 1), 2, 2, pt); P(9, 10 + (f ? 1 : 0), 2, 2, pt); return; }
+  // walking on the map: frames 1 and 3 lift one front paw, 2 and 4 are the standing pose
+  P(11, 7, 3, 2, pt); P(13, 5, 2, 3, pt);
+  P(3, 10 - (f === 1 ? 1 : 0), 2, 2, pt); P(9, 10 - (f === 3 ? 1 : 0), 2, 2, pt);
 }
 const pops = {nsx: 0, c5: 0}, popT = {nsx: 0, c5: 0}; const carClicks = {nsx: 0, c5: 0};
 function car(c, X, Y, o, up, noShadow) {
@@ -505,7 +512,7 @@ function drawRoomFront(now) {
   for (let x = 42; x < 148; x += 3) R(g, x - cam.x, 58 - cam.y, 2, 1, `rgb(${lc[seg(x)]})`);
   // Moe + Jillanne
   moeNap(g, 116 - cam.x, 158 - cam.y, now); heartAt(142 - cam.x, 148 - cam.y, now);
-  const f = P.moving && !reduce ? (Math.floor(walkT) % 4) + 1 : 0, bob = f === 2 || f === 4 ? -1 : !P.moving && !reduce && Math.floor(now / 500) % 2 ? 1 : 0;
+  const f = P.moving && !reduce ? (Math.floor(walkT) % 4) + 1 : 0, bob = !P.moving && !reduce && Math.floor(now / 500) % 2 ? 1 : 0;
   girlSide(g, Math.round(RP.x) - 24 - cam.x, FLOOR - 62 - cam.y + bob, f, RP.dir < 0);
   // hover outline
   if (hoverObj) { g.strokeStyle = 'rgba(255,248,225,.9)'; g.lineWidth = 1; g.strokeRect(hoverObj.x - cam.x - 1.5, hoverObj.y - cam.y - 1.5, hoverObj.w + 3, hoverObj.h + 3); }
@@ -537,8 +544,9 @@ const trail = []; const moe = {x: P.x - 14, y: P.y + 6};
 const keys = new Set();
 let boat = null, boatCool = 0, landDir = 0, boat0dir = 0;
 const visited = new Set(); let autoId = null;
-/* walk cycles run on distance, not time: one frame per STEP_PX of ground, four frames per cycle (contact, pass, contact, pass) */
-const STEP_PX = 11, MOE_STEP_PX = 9; let moeT = 0;
+/* walk cycles run on distance, not time, so feet keep pace with the ground at any speed: one frame per STEP_PX,
+   four frames per cycle (step, stand, other step, stand), like the classic handheld RPGs */
+const STEP_PX = 11, MOE_STEP_PX = 12; let moeT = 0, trailD = 0;
 let running = false, last = 0, tourIdx = -1, openId = null, walkT = 0, touch = matchMedia('(pointer: coarse)').matches;
 
 function blockedAt(px, py) { const c = cur(), tx = Math.floor(px / TS), ty = Math.floor(py / TS); if (tx < 0 || ty < 0 || tx >= c.W || ty >= c.H) return true; return c.block[ty * c.W + tx] === 1; }
@@ -572,6 +580,8 @@ function findPath(x0, y0, x1, y1) {
   return out;
 }
 function goTo(x, y, after) {
+  // a spot on the river itself means "cross it": aim for the far bank
+  if (tiles[idx(Math.floor(x / TS), Math.floor(y / TS))] === T.WATER) x = P.x < riverX() * TS + 8 ? (riverX() + 2) * TS + 14 : (riverX() - 1) * TS - 14;
   ({x, y} = awayFromWater({x, y}));
   const path = findPath(P.x, P.y, x, y); P.stuck = 0; P.after = after || null; P.final = {x, y}; P.retried = false;
   if (path && path.length) { path[path.length - 1] = blockedAt(x, y) ? path[path.length - 1] : {x, y}; P.path = path; P.target = P.path.shift(); }
@@ -603,7 +613,7 @@ function ledCard() {
 /* mini experiences live in minis.js, loaded once the game opens */
 let minisP = null, miniInst = null;
 function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=22'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
-const MCTX = {reduce, get touch() { return touch; }, led, ledColor, state: WSTATE, girl, moeSprite,
+const MCTX = {reduce, get touch() { return touch; }, led, ledColor, state: WSTATE, girl, moeSprite: (c, ox, oy, f) => moeSprite(c, ox, oy, f, true),
   tone: (...a) => window.__tone && window.__tone(...a), motor: (om, alt) => window.__motor && window.__motor.set(om, alt),  thock: (v, p) => window.__thock && window.__thock(v, p), land: (v, p) => window.__land && window.__land(v, p), sfx: (k, v, r, d, f) => window.__play && window.__play(k, v, r, d, f), bite: () => window.__bite && window.__bite(), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
 function stopMini() { window.__motor && window.__motor.stop(); if (miniInst) { try { miniInst.stop(); } catch (e) {} miniInst = null; } }
 /* shrink the picture or toy so the whole card fits on screen without scrolling */
@@ -764,27 +774,37 @@ addEventListener('keydown', e => {
 });
 addEventListener('keyup', e => { if (KEYMAP[e.key]) keys.delete(KEYMAP[e.key]); });
 addEventListener('blur', () => keys.clear());
-/* touch only (desktop is unchanged): she starts walking toward your finger the instant you touch, every frame,
-   like an analog stick centred on her (farther = faster, finger on her = stop). Letting go stops her.
-   A quick tap (short, barely moved) still walks to that spot, opens buildings and pets Moe. */
+/* touch only (desktop is unchanged): touch and hold to walk toward your finger at her normal pace (finger on her = stand).
+   If the way is clear she heads straight there; if a building, a tree or the river is in the way she takes the route
+   around it (or the boat). A press that didn't drag works like a tap when you let go: she carries on to that spot, opens
+   what you pressed or pets Moe. After dragging (steering), letting go stops her. */
 let joy = null;
-function joyVec() {
+function lineClear(x0, y0, x1, y1) { const d = Math.hypot(x1 - x0, y1 - y0), n = Math.ceil(d / 5); for (let k = 1; k <= n; k++) { const x = x0 + (x1 - x0) * k / n, y = y0 + (y1 - y0) * k / n; if (feetBlocked(x, y) || tiles[idx(Math.floor(x / TS), Math.floor(y / TS))] === T.WATER || tiles[idx(Math.floor((x + 11) / TS), Math.floor(y / TS))] === T.WATER || tiles[idx(Math.floor((x - 11) / TS), Math.floor(y / TS))] === T.WATER) return false; } return true; }
+function joyVec(now) {
   if (!joy || scene !== 'world' || boat) return null;
   const cam = camera(), sx = (P.x - cam.x) * SC + offX, sy = (P.y - 12 - cam.y) * SC + offY;
-  const dx = joy.cx - sx, dy = joy.cy - sy, d = Math.hypot(dx, dy), dead = 22, full = 120;
-  if (d < dead) return {x: 0, y: 0, m: 0};
-  return {x: dx / d, y: dy / d, m: Math.min(1, .4 + .6 * (d - dead) / (full - dead))};
+  const dx = joy.cx - sx, dy = joy.cy - sy, d = Math.hypot(dx, dy);
+  if (d < 24) { joy.mode = 0; return {x: 0, y: 0}; }
+  const wx = (joy.cx - offX) / SC + cam.x, wy = (joy.cy - offY) / SC + cam.y, ux = dx / d, uy = dy / d;
+  // look a couple of steps ahead: clear = steer straight like a thumbstick; blocked (or the river) = take the route to your finger.
+  // Re-checked ~10 times a second rather than every frame, so she doesn't flicker between the two.
+  if (!joy.chk || now - joy.chk > 100 || (joy.mode === 2 && !P.target && now - (joy.routed || 0) > 250)) {
+    joy.chk = now; const was = joy.mode, L = Math.min(40, Math.hypot(wx - P.x, wy - P.y));
+    joy.mode = lineClear(P.x, P.y, P.x + ux * L, P.y + uy * L) ? 1 : 2;
+    if (joy.mode === 2 && (was !== 2 || !P.target || now - (joy.routed || 0) > 250)) { joy.routed = now; goTo(wx, wy); }
+  }
+  return joy.mode === 1 ? {x: ux, y: uy} : null;
 }
 cv.addEventListener('pointerdown', e => {
   touch = e.pointerType === 'touch'; closeCard();
-  if (touch && scene === 'world') { if (!e.isPrimary) return; joy = {id: e.pointerId, x0: e.clientX, y0: e.clientY, cx: e.clientX, cy: e.clientY, t0: performance.now(), on: false, e}; P.target = null; P.path = null; P.after = null; P.final = null; P.stuck = 0; try { cv.setPointerCapture(e.pointerId); } catch (er) {} return; }
+  if (touch && scene === 'world') { if (!e.isPrimary) return; const c0 = camera(); joy = {id: e.pointerId, x0: e.clientX, y0: e.clientY, cx: e.clientX, cy: e.clientY, t0: performance.now(), on: false, e, w0: {x: (e.clientX - offX) / SC + c0.x, y: (e.clientY - offY) / SC + c0.y}}; P.target = null; P.path = null; P.after = null; P.final = null; P.stuck = 0; try { cv.setPointerCapture(e.pointerId); } catch (er) {} return; }
   tapAt(e);
 });
-const joyEnd = e => { if (!joy || e.pointerId !== joy.id) return; const j = joy; joy = null; P.stuck = 0; if (e.type === 'pointerup' && !j.on && performance.now() - j.t0 < 260) { tapAt(j.e); return; } if (!boat) { P.target = null; P.path = null; P.after = null; P.final = null; } };
+const joyEnd = e => { if (!joy || e.pointerId !== joy.id) return; const j = joy; joy = null; P.stuck = 0; if (e.type === 'pointerup' && !j.on) { const quick = performance.now() - j.t0 < 600; tapAt(quick ? j.e : {clientX: j.cx, clientY: j.cy}, quick ? j.w0 : null); return; } if (!boat) { P.target = null; P.path = null; P.after = null; P.final = null; } };
 cv.addEventListener('pointerup', joyEnd); cv.addEventListener('pointercancel', joyEnd); cv.addEventListener('lostpointercapture', joyEnd);
-function tapAt(e) {
+function tapAt(e, w0) { // w0: the map point under the finger when it touched down (the camera may have moved since)
   if (scene === 'room') { const o = roomHit(e), cam = roomCam(); if (o && o.id === 'moe') { window.__meow && window.__meow(); moeHeart = performance.now(); } if (o && Math.abs(o.stand - RP.x) < 20) { roomOpen(o); return; } RP.tx = o ? o.stand : Math.max(12, Math.min(RMW - 14, e.clientX / SC + cam.x)); RP.after = o && o.id === 'moe' ? o : null; return; }
-  const cam = camera(); const wx = (e.clientX - offX) / SC + cam.x, wy = (e.clientY - offY) / SC + cam.y;
+  const cam = camera(); const wx = w0 ? w0.x : (e.clientX - offX) / SC + cam.x, wy = w0 ? w0.y : (e.clientY - offY) / SC + cam.y;
   const mo = scene === 'room' ? {x: roomMoe.x + 8, y: roomMoe.y + 10} : moe;
   if (!WSTATE.moeHome && Math.hypot(wx - mo.x, wy - (mo.y - 10)) < 17) { window.__meow && window.__meow(); moeHeart = performance.now(); return; }
   const hit = cur().L.find(l => wx >= l.tx * TS - 4 && wx <= (l.tx + l.w) * TS + 4 && wy >= l.ty * TS - 8 && wy <= (l.ty + l.h) * TS + 4);
@@ -814,7 +834,7 @@ function step(now) {
   if (driveFor && Math.hypot(spotPx(L.find(o => o.id === driveFor)).x - P.x, spotPx(L.find(o => o.id === driveFor)).y - P.y) > 90) hideDrive();
   let vx = 0, vy = 0;
   if (keys.has('left')) vx -= 1; if (keys.has('right')) vx += 1; if (keys.has('up')) vy -= 1; if (keys.has('down')) vy += 1;
-  let jm = 1; const jv = !vx && !vy ? joyVec() : null; if (jv) { vx = jv.x; vy = jv.y; jm = jv.m; P.target = null; P.path = null; }
+  const jv = !vx && !vy ? joyVec(now) : null; if (jv) { vx = jv.x; vy = jv.y; P.target = null; P.path = null; }
   if (!vx && !vy && P.target) {
     const dx = P.target.x - P.x, dy = P.target.y - P.y, d = Math.hypot(dx, dy);
     if (d < 3) { if (P.path && P.path.length) P.target = P.path.shift(); else { P.target = null; P.path = null; if (P.after) { const l = P.after; P.after = null; openCard(l); } } }
@@ -829,7 +849,7 @@ function step(now) {
     if (boat.t >= 1) { const tg = P.target; boat = null; boatCool = .8; const keep = tg && !(scene === 'world' && tiles[idx(Math.floor(tg.x / TS), Math.floor(tg.y / TS))] === T.WATER) && (tg.x - P.x) * boat0dir >= -4; if (!keep) { if (P.path && P.path.length) { while (P.path.length > 1 && (P.path[0].x - P.x) * boat0dir < 0) P.path.shift(); P.target = P.path.shift(); } else { P.target = null; P.after = null; } } P.stuck = 0; }
     draw(now); requestAnimationFrame(step); return;
   }
-  const sp = 175 * dt * jm, len = Math.hypot(vx, vy) || 1;
+  const sp = 175 * dt, len = Math.hypot(vx, vy) || 1, wasMoving = P.moving;
   P.moving = !!(vx || vy);
   if (P.moving) {
     vx = vx / len * sp; vy = vy / len * sp;
@@ -854,14 +874,21 @@ function step(now) {
       if (!okY && vy && Math.abs(vy) > Math.abs(vx) && feetBlocked(P.x, P.y + vy)) { for (let k = 1; k <= 8; k++) { if (!feetBlocked(P.x - k, P.y + vy)) { P.x -= Math.min(k, sp); break; } if (!feetBlocked(P.x + k, P.y + vy)) { P.x += Math.min(k, sp); break; } } }
     }
     if (P.target && !across && Math.hypot(P.x - ox, P.y - oy) < sp * .2) { P.stuck += dt; if (P.stuck > .35 && P.final && !P.retried) { const f = P.final, a = P.after; goTo(f.x, f.y, a); P.retried = true; } else if (P.stuck > .35) { const l = P.after; P.target = null; P.after = null; if (l && Math.hypot(spotPx(l).x - P.x, spotPx(l).y - P.y) < 60) openCard(l); } } else P.stuck = 0;
-    if (Math.hypot(P.x - ox, P.y - oy) < sp * .15) P.moving = false; else { walkT += Math.hypot(P.x - ox, P.y - oy) / STEP_PX; trail.push([P.x, P.y]); if (trail.length > 60) trail.shift(); }
+    const moved = Math.hypot(P.x - ox, P.y - oy);
+    if (moved < sp * .15) P.moving = false;
+    else {
+      if (!wasMoving) walkT = (Math.floor(walkT / 2) + 1) * 2; // first frame of a walk is a step, not the standing pose
+      walkT += moved / STEP_PX;
+      // breadcrumbs for Moe exactly every 3px of ground (not every frame, so the frame rate doesn't change how far back he follows)
+      trailD += moved; while (trailD >= 3) { trailD -= 3; const u = 1 - trailD / moved; trail.push([ox + (P.x - ox) * u, oy + (P.y - oy) * u]); if (trail.length > 60) trail.shift(); }
+    }
   }
   // Moe follows a few steps behind (outside only)
   if (scene === 'world') {
-  const tg = trail.length > 12 ? trail[trail.length - 12] : [P.x - 18, P.y + 6];
+  const tg = trail.length > 12 ? trail[trail.length - 12] : trail.length ? trail[0] : [P.x - 18, P.y + 6];
   const mdx = tg[0] - moe.x, mdy = tg[1] - moe.y, md = Math.hypot(mdx, mdy);
-  moe.moving = md > 14;
-  if (md > 14) { const ms = Math.min(md - 14, 185 * dt); moe.x += mdx / md * ms; moe.y += mdy / md * ms; moeT += ms / MOE_STEP_PX; }
+  const mWas = moe.moving; moe.moving = md > 14;
+  if (md > 14) { const ms = Math.min(md - 14, 185 * dt); if (!mWas) moeT = (Math.floor(moeT / 2) + 1) * 2; moe.x += mdx / md * ms; moe.y += mdy / md * ms; moeT += ms / MOE_STEP_PX; }
   }
   // auto-open when you walk up to something
   if (autoId) { const a = cur().L.find(l => l.id === autoId); if (!a || rectDist(a) > 30) autoId = null; }
@@ -874,7 +901,7 @@ const ftile = document.createElement('canvas'); ftile.width = 48; ftile.height =
   [[4, 6], [28, 22]].forEach(([x, y]) => { P(x + 3, y + 14, 10, 3, 'rgba(0,0,0,.12)'); P(x + 7, y + 11, 2, 5, '#6b4a35'); for (let i = 0; i < 3; i++) { const ww = 4 + i * 3, y0 = y - 2 + i * 4; P(x + 8 - ww, y0 + 3, ww * 2, 3, '#2f5e46'); P(x + 8 - ww + 1, y0 + 2, ww * 2 - 2, 1, '#3b7155'); } });
   P(22, 4, 1, 1, '#88b87a'); P(40, 12, 1, 1, '#88b87a'); P(14, 32, 1, 1, '#88b87a'); }
 const forest = g.createPattern(ftile, 'repeat');
-const sbuf = document.createElement('canvas'); sbuf.width = 24; sbuf.height = 38; const sbc = sbuf.getContext('2d'); const GIRL_K = 1.4, MOE_K = 1.6;
+const sbuf = document.createElement('canvas'); sbuf.width = 24; sbuf.height = 38; const sbc = sbuf.getContext('2d'); // she's drawn at 1.4x (34x53), Moe at 1.6x (32x34)
 /* the Google intern cap: yellow front with "Intern", blue on the wearer's right, red on the left, green bill, bead stem, blue propeller */
 const CAP = {Y: ['#f8d22a', '#e2b40e'], B: ['#4a6ee8', '#2f4bb8'], R: ['#e9483c', '#b8322a'], G: ['#38b35a', '#1f7a39'], P: ['#4f71ea', '#7d98f5']};
 function cap(P, cx, y0, hw, view, now) {
@@ -944,13 +971,13 @@ function draw(now) {
   car(g, c5.tx * TS + 1 - cam.x, c5.ty * TS + 2 - cam.y, CARS.c5, pops.c5);
   // sprites, sorted by y
   const f = P.moving && !reduce ? (Math.floor(walkT) % 4) + 1 : 0;
-  const bob = f === 2 || f === 4 ? -1 : !P.moving && !boat && !reduce && Math.floor(now / 500) % 2 ? 1 : 0;
-  const mf = moe.moving && !reduce ? (Math.floor(moeT) % 4) + 1 : 0, mbob = mf === 2 || mf === 4 ? -1 : 0;
+  const bob = !P.moving && !boat && !reduce && Math.floor(now / 500) % 2 ? 1 : 0;
+  const mf = moe.moving && !reduce ? (Math.floor(moeT) % 4) + 1 : 0;
   if (boat) { const bx = Math.round(P.x) - 16 - cam.x, by = Math.round(P.y) - 6 - cam.y;
     R(g, bx + 2, by + 9, 30, 3, 'rgba(20,50,90,.35)'); R(g, bx + 3, by, 26, 9, '#8a5a36'); R(g, bx, by + 1, 32, 6, '#8a5a36'); R(g, bx + 2, by + 2, 28, 4, '#b07a4a'); R(g, bx, by + 1, 32, 1, '#6b4426'); R(g, bx + 3, by + 8, 26, 1, '#5e3a20');
     const oar = Math.floor(now / 220) % 2; R(g, bx + 14, by - 2 + oar * 2, 2, 12, '#d9b483'); R(g, bx + 13, by + 9 + oar * 2, 4, 3, '#d9b483');
     if (!reduce) { const w = Math.floor(now / 120) % 3; R(g, bx - 3 - w, by + 4, 2, 1, '#cfe6f7'); R(g, bx + 34 + w, by + 4, 2, 1, '#cfe6f7'); } }
-  const sprites = [[WSTATE.moeHome ? -1e9 : moe.y, () => { if (WSTATE.moeHome) return; sbc.clearRect(0, 0, 24, 38); moeSprite(sbc, 2, 7, mf); if (WSTATE.hat) moeCap((x, y, w, h, k) => R(sbc, 2 + x, 7 + y, w, h, k), 7, -1, now); g.drawImage(sbuf, 0, 0, 20, 21, Math.round(moe.x - 9 * MOE_K - cam.x), Math.round(moe.y - 18 * MOE_K - cam.y + mbob), Math.round(20 * MOE_K), Math.round(21 * MOE_K)); }], [P.y, () => { sbc.clearRect(0, 0, 24, 38); girl(sbc, 2, 10, P.dir, f); gear(sbc, P.dir, now); g.drawImage(sbuf, 0, 0, 24, 38, Math.round(P.x - 12 * GIRL_K - cam.x), Math.round(P.y - 35 * GIRL_K - cam.y + bob), Math.round(24 * GIRL_K), Math.round(38 * GIRL_K)); }]].sort((a, b) => a[0] - b[0]);
+  const sprites = [[GOOG_BACK, () => { if (P.y < GOOG_BACK || (!WSTATE.moeHome && moe.y < GOOG_BACK)) g.drawImage(googTop, GOOG.tx * TS - cam.x, GOOG.ty * TS - cam.y); }], [WSTATE.moeHome ? -1e9 : moe.y, () => { if (WSTATE.moeHome) return; sbc.clearRect(0, 0, 24, 38); moeSprite(sbc, 2, 7, mf); if (WSTATE.hat) moeCap((x, y, w, h, k) => R(sbc, 2 + x, 7 + y, w, h, k), 7, -1, now); g.drawImage(sbuf, 0, 0, 20, 21, Math.round(moe.x) - 14 - cam.x, Math.round(moe.y) - 29 - cam.y, 32, 34); }], [P.y, () => { sbc.clearRect(0, 0, 24, 38); girl(sbc, 2, 10, P.dir, f); gear(sbc, P.dir, now); g.drawImage(sbuf, 0, 0, 24, 38, Math.round(P.x) - 17 - cam.x, Math.round(P.y) - 49 - cam.y + bob, 34, 53); }]].sort((a, b) => a[0] - b[0]);
   sprites.forEach(s => s[1]());
   if (TINT) {
     g.fillStyle = TINT; g.fillRect(0, 0, VW, VH);
@@ -972,6 +999,7 @@ function draw(now) {
     if (innerWidth > 760) x = Math.max(w / 2 + 6, Math.min(innerWidth - w / 2 - 6, x)); // phones: labels stay pinned to their building
     for (let k = 0; k < 4 && innerWidth > 760; k++) { const hit = placed.find(r => Math.abs(r.x - x) < (r.w + w) / 2 + 4 && Math.abs(r.y - y) < (r.h + h) / 2 + 2); if (!hit) break; y = hit.y - hit.h - 4; }
     placed.push({x, y, w, h});
+    if (l === GOOG) { const behind = P.y < GOOG_BACK && Math.abs(P.x - (l.tx + l.w / 2) * TS) < l.w * TS / 2 + 14; if (n._fade !== behind) { n._fade = behind; n.style.opacity = behind ? '.3' : ''; } } // see her behind the roof
     n.style.transform = `translate(${Math.round(x)}px,${Math.round(y)}px) translate(-50%,-100%)`;
   });
   iconNodes.forEach(([l, im]) => { const sz = 15 * SC, x = offX + (l.tx * TS + l.w * TS / 2 - cam.x) * SC, y = offY + (l.ty * TS + ICON[l.id] - cam.y) * SC; const vis = x > -40 && x < innerWidth + 40 && y > -40 && y < innerHeight; im.hidden = !vis; if (vis) { im.style.width = im.style.height = sz + 'px'; im.style.transform = `translate(${Math.round(x - sz / 2)}px,${Math.round(y)}px)`; } });
@@ -1105,7 +1133,7 @@ function welcome() {
   const t0 = performance.now(); const early = () => { setTimeout(hide, Math.max(0, 6000 - (performance.now() - t0))); };
   addEventListener('keydown', early); cv.addEventListener('pointerdown', early); setTimeout(hide, 10000);
 }
-window.__w = {get boat() { return boat; }, goTo, blocked: (x, y) => feetBlocked(x, y), get P() { return P; }, get moe() { return moe; }, get RP() { return RP; }, get scene() { return scene; }, camera: () => scene === 'room' ? roomCam() : camera(), get SC() { return SC; }, RO, roomOpen, led, WSTATE};
+window.__w = {get boat() { return boat; }, goTo, lineClear, tileAt: (x, y) => tiles[idx(Math.floor(x / TS), Math.floor(y / TS))], put(x, y) { P.x = x; P.y = y; P.target = null; P.path = null; moe.x = x - 14; moe.y = y + 6; trail.length = 0; }, blocked: (x, y) => feetBlocked(x, y), get P() { return P; }, get moe() { return moe; }, get RP() { return RP; }, get scene() { return scene; }, camera: () => scene === 'room' ? roomCam() : camera(), get SC() { return SC; }, RO, roomOpen, led, WSTATE};
 window.World = {
   start() { loadMinis().catch(() => {}); if (!welcomed) { /* start at stop 1 (Waterloo, 2022) so the map reads left to right like a timeline */ const w = spotPx(L.find(l => l.id === 'waterloo')); P.x = w.x + 22; P.y = w.y; if (feetBlocked(P.x, P.y)) P.x = w.x; P.dir = 'right'; P.target = null; moe.x = P.x - 14; moe.y = P.y + 4; trail.length = 0; } resize(); root.hidden = false; running = true; last = performance.now(); cv.setAttribute('tabindex', '0'); cv.focus({preventScroll: true}); requestAnimationFrame(step); if (!welcomed) welcome(); },
   stop() { if (scene === 'track') leaveTrack(true); hideDrive(); running = false; root.hidden = true; keys.clear(); closeCard(); }
