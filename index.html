@@ -1447,6 +1447,13 @@ html[data-theme="dark"] .pf-now-dot{background:#6fcf9f!important}
 .gt-limits b{color:#b42318}
 html[data-theme="dark"] .gt-limits{border-color:#7a302a!important;background:#2d1f1e}
 html[data-theme="dark"] .gt-limits b{color:#f3a59d}
+/* work terms: one box instead of two rules; label in ink */
+.pf-logos{border:2px solid var(--edge)!important;border-radius:12px;padding:14px 20px;background:var(--card,#fff);margin:0 0 8px}
+.pf-logos span{color:var(--ink)!important;font-weight:600}
+/* asides that fit on one line stay on one line */
+#pf-first .pf-aside,#pf-work .pf-aside{max-width:none}
+/* cleared-to-share note beside the Experience heading: full wording, wraps inside its box */
+@media (min-width:761px){#pf-exp .pf-clear-row{flex:1 1 420px;max-width:640px}}
 </style>
 <style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}@media (hover:none),(pointer:coarse){
   html{-webkit-tap-highlight-color:transparent}
@@ -1522,7 +1529,7 @@ html[data-theme="dark"] .gt-limits b{color:#f3a59d}
     <p class="pf-logos"><span>I worked at:</span> Google, Level Home, Tesla (2×), Geotab, Valbruna, Evercloak</p>
 
     <section class="pf-sec" id="pf-work" aria-labelledby="pf-work-h">
-      <div class="pf-sec-row"><h2 id="pf-work-h" class="pf-label">Selected work</h2><p class="pf-aside">Two projects I can show in depth. Click one for the full write-up.</p></div>
+      <div class="pf-sec-row"><h2 id="pf-work-h" class="pf-label">Selected work</h2><p class="pf-aside">Two projects I can show in depth. Click the cards for their full write-ups.</p></div>
       <a class="case" href="#project/led" data-open="led">
         <span class="case-img"><img src="img/led-exploded.webp" alt="" fetchpriority="high" width="1088" height="1200"></span>
         <span class="case-body">
@@ -1554,15 +1561,15 @@ html[data-theme="dark"] .gt-limits b{color:#f3a59d}
       <p class="pf-now-meta">CHANGE design team, University of Waterloo, Fall 2026</p>
       <p>Working with Spinal Cord Injury Ontario, our team is developing a low-cost system that helps wheelchair users with spinal cord injuries do and track pressure reliefs through the day. I’m leading the mechanical architecture: turning stakeholder feedback into requirements for comfort, thickness, durability, manufacturability and cost, then prototyping concepts against them.</p>
       <dl class="pf-now-facts">
-        <div><dt>My role</dt><dd>Mechanical lead, founding member</dd></div>
-        <div><dt>Now</dt><dd>Requirements and concept development<small>Week 3 of 12</small></dd></div>
-        <div><dt>Next</dt><dd>Functional prototype and bench testing<small>Feedback from SCIO end users</small></dd></div>
-        <div><dt>Target</dt><dd>Pilot-ready design and BOM<small>December 2026</small></dd></div>
+        <div><dt>My role</dt><dd>Founding member and mechanical lead</dd></div>
+        <div><dt>Phase 1</dt><dd>Requirements and concept development<small>Week 3 of 12</small></dd></div>
+        <div><dt>Phase 2</dt><dd>Functional prototype and bench testing<small>Feedback from SCIO end users</small></dd></div>
+        <div><dt>Deliverable</dt><dd>Pilot-ready design and BOM<small>December 2026</small></dd></div>
       </dl>
     </section>
 
     <section class="pf-sec" id="pf-exp" aria-labelledby="pf-exp-h">
-      <div class="pf-sec-row"><h2 id="pf-exp-h" class="pf-label">Experience</h2><div class="pf-clear pf-clear-row"><b>✓ All cleared to share.</b><p>Roles with no photos are described in text, only as far as written here.</p></div><p class="pf-aside">Click to expand any role for details.</p></div>
+      <div class="pf-sec-row"><h2 id="pf-exp-h" class="pf-label">Experience</h2><div class="pf-clear pf-clear-row"><b>✓ Cleared to share</b><p>Everything here is cleared to share. Some roles don’t allow photos or media of the work, so I describe those in text, and only to the extent written here.</p></div><p class="pf-aside">Click to expand any role for details.</p></div>
       <ol class="pf-exp">
         <li data-xp="google"><span class="when">Summer 2026</span><span class="who"><b>Google</b>Product Design Engineering Intern, Pixel Hardware</span><span class="what">Advanced Architecture PD team, across Pixel phone and Pixel Watch: nano-molded antenna-split parts, watch display glass geometry, failure modes, and design and DFM on plastic injection-molded parts.</span><span class="xp-side"><span class="tag no">No photos or media</span><button type="button" class="pf-go sm" data-xp="google">View details →</button></span></li>
         <li data-xp="level"><span class="when">Winter 2026</span><span class="who"><b>Level Home</b>Product Design Engineering Intern</span><span class="what">Magnetometer lock sensing ($12M projected), a 2M-cycle test fixture, a fix for bolt binding, and DFM on 20+ parts.</span><span class="xp-side"><span class="tag ok">Photos and media shown</span><button type="button" class="pf-go sm" data-xp="level">View details →</button></span></li>
