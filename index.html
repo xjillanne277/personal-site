@@ -1459,6 +1459,13 @@ html[data-theme="dark"] .cs-toc a[aria-current="true"] span{border-color:#14181d
 html[data-theme="dark"] .cs-toc a:hover{background:#2c2f33}
 /* asides that fit on one line stay on one line */
 #pf-first .pf-aside,#pf-work .pf-aside{max-width:none}
+/* action buttons: green at rest, dark on hover; the card outline darkens with them */
+.case-cta,.pf-exp .pf-go.sm{background:var(--acc)!important;color:#fff!important}
+.case:hover .case-cta,.case:focus-visible .case-cta,.pf-exp li:hover .pf-go.sm,.pf-exp .pf-go.sm:hover,.pf-exp .pf-go.sm:focus-visible{background:#111418!important;color:#fff!important}
+.case:hover,.pf-exp li:hover{border-color:#111418!important}
+html[data-theme="dark"] .case-cta,html[data-theme="dark"] .pf-exp .pf-go.sm{background:var(--acc)!important;color:#14181d!important}
+html[data-theme="dark"] .case:hover .case-cta,html[data-theme="dark"] .case:focus-visible .case-cta,html[data-theme="dark"] .pf-exp li:hover .pf-go.sm,html[data-theme="dark"] .pf-exp .pf-go.sm:hover,html[data-theme="dark"] .pf-exp .pf-go.sm:focus-visible{background:#e9e7e2!important;color:#14181d!important}
+html[data-theme="dark"] .case:hover,html[data-theme="dark"] .pf-exp li:hover{border-color:#c3c6cb!important}
 </style>
 <style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}@media (hover:none),(pointer:coarse){
   html{-webkit-tap-highlight-color:transparent}
