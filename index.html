@@ -1466,6 +1466,18 @@ html[data-theme="dark"] .cs-toc a:hover{background:#2c2f33}
 html[data-theme="dark"] .case-cta,html[data-theme="dark"] .pf-exp .pf-go.sm{background:var(--acc)!important;color:#14181d!important}
 html[data-theme="dark"] .case:hover .case-cta,html[data-theme="dark"] .case:focus-visible .case-cta,html[data-theme="dark"] .pf-exp li:hover .pf-go.sm,html[data-theme="dark"] .pf-exp .pf-go.sm:hover,html[data-theme="dark"] .pf-exp .pf-go.sm:focus-visible{background:#e9e7e2!important;color:#14181d!important}
 html[data-theme="dark"] .case:hover,html[data-theme="dark"] .pf-exp li:hover{border-color:#c3c6cb!important}
+/* section numbers as plain "1." in the heading's own type */
+#pf .pf-label{gap:.32em!important}
+#pf .pf-label::before{content:attr(data-n) "."!important;display:inline!important;width:auto!important;height:auto!important;border:0!important;border-radius:0!important;background:none!important;padding:0!important;color:inherit!important;font:inherit!important;letter-spacing:inherit!important}
+.cs h2,.proj h2{gap:.32em!important}
+.cs h2 span,.proj h2 span,html[data-theme="dark"] .cs h2 span,html[data-theme="dark"] .proj h2 span{display:inline!important;width:auto!important;min-width:0!important;height:auto!important;border:0!important;border-radius:0!important;background:none!important;padding:0!important;color:inherit!important;font:inherit!important;letter-spacing:inherit!important}
+.cs h2 span::after,.proj h2 span::after{content:"."}
+.cs-toc a span,html[data-theme="dark"] .cs-toc a span{display:inline!important;width:auto!important;height:auto!important;border:0!important;border-radius:0!important;background:none!important;color:inherit!important;font:inherit!important;margin-right:-3px}
+.cs-toc a span::after{content:"."}
+.cs-toc a[aria-current="true"] span,html[data-theme="dark"] .cs-toc a[aria-current="true"] span{color:inherit!important}
+.cs-seq li::before,html[data-theme="dark"] .cs-seq li::before{content:counter(seq) "."!important;display:block!important;width:auto!important;height:auto!important;border:0!important;border-radius:0!important;font:600 16px/1.75 "Space Grotesk",system-ui,sans-serif!important;color:inherit!important}
+.cs-seq li{grid-template-columns:24px 130px minmax(0,1fr)}
+@media (max-width:640px){.cs-seq li{grid-template-columns:24px minmax(0,1fr)}}
 </style>
 <style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}@media (hover:none),(pointer:coarse){
   html{-webkit-tap-highlight-color:transparent}
