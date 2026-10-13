@@ -1447,6 +1447,18 @@ html[data-theme="dark"] .cs h2 span,html[data-theme="dark"] .proj h2 span{border
 html[data-theme="dark"] .proj-bar .proj-resume{color:#7fcfb0}
 .pf-facts dd{text-wrap:balance}
 .cs-changes li span:last-of-type::before,.cs-power>i,.cs-flow>i,.cs-ba-row>i{color:#2f6f5e}
+/* balloons in ink, like a drawing; light in dark mode */
+#pf .pf-label::before{border-color:var(--ink)!important;color:var(--ink)!important}
+.cs h2 span,.proj h2 span,.cs-seq li::before,.cs-toc a span{border-color:#111418!important;color:#111418!important}
+.cs-toc a[aria-current="true"]{background:#111418!important;color:#fff!important}
+.cs-toc a[aria-current="true"] span{border-color:#fff!important;color:#fff!important}
+.cs-toc a:hover{background:#efefea}
+html[data-theme="dark"] .cs h2 span,html[data-theme="dark"] .proj h2 span,html[data-theme="dark"] .cs-seq li::before,html[data-theme="dark"] .cs-toc a span{border-color:#d6d4cf!important;color:#d6d4cf!important}
+html[data-theme="dark"] .cs-toc a[aria-current="true"]{background:#e9e7e2!important;color:#14181d!important}
+html[data-theme="dark"] .cs-toc a[aria-current="true"] span{border-color:#14181d!important;color:#14181d!important}
+html[data-theme="dark"] .cs-toc a:hover{background:#2c2f33}
+/* asides that fit on one line stay on one line */
+#pf-first .pf-aside,#pf-work .pf-aside{max-width:none}
 </style>
 <style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}@media (hover:none),(pointer:coarse){
   html{-webkit-tap-highlight-color:transparent}
