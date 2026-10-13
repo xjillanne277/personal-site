@@ -1403,8 +1403,9 @@ html[data-theme="dark"] .case:hover .case-cta,html[data-theme="dark"] .pf-exp li
 .cs-fig img,.proj figure img,.cs-node,.cs-flow div,.proj-nav button,.proj-pn button,.cs-cards>div{border-color:var(--edge)}
 .cs-stats div+div,.cs-stats.cs-hl,.cs-table th,.cs-table td,.cs-changes li{border-color:var(--line)}
 .proj-bar{border-bottom-color:var(--rule)}
-.cs-box,.cs-box-lead,.cs-eq,.arch-note,.proj-res,.proj-did,.proj-learn,.proj-calc,.gt-limits{border:2px solid var(--edge)!important;border-radius:10px!important}
-.proj-did,.proj-learn,.proj-res{padding:10px 14px}
+.cs-box,.cs-box-lead,.cs-eq,.arch-note,.proj-res,.proj-calc,.gt-limits{border:2px solid var(--edge)!important;border-radius:10px!important}
+.proj-res{padding:10px 14px}
+.proj-did,.proj-learn{border:0!important;padding:0!important;background:none!important;border-radius:0!important}
 .cs-box.k-prob{border-color:#4a515c!important}
 .cs-box.k-why{border-color:#88a3c4!important;background:#f3f6fa}
 .cs-box.k-why .cs-box-t{color:#24486f}
@@ -1457,6 +1458,10 @@ html[data-theme="dark"] .gt-limits b{color:#f3a59d}
 /* skill and tag chips: filled with a soft navy tint, the site's accent */
 .sk-card dd span,.case-tags span{background:#edf2f8!important;border-color:#d3ddea!important;color:#1f3a5c!important}
 html[data-theme="dark"] .sk-card dd span,html[data-theme="dark"] .case-tags span{background:#243042!important;border-color:#34465e!important;color:#c9d8ec!important}
+/* hero facts: labels never wrap */
+.pf-facts dt{white-space:nowrap}
+@media (min-width:1100px){.pf-hero{grid-template-columns:minmax(0,1fr) minmax(300px,500px)}}
+.pf-facts dd{text-wrap:balance}
 </style>
 <style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}@media (hover:none),(pointer:coarse){
   html{-webkit-tap-highlight-color:transparent}
@@ -1591,7 +1596,7 @@ html[data-theme="dark"] .sk-card dd span,html[data-theme="dark"] .case-tags span
       <div class="sk-grid"><div class="sk-card"><h3>Mechanical Design</h3><dl><div><dt>CAD</dt><dd><span>Siemens NX</span><span>CATIA V6</span><span>SolidWorks</span><span>Onshape</span></dd></div><div><dt>DFMA</dt><dd><span>Injection molding</span><span>Precision glass molding</span><span>Die casting</span><span>Die cutting</span><span>CNC machining (3- &amp; 5-axis)</span></dd></div></dl></div><div class="sk-card"><h3>Analysis</h3><dl><div><dt>Methods</dt><dd><span>Tolerance analysis</span><span>RCFA</span><span>FMEA</span></dd></div><div><dt>Simulation</dt><dd><span>FEA (Ansys Mechanical)</span><span>CFD (Ansys Fluent)</span><span>Mold flow</span></dd></div></dl></div><div class="sk-card"><h3>Manufacturing &amp; Prototyping</h3><dl><div><dt>Machining</dt><dd><span>Lathe</span><span>Mill</span><span>3-axis CNC</span></dd></div><div><dt>3D printing</dt><dd><span>FDM</span><span>SLA</span><span>SLS</span></dd></div><div><dt>Cutting</dt><dd><span>Waterjet</span><span>Laser</span></dd></div><div><dt>Electronics</dt><dd><span>Breadboarding</span><span>Soldering</span><span>PCB assembly</span></dd></div></dl></div><div class="sk-card"><h3>Electrical &amp; Software</h3><dl><div><dt>PCB design</dt><dd><span>KiCad</span><span>Altium</span></dd></div><div><dt>Embedded</dt><dd><span>ESP32</span><span>Arduino</span><span>Raspberry Pi</span><span>STM32</span></dd></div><div><dt>Programming</dt><dd><span>C++</span><span>Python</span><span>MATLAB</span></dd></div><div><dt>Testing</dt><dd><span>Data acquisition</span><span>PCB bring-up</span></dd></div></dl></div></div>
     </section>
     <section class="pf-sec pf-arch" id="pf-first" aria-labelledby="pf-first-h">
-      <div class="pf-sec-row"><h2 id="pf-first-h" class="pf-label">Archived projects</h2><p class="pf-aside">Class and hackathon projects from first and second year. They didn’t make the main cut, but they show where I started.</p></div>
+      <div class="pf-sec-row"><h2 id="pf-first-h" class="pf-label">Archived projects</h2><p class="pf-aside">Class and hackathon projects from first and second year, kept to show where I started.</p></div>
       <details class="pf-arch-box"><summary><span><span class="ab-show">Show</span><span class="ab-hide">Hide</span> the 3 archived projects</span></summary>
       <div class="pf-first arch">
         <a class="pf-fy" href="#project/geotab" data-open="geotab"><span class="pf-fy-img fill"><img src="img/gt-cert.webp" alt="" loading="lazy" width="716" height="404"></span><span class="pf-fy-body"><span class="pf-kicker">Geotab hackathon, 2024</span><b>Project Jarvis</b><span>Distracted-driving detection with computer vision. 1st of 11 teams.</span><span class="pf-tags"><i>Model training</i><i>Computer vision</i><i>Python</i></span></span></a>
@@ -1720,7 +1725,7 @@ html[data-theme="dark"] .sk-card dd span,html[data-theme="dark"] .case-tags span
 
     <section class="cs-sec">
       <h2>Does the buck converter need a heatsink?</h2>
-      <div class="cs-verdict"><b>No.</b> Worst case, the IC reaches <strong>83.9 °C</strong>, well under its <strong>125 °C</strong> limit.</div>
+      <div class="cs-verdict"><b>No.</b> At 20 °C ambient, with all the heat in one IC and no radiation, it reaches <strong>83.9 °C</strong>, well under its <strong>125 °C</strong> limit.</div>
       <div class="cs-eqs">
         <div class="cs-eq"><span>Output power</span><b>5 V × 0.37 A = 1.85 W</b><p>Display 0.12 A + ESP32 0.25 A</p></div>
         <div class="cs-eq"><span>Heat lost</span><b>2.34 W − 1.85 W = 0.49 W</b><p>79% efficiency, from my own load sweep</p></div>
