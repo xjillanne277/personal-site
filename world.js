@@ -585,7 +585,7 @@ function ledCard() {
 }
 /* mini experiences live in minis.js, loaded once the game opens */
 let minisP = null, miniInst = null;
-function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=21'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
+function loadMinis() { return minisP || (minisP = new Promise((res, rej) => { if (window.Minis) { res(window.Minis); return; } const sc = document.createElement('script'); sc.src = 'minis.js?v=22'; sc.onload = () => res(window.Minis); sc.onerror = () => { minisP = null; rej(); }; document.head.appendChild(sc); })); }
 const MCTX = {reduce, get touch() { return touch; }, led, ledColor, state: WSTATE, girl, moeSprite,
   tone: (...a) => window.__tone && window.__tone(...a), motor: (om, alt) => window.__motor && window.__motor.set(om, alt),  thock: (v, p) => window.__thock && window.__thock(v, p), land: (v, p) => window.__land && window.__land(v, p), sfx: (k, v, r, d, f) => window.__play && window.__play(k, v, r, d, f), bite: () => window.__bite && window.__bite(), chime: () => window.__sfx && window.__sfx('open'), meow: () => window.__meow && window.__meow()};
 function stopMini() { window.__motor && window.__motor.stop(); if (miniInst) { try { miniInst.stop(); } catch (e) {} miniInst = null; } }
@@ -747,26 +747,24 @@ addEventListener('keydown', e => {
 });
 addEventListener('keyup', e => { if (KEYMAP[e.key]) keys.delete(KEYMAP[e.key]); });
 addEventListener('blur', () => keys.clear());
-/* touch only (desktop is unchanged): a quick tap walks there; press and hold keeps her walking toward your finger,
-   re-routing around buildings every fraction of a second, and letting go stops her */
+/* touch only (desktop is unchanged): she starts walking toward your finger the instant you touch, every frame,
+   like an analog stick centred on her (farther = faster, finger on her = stop). Letting go stops her.
+   A quick tap (short, barely moved) still walks to that spot, opens buildings and pets Moe. */
 let joy = null;
-function holdStart() { if (!joy || joy.hold) return; joy.hold = true; holdGo(true); joy.iv = setInterval(holdGo, 120); }
-/* while holding or dragging: if the straight line to your finger is clear, follow it directly (smooth);
-   otherwise route around buildings or take the boat */
-function lineClear(x0, y0, x1, y1) { const d = Math.hypot(x1 - x0, y1 - y0), n = Math.ceil(d / 5); for (let k = 1; k <= n; k++) { const x = x0 + (x1 - x0) * k / n, y = y0 + (y1 - y0) * k / n; if (feetBlocked(x, y) || tiles[idx(Math.floor(x / TS), Math.floor(y / TS))] === T.WATER || tiles[idx(Math.floor((x + 11) / TS), Math.floor(y / TS))] === T.WATER || tiles[idx(Math.floor((x - 11) / TS), Math.floor(y / TS))] === T.WATER) return false; } return true; }
-function holdGo(force) {
-  if (!joy || !joy.hold || scene !== 'world' || boat) return;
-  const cam = camera(), wx = (joy.cx - offX) / SC + cam.x, wy = (joy.cy - offY) / SC + cam.y;
-  if (lineClear(P.x, P.y, wx, wy)) { P.target = {x: wx, y: wy}; P.path = null; P.after = null; P.final = null; P.stuck = 0; joy.routed = 0; return; }
-  const now = performance.now(); if (force || now - (joy.routed || 0) > 200) { joy.routed = now; goTo(wx, wy); }
+function joyVec() {
+  if (!joy || scene !== 'world' || boat) return null;
+  const cam = camera(), sx = (P.x - cam.x) * SC + offX, sy = (P.y - 12 - cam.y) * SC + offY;
+  const dx = joy.cx - sx, dy = joy.cy - sy, d = Math.hypot(dx, dy), dead = 16, full = 90;
+  if (d < dead) return {x: 0, y: 0, m: 0};
+  return {x: dx / d, y: dy / d, m: Math.min(1, .45 + .55 * (d - dead) / (full - dead))};
 }
 cv.addEventListener('pointerdown', e => {
   touch = e.pointerType === 'touch'; closeCard();
-  if (touch && scene === 'world') { if (!e.isPrimary) return; joy = {id: e.pointerId, x0: e.clientX, y0: e.clientY, cx: e.clientX, cy: e.clientY, t0: performance.now(), on: false, hold: false, e}; joy.tm = setTimeout(holdStart, 280); try { cv.setPointerCapture(e.pointerId); } catch (er) {} return; }
+  if (touch && scene === 'world') { if (!e.isPrimary) return; joy = {id: e.pointerId, x0: e.clientX, y0: e.clientY, cx: e.clientX, cy: e.clientY, t0: performance.now(), on: false, e}; P.target = null; P.path = null; P.after = null; P.final = null; P.stuck = 0; try { cv.setPointerCapture(e.pointerId); } catch (er) {} return; }
   tapAt(e);
 });
-const joyEnd = e => { if (!joy || e.pointerId !== joy.id) return; const j = joy; joy = null; clearTimeout(j.tm); clearInterval(j.iv); if (j.hold) { if (!boat) { P.target = null; P.path = null; P.after = null; P.final = null; P.stuck = 0; } return; } if (!j.on && e.type === 'pointerup') tapAt(j.e); };
-cv.addEventListener('pointerup', joyEnd); cv.addEventListener('pointercancel', joyEnd);
+const joyEnd = e => { if (!joy || e.pointerId !== joy.id) return; const j = joy; joy = null; P.stuck = 0; if (e.type === 'pointerup' && !j.on && performance.now() - j.t0 < 260) { tapAt(j.e); return; } if (!boat) { P.target = null; P.path = null; P.after = null; P.final = null; } };
+cv.addEventListener('pointerup', joyEnd); cv.addEventListener('pointercancel', joyEnd); cv.addEventListener('lostpointercapture', joyEnd);
 function tapAt(e) {
   if (scene === 'room') { const o = roomHit(e), cam = roomCam(); if (o && o.id === 'moe') { window.__meow && window.__meow(); moeHeart = performance.now(); } if (o && Math.abs(o.stand - RP.x) < 20) { roomOpen(o); return; } RP.tx = o ? o.stand : Math.max(12, Math.min(RMW - 14, e.clientX / SC + cam.x)); RP.after = o && o.id === 'moe' ? o : null; return; }
   const cam = camera(); const wx = (e.clientX - offX) / SC + cam.x, wy = (e.clientY - offY) / SC + cam.y;
@@ -777,7 +775,7 @@ function tapAt(e) {
   goTo(wx, wy);
 }
 cv.addEventListener('pointermove', e => {
-  if (joy && e.pointerId === joy.id) { joy.cx = e.clientX; joy.cy = e.clientY; if (Math.hypot(e.clientX - joy.x0, e.clientY - joy.y0) > 12) { joy.on = true; holdStart(); } if (joy.hold) holdGo(); return; }
+  if (joy && e.pointerId === joy.id) { joy.cx = e.clientX; joy.cy = e.clientY; if (Math.hypot(e.clientX - joy.x0, e.clientY - joy.y0) > 14) joy.on = true; return; }
   if (scene !== 'world' || !(e.buttons & 1) || e.pointerType === 'touch') return; const cam = camera(); P.target = {x: (e.clientX - offX) / SC + cam.x, y: (e.clientY - offY) / SC + cam.y}; P.path = null; P.after = null; P.stuck = 0; });
 prompt.addEventListener('click', () => { if (scene === 'room') { const o = roomNearest(); if (o) roomOpen(o); return; } const n = nearest(); if (n) openCard(n); });
 
@@ -799,6 +797,7 @@ function step(now) {
   if (driveFor && Math.hypot(spotPx(L.find(o => o.id === driveFor)).x - P.x, spotPx(L.find(o => o.id === driveFor)).y - P.y) > 90) hideDrive();
   let vx = 0, vy = 0;
   if (keys.has('left')) vx -= 1; if (keys.has('right')) vx += 1; if (keys.has('up')) vy -= 1; if (keys.has('down')) vy += 1;
+  let jm = 1; const jv = !vx && !vy ? joyVec() : null; if (jv) { vx = jv.x; vy = jv.y; jm = jv.m; P.target = null; P.path = null; }
   if (!vx && !vy && P.target) {
     const dx = P.target.x - P.x, dy = P.target.y - P.y, d = Math.hypot(dx, dy);
     if (d < 3) { if (P.path && P.path.length) P.target = P.path.shift(); else { P.target = null; P.path = null; if (P.after) { const l = P.after; P.after = null; openCard(l); } } }
@@ -813,11 +812,12 @@ function step(now) {
     if (boat.t >= 1) { const tg = P.target; boat = null; boatCool = .8; const keep = tg && !(scene === 'world' && tiles[idx(Math.floor(tg.x / TS), Math.floor(tg.y / TS))] === T.WATER) && (tg.x - P.x) * boat0dir >= -4; if (!keep) { if (P.path && P.path.length) { while (P.path.length > 1 && (P.path[0].x - P.x) * boat0dir < 0) P.path.shift(); P.target = P.path.shift(); } else { P.target = null; P.after = null; } } P.stuck = 0; }
     draw(now); requestAnimationFrame(step); return;
   }
-  const sp = 175 * dt, len = Math.hypot(vx, vy) || 1;
+  const sp = 175 * dt * jm, len = Math.hypot(vx, vy) || 1;
   P.moving = !!(vx || vy);
   if (P.moving) {
     vx = vx / len * sp; vy = vy / len * sp;
-    P.dir = Math.abs(vx) > Math.abs(vy) ? (vx < 0 ? 'left' : 'right') : (vy < 0 ? 'up' : 'down');
+    const hz = (P.dir === 'left' || P.dir === 'right'), k = jv ? 1.35 : 1; // while steering, don't flicker between facings on diagonals
+    P.dir = (hz ? Math.abs(vx) * k > Math.abs(vy) : Math.abs(vx) > Math.abs(vy) * k) ? (vx < 0 ? 'left' : 'right') : (vy < 0 ? 'up' : 'down');
     const ox = P.x, oy = P.y;
     const wet = (x, y) => scene === 'world' && tiles[idx(Math.floor(x / TS), Math.floor(y / TS))] === T.WATER;
     boatCool = Math.max(0, boatCool - dt);

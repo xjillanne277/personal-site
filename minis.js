@@ -139,17 +139,22 @@ M.cell = (host, ctl, X) => {
   function reset() { back(E.red); back(E.black); charge = 0; powered = false; drive = null; X.state.cells = false; sel = null; say(base()); }
   ctl.querySelector('[data-reset]').addEventListener('click', reset);
   const near = (p, o, r) => Math.hypot(o.x - p.x, o.y - p.y) < r;
+  /* forgiving targets for fingers: the wire's own terminal grabs it from far away, the wrong one only on a close drop */
+  const RIGHT = 32, WRONG = 15;
+  const target = (k, p) => { const w = E[k].want, o = w === 'pos' ? 'neg' : 'pos'; return near(p, T[w], RIGHT) ? w : near(p, T[o], WRONG) ? o : null; };
+  let lift = 0;
   cv.addEventListener('pointerdown', e => {
     if (powered || drive) return;
     const p = pt(e); moved = 0;
-    const k = Object.keys(E).find(k2 => near(p, E[k2], 11));
-    if (k) { if (E[k].att) { E[k].att = null; charge = 0; } grab = k; sel = k; cv.setPointerCapture(e.pointerId); return; }
-    const t2 = Object.keys(T).find(k2 => near(p, T[k2], 13)); if (t2 && sel) attach(sel, t2);
+    const k = Object.keys(E).find(k2 => near(p, E[k2], 17));
+    if (k) { if (E[k].att) { E[k].att = null; charge = 0; } grab = k; sel = k; lift = e.pointerType === 'touch' ? 14 : 0; cv.setPointerCapture(e.pointerId); return; }
+    if (sel) { const t2 = target(sel, p) || Object.keys(T).find(k2 => near(p, T[k2], 24)); if (t2) attach(sel, t2); }
   });
-  cv.addEventListener('pointermove', e => { if (!grab) return; const p = pt(e), o = E[grab]; moved += Math.hypot(p.x - o.x, p.y - o.y); o.x = Math.max(4, Math.min(W - 4, p.x)); o.y = Math.max(4, Math.min(H - 4, p.y)); });
+  /* on touch the wire end rides just above the fingertip so it stays visible */
+  cv.addEventListener('pointermove', e => { if (!grab) return; const p = pt(e), o = E[grab], y = p.y - lift; moved += Math.hypot(p.x - o.x, y - o.y); o.x = Math.max(4, Math.min(W - 4, p.x)); o.y = Math.max(4, Math.min(H - 4, y)); });
   const up = e => {
-    if (!grab) return; const k = grab; grab = null; const p = pt(e);
-    const t2 = Object.keys(T).find(k2 => near(p, T[k2], 14));
+    if (!grab) return; const k = grab; grab = null;
+    const t2 = target(k, E[k]);
     if (t2 && moved > 3) attach(k, t2); else { back(E[k]); if (moved <= 3) { sel = k; say(`${E[k].name} wire picked up. Tap a terminal on the cell.`); } else sel = null; }
   };
   cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
