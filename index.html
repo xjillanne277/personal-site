@@ -1347,8 +1347,8 @@ html[data-theme="dark"] .cs-how p{color:#d6d4cf}
 .cs-toc summary::-webkit-details-marker{display:none}
 .cs-toc summary::after{content:" ▾";color:#2f6f5e}
 .cs-toc[open] summary::after{content:" ▴"}
-.cs-toc ol{list-style:none;margin:0;padding:2px 0;display:flex;flex-wrap:wrap;gap:2px 4px}
-.cs-toc a{display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:0 10px;border-radius:8px;font:500 14px/1.2 "IBM Plex Sans",system-ui,sans-serif;color:#2b3038;text-decoration:none}
+.cs-toc ol{list-style:none;margin:0;padding:2px 0;display:flex;flex-wrap:wrap;gap:2px}
+.cs-toc a{display:inline-flex;align-items:center;gap:6px;min-height:34px;padding:0 7px;border-radius:8px;font:500 13.5px/1.2 "IBM Plex Sans",system-ui,sans-serif;color:#2b3038;text-decoration:none}
 .cs-toc a span{display:inline-grid;place-items:center;flex:none;width:20px;height:20px;box-sizing:border-box;border:1.5px solid #2f6f5e;border-radius:50%;font:600 11px/1 "Space Grotesk",system-ui,sans-serif;color:#2f6f5e}
 .cs-toc a:hover{background:#eef5f1}
 .cs-toc a:focus-visible{outline:2px solid #2f6f5e;outline-offset:1px}
@@ -1363,6 +1363,8 @@ html[data-theme="dark"] .cs-toc a[aria-current="true"] span{border-color:#14181d
 @media (min-width:861px){.cs-toc summary{display:none}}
 @media (max-width:860px){.cs-toc{position:static}}
 .cs-sec{scroll-margin-top:calc(var(--barh,60px) + 70px)}
+.cs-steps.cs-two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:760px){.cs-steps.cs-two{grid-template-columns:minmax(0,1fr)}}
 
 /* tolerance walkthrough, DFM summary, status label */
 .cs-seq{list-style:none;counter-reset:seq var(--seq-start,0);margin:14px 0 18px;padding:0;display:grid;gap:10px}
@@ -1643,14 +1645,13 @@ html[data-theme="dark"] .proj-bar .proj-resume{color:#7fcfb0}
       <h2><span>2</span> Three prototypes in seven weeks</h2>
       <div class="cs-steps">
         <div><figure class="cs-fig"><img src="img/cs-p0.webp" alt="Prototype 0 on the bench: Arduino, keypad, knob, LCD and a blue LED strip" loading="lazy" width="1004" height="694"><figcaption></figcaption></figure><div class="cs-box"><span class="cs-box-t">P0: proof of concept</span><p>Arduino, keypad, knob and LCD from parts on hand. One strip, one colour channel at a time.</p></div></div>
-        <div><figure class="cs-fig"><img src="img/cs-p1-hands.webp" alt="Prototype 1 being wired on the bench" loading="lazy" width="1400" height="788"><figcaption></figcaption></figure><div class="cs-box"><span class="cs-box-t">P1: functional prototype</span><p>ESP32, five sliders, programmable buttons and an OLED. Several strips at once.</p></div></div>
+        <div><figure class="cs-fig"><img src="img/led-p1-lit.webp" alt="Prototype 1 on the bench: breadboard with the ESP32 and sliders driving four lit LED strips" loading="lazy" width="1100" height="825"><figcaption></figcaption></figure><div class="cs-box"><span class="cs-box-t">P1: functional prototype</span><p>ESP32, five sliders, programmable buttons and an OLED. Several strips at once.</p></div></div>
         <div><figure class="cs-fig"><img src="img/cs-pilot-render.webp" alt="Render of the pilot controller with six LED strips and the power cable connected" loading="lazy" width="1665" height="944"><figcaption class="cs-tiny">Render</figcaption></figure><div class="cs-box"><span class="cs-box-t">Pilot: custom PCB</span><p>My own 2-layer board in an SLA-printed enclosure. First build handed off to the design team for testing and feedback.</p></div></div>
       </div>
       <div class="cs-box cs-box-lead"><span class="cs-box-t">Before ordering P1 parts: simulation</span><p>While waiting for components, I built P1 in an online ESP32 simulator to check the pin mapping, the UI flow and multi-strip control. Debugging the software and wiring early cut bring-up time once the hardware arrived.</p></div>
-      <div class="cs-steps cs-thumbs">
+      <div class="cs-steps cs-thumbs cs-two">
         <div><figure class="cs-fig"><img src="img/led-p1-sim.webp" alt="ESP32 simulation of P1: OLED, five sliders, four buttons and four LED strips shown as rings" loading="lazy" width="1443" height="1223"></figure><div class="cs-box"><span class="cs-box-t">Simulation</span><p>ESP32, OLED, R/G/B/W and brightness sliders, strip-select buttons, four LED strips (shown as rings).</p></div></div>
         <div><figure class="cs-fig"><img src="img/led-p1-oled.webp" alt="OLED dashboard showing the selected strip, RGBW values and a brightness bar" loading="lazy" width="895" height="376"></figure><div class="cs-box"><span class="cs-box-t">OLED dashboard</span><p>Selected strip, RGBW values (0–255) and brightness (0–100%).</p></div></div>
-        <div><figure class="cs-fig"><img src="img/led-p1-bringup.webp" alt="P1 hardware bring-up on a breadboard driving LED strips" loading="lazy" width="1030" height="1100"></figure><div class="cs-box"><span class="cs-box-t">P1 bring-up</span><p>On the bench.</p></div></div>
       </div>
       <figure class="cs-fig fy-video" style="margin-top:22px"><video style="max-height:none;height:auto;background:none" src="vid/led-p1.mp4" poster="img/led-p1-poster.webp" autoplay muted loop playsinline preload="metadata" aria-label="P1 prototype driving 3 LED strips"></video><figcaption>P1 driving 3 LED strips.</figcaption></figure>
     </section>
