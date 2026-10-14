@@ -1506,6 +1506,19 @@ html[data-theme="dark"] .cs-toc a[aria-current="true"],html[data-theme="dark"] .
 @media (min-width:761px){.proj-bar .proj-nav{flex:0 1 auto}.proj-bar .proj-crumb{flex:1 1 0}}
 /* phones: dark-mode button sits on the Back row, Previous/Next get the second row */
 @media (max-width:640px){.proj-bar .theme-btn{order:1;margin-left:auto}.proj-bar .proj-nav{order:2;margin-left:0}}
+/* welcome: Portfolio is the one big button, the game is a quiet link under it (its description stays for screen readers) */
+#title .doors{grid-template-columns:minmax(0,1fr)!important;gap:6px!important}
+#title .menu .door.pf{justify-items:center;text-align:center}
+#title .menu .door.pf b{justify-content:center}
+#title .menu .door.game{position:relative;background:none!important;border:0!important;box-shadow:none!important;padding:8px 0 2px!important;justify-items:center;text-align:center;min-height:0}
+#title .menu .door.game b{display:block!important;font:600 16px/1.35 var(--f-pixel)!important;color:#6b4f39!important;text-decoration:none}
+#title .menu .door.game u{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:4px}
+#title .menu .door.game b::after{display:inline-block;margin-left:6px;text-decoration:none}
+#title .menu .door.game .door-min{display:inline-block;margin-left:2px;font-style:normal;font-weight:500;text-decoration:none}
+#title .menu .door.game span{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
+#title .menu .door.game:hover,#title .menu .door.game[aria-current="true"]{background:none!important;transform:none}
+#title .menu .door.game:focus-visible{outline-offset:1px}
+#title .menu .door.game:hover b,#title .menu .door.game[aria-current="true"] b{color:var(--ink)!important}
 </style>
 <style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}@media (hover:none),(pointer:coarse){
   html{-webkit-tap-highlight-color:transparent}
@@ -1534,10 +1547,9 @@ html[data-theme="dark"] .cs-toc a[aria-current="true"],html[data-theme="dark"] .
   <div class="panel">
     <h1>Jillanne Youssef</h1>
     <p class="sub">3B Mechanical Engineering, <span style="white-space:nowrap">University of Waterloo</span><br>Looking for a Summer 2027 internship</p>
-    <p class="title-ask">Where do you want to start?</p>
     <ul class="menu doors" role="menu" aria-label="Choose a version">
       <li role="none"><button role="menuitem" class="door pf" id="opt-pf" aria-current="true" data-go="portfolio"><b>Portfolio <span class="door-arr" aria-hidden="true">→</span></b><span>My engineering work, quick to read. Projects, experience and résumé.</span><em>Estimated time: 3 minutes</em></button></li>
-      <li role="none"><button role="menuitem" class="door game" id="opt-play" aria-current="false" data-go="play"><b>Or play the game</b><span>A small pixel world: my story, my room, my cat. About 4 minutes, and you can exit at any time.</span></button></li>
+      <li role="none"><button role="menuitem" class="door game" id="opt-play" aria-current="false" data-go="play"><b><u>Or play the game</u> <i class="door-min">(4 min)</i></b><span>A small pixel world: my story, my room, my cat. About 4 minutes, and you can exit at any time.</span></button></li>
     </ul>
   </div>
 </main>
