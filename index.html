@@ -1479,7 +1479,7 @@ html[data-theme="dark"] .case:hover,html[data-theme="dark"] .pf-exp li:hover{bor
 .cs-seq li{grid-template-columns:24px 130px minmax(0,1fr)}
 @media (max-width:640px){.cs-seq li{grid-template-columns:24px minmax(0,1fr)}}
 /* in-page contents: always visible "Jump to:" row of chips, sticky under the top bar at every width */
-.cs-toc{position:sticky!important;top:var(--barh,60px);z-index:3;display:flex!important;align-items:flex-start;gap:8px;margin:6px 0 24px!important;padding:8px 10px!important;background:rgba(250,249,246,.97)!important;border:2px solid #d3dacf!important;border-radius:12px!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 -12px 0 #fff}
+.cs-toc{position:sticky!important;top:var(--barh,60px);z-index:1;display:flex!important;align-items:flex-start;gap:8px;margin:6px 0 24px!important;padding:8px 10px!important;background:rgba(250,249,246,.97)!important;border:2px solid #d3dacf!important;border-radius:12px!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 -12px 0 #fff}
 .cs-toc-k{flex:none;font:600 14px/38px "Space Grotesk",system-ui,sans-serif;color:#3b4048;white-space:nowrap}
 .cs-toc a span{margin-right:0!important}
 .cs-toc ol{flex:1 1 auto;min-width:0;display:flex!important;flex-wrap:nowrap!important;gap:5px!important;margin:0!important;padding:2px 2px!important;list-style:none;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
@@ -1504,6 +1504,8 @@ html[data-theme="dark"] .cs-toc a[aria-current="true"],html[data-theme="dark"] .
 /* top bar: Previous/Next always stay inside the window; when there's no room a long next title gets cut with an ellipsis, the arrow stays */
 .proj-bar .proj-nav{min-width:0;max-width:100%}.proj-nav #proj-prev{flex:none}.proj-nav #proj-next{display:inline-flex;align-items:center;gap:.3em;min-width:0}#proj-next-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media (min-width:761px){.proj-bar .proj-nav{flex:0 1 auto}.proj-bar .proj-crumb{flex:1 1 0}}
+/* phones: dark-mode button sits on the Back row, Previous/Next get the second row */
+@media (max-width:640px){.proj-bar .theme-btn{order:1;margin-left:auto}.proj-bar .proj-nav{order:2;margin-left:0}}
 </style>
 <style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}@media (hover:none),(pointer:coarse){
   html{-webkit-tap-highlight-color:transparent}
