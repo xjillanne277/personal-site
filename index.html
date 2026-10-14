@@ -1501,6 +1501,9 @@ html[data-theme="dark"] .cs-toc a[aria-current="true"],html[data-theme="dark"] .
 @media (min-width:861px) and (min-height:560px){.cs-toc ol{flex-wrap:wrap!important;overflow:visible}}
 @media (max-width:560px){.cs-toc{gap:8px;padding:6px 8px!important;margin:4px 0 20px!important}.cs-toc-k{font-size:13px;line-height:36px}.cs-toc a{min-height:32px!important;padding:0 9px!important;font-size:13px!important}}
 .cs-sec{scroll-margin-top:calc(var(--barh,60px) + var(--toch,56px) + 14px)!important}
+/* top bar: Previous/Next always stay inside the window; when there's no room a long next title gets cut with an ellipsis, the arrow stays */
+.proj-bar .proj-nav{min-width:0;max-width:100%}.proj-nav #proj-prev{flex:none}.proj-nav #proj-next{display:inline-flex;align-items:center;gap:.3em;min-width:0}#proj-next-t{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (min-width:761px){.proj-bar .proj-nav{flex:0 1 auto}.proj-bar .proj-crumb{flex:1 1 0}}
 </style>
 <style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}@media (hover:none),(pointer:coarse){
   html{-webkit-tap-highlight-color:transparent}
