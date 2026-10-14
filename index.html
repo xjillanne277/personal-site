@@ -1478,6 +1478,29 @@ html[data-theme="dark"] .case:hover,html[data-theme="dark"] .pf-exp li:hover{bor
 .cs-seq li::before,html[data-theme="dark"] .cs-seq li::before{content:counter(seq) "."!important;display:block!important;width:auto!important;height:auto!important;border:0!important;border-radius:0!important;font:600 16px/1.75 "Space Grotesk",system-ui,sans-serif!important;color:inherit!important}
 .cs-seq li{grid-template-columns:24px 130px minmax(0,1fr)}
 @media (max-width:640px){.cs-seq li{grid-template-columns:24px minmax(0,1fr)}}
+/* in-page contents: always visible "Jump to:" row of chips, sticky under the top bar at every width */
+.cs-toc{position:sticky!important;top:var(--barh,60px);z-index:3;display:flex!important;align-items:flex-start;gap:8px;margin:6px 0 24px!important;padding:8px 10px!important;background:rgba(250,249,246,.97)!important;border:2px solid #d3dacf!important;border-radius:12px!important;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 -12px 0 #fff}
+.cs-toc-k{flex:none;font:600 14px/38px "Space Grotesk",system-ui,sans-serif;color:#3b4048;white-space:nowrap}
+.cs-toc a span{margin-right:0!important}
+.cs-toc ol{flex:1 1 auto;min-width:0;display:flex!important;flex-wrap:nowrap!important;gap:5px!important;margin:0!important;padding:2px 2px!important;list-style:none;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.cs-toc ol::-webkit-scrollbar{display:none}
+.cs-toc.fade-r ol{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
+.cs-toc.fade-l ol{-webkit-mask-image:linear-gradient(90deg,transparent,#000 28px);mask-image:linear-gradient(90deg,transparent,#000 28px)}
+.cs-toc.fade-l.fade-r ol{-webkit-mask-image:linear-gradient(90deg,transparent,#000 28px,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,transparent,#000 28px,#000 calc(100% - 28px),transparent)}
+.cs-toc li{flex:none}
+.cs-toc a{display:inline-flex!important;align-items:center;gap:4px!important;min-height:34px!important;padding:0 10px!important;border:1.5px solid #cfdfd5!important;border-radius:6px!important;background:#fff!important;color:#111418!important;font:500 13.5px/1.2 "IBM Plex Sans",system-ui,sans-serif!important;white-space:nowrap;text-decoration:none;cursor:pointer;transition:border-color .15s,background-color .15s,color .15s}
+.cs-toc a:hover{border-color:#2f6f5e!important;color:#2f6f5e!important;background:#fff!important}
+.cs-toc a:focus-visible{outline:2px solid #2f6f5e!important;outline-offset:2px}
+.cs-toc a[aria-current="true"],.cs-toc a[aria-current="true"]:hover{background:#2f6f5e!important;border-color:#2f6f5e!important;color:#fff!important}
+html[data-theme="dark"] .cs-toc{background:rgba(35,37,40,.97)!important;border-color:#3a4045!important;box-shadow:0 -12px 0 #232528}
+html[data-theme="dark"] .cs-toc-k{color:#c3c6cb}
+html[data-theme="dark"] .cs-toc a{background:#2a2d31!important;border-color:#444a51!important;color:#e9e7e2!important}
+html[data-theme="dark"] .cs-toc a:hover{border-color:#7fcfb0!important;color:#7fcfb0!important}
+html[data-theme="dark"] .cs-toc a[aria-current="true"],html[data-theme="dark"] .cs-toc a[aria-current="true"]:hover{background:#7fcfb0!important;border-color:#7fcfb0!important;color:#14181d!important}
+@media (prefers-reduced-motion:reduce){.cs-toc a{transition:none}}
+@media (min-width:861px) and (min-height:560px){.cs-toc ol{flex-wrap:wrap!important;overflow:visible}}
+@media (max-width:560px){.cs-toc{gap:8px;padding:6px 8px!important;margin:4px 0 20px!important}.cs-toc-k{font-size:13px;line-height:36px}.cs-toc a{min-height:32px!important;padding:0 9px!important;font-size:13px!important}}
+.cs-sec{scroll-margin-top:calc(var(--barh,60px) + var(--toch,56px) + 14px)!important}
 </style>
 <style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}@media (hover:none),(pointer:coarse){
   html{-webkit-tap-highlight-color:transparent}
@@ -1659,7 +1682,7 @@ html[data-theme="dark"] .case:hover,html[data-theme="dark"] .pf-exp li:hover{bor
       <div><dt>Mechanical</dt><dd>Enclosure design, thermal analysis, material selection</dd></div>
       <div><dt>Impact</dt><dd>6× LED capacity vs. off-the-shelf controller</dd></div>
     </dl>
-    <details class="cs-toc" open><summary>In this case study</summary><ol><li><a href="#led-s1" data-toc="led-s1"><span>1</span>Requirements</a></li><li><a href="#led-s2" data-toc="led-s2"><span>2</span>Prototypes</a></li><li><a href="#led-s3" data-toc="led-s3"><span>3</span>Microcontroller</a></li><li><a href="#led-s4" data-toc="led-s4"><span>4</span>Schematic</a></li><li><a href="#led-s5" data-toc="led-s5"><span>5</span>Power</a></li><li><a href="#led-s6" data-toc="led-s6"><span>6</span>PCB</a></li><li><a href="#led-s7" data-toc="led-s7"><span>7</span>Thermal</a></li><li><a href="#led-s8" data-toc="led-s8"><span>8</span>Enclosure</a></li><li><a href="#led-s9" data-toc="led-s9"><span>9</span>Firmware</a></li><li><a href="#led-s10" data-toc="led-s10"><span>10</span>Result</a></li></ol></details>
+    <nav class="cs-toc" aria-label="Jump to a section"><span class="cs-toc-k">Jump to:</span><ol><li><a href="#led-s1" data-toc="led-s1"><span>1</span>Requirements</a></li><li><a href="#led-s2" data-toc="led-s2"><span>2</span>Prototypes</a></li><li><a href="#led-s3" data-toc="led-s3"><span>3</span>Microcontroller</a></li><li><a href="#led-s4" data-toc="led-s4"><span>4</span>Schematic</a></li><li><a href="#led-s5" data-toc="led-s5"><span>5</span>Power</a></li><li><a href="#led-s6" data-toc="led-s6"><span>6</span>PCB</a></li><li><a href="#led-s7" data-toc="led-s7"><span>7</span>Thermal</a></li><li><a href="#led-s8" data-toc="led-s8"><span>8</span>Enclosure</a></li><li><a href="#led-s9" data-toc="led-s9"><span>9</span>Firmware</a></li><li><a href="#led-s10" data-toc="led-s10"><span>10</span>Result</a></li></ol></nav>
 
 
     <section class="cs-sec" id="led-s1">
@@ -1792,7 +1815,7 @@ html[data-theme="dark"] .case:hover,html[data-theme="dark"] .pf-exp li:hover{bor
       <div><dt>2M+</dt><dd>test cycles completed</dd></div>
       <div><dt>25%</dt><dd>reduction in actuation-force variability</dd></div>
     </dl>
-    <details class="cs-toc" open><summary>In this case study</summary><ol><li><a href="#level-s1" data-toc="level-s1"><span>1</span>Keypad testing</a></li><li><a href="#level-s2" data-toc="level-s2"><span>2</span>Sensing</a></li><li><a href="#level-s3" data-toc="level-s3"><span>3</span>Tolerance analysis</a></li><li><a href="#level-s4" data-toc="level-s4"><span>4</span>DFM</a></li><li><a href="#level-s5" data-toc="level-s5"><span>5</span>Lock lifetime testing</a></li><li><a href="#level-s6" data-toc="level-s6"><span>6</span>Drawings</a></li></ol></details>
+    <nav class="cs-toc" aria-label="Jump to a section"><span class="cs-toc-k">Jump to:</span><ol><li><a href="#level-s1" data-toc="level-s1"><span>1</span>Keypad testing</a></li><li><a href="#level-s2" data-toc="level-s2"><span>2</span>Sensing</a></li><li><a href="#level-s3" data-toc="level-s3"><span>3</span>Tolerance analysis</a></li><li><a href="#level-s4" data-toc="level-s4"><span>4</span>DFM</a></li><li><a href="#level-s5" data-toc="level-s5"><span>5</span>Lock lifetime testing</a></li><li><a href="#level-s6" data-toc="level-s6"><span>6</span>Drawings</a></li></ol></nav>
 
 
     <section class="cs-sec" id="level-s1">
@@ -2713,18 +2736,26 @@ setSel(0, true);
 <script src="world.js">
 </script>
 <script>
-/* in-page contents: open on desktop, folded on phones; smooth jump without touching the hash route; highlight the section in view */
-(function(){var proj=document.getElementById('proj');if(!proj)return;var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-function barH(){var b=proj.querySelector('.proj-bar');if(b&&b.offsetHeight)proj.style.setProperty('--barh',b.offsetHeight+'px');}
-function setOpen(){var wide=matchMedia('(min-width: 861px)').matches;proj.querySelectorAll('.cs-toc').forEach(function(d){d.open=wide;});}
+/* in-page contents: a sticky row of chips; the chip you click is the one shown as selected, then it follows your scrolling */
+(function(){var proj=document.getElementById('proj');if(!proj)return;
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,lockId=null,lockT=0,tick=false;
+function art(){return proj.querySelector('article:not([hidden])');}
+function sizes(){var b=proj.querySelector('.proj-bar'),bh=b?b.offsetHeight:0;if(bh)proj.style.setProperty('--barh',bh+'px');
+var a=art(),t=a&&a.querySelector('.cs-toc'),th=t?t.offsetHeight:0;if(th)proj.style.setProperty('--toch',th+'px');return {bh:bh,th:th};}
+function fades(toc){var ol=toc&&toc.querySelector('ol');if(!ol)return;var max=ol.scrollWidth-ol.clientWidth;toc.classList.toggle('fade-r',ol.scrollLeft<max-2);toc.classList.toggle('fade-l',ol.scrollLeft>2);}
+function setCur(toc,id){if(!toc)return;var ol=toc.querySelector('ol');toc.querySelectorAll('a').forEach(function(x){var on=!!id&&x.dataset.toc===id;x.setAttribute('aria-current',on?'true':'false');
+if(on&&ol){var l=x.offsetLeft-ol.offsetLeft,r=l+x.offsetWidth;if(l<ol.scrollLeft+8||r>ol.scrollLeft+ol.clientWidth-8)ol.scrollTo({left:Math.max(0,l-Math.max(0,(ol.clientWidth-x.offsetWidth)/2)),behavior:reduce?'auto':'smooth'});}});fades(toc);}
+function spy(){var a=art();if(!a)return;var toc=a.querySelector('.cs-toc');if(!toc||lockId)return;var s=sizes(),lim=s.bh+s.th+48,cur=null,secs=a.querySelectorAll('.cs-sec[id]');
+secs.forEach(function(sec){if(sec.getBoundingClientRect().top<lim)cur=sec.id;});
+if(secs.length&&proj.scrollTop+proj.clientHeight>=proj.scrollHeight-4)cur=secs[secs.length-1].id;setCur(toc,cur);}
+function unlockSoon(ms){clearTimeout(lockT);lockT=setTimeout(function(){lockId=null;},ms);}
 proj.addEventListener('click',function(e){var a=e.target.closest('.cs-toc a');if(!a)return;e.preventDefault();var t=document.getElementById(a.dataset.toc);if(!t)return;
-barH();if(!matchMedia('(min-width: 861px)').matches){var d=a.closest('details');if(d)d.open=false;}requestAnimationFrame(function(){t.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});});});
-var tick=false;proj.addEventListener('scroll',function(){if(tick)return;tick=true;requestAnimationFrame(function(){tick=false;
-barH();var art=proj.querySelector('article:not([hidden])');if(!art)return;var toc=art.querySelector('.cs-toc');if(!toc)return;var lim=(parseFloat(getComputedStyle(proj).getPropertyValue('--barh'))||60)+90,cur=null;
-art.querySelectorAll('.cs-sec[id]').forEach(function(sec){if(sec.getBoundingClientRect().top<lim)cur=sec.id;});
-toc.querySelectorAll('a').forEach(function(a){a.setAttribute('aria-current',String(a.dataset.toc===cur));});});},{passive:true});
-addEventListener('resize',function(){barH();});new MutationObserver(function(){if(!proj.hidden)setTimeout(function(){barH();setOpen();},30);}).observe(proj,{attributes:true,attributeFilter:['hidden']});addEventListener('hashchange',function(){setTimeout(function(){barH();setOpen();},60);});barH();setOpen();})();
+var s=sizes();lockId=a.dataset.toc;setCur(a.closest('.cs-toc'),lockId);unlockSoon(500);
+var top=t.getBoundingClientRect().top-proj.getBoundingClientRect().top+proj.scrollTop-(s.bh+s.th+14);proj.scrollTo({top:Math.max(0,top),behavior:reduce?'auto':'smooth'});});
+proj.addEventListener('scroll',function(){if(lockId){unlockSoon(160);return;}if(tick)return;tick=true;requestAnimationFrame(function(){tick=false;spy();});},{passive:true});
+function init(){proj.querySelectorAll('.cs-toc').forEach(function(toc){var ol=toc.querySelector('ol');if(ol&&!ol.dataset.f){ol.dataset.f='1';ol.addEventListener('scroll',function(){fades(toc);},{passive:true});}fades(toc);});sizes();spy();}
+addEventListener('resize',function(){sizes();proj.querySelectorAll('.cs-toc').forEach(fades);});
+new MutationObserver(function(){if(!proj.hidden)setTimeout(init,40);}).observe(proj,{attributes:true,subtree:true,attributeFilter:['hidden']});init();})();
 </script>
-
 </body>
 </html>
