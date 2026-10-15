@@ -26,7 +26,7 @@ markNear(PATH_ON); markNear(PATH_CA);
 for (let i = 0; i < MW * MH; i++) if (tiles[i] === T.OCEAN) block[i] = 1;
 
 /* ---------------- landmarks ---------------- */
-const RES = 'resume.pdf?v=2';
+const RES = 'resume.pdf?v=3';
 const L = [
   {id: 'waterloo', label: 'Waterloo', yr: '2022', tx: 2, ty: 16, w: 5, h: 4, spot: [4, 20], kind: 'school', tour: 1,
    card: {title: 'University of Waterloo', meta: 'Mechanical Engineering, started Fall 2022', mini: 'toy', proj: 'toy', tabs: [['toy', 'ME100: Wind-up toy', 'toy'], ['cake', 'ME101: FrostBot', 'waterloo']], blurb: ['Where it started: a wind-up soccer toy for ME100, then FrostBot, a cake-icing robot, for ME101.']}},
