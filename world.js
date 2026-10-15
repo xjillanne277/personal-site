@@ -39,7 +39,7 @@ const L = [
   {id: 'teslacells', label: 'Tesla Cell Equipment', yr: '2025', tx: 27, ty: 3, w: 5, h: 4, spot: [29, 7], kind: 'modern', tour: 5,
    card: {title: 'Tesla Cell Equipment', meta: 'Mechanical Design Engineering Intern, Palo Alto, Winter 2025', mini: 'cell', blurb: ['My first internship in California, and it was a lot of fun. I can’t share many details, so here’s a cell. Do you know how to connect it?']}},
   {id: 'teslalight', label: 'Tesla Lighting', yr: '2025', tx: 35, ty: 3, w: 5, h: 4, spot: [37, 7], kind: 'modern', tour: 6,
-   card: {title: 'Tesla, Lighting, Switches & Sensors', meta: 'Mechanical Design Engineering Intern, Fremont, Fall 2025', mini: 'led', proj: 'led', more: 'Read the LED controller story', blurb: ['I designed an interior cabin light, and built an RGBW LED controller for the lighting design studio. Try it.']}},
+   card: {title: 'Tesla, Lighting, Switches & Sensors', meta: 'Product Design Engineering Intern, Fremont, Fall 2025', mini: 'led', proj: 'led', more: 'Read the LED controller story', blurb: ['I designed an interior cabin light, and built an RGBW LED controller for the lighting design studio. Try it.']}},
   {id: 'level', label: 'Level Home', yr: '2026', tx: 40, ty: 11, w: 4, h: 3, spot: [41, 14], kind: 'office', tour: 7,
    card: {title: 'Level Home', meta: 'Product Design Engineering Intern, Redwood City, Winter 2026', mini: 'lock', img: 'img/level-welcome.webp', imgAlt: 'Level welcome box with a hoodie, jacket and water bottle', photo: 'See my welcome box', blurb: ['Four months on smart locks, from a keypad test fixture to the sensor that knows whether the bolt is thrown.']}},
   {id: 'google', label: 'Google', yr: '2026', tx: 31, ty: 10, w: 5, h: 4, spot: [33, 14], kind: 'modern2', tour: 8,
