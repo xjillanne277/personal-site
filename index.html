@@ -60,7 +60,7 @@ if(mine||!/(^|\.)jillanneyoussef\.com$/.test(location.hostname))return;
 /* landed straight on /#portfolio (e.g. the résumé PDF link): keep where they came from too */
 try{if(location.hash==='#portfolio'&&sessionStorage.getItem('jy_orig_ref')===null){sessionStorage.setItem('jy_orig_ref',document.referrer||'$direct');}}catch(e){}
 posthog.init('phc_pa4M8Vc85fpo7vPVdsMcpwAzSshtLEWUvhkJyViGZVLE',{
-  api_host:'https://us.i.posthog.com',
+  api_host:'https://e.jillanneyoussef.com', ui_host:'https://us.posthog.com',
   defaults:'2026-05-30',
   person_profiles:'always', /* links repeat visits from the same browser into one visitor */
   capture_pageview:false, /* page views are sent by pv() below so they use the same names as GA */
