@@ -2480,7 +2480,7 @@ window.__sfx = () => chime();
   const v = document.getElementById('cv-view'), img = v.querySelector('img'), mq = matchMedia('(max-width: 760px), (pointer: coarse)');
   let opener = null, pushed = false;
   const close = fromPop => { if (v.hidden) return; v.hidden = true; document.documentElement.style.overflow = ''; if (pushed && !fromPop) { pushed = false; history.back(); } pushed = false; if (opener && opener.isConnected) opener.focus({preventScroll: true}); };
-  const open = a => { opener = a; if (!img.getAttribute('src')) img.src = 'img/resume-page.webp?v=2'; v.hidden = false; v.scrollTop = 0; try { history.pushState({cv: 1}, ''); pushed = true; } catch (e) {} v.querySelector('.cv-back').focus({preventScroll: true}); };
+  const open = a => { opener = a; if (!img.getAttribute('src')) img.src = 'img/resume-page.webp?v=4'; v.hidden = false; v.scrollTop = 0; try { history.pushState({cv: 1}, ''); pushed = true; } catch (e) {} v.querySelector('.cv-back').focus({preventScroll: true}); };
   document.addEventListener('click', e => { const a = e.target.closest && e.target.closest('a[href*="resume.pdf"]'); if (!a || a.hasAttribute('data-direct') || !mq.matches || e.metaKey || e.ctrlKey) return; e.preventDefault(); open(a); });
   v.querySelector('.cv-back').addEventListener('click', () => close());
   addEventListener('popstate', () => close(true));
